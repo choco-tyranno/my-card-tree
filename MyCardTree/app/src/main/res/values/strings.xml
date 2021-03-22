@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Card Tree</string>
+    <string name="app_name_for_main_title_fab">\tMy Card Tree</string>
+    <string name="description_image_1">this is image desc</string>
+    <string name="message_for_left_drawer">To be continue</string>
+    <string name="order_card_fab_content_description">Draggable content for add card</string>
 </resources>

@@ -1,10 +1,31 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ToolbarTitleStyleParent">
+        <item name="android:fontFamily">@font/rubik_regular</item>
+        <item name="android:shadowDx">0.5</item>
+        <item name="android:shadowDy">0.5</item>
+        <item name="android:shadowRadius">0.5</item>
+        <item name="android:shadowColor">#ffffff</item>
+    </style>
+
+    <style name="CollapsingTitleStyle" parent="ToolbarTitleStyleParent">
+        <item name="android:textColor">#000</item>
+    </style>
+
+    <style name="ExpandedTitleStyle" parent="ToolbarTitleStyleParent">
+        <item name="android:textColor">#000</item>
+    </style>
 </resources>
