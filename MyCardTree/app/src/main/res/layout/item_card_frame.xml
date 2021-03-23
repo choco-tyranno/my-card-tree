@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!-- member_icon image : Copyright (c) freepik  http://www.freepik.com  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_container"
+    android:layout_width="330dp"
+    android:layout_height="@dimen/card_height"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_marginStart="45dp">
+
+    <include layout="@layout/item_card_back" />
+    <include layout="@layout/item_card_front"/>
+
+</FrameLayout>
