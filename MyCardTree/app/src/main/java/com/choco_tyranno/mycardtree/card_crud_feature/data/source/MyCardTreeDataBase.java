@@ -1,0 +1,68 @@
+package com.choco_tyranno.mycardtree.card_crud_feature.data.source;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.helper.widget.Layer;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data.CardContainer;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data.CardContainerDAO;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data.CardContainerDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.layer_rv.CardLayerViewHolder;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Database(entities = {Card.class, CardContainer.class}, version = 1, exportSchema = false)
+public abstract class MyCardTreeDataBase extends RoomDatabase {
+    public abstract CardDAO cardDAO();
+    public abstract CardContainerDAO cardContainerDAO();
+    private static volatile MyCardTreeDataBase INSTANCE;
+    private static final int NUMBER_OF_THREADS = 4;
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    public static MyCardTreeDataBase getDatabase(final Context context){
+        if (INSTANCE == null){
+            synchronized (MyCardTreeDataBase.class){
+                if (INSTANCE == null){
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            MyCardTreeDataBase.class, "my_card_tree_database")
+                            .addCallback(sRoomDatabaseCallback).build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            databaseWriteExecutor.execute(() -> {
+                CardDAO cardDAO = INSTANCE.cardDAO();
+                CardContainerDAO cardContainerDAO = INSTANCE.cardContainerDAO();
+                Card welcomeCard = new Card(0,1,0,ContactCardViewHolder.CONTACT_CARD_TYPE);
+                CardContainer welcomeContainer = new CardContainer(1,CardLayerViewHolder.REPLICA_LAYER_TYPE);
+                cardContainerDAO.insertContainer(welcomeContainer);
+                cardDAO.insertCard(welcomeCard);
+            });
+
+        }
+
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+        }
+    };
+}
+

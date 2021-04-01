@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+
+        <variable
+            name="container"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data.CardContainer" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipChildren="false"
@@ -14,7 +23,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:padding="12sp"
-        android:text="test text :"
+        tools:text="test text :"
+        android:text="@{container.type}"
         android:textColor="#000"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -59,3 +69,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

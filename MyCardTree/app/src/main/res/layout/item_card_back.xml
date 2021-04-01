@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+        <data>
+                <variable
+                    name="card"
+                    type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card" />
+        </data>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,3 +28,4 @@
             android:transitionName="shared_element_img"/>
 
 </com.google.android.material.card.MaterialCardView>
+</layout>

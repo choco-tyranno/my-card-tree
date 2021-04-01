@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="card"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card" />
+
+    </data>
+
+<com.google.android.material.card.MaterialCardView
     android:id="@+id/front_cv"
     android:layout_width="320dp"
     android:layout_height="140dp"
@@ -103,3 +113,4 @@
         android:elevation="12dp" />
 
 </com.google.android.material.card.MaterialCardView>
+</layout>

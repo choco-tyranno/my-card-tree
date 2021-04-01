@@ -3,5 +3,8 @@
     <dimen name="card_thumbnail_image_width">320dp</dimen>
     <dimen name="card_thumbnail_image_height">140dp</dimen>
     <dimen name="card_height">140dp</dimen>
-    <dimen name="layer_height">150dp</dimen>
+    <dimen name="container_height">150dp</dimen>
+    <dimen name="card_width">320dp</dimen>
+    <dimen name="container_width">330dp</dimen>
+
 </resources>

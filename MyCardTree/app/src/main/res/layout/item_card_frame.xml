@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?><!-- member_icon image : Copyright (c) freepik  http://www.freepik.com  -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_container"
-    android:layout_width="330dp"
-    android:layout_height="@dimen/card_height"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:layout_marginStart="45dp">
+    xmlns:bind="http://schemas.android.com/tools">
+    <data>
+    <variable
+         name="card"
+        type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card"
+        />
+    </data>
+    <FrameLayout
+        android:id="@+id/card_container"
+        android:layout_width="330dp"
+        android:layout_height="@dimen/card_height"
+        android:layout_marginStart="45dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-    <include layout="@layout/item_card_back" />
-    <include layout="@layout/item_card_front"/>
+        <include layout="@layout/item_card_back"
+            bind:card="@{card}"/>
 
-</FrameLayout>
+        <include layout="@layout/item_card_front"
+            bind:card="@{card}"/>
+
+    </FrameLayout>
+</layout>
