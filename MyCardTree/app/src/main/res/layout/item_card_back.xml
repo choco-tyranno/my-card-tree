@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-        <data>
-                <variable
-                    name="card"
-                    type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card" />
-        </data>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/back_cv"
-    android:layout_width="320dp"
-    android:layout_height="140dp"
-    android:checkable="true"
-    android:clickable="true"
-    android:focusable="true"
-    app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="12dp">
+
+    <data>
+        <variable
+            name="card"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/back_cv"
+        android:layout_width="320dp"
+        android:layout_height="140dp"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="12dp">
 
         <ImageView
             android:id="@+id/card_back_img"
@@ -25,7 +26,7 @@
             android:contentDescription="@string/description_image_1"
             android:scaleType="centerCrop"
             android:src="@drawable/default_card_image_01"
-            android:transitionName="shared_element_img"/>
+            android:transitionName="shared_element_img" />
 
-</com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -1,8 +1,9 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data;
+package com.choco_tyranno.mycardtree.card_crud_feature.data.container_data;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "table_card_container")
@@ -18,6 +19,7 @@ public class CardContainer {
 
     public CardContainer(){}
 
+    @Ignore
     public CardContainer(int containerNo, int type){
         this.mContainerNo = containerNo;
         this.mType = type;

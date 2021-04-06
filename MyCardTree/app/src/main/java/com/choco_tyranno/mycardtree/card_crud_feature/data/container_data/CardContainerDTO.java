@@ -1,10 +1,6 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data;
+package com.choco_tyranno.mycardtree.card_crud_feature.data.container_data;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
-import androidx.room.ColumnInfo;
 
 
 public class CardContainerDTO {

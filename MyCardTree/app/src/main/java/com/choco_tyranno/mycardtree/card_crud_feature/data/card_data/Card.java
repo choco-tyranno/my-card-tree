@@ -1,5 +1,6 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.data.card_data;
 
+import androidx.databinding.ObservableInt;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -43,11 +44,13 @@ public class Card implements Comparable<Card> {
 
     }
 
+    @Ignore
     public Card(String tempTitle) {
         this.mTitle = tempTitle;
         this.mContactNumber = "";
     }
 
+    @Ignore
     public Card(int seqNo, int containerNo, int bossNo, int type) {
         this.mSeqNo = seqNo;
         this.mContainerNo = containerNo;

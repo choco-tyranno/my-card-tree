@@ -7,6 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".card_crud_feature.presentation.UiTestActivity">
 
-    <include layout="@layout/item_layer"/>
+    <include layout="@layout/item_cardcontainer"/>
 
 </LinearLayout>

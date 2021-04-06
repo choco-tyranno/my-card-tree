@@ -21,6 +21,8 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/main_title_fab"
+            android:text="@{'t'}+@string/app_name"
+            android:paddingStart="25dp"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_gravity="center"

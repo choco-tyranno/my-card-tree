@@ -5,27 +5,27 @@
     tools:context=".card_crud_feature.presentation.MainCardActivity">
 
     <data>
+
         <variable
             name="card_view_model"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel"
-            />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
 
     </data>
 
-<androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/main_drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/main_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/activity_main_screen"/>
+        <include
+            android:id="@+id/main_screen"
+            layout="@layout/activity_main_screen" />
 
-    <include/>
 
-    <include layout="@layout/activity_main_leftdrawer" />
+        <include layout="@layout/activity_main_leftdrawer" />
 
-    <include layout="@layout/activity_main_rightdrawer" />
+        <include layout="@layout/activity_main_rightdrawer" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>

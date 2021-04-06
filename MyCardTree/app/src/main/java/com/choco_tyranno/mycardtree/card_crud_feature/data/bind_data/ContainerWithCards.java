@@ -4,7 +4,7 @@ import androidx.room.Embedded;
 import androidx.room.Relation;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.layer_data.CardContainer;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
