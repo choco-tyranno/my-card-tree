@@ -9,7 +9,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainer;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainerDAO;
-import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreadManager;
+import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreads;
 
 import java.util.List;
 
@@ -22,21 +22,19 @@ public class CardRepository {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
         cardDAO = db.cardDAO();
         cardContainerDAO = db.cardContainerDAO();
-        WorkerThreadManager.instance.execute(new Runnable() {
-            @Override
-            public void run() {
-                readAllData(dataLoadCallback);
-            }
+        WorkerThreads.instance.assignWork(()->{
+            readData(dataLoadCallback);
         });
     }
 
-    private void readAllData(OnDataLoadListener callback) {
+    private void readData(OnDataLoadListener callback) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
             allContainerCards = cardContainerDAO.getAllContainerLiveData();
             callback.onLoadData();
         });
     }
 
+//    Callback 으로 호출됨.
     public LiveData<List<ContainerWithCards>> getData() {
         return allContainerCards;
     }

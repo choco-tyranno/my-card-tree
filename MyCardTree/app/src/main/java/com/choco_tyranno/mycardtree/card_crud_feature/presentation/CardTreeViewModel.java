@@ -11,6 +11,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.data.bind_data.ContainerWi
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.CallbackCollector;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.OnDataLoadListener;
+import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreads;
 
 import java.util.List;
 
@@ -30,19 +31,28 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     public CardTreeViewModel(Application application) {
         super(application);
-        mCardRepository = new CardRepository(application, () -> {
-            mAllCards = mCardRepository.getData();
-            onDataLoadListener.onLoadData();
+        WorkerThreads.instance.assignWork(()->{
+            mCardRepository = new CardRepository(application, this::dataLoad);
         });
     }
 
+//    public void createRepo(){
+//        WorkerThreads.instance.assignWork(()->{
+//            mCardRepository = new CardRepository(getApplication(), this::dataLoad);
+//        });
+//    }
 
-    public LiveData<List<ContainerWithCards>> getData() {
-        return mAllCards != null ? mAllCards : loadData();
+
+    private void dataLoad() {
+        mAllCards = mCardRepository.getData();
     }
 
-    private LiveData<List<ContainerWithCards>> loadData() {
-//        return mAllCards = mCardRepository.getAllContainerCards();
+    public void prepareData(OnDataLoadListener callback){
+        callback.onLoadData();
+    }
+
+    public LiveData<List<ContainerWithCards>> getData() {
+        return mAllCards;
     }
 
     public String hasListObj() {

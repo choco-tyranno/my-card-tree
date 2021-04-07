@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
@@ -17,6 +18,8 @@ public class ContactCardViewHolder extends CardViewHolder {
     }
 
     public void bind(Card card){
+        mBinding.setVariable(BR.card, card);
+        mBinding.executePendingBindings();
     }
 
 
