@@ -3,69 +3,71 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.bind_data.ContainerWithCards;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.source.CallbackCollector;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.OnDataLoadListener;
-import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreads;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CardTreeViewModel extends AndroidViewModel {
     private final String DEBUG_TAG = "!!!:";
-    private final String DATA_IN = "CARDVIEWMODEL_DATA_IN";
-    private CardRepository mCardRepository;
-    private LiveData<List<ContainerWithCards>> mAllCards;
-    public MutableLiveData<List<ContainerWithCards>> mutableData;
-    private OnDataLoadListener onDataLoadListener;
+    private final CardRepository mCardRepository;
 
-//    public void testTriggerDataChange() {
-//        Log.d(DEBUG_TAG, "before value :" + mAllCards.getValue().get(0).getCardContainer().getContainerNo());
-//        this.mutableData.getValue().get(0).getCardContainer().setContainerNo(10);
-//        Log.d(DEBUG_TAG, "result :" + mAllCards.getValue().get(0).getCardContainer().getContainerNo());
-//    }
+    //    private LiveData<List<Card>> mAllCards;
+    private MutableLiveData<List<CardDTO>> mAllCards;
+    public LiveData<List<CardDTO>> allCards;
 
     public CardTreeViewModel(Application application) {
         super(application);
-        WorkerThreads.instance.assignWork(()->{
-            mCardRepository = new CardRepository(application, this::dataLoad);
+        mCardRepository = new CardRepository(application);
+    }
+
+    public void prepareData(OnDataLoadListener callback) {
+        Log.d(DEBUG_TAG,"vm#preparedData");
+        mCardRepository.readData(()->{onLoadData(callback);});
+    }
+
+    private void onLoadData(OnDataLoadListener callback) {
+        Log.d(DEBUG_TAG,"@callback/ vm#onLoadData");
+        MutableLiveData<List<Card>> entityList = mCardRepository.getData();
+        Log.d(DEBUG_TAG,"vm#onLoadData entityList : "+(entityList==null? "null": "exist size:"+entityList.getValue().size()));
+
+        mAllCards = (MutableLiveData<List<CardDTO>>) Transformations.map(entityList, new Function<List<Card>, List<CardDTO>>() {
+            @Override
+            public List<CardDTO> apply(List<Card> input) {
+                List<CardDTO> result = new ArrayList<>();
+                for (Card entity : input) {
+                    result.add(CardDTO.entityToDTO(entity));
+                }
+                return result;
+            }
         });
-    }
 
-//    public void createRepo(){
-//        WorkerThreads.instance.assignWork(()->{
-//            mCardRepository = new CardRepository(getApplication(), this::dataLoad);
-//        });
-//    }
+        allCards = (LiveData<List<CardDTO>>) mAllCards;
 
-
-    private void dataLoad() {
-        mAllCards = mCardRepository.getData();
-    }
-
-    public void prepareData(OnDataLoadListener callback){
         callback.onLoadData();
     }
 
-    public LiveData<List<ContainerWithCards>> getData() {
-        return mAllCards;
+    public LiveData<List<CardDTO>> getData() {
+        return allCards;
     }
 
-    public String hasListObj() {
-        return "" + (isNull(mAllCards) ? "null" : "exist");
-    }
+//    public String hasListObj() {
+//        return "" + (isNull(mAllCards) ? "null" : "exist");
+//    }
 
     public boolean isNull(Object object) {
         return object == null;
     }
 
-    public void postDataLoadListener(OnDataLoadListener onDataLoadListener) {
-        this.onDataLoadListener = onDataLoadListener;
-    }
 
 //    public LiveData<CardVO> getLiveCard(int card_no) {
 //        return cardRepository.getLiveCard(card_no);

@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
-import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreads;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,24 +22,13 @@ public class MainCardActivity extends AppCompatActivity {
     CardTreeViewModel viewModel;
     ActivityMainFrameBinding binding;
 
-    public void assignWork(Runnable work) {
-        WorkerThreads.instance.execute(work);
-    }
-
-    private void observeData() {
-        viewModel.getData().observe(MainCardActivity.this, containerWithCards -> {
-        });
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(DEBUG_TAG, "Activity onCreate start");
-        WorkerThreads workers = new WorkerThreads(4, 4, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
-//        viewModel.createRepo();
-        viewModel.prepareData(this::observeData);
 
+        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        viewModel.prepareData(this::observeData);
+        Log.d(DEBUG_TAG,"vm prepared");
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
@@ -49,9 +37,19 @@ public class MainCardActivity extends AppCompatActivity {
             public void onClick(View v) {
             }
         });
-
         loadContainerRecyclerView();
 
+    }
+
+    private void observeData() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                viewModel.getData().observe(MainCardActivity.this, cardDTOS -> {
+
+                });
+            }
+        });
     }
 
     private void loadContainerRecyclerView() {
@@ -59,7 +57,6 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
     }
-
 
     @Override
     protected void onDestroy() {

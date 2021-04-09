@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="container"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainer" />
+            name="container_num"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

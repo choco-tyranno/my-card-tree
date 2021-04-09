@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainer;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
@@ -16,11 +17,13 @@ import java.util.List;
 
 public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHolder> {
     private final LayoutInflater inflater;
-    List<CardContainer> cardContainers;
+    List<CardDTO> cards;
+    List<CardDTO> presentCards;
 
     public ContainerAdapter(Context context) {
         this.inflater = ((MainCardActivity) context).getLayoutInflater();
-        this.cardContainers = new ArrayList<>();
+        this.cards = new ArrayList<>();
+        this.presentCards = new ArrayList<>();
     }
 
     @NonNull
@@ -32,18 +35,16 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CardContainerViewHolder holder, int position) {
-        CardContainer cardContainer = getItem(position);
-        holder.bind(getItem(position));
-    }
-
-    private CardContainer getItem(int position) {
-        return cardContainers.get(position);
+        holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        return cardContainers.size();
+        return presentCards.size();
     }
 
+    public void presentItem(){
+
+    }
 
 }

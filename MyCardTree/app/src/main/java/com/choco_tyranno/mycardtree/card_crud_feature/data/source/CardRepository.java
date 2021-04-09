@@ -1,63 +1,79 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.data.source;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.bind_data.ContainerWithCards;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainer;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.container_data.CardContainerDAO;
-import com.choco_tyranno.mycardtree.card_crud_feature.utils.WorkerThreads;
+import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
 
 import java.util.List;
 
 public class CardRepository {
-    private CardDAO cardDAO;
-    private CardContainerDAO cardContainerDAO;
-    private LiveData<List<ContainerWithCards>> allContainerCards;
+    private final String DEBUG_TAG = "!!!:";
+    private final CardDAO mCardDAO;
+    private LiveData<List<Card>> mCardData;
 
-    public CardRepository(Application application, OnDataLoadListener dataLoadCallback) {
+    public CardRepository(Application application) {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
-        cardDAO = db.cardDAO();
-        cardContainerDAO = db.cardContainerDAO();
-        WorkerThreads.instance.assignWork(()->{
-            readData(dataLoadCallback);
-        });
+        mCardDAO = db.cardDAO();
+        Log.d(DEBUG_TAG,"db?"+db.toString());
     }
 
-    private void readData(OnDataLoadListener callback) {
+    public void readData(OnDataLoadListener callback) {
+        Log.d(DEBUG_TAG,"repo#readData");
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            allContainerCards = cardContainerDAO.getAllContainerLiveData();
-            callback.onLoadData();
+            Log.d(DEBUG_TAG,"repo#readData/multi threading -s");
+            mCardData = mCardDAO.findAllCards();
+
+            if (mCardData.getValue()==null){
+                Handler handler = new Handler(Looper.getMainLooper());
+                waitDataLoad(handler, callback, 1);
+            }
         });
     }
 
-//    Callback 으로 호출됨.
-    public LiveData<List<ContainerWithCards>> getData() {
-        return allContainerCards;
+    public void waitDataLoad(Handler handler, OnDataLoadListener callback, int recursionCount){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(DEBUG_TAG,"repo#readData/multi threading/data in?: data :"+
+                        (mCardData==null? "nll": "exst size:"+(mCardData.getValue()==null? "nll": ""+mCardData.getValue().size())));
+                if (mCardData.getValue()==null){
+                    if (recursionCount<5){
+                        waitDataLoad(handler,callback,recursionCount+1 );
+                    }else {
+                        callback.onLoadData();
+                    }
+                }else {
+                    callback.onLoadData();
+                }
+            }
+        }, 2000);
     }
 
-    public LiveData<Card> getLiveCard(int card_no) {
-        return cardDAO.getLiveCard(card_no);
+    //    Callback 으로 호출됨.
+    public MutableLiveData<List<Card>> getData() {
+        MutableLiveData<List<Card>> transformedValue =  new MutableLiveData<>();
+        transformedValue.postValue(mCardData.getValue());
+        return transformedValue;
     }
 
-    public void insertLayer(CardContainer cardContainer) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            cardContainerDAO.insertContainer(cardContainer);
-        });
-    }
 
     public void insertCard(Card card) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            cardDAO.insertCard(card);
+            mCardDAO.insertCard(card);
         });
     }
 
     public void updateCard(Card card) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            cardDAO.updateCard(card);
+            mCardDAO.updateCard(card);
         });
     }
 
@@ -67,13 +83,13 @@ public class CardRepository {
         }
 
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            cardDAO.updateCards(cardList);
+            mCardDAO.updateCards(cardList);
         });
     }
 
     public void deleteCards(List<Card> invalidCards) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            cardDAO.deleteSelectedCards(invalidCards);
+            mCardDAO.deleteSelectedCards(invalidCards);
         });
     }
 }

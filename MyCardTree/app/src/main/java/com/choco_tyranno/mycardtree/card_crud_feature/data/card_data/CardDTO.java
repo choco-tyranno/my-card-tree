@@ -16,7 +16,7 @@ public class CardDTO {
 
     private ObservableInt mContainerNo;
 
-    private ObservableInt mParentNo;
+    private ObservableInt mBossNo;
 
     private ObservableInt mType;
 
@@ -34,13 +34,17 @@ public class CardDTO {
         this.mCardNo = new ObservableInt(builder.mCardNo);
         this.mSeqNo = new ObservableInt(builder.mSeqNo);
         this.mContainerNo = new ObservableInt(builder.mContainerNo);
-        this.mParentNo = new ObservableInt(builder.mParentNo);
+        this.mBossNo = new ObservableInt(builder.mBossNo);
         this.mType = new ObservableInt(builder.mType);
         this.mTitle = new ObservableField<>(builder.mTitle);
         this.mSubTitle = new ObservableField<>(builder.mSubTitle);
         this.mContactNumber = new ObservableField<>(builder.mContactNumber);
         this.mFreeNote = new ObservableField<>(builder.mFreeNote);
         this.mImagePath = new ObservableField<>(builder.mImagePath);
+    }
+
+    public static CardDTO entityToDTO(Card entity){
+        return new CardDTO.Builder().entityToDTO(entity).build();
     }
 
     public static class Builder {
@@ -51,7 +55,7 @@ public class CardDTO {
 
         private int mContainerNo = 0;
 
-        private int mParentNo = 0;
+        private int mBossNo = 0;
 
         private int mType = 0;
 
@@ -69,6 +73,20 @@ public class CardDTO {
 
         }
 
+        public Builder entityToDTO(Card entity){
+            this.mCardNo = entity.getCardNo();
+            this.mSeqNo = entity.getSeqNo();
+            this.mContainerNo = entity.getContainerNo();
+            this.mBossNo = entity.getBossNo();
+            this.mType = entity.getType();
+            this.mTitle = entity.getTitle();
+            this.mSubTitle = entity.getSubtitle();
+            this.mContactNumber = entity.getContactNumber();
+            this.mFreeNote = entity.getFreeNote();
+            this.mImagePath = entity.getImagePath();
+            return this;
+        }
+
         public Builder cardNo(int cardNo) {
             this.mCardNo = cardNo;
             return this;
@@ -84,8 +102,8 @@ public class CardDTO {
             return this;
         }
 
-        public Builder parentNo(int parentNo) {
-            this.mParentNo = parentNo;
+        public Builder bossNo(int bossNo) {
+            this.mBossNo = bossNo;
             return this;
         }
 
@@ -148,12 +166,12 @@ public class CardDTO {
         this.mContainerNo.set(containerNo);
     }
 
-    public int getParentNo() {
-        return mParentNo.get();
+    public int getBossNo() {
+        return mBossNo.get();
     }
 
-    public void setParentNo(int parentNo) {
-        this.mParentNo.set(parentNo);
+    public void setBossNo(int bossNo) {
+        this.mBossNo.set(bossNo);
     }
 
     public int getType() {

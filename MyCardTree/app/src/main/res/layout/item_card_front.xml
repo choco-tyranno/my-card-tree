@@ -7,7 +7,7 @@
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO" />
 
         <variable
             name="view_model"

@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "table_card")
 public class Card implements Comparable<Card> {
+    @Ignore
+    public static final int CONTACT_CARD_TYPE = 100;
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "card_no")
