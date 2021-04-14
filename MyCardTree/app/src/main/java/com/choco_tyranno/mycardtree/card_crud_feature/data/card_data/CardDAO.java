@@ -21,7 +21,7 @@ public interface CardDAO {
     void insertCards(List<Card> cards);
 
     @Query("select * from table_card")
-    LiveData<List<Card>> findAllCards();
+    List<Card> findAllCards();
 
     @Query("select * from table_card where container_no = :key_container_no")
     List<Card> findCardsByContainerNo(int key_container_no);

@@ -46,8 +46,9 @@ public abstract class MyCardTreeDataBase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 CardDAO cardDAO = INSTANCE.cardDAO();
                 Card welcomeCard = new Card(0,1,0,ContactCardViewHolder.CONTACT_CARD_TYPE);
+                Card welcomeCard2 = new Card(1,1,0,ContactCardViewHolder.CONTACT_CARD_TYPE);
                 cardDAO.insertCard(welcomeCard);
-                Log.d("!!!:","db:onCreate");
+                cardDAO.insertCard(welcomeCard2);
             });
 
         }

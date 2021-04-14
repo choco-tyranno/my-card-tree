@@ -1,63 +1,74 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import android.app.Application;
+import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.CardRepository;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.source.OnDataLoadListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CardTreeViewModel extends AndroidViewModel {
     private final String DEBUG_TAG = "!!!:";
     private final CardRepository mCardRepository;
 
-    //    private LiveData<List<Card>> mAllCards;
-    private MutableLiveData<List<CardDTO>> mAllCards;
-    public LiveData<List<CardDTO>> allCards;
+
+    private Handler mainHandler;
+    //    private MutableLiveData<List<CardDTO>> mAllCards;
+
+    private LiveData<List<Card>> entityCards;
+    private MutableLiveData<List<CardDTO>> _dtoCards;
 
     public CardTreeViewModel(Application application) {
         super(application);
         mCardRepository = new CardRepository(application);
+        _dtoCards = new MutableLiveData<List<CardDTO>>(new ArrayList<>());
     }
 
-    public void prepareData(OnDataLoadListener callback) {
-        Log.d(DEBUG_TAG,"vm#preparedData");
-        mCardRepository.readData(()->{onLoadData(callback);});
+    public void setMainHandler(Handler handler) {
+        this.mainHandler = handler;
+        postMainHandler(handler);
+    }
+    public void postMainHandler(Handler handler) {
+        mCardRepository.setHandler(handler);
     }
 
-    private void onLoadData(OnDataLoadListener callback) {
-        Log.d(DEBUG_TAG,"@callback/ vm#onLoadData");
-        MutableLiveData<List<Card>> entityList = mCardRepository.getData();
-        Log.d(DEBUG_TAG,"vm#onLoadData entityList : "+(entityList==null? "null": "exist size:"+entityList.getValue().size()));
-
-        mAllCards = (MutableLiveData<List<CardDTO>>) Transformations.map(entityList, new Function<List<Card>, List<CardDTO>>() {
-            @Override
-            public List<CardDTO> apply(List<Card> input) {
-                List<CardDTO> result = new ArrayList<>();
-                for (Card entity : input) {
-                    result.add(CardDTO.entityToDTO(entity));
-                }
-                return result;
-            }
-        });
-
-        allCards = (LiveData<List<CardDTO>>) mAllCards;
-
-        callback.onLoadData();
+    public void loadData(){
+        mCardRepository.readData(this::setData);
     }
+
+    private void setData(){
+        List<CardDTO> transformedData = mCardRepository.getData().stream().map(Card::toDTO).collect(Collectors.toList());
+        Logger.cardDTOSizeCheck(transformedData,"vm#setData/transformed data");
+        _dtoCards.getValue().clear();
+        _dtoCards.getValue().addAll(transformedData);
+
+//        entityCards = mCardRepository.getData();
+    }
+    //    public void loadData() {
+//        mCardRepository.readData();
+////        mCardRepository.readData(this::observe);
 
     public LiveData<List<CardDTO>> getData() {
-        return allCards;
+        return _dtoCards;
+    }
+
+//    }
+
+    public void getDTO() {
     }
 
 //    public String hasListObj() {

@@ -27,30 +27,25 @@ public class Card implements Comparable<Card> {
     @ColumnInfo(name = "type")
     private int mType;
 
-    @ColumnInfo(name = "title")
+    @ColumnInfo(name = "title", defaultValue = "Hohoho")
     private String mTitle;
 
-    @ColumnInfo(name = "subtitle")
+    @ColumnInfo(name = "subtitle", defaultValue = "")
     private String mSubtitle;
 
-    @ColumnInfo(name = "contact_number")
+    @ColumnInfo(name = "contact_number", defaultValue = "")
     private String mContactNumber;
 
-    @ColumnInfo(name = "free_note")
+    @ColumnInfo(name = "free_note", defaultValue = "")
     private String mFreeNote;
 
-    @ColumnInfo(name = "image_path")
+    @ColumnInfo(name = "image_path", defaultValue = "")
     private String mImagePath;
 
     public Card() {
 
     }
 
-    @Ignore
-    public Card(String tempTitle) {
-        this.mTitle = tempTitle;
-        this.mContactNumber = "";
-    }
 
     @Ignore
     public Card(int seqNo, int containerNo, int bossNo, int type) {
@@ -58,6 +53,11 @@ public class Card implements Comparable<Card> {
         this.mContainerNo = containerNo;
         this.mBossNo = bossNo;
         this.mType = type;
+    }
+
+    @Ignore
+    public CardDTO toDTO(){
+        return new CardDTO.Builder().entityToDTO(this).build();
     }
 
     @Override

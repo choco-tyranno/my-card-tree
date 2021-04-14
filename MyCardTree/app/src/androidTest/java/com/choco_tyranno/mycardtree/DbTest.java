@@ -10,11 +10,15 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
 import com.choco_tyranno.mycardtree.card_crud_feature.data.source.MyCardTreeDataBase;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +27,7 @@ import java.util.List;
 public class DbTest {
     private CardDAO cardDAO;
     private MyCardTreeDataBase testDb;
+    private CardTreeViewModel viewModel;
 
     @Before
     public void createDb() {
@@ -41,6 +46,10 @@ public class DbTest {
         List<Card> testCards = TestUtil.createCards(5);
         Card testCard = testCards.get(0);
         cardDAO.insertCards(testCards);
+
         LiveData<List<Card>> cards = cardDAO.findAllCards();
+
+        assertThat(cards.getValue().get(0), is(testCard));
     }
+
 }

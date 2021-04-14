@@ -6,17 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 public class MainCardActivity extends AppCompatActivity {
-    final String DEBUG_TAG = "!!!!:";
     ContainerAdapter layerAdapter;
     LinearLayoutManager layerLM;
     CardTreeViewModel viewModel;
@@ -27,8 +24,12 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
-        viewModel.prepareData(this::observeData);
-        Log.d(DEBUG_TAG,"vm prepared");
+        viewModel.setMainHandler(new Handler(getMainLooper()));
+        viewModel.loadData();
+        viewModel.getData().observe(this,(cards)->{
+            Logger.nullCheck(cards,"activity#onCreate/observe cards");
+        });
+
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
@@ -37,19 +38,9 @@ public class MainCardActivity extends AppCompatActivity {
             public void onClick(View v) {
             }
         });
+
         loadContainerRecyclerView();
 
-    }
-
-    private void observeData() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                viewModel.getData().observe(MainCardActivity.this, cardDTOS -> {
-
-                });
-            }
-        });
     }
 
     private void loadContainerRecyclerView() {
