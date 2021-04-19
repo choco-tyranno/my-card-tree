@@ -10,6 +10,7 @@
             name="card_view_model"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
 
+
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

@@ -15,6 +15,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     }
 
     public void bind(Integer containerNum){
+
     }
 
 }

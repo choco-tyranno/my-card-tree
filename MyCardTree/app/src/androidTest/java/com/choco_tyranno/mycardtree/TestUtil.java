@@ -1,6 +1,6 @@
 package com.choco_tyranno.mycardtree;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
 
 import java.util.ArrayList;
 import java.util.List;

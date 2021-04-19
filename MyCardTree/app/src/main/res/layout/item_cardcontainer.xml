@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="java.util.List"/>
+        <import type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO"/>
         <variable
-            name="container_num"
-            type="String" />
+            name="container_no"
+            type="Integer"/>
+        <variable
+            name="data"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,12 +29,12 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:padding="12sp"
-            android:text="@string/text_suffixcontainertitle"
+            android:text='@{String.valueOf("layer:"+container_no)}'
             android:textColor="#000"
             android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="test text :" />
+            />
 
 
         <com.google.android.material.chip.Chip
@@ -62,9 +69,10 @@
             android:layout_height="@dimen/container_height"
             android:clipChildren="false"
             android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parent_item_title" />
+            app:layout_constraintTop_toBottomOf="@+id/parent_item_title"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

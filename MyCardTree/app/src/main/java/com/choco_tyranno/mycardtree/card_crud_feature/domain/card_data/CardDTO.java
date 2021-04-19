@@ -1,13 +1,7 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.data.card_data;
+package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
-import androidx.room.ColumnInfo;
-import androidx.room.PrimaryKey;
-
-import com.choco_tyranno.mycardtree.BR;
 
 public class CardDTO {
     private ObservableInt mCardNo;
@@ -22,13 +16,17 @@ public class CardDTO {
 
     private ObservableField<String> mTitle;
 
-    private ObservableField<String> mSubTitle;
+    private ObservableField<String> mSubtitle;
 
     private ObservableField<String> mContactNumber;
 
     private ObservableField<String> mFreeNote;
 
     private ObservableField<String> mImagePath;
+
+    CardDTO() {
+
+    }
 
     CardDTO(Builder builder) {
         this.mCardNo = new ObservableInt(builder.mCardNo);
@@ -37,50 +35,57 @@ public class CardDTO {
         this.mBossNo = new ObservableInt(builder.mBossNo);
         this.mType = new ObservableInt(builder.mType);
         this.mTitle = new ObservableField<>(builder.mTitle);
-        this.mSubTitle = new ObservableField<>(builder.mSubTitle);
+        this.mSubtitle = new ObservableField<>(builder.mSubtitle);
         this.mContactNumber = new ObservableField<>(builder.mContactNumber);
         this.mFreeNote = new ObservableField<>(builder.mFreeNote);
         this.mImagePath = new ObservableField<>(builder.mImagePath);
     }
 
-    public static CardDTO entityToDTO(Card entity){
+    public Card toEntity() {
+        return new Card.Builder().dtoToEntity(this).build();
+    }
+
+    public static CardDTO entityToDTO(Card entity) {
         return new CardDTO.Builder().entityToDTO(entity).build();
     }
 
     public static class Builder {
-
-        private int mCardNo = 0;
-
-        private int mSeqNo = 0;
-
-        private int mContainerNo = 0;
-
-        private int mBossNo = 0;
-
-        private int mType = 0;
-
-        private String mTitle = "";
-
-        private String mSubTitle = "";
-
-        private String mContactNumber = "";
-
-        private String mFreeNote = "";
-
-        private String mImagePath = "";
+        private int mCardNo;
+        private int mSeqNo;
+        private int mContainerNo;
+        private int mBossNo;
+        private int mType;
+        private String mTitle;
+        private String mSubtitle;
+        private String mContactNumber;
+        private String mFreeNote;
+        private String mImagePath;
 
         public Builder() {
-
+            init();
         }
 
-        public Builder entityToDTO(Card entity){
+        private void init() {
+            this.mCardNo = 0;
+            this.mSeqNo = 0;
+            this.mContainerNo = 0;
+            this.mBossNo = 0;
+            this.mType = 0;
+            this.mTitle = "";
+            this.mSubtitle = "";
+            this.mContactNumber = "";
+            this.mFreeNote = "";
+            this.mImagePath = "";
+        }
+
+        public Builder entityToDTO(Card entity) {
             this.mCardNo = entity.getCardNo();
             this.mSeqNo = entity.getSeqNo();
             this.mContainerNo = entity.getContainerNo();
             this.mBossNo = entity.getBossNo();
             this.mType = entity.getType();
             this.mTitle = entity.getTitle();
-            this.mSubTitle = entity.getSubtitle();
+            this.mSubtitle = entity.getSubtitle();
             this.mContactNumber = entity.getContactNumber();
             this.mFreeNote = entity.getFreeNote();
             this.mImagePath = entity.getImagePath();
@@ -117,8 +122,8 @@ public class CardDTO {
             return this;
         }
 
-        public Builder subTitle(String subTitle) {
-            this.mSubTitle = subTitle;
+        public Builder subtitle(String subtitle) {
+            this.mSubtitle = subtitle;
             return this;
         }
 
@@ -190,12 +195,12 @@ public class CardDTO {
         this.mTitle.set(title);
     }
 
-    public String getSubTitle() {
-        return mSubTitle.get();
+    public String getSubtitle() {
+        return mSubtitle.get();
     }
 
-    public void setSubTitle(String subTitle) {
-        this.mSubTitle.set(subTitle);
+    public void setSubtitle(String subTitle) {
+        this.mSubtitle.set(subTitle);
     }
 
     public String getContactNumber() {

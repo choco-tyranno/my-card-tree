@@ -4,8 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 
 import java.util.List;
 

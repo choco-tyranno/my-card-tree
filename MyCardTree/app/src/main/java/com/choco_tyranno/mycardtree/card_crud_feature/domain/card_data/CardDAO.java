@@ -1,8 +1,6 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.data.card_data;
+package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;

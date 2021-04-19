@@ -7,9 +7,9 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.source.MyCardTreeDataBase;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 
 import org.junit.After;

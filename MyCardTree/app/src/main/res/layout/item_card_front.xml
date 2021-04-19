@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
 
         <variable
             name="view_model"

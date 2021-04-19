@@ -8,7 +8,7 @@
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDTO" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
     </data>
 
     <FrameLayout

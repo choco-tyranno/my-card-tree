@@ -7,6 +7,6 @@
     <string name="empty_container_text">카드를 추가해주세요.</string>
     <string name="btn_save_name">저장</string>
     <string name="btn_cancel_name">취소</string>
-    <string name="text_suffixcontainertitle"> 층 :</string>
+    <string name="container_title">%1$s, %2$s</string>
     <string name="text_card_delete">제거</string>
 </resources>

@@ -5,11 +5,21 @@
 
     <data>
 
+        <import type="java.util.List" />
+
+        <import type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+
+        <variable
+            name="data"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/parent_recyclerview"
+        android:id="@+id/container_recyclerview"
         android:layout_width="410dp"
         android:layout_height="700dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        />
 </layout>

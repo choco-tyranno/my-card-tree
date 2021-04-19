@@ -6,47 +6,60 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
+import com.choco_tyranno.mycardtree.databinding.ActivityMainBodyBinding;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
+import java.util.Optional;
+
 public class MainCardActivity extends AppCompatActivity {
-    ContainerAdapter layerAdapter;
-    LinearLayoutManager layerLM;
-    CardTreeViewModel viewModel;
-    ActivityMainFrameBinding binding;
+    private ContainerAdapter layerAdapter;
+    private LinearLayoutManager layerLM;
+    private ActivityMainFrameBinding binding;
+
+    int lastSeqNo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainBinding();
+        setContainerRv();
+        contractVm();
+    }
 
-        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
-        viewModel.setMainHandler(new Handler(getMainLooper()));
-        viewModel.loadData();
-        viewModel.getData().observe(this,(cards)->{
-            Logger.nullCheck(cards,"activity#onCreate/observe cards");
+    private void contractVm() {
+        CardTreeViewModel viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        viewModel.loadData(() -> {
+            Optional.ofNullable(viewModel.getData()).ifPresent((liveData -> {
+                        runOnUiThread(() -> {
+                            liveData.observe(this, (cards) -> {
+//                                binding.mainScreen.mainBody.setData();
+                            });
+                        });
+                    })
+            );
         });
+    }
 
+    private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
         binding.mainScreen.createCardFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                viewModel.addCard(new CardDTO.Builder().bossNo(0).containerNo(1).seqNo(lastSeqNo+1).build());
             }
         });
-
-        loadContainerRecyclerView();
-
     }
 
-    private void loadContainerRecyclerView() {
-        RecyclerView rv = binding.mainScreen.mainBody.parentRecyclerview;
+    private void setContainerRv() {
+        RecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
+
     }
 
     @Override

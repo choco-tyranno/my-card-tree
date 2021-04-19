@@ -1,7 +1,6 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.data.source;
+package com.choco_tyranno.mycardtree.card_crud_feature.domain.source;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -9,10 +8,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.Card;
-import com.choco_tyranno.mycardtree.card_crud_feature.data.card_data.CardDAO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,8 +43,8 @@ public abstract class MyCardTreeDataBase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 CardDAO cardDAO = INSTANCE.cardDAO();
-                Card welcomeCard = new Card(0,1,0,ContactCardViewHolder.CONTACT_CARD_TYPE);
-                Card welcomeCard2 = new Card(1,1,0,ContactCardViewHolder.CONTACT_CARD_TYPE);
+                Card welcomeCard = new Card.Builder().seqNo(0).containerNo(1).bossNo(0).type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                Card welcomeCard2 =new Card.Builder().seqNo(1).containerNo(1).bossNo(0).type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
                 cardDAO.insertCard(welcomeCard);
                 cardDAO.insertCard(welcomeCard2);
             });
