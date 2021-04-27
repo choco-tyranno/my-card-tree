@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="card"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+
+        <variable
+            name="view_model"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/front_cv"
+        android:layout_width="320dp"
+        android:layout_height="140dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="12dp">
+
+        <!-- edit mode start-->
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/child_title_et"
+            android:layout_width="150dp"
+            android:layout_height="27dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="40dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/overlock_regular"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/child_contact_number_et"
+            android:layout_width="210dp"
+            android:layout_height="27dp"
+            android:layout_gravity="top"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/overlock_regular"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/front_save_btn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|left"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/rubik_regular"
+            android:text="@string/btn_save_name"
+            android:textColor="@color/colorAccent"
+            app:cornerRadius="20dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/front_cancel_btn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/rubik_regular"
+            android:text="@string/btn_cancel_name"
+            android:textColor="@color/colorAccent"
+            app:cornerRadius="20dp" />
+
+
+        <!-- view mode start-->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/child_contact_number_tv"
+            android:layout_width="210dp"
+            android:layout_height="27dp"
+            android:layout_gravity="top"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/overlock_regular"
+            android:singleLine="true"
+            android:text="@{card.contactNumber}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            tools:text="010-3532-7735" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/child_title_tv"
+            android:layout_width="150dp"
+            android:layout_height="27dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="50dp"
+            android:fontFamily="@font/overlock_regular"
+            android:singleLine="true"
+            android:text="@{card.title}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            tools:text="이대곤 전번" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/card_front_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:elevation="12dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

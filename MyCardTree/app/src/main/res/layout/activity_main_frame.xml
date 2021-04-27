@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".card_crud_feature.presentation.MainCardActivity">
+
+    <data>
+
+        <variable
+            name="card_view_model"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
+
+
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/main_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/main_screen"
+            layout="@layout/activity_main_screen" />
+
+
+        <include layout="@layout/activity_main_leftdrawer" />
+
+        <include layout="@layout/activity_main_rightdrawer" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!-- member_icon image : Copyright (c) freepik  http://www.freepik.com  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/card_container"
+        android:layout_width="@dimen/container_width"
+        android:layout_height="@dimen/container_height"
+        android:layout_marginStart="45dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <include
+            layout="@layout/item_card_back"
+            bind:card="@{data}" />
+
+        <include
+            layout="@layout/item_card_front"
+            bind:card="@{data}" />
+
+    </FrameLayout>
+</layout>

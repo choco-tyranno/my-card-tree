@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "MyCardTree"
+rootProject.name = "My Card Tree"

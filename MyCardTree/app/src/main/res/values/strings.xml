@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">MyCardTree</string>
+    <string name="app_name">My Card Tree</string>
+    <string name="app_name_title">My Card Tree</string>
+    <string name="description_image_1">this is card back image</string>
+    <string name="message_for_left_drawer">To be continue</string>
+    <string name="order_card_fab_content_description">Draggable content for add card</string>
+    <string name="empty_container_text">카드를 추가해주세요.</string>
+    <string name="btn_save_name">저장</string>
+    <string name="btn_cancel_name">취소</string>
+    <string name="container_title">%1$s, %2$s</string>
+    <string name="text_card_delete">제거</string>
 </resources>
