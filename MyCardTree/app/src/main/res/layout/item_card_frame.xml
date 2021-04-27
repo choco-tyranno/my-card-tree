@@ -2,12 +2,13 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="card"
+            name="data"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
     </data>
 
@@ -21,11 +22,11 @@
 
         <include
             layout="@layout/item_card_back"
-            bind:card="@{card}" />
+            bind:card="@{data}" />
 
         <include
             layout="@layout/item_card_front"
-            bind:card="@{card}" />
+            bind:card="@{data}" />
 
     </FrameLayout>
 </layout>

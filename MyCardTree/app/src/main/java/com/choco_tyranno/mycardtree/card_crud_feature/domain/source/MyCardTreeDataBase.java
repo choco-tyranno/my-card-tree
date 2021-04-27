@@ -43,10 +43,12 @@ public abstract class MyCardTreeDataBase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 CardDAO cardDAO = INSTANCE.cardDAO();
-                Card welcomeCard = new Card.Builder().seqNo(0).containerNo(1).bossNo(0).type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                Card welcomeCard2 =new Card.Builder().seqNo(1).containerNo(1).bossNo(0).type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                Card welcomeCard = new Card.Builder().seqNo(0).containerNo(1).bossNo(0).title("초코").contactNumber("010-3899-8450").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                Card welcomeCard2 =new Card.Builder().seqNo(1).containerNo(1).bossNo(0).title("1ee").contactNumber("010-3523-7735").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                Card welcomeCard3 =new Card.Builder().seqNo(0).containerNo(2).bossNo(1).title("찹소").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
                 cardDAO.insertCard(welcomeCard);
                 cardDAO.insertCard(welcomeCard2);
+                cardDAO.insertCard(welcomeCard3);
             });
 
         }

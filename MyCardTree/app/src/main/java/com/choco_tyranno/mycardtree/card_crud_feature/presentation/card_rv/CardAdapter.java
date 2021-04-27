@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
@@ -16,12 +17,13 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>{
     private final LayoutInflater inflater;
-    private final List<Card> cards;
+    private final List<CardDTO> mData;
+    private final List<CardDTO> mPresentData;
 
     public CardAdapter(Context context){
-        cards = new ArrayList<>();
+        mData = new ArrayList<>();
+        mPresentData = new ArrayList<>();
         inflater = ((MainCardActivity)context).getLayoutInflater();
-
     }
 
     @NonNull
@@ -38,10 +40,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>{
 
     @Override
     public int getItemCount() {
-        return cards.size();
+        return mPresentData.size();
     }
 
-    private Card getItem(int position){
-        return cards.get(position);
+    private CardDTO getItem(int position){
+        return mPresentData.get(position);
+    }
+
+    public void clear(){
+        this.mData.clear();
+        this.mPresentData.clear();
+    }
+
+    public void submitList(List<CardDTO> data){
+        this.mData.addAll(data);
+        this.mPresentData.addAll(data);
+        notifyDataSetChanged();
     }
 }
