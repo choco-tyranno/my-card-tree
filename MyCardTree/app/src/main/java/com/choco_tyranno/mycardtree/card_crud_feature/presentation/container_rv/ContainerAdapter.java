@@ -86,12 +86,14 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
             }
 
             if (i == 0) {
-                foundFlag = dtoList.get(0).getCardNo();
+                foundFlag = dtoList.get(0).getBossNo();
+                nextGroupFlag = dtoList.get(0).getCardNo();
                 hasNext = true;
             } else {
                 for (CardDTO dto : dtoList) {
                     if (dto.getBossNo() == nextGroupFlag) {
-                        foundFlag = dto.getCardNo();
+                        foundFlag = dto.getBossNo();
+                        nextGroupFlag = dto.getCardNo();
                         hasNext = true;
                         break;
                     }
@@ -99,16 +101,10 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
             }
 
             mPresentContainerGroupingFlags.add(i, foundFlag);
-            nextGroupFlag = foundFlag;
 
             if (!hasNext)
                 break;
         }
     }
 
-    private void updatePresentData() {
-//        mPresentData.clear();
-//        mPresentData.addAll();
-        notifyDataSetChanged();
-    }
 }

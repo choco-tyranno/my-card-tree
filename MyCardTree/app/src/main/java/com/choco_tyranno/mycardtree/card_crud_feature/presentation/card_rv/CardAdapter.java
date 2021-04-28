@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
@@ -47,6 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public void clear() {
         this.mData.clear();
         this.mPresentData.clear();
+        Logger.message("cardAdapter - cleared");
     }
 
     public void submitList(List<CardDTO> data) {

@@ -55,12 +55,12 @@ public class CardDTO implements Comparable<CardDTO>{
 
     @Override
     public int compareTo(CardDTO compareTarget) {
-        if (this.getSeqNo()>compareTarget.getSeqNo()){
+        if (this.getSeqNo()>compareTarget.getSeqNo())
             return -1;
-        }else if(this.getSeqNo()<compareTarget.getSeqNo()){
+        else if(this.getSeqNo()<compareTarget.getSeqNo())
             return 1;
-        }
-        throw new RuntimeException("Compare Error/ CardDTO.SeqNo has duplicated ");
+        else
+        throw new RuntimeException("Compare Error/ Comparing CardDTO.SeqNo has duplicated ");
     }
 
     public static class Builder {
