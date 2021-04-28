@@ -20,12 +20,12 @@ import java.util.Optional;
 public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHolder> {
     private final LayoutInflater inflater;
     private final List<List<CardDTO>> mData;
-    private final List<List<CardDTO>> mPresentData;
+    private int presentContainerLength;
 
     public ContainerAdapter(Context context) {
         this.inflater = ((MainCardActivity) context).getLayoutInflater();
         this.mData = new ArrayList<>();
-        this.mPresentData = new ArrayList<>();
+        this.presentContainerLength = 0;
     }
 
     @NonNull
@@ -37,42 +37,38 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CardContainerViewHolder holder, int position) {
-        holder.bind(position+1, mPresentData);
+        holder.bind(position + 1, mData.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mPresentData.size();
+        return presentContainerLength;
     }
 
-    public void submitList(List<CardDTO> listData){
+    public void submitList(List<CardDTO> maybeExistData) {
         this.mData.clear();
-        this.mData.addAll(listData);
+        Optional.ofNullable(maybeExistData).ifPresent(data->{
+            this.mData.addAll(separateToListByContainerNo(data));
+        });
 
-        this.mPresentData.clear();
-        this.mPresentData.addAll(listData);
         notifyDataSetChanged();
     }
 
-    private List<List<CardDTO>> separateToListByContainerNo(List<CardDTO> unrefinedData){
+    private List<List<CardDTO>> separateToListByContainerNo(List<CardDTO> unrefinedData) {
         List<List<CardDTO>> basket = new ArrayList<>();
-        Optional.ofNullable(unrefinedData).ifPresent(data ->{
-            int size = data.size();
-//            for (:
-//                 ) {
-//
-//            }
-//            basket.;
+        Optional.ofNullable(unrefinedData).ifPresent(dtoList -> {
+            for (CardDTO dto : dtoList) {
+                int position = Integer.parseInt(dto.getContactNumber())-1;
+                basket.set(position, Optional.ofNullable(basket.get(position)).orElse(new ArrayList<>()));
+                basket.get(position).add(dto);
+            }
         });
-//        basket.add();
-//        return ;
-
+        return basket;
     }
 
-    private void updatePresentData(){
-        mPresentData.clear();
-
-        mPresentData.addAll();
+    private void updatePresentData() {
+//        mPresentData.clear();
+//        mPresentData.addAll();
         notifyDataSetChanged();
     }
 }
