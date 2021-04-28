@@ -14,10 +14,11 @@ public class ContactCardViewHolder extends CardViewHolder {
     public ContactCardViewHolder(@NonNull ItemCardFrameBinding binding) {
         super(binding.getRoot());
         this.mBinding = binding;
+        //TODO : init constructors
     }
 
     public void bind(CardDTO data){
         mBinding.setData(data);
+        mBinding.executePendingBindings();
     }
-
 }

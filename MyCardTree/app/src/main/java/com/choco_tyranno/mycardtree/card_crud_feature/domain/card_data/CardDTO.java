@@ -3,7 +3,11 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
-public class CardDTO {
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+
+import kotlin.jvm.Throws;
+
+public class CardDTO implements Comparable<CardDTO>{
     private ObservableInt mCardNo;
 
     private ObservableInt mSeqNo;
@@ -47,6 +51,16 @@ public class CardDTO {
 
     public static CardDTO entityToDTO(Card entity) {
         return new CardDTO.Builder().entityToDTO(entity).build();
+    }
+
+    @Override
+    public int compareTo(CardDTO compareTarget) {
+        if (this.getSeqNo()>compareTarget.getSeqNo()){
+            return -1;
+        }else if(this.getSeqNo()<compareTarget.getSeqNo()){
+            return 1;
+        }
+        throw new RuntimeException("Compare Error/ CardDTO.SeqNo has duplicated ");
     }
 
     public static class Builder {

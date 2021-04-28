@@ -22,14 +22,14 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
     }
 
-    public void bind(int containerNum, List<CardDTO> data){
+    public void bind(int containerNum, int groupingFlag, List<CardDTO> data){
         RecyclerView rv = mBinding.cardRecyclerview;
         rv.setLayoutManager(null);
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
         ((CardAdapter)rv.getAdapter()).clear();
-
         mBinding.setContainerNo(containerNum);
-        ((CardAdapter)mBinding.cardRecyclerview.getAdapter()).submitList(data);
+        CardAdapter cardAdapter = (CardAdapter)mBinding.cardRecyclerview.getAdapter();
+        cardAdapter.submitList(data);
+        cardAdapter.presentCardViews(groupingFlag);
     }
-
 }

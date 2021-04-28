@@ -16,30 +16,29 @@ import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 import java.util.Optional;
 
 public class MainCardActivity extends AppCompatActivity {
-    private ContainerAdapter layerAdapter;
+    //    private ContainerAdapter containerAdapter;
     private LinearLayoutManager layerLM;
     private ActivityMainFrameBinding binding;
-
-    int lastSeqNo = 0;
+    boolean isStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isStart = true;
         mainBinding();
         setContainerRv();
         contractVm();
+    }
+
+    private void presentInitCardContainerViews() {
+        Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter())
+                .ifPresent(ContainerAdapter::presentInitContainerViews);
     }
 
     private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
-        binding.mainScreen.createCardFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                viewModel.addCard(new CardDTO.Builder().bossNo(0).containerNo(1).seqNo(lastSeqNo+1).build());
-            }
-        });
     }
 
     private void setContainerRv() {
@@ -54,9 +53,13 @@ public class MainCardActivity extends AppCompatActivity {
             Optional.ofNullable(viewModel.getData()).ifPresent((liveData -> {
                         runOnUiThread(() -> {
                             liveData.observe(this, (cards) -> {
-                                Logger.message("observe");
-                                ((ContainerAdapter)binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).submitList(cards);
+                                ContainerAdapter containerAdapter = ((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter());
+                                containerAdapter.submitList(cards);
                             });
+                            if (isStart) {
+                                presentInitCardContainerViews();
+                                isStart = false;
+                            }
                         });
                     })
             );

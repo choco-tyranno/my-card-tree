@@ -13,17 +13,18 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActiv
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>{
+public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private final LayoutInflater inflater;
     private final List<CardDTO> mData;
     private final List<CardDTO> mPresentData;
 
-    public CardAdapter(Context context){
+    public CardAdapter(Context context) {
         mData = new ArrayList<>();
         mPresentData = new ArrayList<>();
-        inflater = ((MainCardActivity)context).getLayoutInflater();
+        inflater = ((MainCardActivity) context).getLayoutInflater();
     }
 
     @NonNull
@@ -35,7 +36,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(mPresentData.get(position));
     }
 
     @Override
@@ -43,18 +44,26 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>{
         return mPresentData.size();
     }
 
-    private CardDTO getItem(int position){
-        return mPresentData.get(position);
-    }
-
-    public void clear(){
+    public void clear() {
         this.mData.clear();
         this.mPresentData.clear();
     }
 
-    public void submitList(List<CardDTO> data){
+    public void submitList(List<CardDTO> data) {
         this.mData.addAll(data);
-        this.mPresentData.addAll(data);
+    }
+
+    public void presentCardViews(int groupingFlag) {
+        setPresentDataList(groupingFlag);
         notifyDataSetChanged();
+    }
+
+    private void setPresentDataList(int groupingFlag){
+        mPresentData.clear();
+        for (CardDTO dto : mData) {
+            if (dto.getBossNo() == groupingFlag)
+                mPresentData.add(dto);
+        }
+        Collections.sort(mPresentData);
     }
 }

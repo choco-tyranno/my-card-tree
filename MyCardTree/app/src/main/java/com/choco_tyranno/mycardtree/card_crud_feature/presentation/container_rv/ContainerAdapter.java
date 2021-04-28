@@ -14,18 +14,20 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActiv
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHolder> {
     private final LayoutInflater inflater;
     private final List<List<CardDTO>> mData;
-    private int presentContainerLength;
+    private final List<Integer> mPresentContainerGroupingFlags;
 
     public ContainerAdapter(Context context) {
         this.inflater = ((MainCardActivity) context).getLayoutInflater();
         this.mData = new ArrayList<>();
-        this.presentContainerLength = 0;
+        this.mPresentContainerGroupingFlags = new ArrayList<>();
     }
 
     @NonNull
@@ -37,33 +39,71 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CardContainerViewHolder holder, int position) {
-        holder.bind(position + 1, mData.get(position));
+        holder.bind(position + 1, mPresentContainerGroupingFlags.get(position), mData.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return presentContainerLength;
+        return mPresentContainerGroupingFlags.size();
     }
 
     public void submitList(List<CardDTO> maybeExistData) {
         this.mData.clear();
-        Optional.ofNullable(maybeExistData).ifPresent(data->{
+        Optional.ofNullable(maybeExistData).ifPresent(data -> {
             this.mData.addAll(separateToListByContainerNo(data));
         });
-
-        notifyDataSetChanged();
     }
 
     private List<List<CardDTO>> separateToListByContainerNo(List<CardDTO> unrefinedData) {
         List<List<CardDTO>> basket = new ArrayList<>();
         Optional.ofNullable(unrefinedData).ifPresent(dtoList -> {
             for (CardDTO dto : dtoList) {
-                int position = Integer.parseInt(dto.getContactNumber())-1;
-                basket.set(position, Optional.ofNullable(basket.get(position)).orElse(new ArrayList<>()));
+                int position = dto.getContainerNo() - 1;
+                if (position > basket.size() - 1) {
+                    basket.add(new ArrayList<>());
+                }
                 basket.get(position).add(dto);
             }
         });
         return basket;
+    }
+
+    public void presentInitContainerViews() {
+        setInitPresentBossNoList();
+        notifyDataSetChanged();
+    }
+
+    private void setInitPresentBossNoList() {
+        int nextGroupFlag = -1;
+
+        for (int i = 0; i < mData.size(); i++) {
+            List<CardDTO> dtoList = mData.get(i);
+            boolean hasNext = false;
+            int foundFlag = -1;
+
+            if (mData.get(i).isEmpty()) {
+                return;
+            }
+
+            if (i == 0) {
+                foundFlag = dtoList.get(0).getCardNo();
+                hasNext = true;
+            } else {
+                for (CardDTO dto : dtoList) {
+                    if (dto.getBossNo() == nextGroupFlag) {
+                        foundFlag = dto.getCardNo();
+                        hasNext = true;
+                        break;
+                    }
+                }
+            }
+
+            mPresentContainerGroupingFlags.add(i, foundFlag);
+            nextGroupFlag = foundFlag;
+
+            if (!hasNext)
+                break;
+        }
     }
 
     private void updatePresentData() {
