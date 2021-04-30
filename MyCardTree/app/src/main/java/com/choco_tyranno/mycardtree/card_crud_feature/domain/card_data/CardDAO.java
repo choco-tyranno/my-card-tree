@@ -13,26 +13,26 @@ import java.util.List;
 @Dao
 public interface CardDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertCard(Card card);
+    void insertCard(CardEntity cardEntity);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertCards(List<Card> cards);
+    void insertCards(List<CardEntity> cardEntities);
 
     @Query("select * from table_card")
-    List<Card> findAllCards();
+    List<CardEntity> findAllCards();
 
     @Query("select * from table_card where container_no = :key_container_no")
-    List<Card> findCardsByContainerNo(int key_container_no);
+    List<CardEntity> findCardsByContainerNo(int key_container_no);
 
     @Update
-    void updateCard(Card card);
+    void updateCard(CardEntity cardEntity);
 
     @Update
-    void updateCards(List<Card> cards);
+    void updateCards(List<CardEntity> cardEntities);
 
     @Query("DELETE FROM table_card")
     void deleteAllCards();
 
     @Delete
-    void deleteSelectedCards(List<Card> selectedCards);
+    void deleteSelectedCards(List<CardEntity> selectedCardEntities);
 }

@@ -3,10 +3,6 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-
-import kotlin.jvm.Throws;
-
 public class CardDTO implements Comparable<CardDTO>{
     private ObservableInt mCardNo;
 
@@ -45,11 +41,11 @@ public class CardDTO implements Comparable<CardDTO>{
         this.mImagePath = new ObservableField<>(builder.mImagePath);
     }
 
-    public Card toEntity() {
-        return new Card.Builder().dtoToEntity(this).build();
+    public CardEntity toEntity() {
+        return new CardEntity.Builder().dtoToEntity(this).build();
     }
 
-    public static CardDTO entityToDTO(Card entity) {
+    public static CardDTO entityToDTO(CardEntity entity) {
         return new CardDTO.Builder().entityToDTO(entity).build();
     }
 
@@ -92,7 +88,7 @@ public class CardDTO implements Comparable<CardDTO>{
             this.mImagePath = "";
         }
 
-        public Builder entityToDTO(Card entity) {
+        public Builder entityToDTO(CardEntity entity) {
             this.mCardNo = entity.getCardNo();
             this.mSeqNo = entity.getSeqNo();
             this.mContainerNo = entity.getContainerNo();

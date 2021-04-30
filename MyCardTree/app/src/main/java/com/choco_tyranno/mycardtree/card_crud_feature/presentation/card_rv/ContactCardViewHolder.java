@@ -1,10 +1,8 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
@@ -18,8 +16,10 @@ public class ContactCardViewHolder extends CardViewHolder {
         //TODO : init constructors
     }
 
-    public void bind(CardDTO data){
-        Logger.message("cardvh#bind cardNo:"+data.getCardNo());
+    @Override
+    public void bind(CardDTO data) {
+        Logger.message("CardVH#bind");
+        Logger.message("cardVH#bind cardNo:" + data.getCardNo());
         mBinding.setData(data);
         mBinding.executePendingBindings();
     }

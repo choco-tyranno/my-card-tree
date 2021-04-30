@@ -2,7 +2,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.source;
 
 import android.app.Application;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class CardRepository {
     private final String DEBUG_TAG = "!!!:";
     private final CardDAO mCardDAO;
-    private List<Card> _originData;
+    private List<CardEntity> _originData;
 
     public CardRepository(Application application) {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
@@ -26,36 +26,34 @@ public class CardRepository {
         });
     }
 
-    public List<Card> getData() {
+    public List<CardEntity> getData() {
         return _originData;
     }
 
-    public void insertCard(Card card) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            mCardDAO.insertCard(card);
-        });
+    public void insertCard(CardEntity cardEntity) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> mCardDAO.insertCard(cardEntity));
     }
 
-    public void updateCard(Card card) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            mCardDAO.updateCard(card);
-        });
+    public void updateCard(CardEntity cardEntity) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
+                mCardDAO.updateCard(cardEntity)
+        );
     }
 
     //refactoring needed
-    public void updateCards(List<Card> cardList) {
-        for (Card card : cardList) {
-            card.setSeqNo(cardList.indexOf(card));
+    public void updateCards(List<CardEntity> cardEntityList) {
+        for (CardEntity cardEntity : cardEntityList) {
+            cardEntity.setSeqNo(cardEntityList.indexOf(cardEntity));
         }
 
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            mCardDAO.updateCards(cardList);
-        });
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
+                mCardDAO.updateCards(cardEntityList)
+        );
     }
 
-    public void deleteCards(List<Card> invalidCards) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            mCardDAO.deleteSelectedCards(invalidCards);
-        });
+    public void deleteCards(List<CardEntity> invalidCardEntities) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
+            mCardDAO.deleteSelectedCards(invalidCardEntities)
+        );
     }
 }

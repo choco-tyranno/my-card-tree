@@ -14,7 +14,7 @@
             android:layout_height="66dp"
             android:background="@color/colorPrimary"
             android:iconifiedByDefault="true"
-            android:queryHint="Search card here." />
+            android:queryHint="Search cardEntity here." />
 
         <ListView
             android:id="@+id/card_search_result_list_view"

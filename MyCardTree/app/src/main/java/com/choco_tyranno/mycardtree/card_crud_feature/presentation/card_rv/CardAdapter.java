@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.Card;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
@@ -21,22 +21,25 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private final LayoutInflater inflater;
     private final List<CardDTO> mData;
     private final List<CardDTO> mPresentData;
+    private final CardTreeViewModel viewModel;
 
     public CardAdapter(Context context) {
         mData = new ArrayList<>();
         mPresentData = new ArrayList<>();
         inflater = ((MainCardActivity) context).getLayoutInflater();
+        this.viewModel = ((MainCardActivity) context).shareViewModel();
     }
 
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemCardFrameBinding binding = ItemCardFrameBinding.inflate(inflater.from(parent.getContext()), parent, false);
+        ItemCardFrameBinding binding = ItemCardFrameBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ContactCardViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        Logger.message("CardAdapter#onBVH");
         holder.bind(mPresentData.get(position));
     }
 
@@ -48,7 +51,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public void clear() {
         this.mData.clear();
         this.mPresentData.clear();
-        Logger.message("cardAdapter - cleared");
     }
 
     public void submitList(List<CardDTO> data) {
@@ -67,5 +69,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
                 mPresentData.add(dto);
         }
         Collections.sort(mPresentData);
+    }
+
+    public CardAdapter getInstance(){
+        return CardAdapter.this;
     }
 }

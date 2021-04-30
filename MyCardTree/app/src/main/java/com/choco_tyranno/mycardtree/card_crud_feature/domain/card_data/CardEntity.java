@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "table_card")
-public class Card implements Comparable<Card> {
+public class CardEntity implements Comparable<CardEntity> {
     @Ignore
     public static final int CONTACT_CARD_TYPE = 100;
 
@@ -41,7 +41,7 @@ public class Card implements Comparable<Card> {
     @ColumnInfo(name = "image_path")
     private String mImagePath;
 
-    public Card() {
+    public CardEntity() {
         init();
     }
 
@@ -61,7 +61,7 @@ public class Card implements Comparable<Card> {
 
     //Use case : dtoTOEntity
     @Ignore
-    public Card(Card.Builder builder) {
+    public CardEntity(CardEntity.Builder builder) {
         this.mCardNo = builder.mCardNo;
         this.mSeqNo = builder.mSeqNo;
         this.mContainerNo = builder.mContainerNo;
@@ -76,7 +76,7 @@ public class Card implements Comparable<Card> {
 
     //Use case : prepopulate db data
     @Ignore
-    public Card(int seqNo, int containerNo, int bossNo, int type) {
+    public CardEntity(int seqNo, int containerNo, int bossNo, int type) {
         init();
         this.mSeqNo = seqNo;
         this.mContainerNo = containerNo;
@@ -90,14 +90,8 @@ public class Card implements Comparable<Card> {
     }
 
     @Override
-    public int compareTo(Card card) {
-        if (this.mSeqNo > card.mSeqNo) {
-            return 1;
-        } else if (this.mSeqNo < card.mSeqNo) {
-            return -1;
-        } else {
-            return 0;
-        }
+    public int compareTo(CardEntity cardEntity) {
+        return Integer.compare(cardEntity.mSeqNo, this.mSeqNo);
     }
 
     public int getCardNo() {
@@ -221,7 +215,7 @@ public class Card implements Comparable<Card> {
             this.mImagePath = "";
         }
 
-        public Card.Builder dtoToEntity(CardDTO dto) {
+        public CardEntity.Builder dtoToEntity(CardDTO dto) {
             this.mCardNo = dto.getCardNo();
             this.mSeqNo = dto.getSeqNo();
             this.mContainerNo = dto.getContainerNo();
@@ -235,58 +229,58 @@ public class Card implements Comparable<Card> {
             return this;
         }
 
-        public Card.Builder cardNo(int cardNo) {
+        public CardEntity.Builder cardNo(int cardNo) {
             this.mCardNo = cardNo;
             return this;
         }
 
-        public Card.Builder seqNo(int seqNo) {
+        public CardEntity.Builder seqNo(int seqNo) {
             this.mSeqNo = seqNo;
             return this;
         }
 
-        public Card.Builder containerNo(int containerNo) {
+        public CardEntity.Builder containerNo(int containerNo) {
             this.mContainerNo = containerNo;
             return this;
         }
 
-        public Card.Builder bossNo(int bossNo) {
+        public CardEntity.Builder bossNo(int bossNo) {
             this.mBossNo = bossNo;
             return this;
         }
 
-        public Card.Builder type(int type) {
+        public CardEntity.Builder type(int type) {
             this.mType = type;
             return this;
         }
 
-        public Card.Builder title(String title) {
+        public CardEntity.Builder title(String title) {
             this.mTitle = title;
             return this;
         }
 
-        public Card.Builder subTitle(String subTitle) {
+        public CardEntity.Builder subTitle(String subTitle) {
             this.mSubtitle = subTitle;
             return this;
         }
 
-        public Card.Builder contactNumber(String contactNumber) {
+        public CardEntity.Builder contactNumber(String contactNumber) {
             this.mContactNumber = contactNumber;
             return this;
         }
 
-        public Card.Builder freeNote(String freeNote) {
+        public CardEntity.Builder freeNote(String freeNote) {
             this.mFreeNote = freeNote;
             return this;
         }
 
-        public Card.Builder imagePath(String imagePath) {
+        public CardEntity.Builder imagePath(String imagePath) {
             this.mImagePath = imagePath;
             return this;
         }
 
-        public Card build() {
-            return new Card(this);
+        public CardEntity build() {
+            return new CardEntity(this);
         }
     }
 }

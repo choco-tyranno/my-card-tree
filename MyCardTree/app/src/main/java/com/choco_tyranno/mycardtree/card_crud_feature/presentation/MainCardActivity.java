@@ -16,7 +16,7 @@ import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 import java.util.Optional;
 
 public class MainCardActivity extends AppCompatActivity {
-    //    private ContainerAdapter containerAdapter;
+    private CardTreeViewModel viewModel;
     private LinearLayoutManager layerLM;
     private ActivityMainFrameBinding binding;
     boolean isStart;
@@ -27,7 +27,8 @@ public class MainCardActivity extends AppCompatActivity {
         isStart = true;
         mainBinding();
         setContainerRv();
-        contractVm();
+        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        observeCardData();
     }
 
     private void presentInitCardContainerViews() {
@@ -47,29 +48,31 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
     }
 
-    private void contractVm() {
-        CardTreeViewModel viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
-        viewModel.loadData(() -> {
-            Optional.ofNullable(viewModel.getData()).ifPresent((liveData -> {
-                        runOnUiThread(() -> {
-                            liveData.observe(this, (cards) -> {
-                                ContainerAdapter containerAdapter = ((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter());
-                                containerAdapter.submitList(cards);
-                            });
-                            if (isStart) {
-                                presentInitCardContainerViews();
-                                isStart = false;
-                            }
-                        });
-                    })
-            );
-        });
+    private void observeCardData() {
+        viewModel.loadData(() -> Optional.ofNullable(viewModel.getData()).ifPresent((liveData -> runOnUiThread(() -> {
+            liveData.observe(this, (cards) -> {
+                boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
+                if (hasAdapter){
+                    ContainerAdapter containerAdapter = (ContainerAdapter)binding.mainScreen.mainBody.containerRecyclerview.getAdapter();
+                    containerAdapter.submitList(cards);
+                }
+            });
+            if (isStart) {
+                presentInitCardContainerViews();
+                isStart = false;
+            }
+        }))
+        ));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 //        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    public CardTreeViewModel shareViewModel(){
+        return viewModel;
     }
 
 }
