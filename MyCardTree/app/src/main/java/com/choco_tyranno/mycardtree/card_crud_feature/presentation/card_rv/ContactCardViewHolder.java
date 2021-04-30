@@ -18,8 +18,6 @@ public class ContactCardViewHolder extends CardViewHolder {
 
     @Override
     public void bind(CardDTO data) {
-        Logger.message("CardVH#bind");
-        Logger.message("cardVH#bind cardNo:" + data.getCardNo());
         mBinding.setData(data);
         mBinding.executePendingBindings();
     }

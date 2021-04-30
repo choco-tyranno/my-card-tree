@@ -24,17 +24,18 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
     }
 
-    public void bind(int containerNum, int groupingFlag, List<CardDTO> data){
+    public void bind(int containerPosition){
         RecyclerView rv = mBinding.cardRecyclerview;
         rv.setLayoutManager(null);
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
         boolean hasAdapter = Optional.ofNullable(((CardAdapter)rv.getAdapter())).isPresent();
         if (hasAdapter){
             CardAdapter cardAdapter = (CardAdapter)rv.getAdapter();
-            cardAdapter.submitList(data);
-            cardAdapter.presentCardViews(groupingFlag);
+            cardAdapter.clear();
+            cardAdapter.setContainerPosition(containerPosition);
+            cardAdapter.notifyDataSetChanged();
         } else
             throw new RuntimeException("CardContainerViewHolder#bind/recyclerview has no adapter.");
-        mBinding.setContainerNo(containerNum);
+        mBinding.setContainerNo(containerPosition+1);
     }
 }

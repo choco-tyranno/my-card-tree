@@ -27,14 +27,9 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         isStart = true;
         mainBinding();
-        setContainerRv();
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        setContainerRv();
         observeCardData();
-    }
-
-    private void presentInitCardContainerViews() {
-        Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter())
-                .ifPresent(ContainerAdapter::presentInitContainerViews);
     }
 
     private void mainBinding() {
@@ -49,20 +44,17 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
     }
 
+    // TODO : this is for auto notify using DiffUtil
     private void observeCardData() {
-        viewModel.loadData(() -> Optional.ofNullable(viewModel.getData()).ifPresent((liveData -> runOnUiThread(() -> {
-            liveData.observe(this, (cards) -> {
-                boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
-                if (hasAdapter){
-                    ContainerAdapter containerAdapter = (ContainerAdapter)binding.mainScreen.mainBody.containerRecyclerview.getAdapter();
-                    containerAdapter.submitList(cards);
-                }
-            });
-            if (isStart) {
-                presentInitCardContainerViews();
-                isStart = false;
-            }
-        }))
+        viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
+                        liveData.observe(this, (cards) -> {
+                            boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
+                            if (hasAdapter) {
+                                binding.mainScreen.mainBody.containerRecyclerview.getAdapter().notifyDataSetChanged();
+                            } else
+                                throw new RuntimeException("MainActivity#observeCardData/binding.mainScreen.mainBody.containerRecyclerview has no adapter.");
+                        })
+                ))
         ));
     }
 
@@ -72,7 +64,7 @@ public class MainCardActivity extends AppCompatActivity {
 //        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-    public CardTreeViewModel shareViewModel(){
+    public CardTreeViewModel shareViewModel() {
         return viewModel;
     }
 

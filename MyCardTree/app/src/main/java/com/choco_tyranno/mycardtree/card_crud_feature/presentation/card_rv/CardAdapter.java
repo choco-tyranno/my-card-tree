@@ -18,16 +18,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
-    private final LayoutInflater inflater;
-    private final List<CardDTO> mData;
-    private final List<CardDTO> mPresentData;
     private final CardTreeViewModel viewModel;
+    private final LayoutInflater inflater;
+    private int mContainerPosition;
 
     public CardAdapter(Context context) {
-        mData = new ArrayList<>();
-        mPresentData = new ArrayList<>();
-        inflater = ((MainCardActivity) context).getLayoutInflater();
         this.viewModel = ((MainCardActivity) context).shareViewModel();
+        inflater = ((MainCardActivity) context).getLayoutInflater();
+        mContainerPosition = -1;
     }
 
     @NonNull
@@ -39,39 +37,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        Logger.message("CardAdapter#onBVH");
-        holder.bind(mPresentData.get(position));
+        holder.bind(viewModel.getCardDTO(mContainerPosition, position));
     }
 
     @Override
     public int getItemCount() {
-        return mPresentData.size();
+        return viewModel.getPresentCardCount(mContainerPosition);
     }
 
     public void clear() {
-        this.mData.clear();
-        this.mPresentData.clear();
-    }
-
-    public void submitList(List<CardDTO> data) {
-        this.mData.addAll(data);
-    }
-
-    public void presentCardViews(int groupingFlag) {
-        setPresentDataList(groupingFlag);
-        notifyDataSetChanged();
-    }
-
-    private void setPresentDataList(int groupingFlag){
-        mPresentData.clear();
-        for (CardDTO dto : mData) {
-            if (dto.getBossNo() == groupingFlag)
-                mPresentData.add(dto);
-        }
-        Collections.sort(mPresentData);
+        this.mContainerPosition = -1;
     }
 
     public CardAdapter getInstance(){
         return CardAdapter.this;
+    }
+
+    public void setContainerPosition(int containerPosition){
+        this.mContainerPosition = containerPosition;
     }
 }
