@@ -8,5 +8,6 @@
     <dimen name="container_width">330dp</dimen>
     <dimen name="cardRecyclerview_marginTop">20dp</dimen>
     <dimen name="containerLayout_paddingBottom">20dp</dimen>
-
+    <dimen name="card_mainTextView_paddingStart">20dp</dimen>
+    <dimen name="card_mainTextView_paddingEnd">10dp</dimen>
 </resources>

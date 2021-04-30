@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class CardTreeViewModel extends AndroidViewModel {
     private final String DEBUG_TAG = "!!!:";
     private final CardRepository mCardRepository;
-    private MutableLiveData<List<List<CardDTO>>> DTOListGroupedByContainerNo;
+    private final MutableLiveData<List<List<CardDTO>>> mDTOListGroupedByContainerNo;
 
     public CardTreeViewModel(Application application) {
         super(application);
         mCardRepository = new CardRepository(application);
-        DTOListGroupedByContainerNo = new MutableLiveData<>();
+        mDTOListGroupedByContainerNo = new MutableLiveData<>();
     }
 
     public void loadData(OnDataLoadListener callback) {
@@ -36,7 +36,7 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     private void setData() {
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
-        DTOListGroupedByContainerNo.postValue(groupDataByContainerNo(allDTOs));
+        mDTOListGroupedByContainerNo.postValue(groupDataByContainerNo(allDTOs));
     }
 
     private List<List<CardDTO>> groupDataByContainerNo(List<CardDTO> data) {
@@ -54,7 +54,7 @@ public class CardTreeViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<List<CardDTO>>> getData() {
-        return DTOListGroupedByContainerNo;
+        return mDTOListGroupedByContainerNo;
     }
 
 //    public void addCard(CardDTO newData) {

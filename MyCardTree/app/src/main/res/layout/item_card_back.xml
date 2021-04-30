@@ -12,7 +12,7 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/back_cv"
+        android:id="@+id/backCard_cardView"
         android:layout_width="320dp"
         android:layout_height="140dp"
         android:checkable="true"
@@ -23,7 +23,7 @@
         app:cardElevation="12dp">
 
         <ImageView
-            android:id="@+id/card_back_img"
+            android:id="@+id/backCard_imageView"
             android:layout_width="@dimen/card_thumbnail_image_width"
             android:layout_height="@dimen/card_thumbnail_image_height"
             android:contentDescription="@string/description_image_1"

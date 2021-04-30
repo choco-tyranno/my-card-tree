@@ -23,6 +23,7 @@ public class MainCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         isStart = true;
         mainBinding();
