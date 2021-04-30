@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "table_card")
-public class CardEntity implements Comparable<CardEntity> {
+public class CardEntity{
     @Ignore
     public static final int CONTACT_CARD_TYPE = 100;
 
@@ -87,11 +87,6 @@ public class CardEntity implements Comparable<CardEntity> {
     @Ignore
     public CardDTO toDTO() {
         return new CardDTO.Builder().entityToDTO(this).build();
-    }
-
-    @Override
-    public int compareTo(CardEntity cardEntity) {
-        return Integer.compare(cardEntity.mSeqNo, this.mSeqNo);
     }
 
     public int getCardNo() {
