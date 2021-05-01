@@ -11,6 +11,10 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
 
         <variable
+            name="card_state"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
+
+        <variable
             name="view_model"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
     </data>
@@ -21,7 +25,6 @@
         android:layout_height="140dp"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible"
         app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="8dp"
         app:cardElevation="12dp">

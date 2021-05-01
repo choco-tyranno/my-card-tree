@@ -1,6 +1,7 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import android.app.Application;
+import android.util.Pair;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -8,11 +9,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +28,7 @@ public class CardTreeViewModel extends AndroidViewModel {
 //    private final List<List<CardDTO>> mPresentDataOfCardAdapters;
 
     private final List<Integer> mPresentFlags;
-    private final List<List<CardDTO>> mPresentData;
+    private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
     public CardTreeViewModel(Application application) {
         super(application);
@@ -50,7 +53,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
         List<List<CardDTO>> groupedData = groupDataByContainerNo(allDTOs);
         initContainerPresentFlags(groupedData);
-        List<List<CardDTO>> presentData = collectPresentData(groupedData);
+        List<List<Pair<CardDTO, CardState>>> presentData = collectPresentData(groupedData);
         mPresentData.clear();
         mPresentData.addAll(presentData);
         // for Search func
@@ -108,9 +111,8 @@ public class CardTreeViewModel extends AndroidViewModel {
         return basket;
     }
 
-    // TODO : prework, collect mPresentFlags required.
-    private List<List<CardDTO>> collectPresentData(List<List<CardDTO>> disorderedData) {
-        List<List<CardDTO>> collectBasket = new ArrayList<>();
+    private List<List<Pair<CardDTO, CardState>>> collectPresentData(List<List<CardDTO>> disorderedData) {
+        List<List<Pair<CardDTO, CardState>>> collectBasket = new ArrayList<>();
         boolean start = true;
         boolean hasNext = false;
         for (List<CardDTO> data : disorderedData) {
@@ -123,15 +125,16 @@ public class CardTreeViewModel extends AndroidViewModel {
         return collectBasket;
     }
 
-    private boolean findPresentData(List<List<CardDTO>> basket, List<CardDTO> disorderedData, int orderFlag) {
-        List<CardDTO> smallBasket = new ArrayList<>();
+    private boolean findPresentData(List<List<Pair<CardDTO, CardState>>> basket, List<CardDTO> disorderedData, int orderFlag) {
+        List<Pair<CardDTO, CardState>> smallBasket = new ArrayList<>();
         for (CardDTO dto : disorderedData){
             if(dto.getBossNo()==orderFlag){
-                smallBasket.add(dto);
+                Pair<CardDTO, CardState> cardDataPair = Pair.create(dto,new CardState(CardState.FRONT_DISPLAYING));
+                smallBasket.add(cardDataPair);
             }
         }
         if (!smallBasket.isEmpty()){
-            Collections.sort(smallBasket);
+            smallBasket.sort(Comparator.comparing(p -> p.first));
             basket.add(smallBasket);
         }
         return !smallBasket.isEmpty();
@@ -158,7 +161,11 @@ public class CardTreeViewModel extends AndroidViewModel {
     }
 
     public CardDTO getCardDTO(int containerPosition, int cardPosition){
-        return mPresentData.get(containerPosition).get(cardPosition);
+        return mPresentData.get(containerPosition).get(cardPosition).first;
+    }
+
+    public CardState getCardState(int containerPosition, int cardPosition){
+        return mPresentData.get(containerPosition).get(cardPosition).second;
     }
 
 

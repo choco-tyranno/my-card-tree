@@ -6,6 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="cardState"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
 
         <variable
             name="data"
@@ -22,11 +25,18 @@
 
         <include
             layout="@layout/item_card_back"
-            bind:card="@{data}" />
+            bind:card="@{data}"
+            android:visibility="@{cardState.Back.visibility}"
+            android:alpha="@{cardState.Back.alpha}"
+            android:rotationX="@{cardState.Back.rotationX}" />
 
         <include
             layout="@layout/item_card_front"
-            bind:card="@{data}" />
+            bind:card="@{data}"
+            android:visibility="@{cardState.Front.visibility}"
+            android:alpha="@{cardState.Front.alpha}"
+            android:rotationX="@{cardState.Front.rotationX}"
+            />
 
     </FrameLayout>
 </layout>
