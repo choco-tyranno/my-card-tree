@@ -24,6 +24,9 @@ public class CardState {
     }
 
     public static class Front {
+        public static final int READ_MODE = 0;
+        public static final int EDIT_MODE = 1;
+        public int mode;
         public float alpha;
         public float rotationX;
         public int visibility;
@@ -33,6 +36,7 @@ public class CardState {
                 toVisible();
             else
                 toInvisible();
+            toReadMode();
         }
 
         private void toVisible(){
@@ -40,10 +44,19 @@ public class CardState {
             this.rotationX = 0f;
             this.visibility = View.VISIBLE;
         }
+
         private void toInvisible(){
             this.alpha = 0.0f;
             this.rotationX = 0f;
             this.visibility = View.INVISIBLE;
+        }
+
+        private void toReadMode(){
+            this.mode = READ_MODE;
+        }
+
+        private void toEditMode(){
+            this.mode = EDIT_MODE;
         }
 
         public int getVisibility() {
@@ -56,6 +69,10 @@ public class CardState {
 
         public float getRotationX() {
             return rotationX;
+        }
+
+        public int getMode() {
+            return mode;
         }
     }
 

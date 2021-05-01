@@ -5,17 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="card"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
 
         <variable
-            name="card_state"
+            name="cardState"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
 
         <variable
-            name="view_model"
+            name="viewModel"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
     </data>
 
@@ -33,6 +34,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/frontCard_titleEditText"
+            android:visibility="@{cardState.Front.mode==cardState.Front.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="150dp"
             android:layout_height="27dp"
             android:layout_gravity="bottom"
@@ -46,6 +48,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/frontCard_contactNumberEditText"
+            android:visibility="@{cardState.Front.mode==cardState.Front.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="210dp"
             android:layout_height="27dp"
             android:layout_gravity="top"
@@ -59,7 +62,8 @@
             android:textSize="24sp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/frontCard_saveBtn"
+            android:id="@+id/frontCard_editTool_saveBtn"
+            android:visibility="@{cardState.Front.mode==cardState.Front.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="90dp"
             android:layout_height="50dp"
@@ -71,7 +75,8 @@
             app:cornerRadius="20dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/frontCard_cancelBtn"
+            android:id="@+id/frontCard_editTool_cancelBtn"
+            android:visibility="@{cardState.Front.mode==cardState.Front.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="90dp"
             android:layout_height="50dp"
@@ -83,9 +88,10 @@
             app:cornerRadius="20dp" />
 
 
-        <!-- view mode start-->
+        <!-- read mode start-->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/frontCard_contactNumberTextView"
+            android:visibility="@{cardState.Front.mode==cardState.Front.READ_MODE? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="210dp"
             android:layout_height="27dp"
             android:layout_gravity="top"
@@ -102,6 +108,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/frontCard_titleTextView"
+            android:visibility="@{cardState.Front.mode==cardState.Front.READ_MODE? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="150dp"
             android:layout_height="27dp"
             android:layout_gravity="bottom"

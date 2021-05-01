@@ -11,8 +11,12 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
 
         <variable
-            name="data"
+            name="card"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+
+        <variable
+            name="viewModel"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
     </data>
 
     <FrameLayout
@@ -25,14 +29,15 @@
 
         <include
             layout="@layout/item_card_back"
-            bind:card="@{data}"
+            bind:card="@{card}"
             android:visibility="@{cardState.Back.visibility}"
             android:alpha="@{cardState.Back.alpha}"
             android:rotationX="@{cardState.Back.rotationX}" />
 
         <include
             layout="@layout/item_card_front"
-            bind:card="@{data}"
+            bind:card="@{card}"
+            bind:cardState="@{cardState}"
             android:visibility="@{cardState.Front.visibility}"
             android:alpha="@{cardState.Front.alpha}"
             android:rotationX="@{cardState.Front.rotationX}"

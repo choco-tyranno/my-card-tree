@@ -17,9 +17,9 @@ public class ContactCardViewHolder extends CardViewHolder {
     }
 
     @Override
-    public void bind(CardDTO data, CardState cardState) {
+    public void bind(CardDTO cardDTO, CardState cardState) {
         mBinding.setCardState(cardState);
-        mBinding.setData(data);
+        mBinding.setCard(cardDTO);
         mBinding.executePendingBindings();
     }
 }
