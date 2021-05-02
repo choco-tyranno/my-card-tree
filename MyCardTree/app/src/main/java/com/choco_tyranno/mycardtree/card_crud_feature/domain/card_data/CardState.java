@@ -1,12 +1,24 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.BindingMethod;
+import androidx.databinding.ObservableInt;
+
+import com.choco_tyranno.mycardtree.BR;
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.generated.callback.OnCheckedChangeListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class CardState {
     public static int FRONT_DISPLAYING = 0;
     public static int BACK_DISPLAYING = 1;
-    public Front front;
-    public Back back;
+    private Front front;
+    private Back back;
 
     public CardState(int initCardVisibility) {
         this.front = new Front(initCardVisibility);
@@ -23,15 +35,15 @@ public class CardState {
         this.front.toInvisible();
     }
 
-    public static class Front {
+    public static class Front extends BaseObservable {
         public static final int READ_MODE = 0;
         public static final int EDIT_MODE = 1;
-        public int mode;
-        public float alpha;
-        public float rotationX;
-        public int visibility;
+        private int mode;
+        private float alpha;
+        private float rotationX;
+        private int visibility;
 
-        public Front(int initCardVisibility) {
+        private Front(int initCardVisibility) {
             if (initCardVisibility == CardState.FRONT_DISPLAYING)
                 toVisible();
             else
@@ -52,11 +64,16 @@ public class CardState {
         }
 
         private void toReadMode(){
-            this.mode = READ_MODE;
+            setMode(READ_MODE);
         }
 
         private void toEditMode(){
-            this.mode = EDIT_MODE;
+            setMode(EDIT_MODE);
+        }
+
+        private void setMode(int mode){
+            this.mode = mode;
+            notifyPropertyChanged(BR.mode);
         }
 
         public int getVisibility() {
@@ -71,29 +88,37 @@ public class CardState {
             return rotationX;
         }
 
+        @Bindable
         public int getMode() {
             return mode;
+        }
+
+        public void onSwitchChanged(CardDTO dto, boolean isOn){
+            if (isOn)
+                toEditMode();
+            else
+                toReadMode();
         }
     }
 
     public static class Back {
-        public float alpha;
-        public float rotationX;
-        public int visibility;
+        private float alpha;
+        private float rotationX;
+        private int visibility;
 
-        public Back(int initCardVisibility) {
+        private Back(int initCardVisibility) {
             if (initCardVisibility == CardState.BACK_DISPLAYING)
                 toVisible();
             else
                 toInvisible();
         }
 
-        private void toVisible(){
+        public void toVisible(){
             this.alpha = 1.0f;
             this.rotationX = 0f;
             this.visibility = View.VISIBLE;
         }
-        private void toInvisible(){
+        public void toInvisible(){
             this.alpha = 0f;
             this.rotationX = 0f;
             this.visibility = View.INVISIBLE;

@@ -36,8 +36,10 @@
 
         <include
             layout="@layout/item_card_front"
+            bind:viewModel="@{viewModel}"
             bind:card="@{card}"
             bind:cardState="@{cardState}"
+            bind:frontState="@{cardState.front}"
             android:visibility="@{cardState.Front.visibility}"
             android:alpha="@{cardState.Front.alpha}"
             android:rotationX="@{cardState.Front.rotationX}"

@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
@@ -142,10 +143,6 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     public LiveData<List<List<CardDTO>>> getAllLiveData() {
         return mListLiveDataByContainer;
-    }
-
-    public void getPresentDataBy() {
-
     }
 
     /* Container Level */

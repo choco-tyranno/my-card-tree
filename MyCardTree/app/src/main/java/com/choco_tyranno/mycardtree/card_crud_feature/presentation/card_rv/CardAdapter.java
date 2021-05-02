@@ -37,7 +37,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int cardPosition) {
-        holder.bind(viewModel.getCardDTO(mContainerPosition, cardPosition), viewModel.getCardState(mContainerPosition, cardPosition));
+        holder.bind(viewModel, viewModel.getCardDTO(mContainerPosition, cardPosition), viewModel.getCardState(mContainerPosition, cardPosition));
     }
 
     @Override

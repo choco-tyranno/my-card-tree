@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
 public class ContactCardViewHolder extends CardViewHolder {
@@ -17,9 +18,12 @@ public class ContactCardViewHolder extends CardViewHolder {
     }
 
     @Override
-    public void bind(CardDTO cardDTO, CardState cardState) {
+    public void bind(CardTreeViewModel viewModel, CardDTO cardDTO, CardState cardState) {
+        mBinding.setViewModel(viewModel);
         mBinding.setCardState(cardState);
         mBinding.setCard(cardDTO);
         mBinding.executePendingBindings();
     }
+
+
 }
