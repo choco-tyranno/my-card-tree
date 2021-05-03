@@ -22,11 +22,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CardTreeViewModel extends AndroidViewModel {
-    private final String DEBUG_TAG = "!!!:";
     private final CardRepository mCardRepository;
     private final MutableLiveData<List<List<CardDTO>>> mListLiveDataByContainer;
     private final List<List<CardDTO>> allData;
-//    private final List<List<CardDTO>> mPresentDataOfCardAdapters;
 
     private final List<Integer> mPresentFlags;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
@@ -36,7 +34,6 @@ public class CardTreeViewModel extends AndroidViewModel {
         mCardRepository = new CardRepository(application);
         mListLiveDataByContainer = new MutableLiveData<>();
 
-//        mPresentDataOfCardAdapters = new ArrayList<>();
         mPresentFlags = new ArrayList<>();
         allData = new ArrayList<>();
 

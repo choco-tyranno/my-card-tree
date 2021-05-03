@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?><!-- member_icon image : Copyright (c) freepik  http://www.freepik.com  -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
 
     <data>
+
+        <variable
+            name="cardRootReference"
+            type="com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl" />
+
         <variable
             name="cardState"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
@@ -28,22 +32,24 @@
         android:clipToPadding="false">
 
         <include
+            android:id="@+id/cardBackLayout"
             layout="@layout/item_card_back"
-            bind:card="@{card}"
-            android:visibility="@{cardState.Back.visibility}"
             android:alpha="@{cardState.Back.alpha}"
-            android:rotationX="@{cardState.Back.rotationX}" />
+            android:rotationX="@{cardState.Back.rotationX}"
+            android:visibility="@{cardState.Back.visibility}"
+            bind:card="@{card}" />
 
         <include
+            android:id="@+id/cardFrontLayout"
             layout="@layout/item_card_front"
-            bind:viewModel="@{viewModel}"
+            android:alpha="@{cardState.Front.alpha}"
+            android:rotationX="@{cardState.Front.rotationX}"
+            android:visibility="@{cardState.Front.visibility}"
+            bind:CardRootReference="@{cardRootReference}"
             bind:card="@{card}"
             bind:cardState="@{cardState}"
             bind:frontState="@{cardState.front}"
-            android:visibility="@{cardState.Front.visibility}"
-            android:alpha="@{cardState.Front.alpha}"
-            android:rotationX="@{cardState.Front.rotationX}"
-            />
+            bind:viewModel="@{viewModel}" />
 
     </FrameLayout>
 </layout>

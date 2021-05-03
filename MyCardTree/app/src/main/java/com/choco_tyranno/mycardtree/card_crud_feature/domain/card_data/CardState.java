@@ -3,6 +3,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
@@ -11,7 +12,10 @@ import androidx.databinding.ObservableInt;
 
 import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 import com.choco_tyranno.mycardtree.generated.callback.OnCheckedChangeListener;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class CardState {
@@ -76,6 +80,23 @@ public class CardState {
             notifyPropertyChanged(BR.mode);
         }
 
+        public void onSwitchChanged(CardDTO dto, boolean isOn){
+            if (isOn)
+                toEditMode();
+            else
+                toReadMode();
+        }
+
+        public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding){
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
+            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
+            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
+            titleEditText.setText("");
+            contactNumberEditText.setText("");
+            switchView.setChecked(false);
+        }
+
+        //Getter
         public int getVisibility() {
             return visibility;
         }
@@ -88,16 +109,10 @@ public class CardState {
             return rotationX;
         }
 
+        //BR. id create
         @Bindable
         public int getMode() {
             return mode;
-        }
-
-        public void onSwitchChanged(CardDTO dto, boolean isOn){
-            if (isOn)
-                toEditMode();
-            else
-                toReadMode();
         }
     }
 
