@@ -6,17 +6,14 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.BindingAdapter;
-import androidx.databinding.BindingMethod;
-import androidx.databinding.ObservableInt;
 
 import com.choco_tyranno.mycardtree.BR;
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
-import com.choco_tyranno.mycardtree.generated.callback.OnCheckedChangeListener;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CardState {
     public static int FRONT_DISPLAYING = 0;
@@ -29,12 +26,12 @@ public class CardState {
         this.back = new Back(initCardVisibility);
     }
 
-    public void displayFront(){
+    public void displayFront() {
         this.front.toVisible();
         this.back.toInvisible();
     }
 
-    public void displayBack(){
+    public void displayBack() {
         this.back.toVisible();
         this.front.toInvisible();
     }
@@ -55,44 +52,82 @@ public class CardState {
             toReadMode();
         }
 
-        private void toVisible(){
+        private void toVisible() {
             this.alpha = 1.0f;
             this.rotationX = 0f;
             this.visibility = View.VISIBLE;
         }
 
-        private void toInvisible(){
+        private void toInvisible() {
             this.alpha = 0.0f;
             this.rotationX = 0f;
             this.visibility = View.INVISIBLE;
         }
 
-        private void toReadMode(){
+        private void toReadMode() {
             setMode(READ_MODE);
         }
 
-        private void toEditMode(){
+        private void toEditMode() {
             setMode(EDIT_MODE);
         }
 
-        private void setMode(int mode){
+        private void setMode(int mode) {
             this.mode = mode;
             notifyPropertyChanged(BR.mode);
         }
 
-        public void onSwitchChanged(CardDTO dto, boolean isOn){
+        public void onSwitchChanged(CardDTO dto, boolean isOn) {
             if (isOn)
                 toEditMode();
             else
                 toReadMode();
         }
 
-        public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding){
+        public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO, CardTreeViewModel viewModel) {
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
-            titleEditText.setText("");
-            contactNumberEditText.setText("");
+
+            AtomicReference<String> textOfTitleEditText = new AtomicReference<>("");
+            Optional.ofNullable(titleEditText.getText()).ifPresent(text->{
+                textOfTitleEditText.set(text.toString());
+            });
+
+            AtomicReference<String> textOfContactNumberEditText = new AtomicReference<>("");
+            Optional.ofNullable(contactNumberEditText.getText()).ifPresent(text->{
+                textOfContactNumberEditText.set(text.toString());
+            });
+
+            boolean isTitleChanged = false;
+            boolean isContactNumberChanged = false;
+
+            if (!cardDTO.getTitle().equals(textOfTitleEditText.get())){
+                isTitleChanged = true;
+                cardDTO.setTitle(textOfTitleEditText.get());
+            }
+
+            if (!cardDTO.getContactNumber().equals(textOfContactNumberEditText.get())){
+                isContactNumberChanged = true;
+                cardDTO.setContactNumber(textOfContactNumberEditText.get());
+            }
+
+            if (isTitleChanged||isContactNumberChanged){
+                viewModel.updateCard(cardDTO);
+                Toast.makeText(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                switchView.setChecked(false);
+                return;
+            }
+
+            Toast.makeText(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO) {
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
+            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
+            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
+            titleEditText.setText(cardDTO.getTitle());
+            contactNumberEditText.setText(cardDTO.getContactNumber());
             switchView.setChecked(false);
         }
 
@@ -128,12 +163,13 @@ public class CardState {
                 toInvisible();
         }
 
-        public void toVisible(){
+        public void toVisible() {
             this.alpha = 1.0f;
             this.rotationX = 0f;
             this.visibility = View.VISIBLE;
         }
-        public void toInvisible(){
+
+        public void toInvisible() {
             this.alpha = 0f;
             this.rotationX = 0f;
             this.visibility = View.INVISIBLE;

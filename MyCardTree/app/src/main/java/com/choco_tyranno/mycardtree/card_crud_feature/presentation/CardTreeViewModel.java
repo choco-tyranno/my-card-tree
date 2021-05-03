@@ -163,10 +163,11 @@ public class CardTreeViewModel extends AndroidViewModel {
     }
 
 
+    public void updateCard(CardDTO cardDTO){
+        mCardRepository.updateCard(cardDTO.toEntity());
+    }
+
 //    public void addCard(CardDTO newData) {
-//        List<CardDTO> oldData = _dtoCards.getValue();
-//        oldData.add(newData);
-//        _dtoCards.setValue(oldData);
 //        mCardRepository.insertCard(newData.toEntity());
 //    }
 

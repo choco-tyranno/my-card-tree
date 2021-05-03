@@ -1,44 +1,49 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
-public class CardDTO implements Comparable<CardDTO>{
-    private ObservableInt mCardNo;
+import com.choco_tyranno.mycardtree.BR;
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 
-    private ObservableInt mSeqNo;
+public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
+    private int mCardNo;
 
-    private ObservableInt mContainerNo;
+    private int mSeqNo;
 
-    private ObservableInt mBossNo;
+    private int mContainerNo;
 
-    private ObservableInt mType;
+    private int mBossNo;
 
-    private ObservableField<String> mTitle;
+    private int mType;
 
-    private ObservableField<String> mSubtitle;
+    private String mTitle;
 
-    private ObservableField<String> mContactNumber;
+    private String mSubtitle;
 
-    private ObservableField<String> mFreeNote;
+    private String mContactNumber;
 
-    private ObservableField<String> mImagePath;
+    private String mFreeNote;
+
+    private String mImagePath;
 
     CardDTO() {
 
     }
 
     CardDTO(Builder builder) {
-        this.mCardNo = new ObservableInt(builder.mCardNo);
-        this.mSeqNo = new ObservableInt(builder.mSeqNo);
-        this.mContainerNo = new ObservableInt(builder.mContainerNo);
-        this.mBossNo = new ObservableInt(builder.mBossNo);
-        this.mType = new ObservableInt(builder.mType);
-        this.mTitle = new ObservableField<>(builder.mTitle);
-        this.mSubtitle = new ObservableField<>(builder.mSubtitle);
-        this.mContactNumber = new ObservableField<>(builder.mContactNumber);
-        this.mFreeNote = new ObservableField<>(builder.mFreeNote);
-        this.mImagePath = new ObservableField<>(builder.mImagePath);
+        this.mCardNo = builder.mCardNo;
+        this.mSeqNo = builder.mSeqNo;
+        this.mContainerNo = builder.mContainerNo;
+        this.mBossNo = builder.mBossNo;
+        this.mType = builder.mType;
+        this.mTitle = builder.mTitle;
+        this.mSubtitle = builder.mSubtitle;
+        this.mContactNumber = builder.mContactNumber;
+        this.mFreeNote = builder.mFreeNote;
+        this.mImagePath = builder.mImagePath;
     }
 
     public CardEntity toEntity() {
@@ -152,83 +157,104 @@ public class CardDTO implements Comparable<CardDTO>{
         }
     }
 
+    @Bindable
     public int getCardNo() {
-        return mCardNo.get();
+        return mCardNo;
     }
 
     public void setCardNo(int cardNo) {
-        this.mCardNo.set(cardNo);
+        this.mCardNo = cardNo;
+        notifyPropertyChanged(BR.cardNo);
     }
 
+    @Bindable
     public int getSeqNo() {
-        return mSeqNo.get();
+        return mSeqNo;
     }
 
     public void setSeqNo(int seqNo) {
-        this.mSeqNo.set(seqNo);
+        this.mSeqNo = seqNo;
+        notifyPropertyChanged(BR.seqNo);
     }
 
+    @Bindable
     public int getContainerNo() {
-        return mContainerNo.get();
+        return mContainerNo;
     }
 
     public void setContainerNo(int containerNo) {
-        this.mContainerNo.set(containerNo);
+        this.mContainerNo = containerNo;
+        notifyPropertyChanged(BR.containerNo);
     }
 
+    @Bindable
     public int getBossNo() {
-        return mBossNo.get();
+        return mBossNo;
     }
 
     public void setBossNo(int bossNo) {
-        this.mBossNo.set(bossNo);
+        this.mBossNo = bossNo;
+        notifyPropertyChanged(BR.bossNo);
     }
 
+    @Bindable
     public int getType() {
-        return mType.get();
+        return mType;
     }
 
     public void setType(int type) {
-        this.mType.set(type);
+        this.mType = type;
+        notifyPropertyChanged(BR.type);
     }
 
+    @Bindable
     public String getTitle() {
-        return mTitle.get();
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.mTitle.set(title);
+        this.mTitle = title;
+        notifyPropertyChanged(BR.title);
     }
 
+    @Bindable
     public String getSubtitle() {
-        return mSubtitle.get();
+        return mSubtitle;
     }
 
     public void setSubtitle(String subTitle) {
-        this.mSubtitle.set(subTitle);
+        this.mSubtitle = subTitle;
+        notifyPropertyChanged(BR.subtitle);
     }
 
+    @Bindable
     public String getContactNumber() {
-        return mContactNumber.get();
+        return mContactNumber;
     }
 
     public void setContactNumber(String contactNumber) {
-        this.mContactNumber.set(contactNumber);
+        Logger.message("CardDTO#setContactNumber"+contactNumber);
+        this.mContactNumber = contactNumber;
+        notifyPropertyChanged(BR.contactNumber);
     }
 
+    @Bindable
     public String getFreeNote() {
-        return mFreeNote.get();
+        return mFreeNote;
     }
 
     public void setFreeNote(String freeNote) {
-        this.mFreeNote.set(freeNote);
+        this.mFreeNote = freeNote;
+        notifyPropertyChanged(BR.freeNote);
     }
 
+    @Bindable
     public String getImagePath() {
-        return mImagePath.get();
+        return mImagePath;
     }
 
     public void setImagePath(String imagePath) {
-        this.mImagePath.set(imagePath);
+        this.mImagePath = imagePath;
+        notifyPropertyChanged(BR.imagePath);
     }
 }

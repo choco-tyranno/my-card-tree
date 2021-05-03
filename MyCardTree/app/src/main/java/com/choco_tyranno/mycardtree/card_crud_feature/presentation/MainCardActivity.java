@@ -48,6 +48,7 @@ public class MainCardActivity extends AppCompatActivity {
     private void observeCardData() {
         viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
                         liveData.observe(this, (cards) -> {
+                            Logger.message("allLiveData - The Data changed");
                             boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
                             if (hasAdapter) {
                                 binding.mainScreen.mainBody.containerRecyclerview.getAdapter().notifyDataSetChanged();
