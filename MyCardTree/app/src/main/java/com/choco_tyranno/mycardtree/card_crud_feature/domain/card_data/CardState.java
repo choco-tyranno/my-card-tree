@@ -1,5 +1,6 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
+import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -8,18 +9,21 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.mycardtree.BR;
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class CardState {
     public static int FRONT_DISPLAYING = 0;
     public static int BACK_DISPLAYING = 1;
-    private Front front;
-    private Back back;
+    private final Front front;
+    private final Back back;
 
     public CardState(int initCardVisibility) {
         this.front = new Front(initCardVisibility);
@@ -77,6 +81,16 @@ public class CardState {
             notifyPropertyChanged(BR.mode);
         }
 
+        public void onContactNumberEditTextChanged(ItemCardFrameBindingImpl cardFrameBinding){
+            AtomicReference<String> editTextValue = new AtomicReference<>();
+            Optional.ofNullable(cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.getText()).ifPresent((text)->editTextValue.set(text.toString()));
+            String formatNumber = PhoneNumberUtils.formatNumber(editTextValue.get(), Locale.getDefault().getCountry());
+            if(editTextValue.get().equals(formatNumber))
+                return;
+            cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.setText(formatNumber);
+            cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.setSelection(formatNumber.length());
+        }
+
         public void onSwitchChanged(CardDTO dto, boolean isOn) {
             if (isOn)
                 toEditMode();
@@ -90,14 +104,14 @@ public class CardState {
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
 
             AtomicReference<String> textOfTitleEditText = new AtomicReference<>("");
-            Optional.ofNullable(titleEditText.getText()).ifPresent(text->{
-                textOfTitleEditText.set(text.toString());
-            });
+            Optional.ofNullable(titleEditText.getText()).ifPresent(text->
+                textOfTitleEditText.set(text.toString())
+            );
 
             AtomicReference<String> textOfContactNumberEditText = new AtomicReference<>("");
-            Optional.ofNullable(contactNumberEditText.getText()).ifPresent(text->{
-                textOfContactNumberEditText.set(text.toString());
-            });
+            Optional.ofNullable(contactNumberEditText.getText()).ifPresent(text->
+                textOfContactNumberEditText.set(text.toString())
+            );
 
             boolean isTitleChanged = false;
             boolean isContactNumberChanged = false;

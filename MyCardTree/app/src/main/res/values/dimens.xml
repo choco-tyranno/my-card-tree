@@ -8,6 +8,22 @@
     <dimen name="container_width">330dp</dimen>
     <dimen name="cardRecyclerview_marginTop">20dp</dimen>
     <dimen name="containerLayout_paddingBottom">20dp</dimen>
-    <dimen name="card_mainTextView_paddingStart">20dp</dimen>
-    <dimen name="card_mainTextView_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_titleTextView_paddingStart">20dp</dimen>
+    <dimen name="cardFront_titleTextView_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_titleTextView_marginStart">20dp</dimen>
+    <dimen name="cardFront_titleTextView_marginBottom">20dp</dimen>
+    <dimen name="cardFront_contactNumberTextView_paddingStart">20dp</dimen>
+    <dimen name="cardFront_contactNumberTextView_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_contactNumberTextView_marginStart">20dp</dimen>
+    <dimen name="cardFront_contactNumberTextView_marginBottom">20dp</dimen>
+    <dimen name="cardFront_titleEditText_paddingStart">20dp</dimen>
+    <dimen name="cardFront_titleEditText_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_titleEditText_marginStart">20dp</dimen>
+    <dimen name="cardFront_titleEditText_marginBottom">20dp</dimen>
+    <dimen name="cardFront_contactNumberEditText_paddingStart">19dp</dimen>
+    <dimen name="cardFront_contactNumberEditText_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_contactNumberEditText_marginStart">20dp</dimen>
+    <dimen name="cardFront_contactNumberEditText_marginBottom">20dp</dimen>
+    android:layout_marginStart="21dp"
+    android:layout_marginBottom="49dp"
 </resources>
