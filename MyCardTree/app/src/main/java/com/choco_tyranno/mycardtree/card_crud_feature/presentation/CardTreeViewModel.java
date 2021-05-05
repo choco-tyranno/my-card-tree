@@ -1,8 +1,13 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import android.app.Application;
+import android.content.ClipData;
 import android.util.Pair;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,15 +34,24 @@ public class CardTreeViewModel extends AndroidViewModel {
     private final List<Integer> mPresentFlags;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
+    public View.OnTouchListener onTouchListenerForAddCardUtilFab;
+
     public CardTreeViewModel(Application application) {
         super(application);
         mCardRepository = new CardRepository(application);
         mListLiveDataByContainer = new MutableLiveData<>();
-
         mPresentFlags = new ArrayList<>();
         allData = new ArrayList<>();
-
         mPresentData = new ArrayList<>();
+        onTouchListenerForAddCardUtilFab = (view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                view.startDragAndDrop(data, shadowBuilder, view, 0);
+                return true;
+            }
+            return false;
+        };
     }
 
     public void loadData(OnDataLoadListener callback) {
@@ -114,7 +128,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         boolean start = true;
         boolean hasNext = false;
         for (List<CardDTO> data : disorderedData) {
-            if (hasNext||start) {
+            if (hasNext || start) {
                 hasNext = findPresentData(collectBasket, data, mPresentFlags.get(disorderedData.indexOf(data)));
                 start = false;
             } else
@@ -125,13 +139,13 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     private boolean findPresentData(List<List<Pair<CardDTO, CardState>>> basket, List<CardDTO> disorderedData, int orderFlag) {
         List<Pair<CardDTO, CardState>> smallBasket = new ArrayList<>();
-        for (CardDTO dto : disorderedData){
-            if(dto.getBossNo()==orderFlag){
-                Pair<CardDTO, CardState> cardDataPair = Pair.create(dto,new CardState(CardState.FRONT_DISPLAYING));
+        for (CardDTO dto : disorderedData) {
+            if (dto.getBossNo() == orderFlag) {
+                Pair<CardDTO, CardState> cardDataPair = Pair.create(dto, new CardState(CardState.FRONT_DISPLAYING));
                 smallBasket.add(cardDataPair);
             }
         }
-        if (!smallBasket.isEmpty()){
+        if (!smallBasket.isEmpty()) {
             smallBasket.sort(Comparator.comparing(p -> p.first));
             basket.add(smallBasket);
         }
@@ -148,22 +162,21 @@ public class CardTreeViewModel extends AndroidViewModel {
     }
 
     /* Card Level */
-    public int getPresentCardCount(int containerPosition){
-        if (containerPosition!=-1)
-        return mPresentData.get(containerPosition).size();
+    public int getPresentCardCount(int containerPosition) {
+        if (containerPosition != -1)
+            return mPresentData.get(containerPosition).size();
         return 0;
     }
 
-    public CardDTO getCardDTO(int containerPosition, int cardPosition){
+    public CardDTO getCardDTO(int containerPosition, int cardPosition) {
         return mPresentData.get(containerPosition).get(cardPosition).first;
     }
 
-    public CardState getCardState(int containerPosition, int cardPosition){
+    public CardState getCardState(int containerPosition, int cardPosition) {
         return mPresentData.get(containerPosition).get(cardPosition).second;
     }
 
-
-    public void updateCard(CardDTO cardDTO){
+    public void updateCard(CardDTO cardDTO) {
         mCardRepository.updateCard(cardDTO.toEntity());
     }
 
@@ -175,5 +188,14 @@ public class CardTreeViewModel extends AndroidViewModel {
 ////      _dtoCards.setValue() -> trigger onChanged
 //        mCardRepository.updateCard(modData.toEntity());
 //    }
+
+    @BindingAdapter("onTouchListener")
+    public static void setOnTouchListener(View view, View.OnTouchListener listener){
+        view.setOnTouchListener(listener);
+    }
+
+    public View.OnTouchListener getOnTouchListener(){
+        return onTouchListenerForAddCardUtilFab;
+    }
 
 }

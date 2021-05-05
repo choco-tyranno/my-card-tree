@@ -1,17 +1,20 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainBodyBinding;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Optional;
 
@@ -23,14 +26,15 @@ public class MainCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         isStart = true;
         mainBinding();
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        binding.mainScreen.setViewModel(viewModel);
         setContainerRv();
         observeCardData();
     }
+
 
     private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
@@ -43,6 +47,11 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
     }
+
+//    private void setNewCardUtilFab(){
+//        FloatingActionButton addNewCardUtilFab = binding.mainScreen.addNewCardUtilFab;
+//
+//    }
 
     // TODO : this is for auto notify using DiffUtil
     private void observeCardData() {
