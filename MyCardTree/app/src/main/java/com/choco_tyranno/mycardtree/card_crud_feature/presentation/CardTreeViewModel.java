@@ -2,10 +2,10 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import android.app.Application;
 import android.content.ClipData;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.util.Pair;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,7 +20,6 @@ import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardReposito
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,8 @@ public class CardTreeViewModel extends AndroidViewModel {
     private final List<Integer> mPresentFlags;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
-    public View.OnTouchListener onTouchListenerForAddCardUtilFab;
+//    private final View.OnTouchListener onTouchListenerForAddCardUtilFab;
+    private final View.OnLongClickListener onLongListenerForAddCardUtilFab;
 
     public CardTreeViewModel(Application application) {
         super(application);
@@ -43,15 +43,25 @@ public class CardTreeViewModel extends AndroidViewModel {
         mPresentFlags = new ArrayList<>();
         allData = new ArrayList<>();
         mPresentData = new ArrayList<>();
-        onTouchListenerForAddCardUtilFab = (view, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                view.startDragAndDrop(data, shadowBuilder, view, 0);
+        onLongListenerForAddCardUtilFab = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                v.startDragAndDrop(ClipData.newPlainText("",""),new CardShadow(v),null,0);
                 return true;
             }
-            return false;
         };
+
+//        onTouchListenerForAddCardUtilFab = (view, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                boolean isExist = Optional.ofNullable(view).isPresent();
+//                if(isExist){
+//                    CardShadow shadowBuilder = new CardShadow(view);
+//                    view.startDragAndDrop(ClipData.newPlainText("", ""), shadowBuilder, null, 0);
+//                    return true;
+//                }
+//            }
+//            return false;
+//        };
     }
 
     public void loadData(OnDataLoadListener callback) {
@@ -194,8 +204,16 @@ public class CardTreeViewModel extends AndroidViewModel {
         view.setOnTouchListener(listener);
     }
 
-    public View.OnTouchListener getOnTouchListener(){
-        return onTouchListenerForAddCardUtilFab;
+    @BindingAdapter("onLongClickListener")
+    public static void setOnLongClickListener(View view, View.OnLongClickListener listener){
+        view.setOnLongClickListener(listener);
+    }
+
+//    public View.OnTouchListener getOnTouchListener(){
+//        return onTouchListenerForAddCardUtilFab;
+//    }
+    public View.OnLongClickListener getOnLongListenerForAddCardUtilFab(){
+        return onLongListenerForAddCardUtilFab;
     }
 
 }
