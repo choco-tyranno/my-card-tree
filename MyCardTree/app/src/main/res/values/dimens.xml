@@ -29,7 +29,7 @@
     <dimen name="cardFront_contactNumberEditText_marginStart">20dp</dimen>
     <dimen name="cardFront_contactNumberEditText_marginBottom">20dp</dimen>
 
-    <dimen name="createCardFab_shadow_width">100dp</dimen>
+    <dimen name="createCardFab_shadow_width">230dp</dimen>
     <dimen name="createCardFab_shadow_height">100dp</dimen>
 
 </resources>

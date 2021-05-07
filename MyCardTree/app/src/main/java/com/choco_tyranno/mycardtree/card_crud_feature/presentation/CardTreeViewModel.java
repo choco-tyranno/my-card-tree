@@ -34,7 +34,7 @@ public class CardTreeViewModel extends AndroidViewModel {
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
 //    private final View.OnTouchListener onTouchListenerForAddCardUtilFab;
-    private final View.OnLongClickListener onLongListenerForAddCardUtilFab;
+    private final View.OnLongClickListener onLongListenerForCreateCardUtilFab;
 
     public CardTreeViewModel(Application application) {
         super(application);
@@ -43,13 +43,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         mPresentFlags = new ArrayList<>();
         allData = new ArrayList<>();
         mPresentData = new ArrayList<>();
-        onLongListenerForAddCardUtilFab = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                v.startDragAndDrop(ClipData.newPlainText("",""),new CardShadow(v),null,0);
-                return true;
-            }
-        };
+        onLongListenerForCreateCardUtilFab = (view)->view.startDragAndDrop(ClipData.newPlainText("",""),new CardShadow(view),null,0);
 
 //        onTouchListenerForAddCardUtilFab = (view, event) -> {
 //            if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -212,8 +206,8 @@ public class CardTreeViewModel extends AndroidViewModel {
 //    public View.OnTouchListener getOnTouchListener(){
 //        return onTouchListenerForAddCardUtilFab;
 //    }
-    public View.OnLongClickListener getOnLongListenerForAddCardUtilFab(){
-        return onLongListenerForAddCardUtilFab;
+    public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab(){
+        return onLongListenerForCreateCardUtilFab;
     }
 
 }
