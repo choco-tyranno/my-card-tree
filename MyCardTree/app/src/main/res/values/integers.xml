@@ -2,4 +2,12 @@
 <resources>
     <integer name="card_flip_time_full">2000</integer>
     <integer name="card_flip_time_half">1000</integer>
+    <integer name="createCardFab_shadow_textStrokeWidth">4</integer>
+    <integer name="createCardFab_shadow_boundStrokeWidth">15</integer>
+    <integer name="createCardFab_shadow_boundRectWidth">400</integer>
+    <integer name="createCardFab_shadow_boundRectHeight">300</integer>
+    <integer name="createCardFab_shadow_textSize">100</integer>
+    <integer name="createCardFab_shadow_xRadius">15</integer>
+    <integer name="createCardFab_shadow_yRadius">15</integer>
+
 </resources>
