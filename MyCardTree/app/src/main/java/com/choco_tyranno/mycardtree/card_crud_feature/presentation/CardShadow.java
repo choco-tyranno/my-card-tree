@@ -53,8 +53,8 @@ public class CardShadow extends View.DragShadowBuilder {
     @Override
     public void onDrawShadow(Canvas canvas) {
         canvas.drawText(text, (float) (textRect.right - textRect.left) / 2 + boundStrokeWidth,
-                -textRect.top - ascent + descent + boundStrokeWidth, textPaint);
-        canvas.drawRoundRect(new RectF(boundStrokeWidth, boundStrokeWidth,
+                (float)(-textRect.top+rectHeight)/2 + boundStrokeWidth, textPaint);
+        canvas.drawRoundRect(new RectF(boundStrokeWidth, (float) boundStrokeWidth,
                 rectWidth + boundStrokeWidth, rectHeight + boundStrokeWidth), xRadius, yRadius, boundPaint);
     }
 }
