@@ -35,7 +35,8 @@
         android:focusable="true"
         app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="8dp"
-        app:cardElevation="12dp">
+        app:cardElevation="12dp"
+        app:onDragListener="@{viewModel.onDragListenerForCard}">
 
         <!-- edit mode start-->
 

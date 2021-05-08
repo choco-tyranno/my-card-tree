@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,7 +17,10 @@ import com.choco_tyranno.mycardtree.databinding.ActivityMainBodyBinding;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardTreeViewModel viewModel;
@@ -34,7 +38,6 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         observeCardData();
     }
-
 
     private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());

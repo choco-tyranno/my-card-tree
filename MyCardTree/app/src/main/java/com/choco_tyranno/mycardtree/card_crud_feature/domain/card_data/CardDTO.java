@@ -7,6 +7,7 @@ import androidx.databinding.ObservableInt;
 
 import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 
 public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
     private int mCardNo;
@@ -80,7 +81,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
             this.mSeqNo = 0;
             this.mContainerNo = 0;
             this.mBossNo = 0;
-            this.mType = 0;
+            this.mType = ContactCardViewHolder.CONTACT_CARD_TYPE;
             this.mTitle = "";
             this.mSubtitle = "";
             this.mContactNumber = "";

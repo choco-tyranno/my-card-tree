@@ -27,5 +27,8 @@ public class ContactCardViewHolder extends CardViewHolder {
         mBinding.executePendingBindings();
     }
 
+    public ItemCardFrameBinding getBinding(){
+        return mBinding;
+    }
 
 }

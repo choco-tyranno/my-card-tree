@@ -2,22 +2,34 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import android.app.Application;
 import android.content.ClipData;
+import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Pair;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,8 +45,9 @@ public class CardTreeViewModel extends AndroidViewModel {
     private final List<Integer> mPresentFlags;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
-//    private final View.OnTouchListener onTouchListenerForAddCardUtilFab;
+    //    private final View.OnTouchListener onTouchListenerForAddCardUtilFab;
     private final View.OnLongClickListener onLongListenerForCreateCardUtilFab;
+    private View.OnDragListener onDragListenerForCard;
 
     public CardTreeViewModel(Application application) {
         super(application);
@@ -43,19 +56,38 @@ public class CardTreeViewModel extends AndroidViewModel {
         mPresentFlags = new ArrayList<>();
         allData = new ArrayList<>();
         mPresentData = new ArrayList<>();
-        onLongListenerForCreateCardUtilFab = (view)->view.startDragAndDrop(ClipData.newPlainText("",""),new CardShadow(view),null,0);
+        onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(ClipData.newPlainText("", ""), new CardShadow(view), null, 0);
+        onDragListenerForCard = (v, event) -> {
+            if (!(v instanceof MaterialCardView)) {
+                return false;
+            }
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_ENTERED:
+//                    v.getDisplay()
+                    ((MaterialCardView) v).setCardBackgroundColor(Color.RED);
+                    Logger.message("DragListener/ACTION_DRAG_ENTERED");
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                case DragEvent.ACTION_DRAG_ENDED:
+                    ((MaterialCardView) v).setCardBackgroundColor(v.getResources().getColor(R.color.colorPrimary));
+                    break;
+                case DragEvent.ACTION_DROP:
+                    FrameLayout parentView = (FrameLayout) v.getParent();
+                    RecyclerView cardRecyclerView = (RecyclerView) parentView.getParent();
+                    int position = cardRecyclerView.getChildAdapterPosition(parentView);
+                    CardAdapter cardAdapter= (CardAdapter)cardRecyclerView.getAdapter();
+                    ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder)cardRecyclerView.getChildViewHolder(parentView)).getBinding();
+                    CardDTO cardDTO = cardFrameBinding.getCard();
+                    int targetCardNo = cardDTO.getCardNo();
+                    int targetSeqNo = cardDTO.getSeqNo();
+                    int targetBossNo = cardDTO.getBossNo();
+                    CardDTO newCardDTO = new CardDTO.Builder().bossNo(targetBossNo).seqNo(targetSeqNo).build();
+                    mCardRepository.insertCard(newCardDTO.toEntity());
 
-//        onTouchListenerForAddCardUtilFab = (view, event) -> {
-//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                boolean isExist = Optional.ofNullable(view).isPresent();
-//                if(isExist){
-//                    CardShadow shadowBuilder = new CardShadow(view);
-//                    view.startDragAndDrop(ClipData.newPlainText("", ""), shadowBuilder, null, 0);
-//                    return true;
-//                }
-//            }
-//            return false;
-//        };
+                    break;
+            }
+            return true;
+        };
     }
 
     public void loadData(OnDataLoadListener callback) {
@@ -194,20 +226,30 @@ public class CardTreeViewModel extends AndroidViewModel {
 //    }
 
     @BindingAdapter("onTouchListener")
-    public static void setOnTouchListener(View view, View.OnTouchListener listener){
+    public static void setOnTouchListener(View view, View.OnTouchListener listener) {
         view.setOnTouchListener(listener);
     }
 
+    @BindingAdapter("onDragListener")
+    public static void setOnDragListener(View view, View.OnDragListener listener) {
+        view.setOnDragListener(listener);
+    }
+
     @BindingAdapter("onLongClickListener")
-    public static void setOnLongClickListener(View view, View.OnLongClickListener listener){
+    public static void setOnLongClickListener(View view, View.OnLongClickListener listener) {
         view.setOnLongClickListener(listener);
     }
 
-//    public View.OnTouchListener getOnTouchListener(){
+    //    public View.OnTouchListener getOnTouchListener(){
 //        return onTouchListenerForAddCardUtilFab;
 //    }
-    public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab(){
+    public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab() {
         return onLongListenerForCreateCardUtilFab;
     }
+
+    public View.OnDragListener getOnDragListenerForCard() {
+        return onDragListenerForCard;
+    }
+
 
 }
