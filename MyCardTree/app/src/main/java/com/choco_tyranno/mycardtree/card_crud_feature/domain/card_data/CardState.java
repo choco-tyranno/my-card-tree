@@ -22,12 +22,14 @@ import java.util.stream.Stream;
 public class CardState {
     public static int FRONT_DISPLAYING = 0;
     public static int BACK_DISPLAYING = 1;
+    private boolean isPersistence;
     private final Front front;
     private final Back back;
 
-    public CardState(int initCardVisibility) {
+    public CardState(int initCardVisibility, boolean isPersistence) {
         this.front = new Front(initCardVisibility);
         this.back = new Back(initCardVisibility);
+        this.isPersistence = isPersistence;
     }
 
     public void displayFront() {
@@ -38,6 +40,14 @@ public class CardState {
     public void displayBack() {
         this.back.toVisible();
         this.front.toInvisible();
+    }
+
+    public boolean isPersistence(){
+        return isPersistence;
+    }
+
+    public void toPersistence(){
+        this.isPersistence = true;
     }
 
     public static class Front extends BaseObservable {
