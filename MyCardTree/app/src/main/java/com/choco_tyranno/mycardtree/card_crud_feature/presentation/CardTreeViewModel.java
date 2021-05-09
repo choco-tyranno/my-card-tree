@@ -61,33 +61,76 @@ public class CardTreeViewModel extends AndroidViewModel {
             if (!(v instanceof MaterialCardView)) {
                 return false;
             }
+
+            FrameLayout parentView = (FrameLayout) v.getParent();
+            RecyclerView cardRecyclerView = (RecyclerView) parentView.getParent();
+            int position = cardRecyclerView.getChildAdapterPosition(parentView);
+            CardAdapter cardAdapter = (CardAdapter) cardRecyclerView.getAdapter();
+            ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(parentView)).getBinding();
+            CardDTO cardDTO = cardFrameBinding.getCard();
+            int targetSeqNo = cardDTO.getSeqNo();
+            int targetContainerNo = cardDTO.getContainerNo();
+            int targetBossNo = cardDTO.getBossNo();
+            List<Pair<CardDTO, CardState>> targetContainerPresentCardItems = mPresentData.get(targetContainerNo - 1);
+
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_ENTERED:
-//                    v.getDisplay()
-                    ((MaterialCardView) v).setCardBackgroundColor(Color.RED);
-                    Logger.message("DragListener/ACTION_DRAG_ENTERED");
+//                    ((MaterialCardView) v).setCardBackgroundColor(Color.YELLOW);
+                    //Create CardDTO
+                    CardDTO newCardDTO = new CardDTO.Builder().bossNo(targetBossNo).seqNo(targetSeqNo + 1).containerNo(targetContainerNo).build();
+                    targetContainerPresentCardItems.add(targetSeqNo + 1, Pair.create(newCardDTO, new CardState(CardState.FRONT_DISPLAYING)));
+                    if (targetContainerPresentCardItems.size() > targetSeqNo + 2) {
+                        toPushBackSeqListItems(targetContainerPresentCardItems, targetSeqNo + 2);
+                    }
+                    Optional.ofNullable(cardAdapter).ifPresent((cardAdapter1 -> cardAdapter.notifyItemInserted(targetSeqNo + 1)));
+                    cardRecyclerView.smoothScrollToPosition(targetSeqNo + 1);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
+                    targetContainerPresentCardItems.remove(targetSeqNo);
+                    if (targetContainerPresentCardItems.size() > targetSeqNo) {
+                        takeListItemsSeqBack(targetContainerPresentCardItems, targetSeqNo);
+                    }
+                    Optional.ofNullable(cardAdapter).ifPresent((cardAdapter1 -> cardAdapter.notifyItemRemoved(targetSeqNo)));
                 case DragEvent.ACTION_DRAG_ENDED:
-                    ((MaterialCardView) v).setCardBackgroundColor(v.getResources().getColor(R.color.colorPrimary));
+//                    ((MaterialCardView) v).setCardBackgroundColor(v.getResources().getColor(R.color.colorPrimary));
                     break;
                 case DragEvent.ACTION_DROP:
-                    FrameLayout parentView = (FrameLayout) v.getParent();
-                    RecyclerView cardRecyclerView = (RecyclerView) parentView.getParent();
-                    int position = cardRecyclerView.getChildAdapterPosition(parentView);
-                    CardAdapter cardAdapter= (CardAdapter)cardRecyclerView.getAdapter();
-                    ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder)cardRecyclerView.getChildViewHolder(parentView)).getBinding();
-                    CardDTO cardDTO = cardFrameBinding.getCard();
-                    int targetCardNo = cardDTO.getCardNo();
-                    int targetSeqNo = cardDTO.getSeqNo();
-                    int targetBossNo = cardDTO.getBossNo();
-                    CardDTO newCardDTO = new CardDTO.Builder().bossNo(targetBossNo).seqNo(targetSeqNo).build();
-                    mCardRepository.insertCard(newCardDTO.toEntity());
-
+//                    FrameLayout parentView = (FrameLayout) v.getParent();
+//                    RecyclerView cardRecyclerView = (RecyclerView) parentView.getParent();
+//                    int position = cardRecyclerView.getChildAdapterPosition(parentView);
+//                    CardAdapter cardAdapter= (CardAdapter)cardRecyclerView.getAdapter();
+//                    ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder)cardRecyclerView.getChildViewHolder(parentView)).getBinding();
+//                    CardDTO cardDTO = cardFrameBinding.getCard();
+//                    int targetCardNo = cardDTO.getCardNo();
+//                    int targetSeqNo = cardDTO.getSeqNo();
+//                    int targetContainerNo = cardDTO.getContainerNo();
+//                    int targetBossNo = cardDTO.getBossNo();
+//                    //Create CardDTO
+//                    CardDTO newCardDTO = new CardDTO.Builder().bossNo(targetBossNo).seqNo(targetSeqNo).containerNo(targetContainerNo).build();
+//                    //align seqNo
+//
+//                    //add CardDTO to present List
+//
+//                    //sort??
+//
+//                    //insert CardDTO data
+//                    mCardRepository.insertCard(newCardDTO.toEntity());
                     break;
             }
             return true;
         };
+    }
+
+    private void takeListItemsSeqBack(List<Pair<CardDTO, CardState>> list, int start) {
+        for (int i = start; i < list.size(); i++) {
+            list.get(i).first.setSeqNo(i);
+        }
+    }
+
+    private void toPushBackSeqListItems(List<Pair<CardDTO, CardState>> list, int start) {
+        for (int i = start; i < list.size(); i++) {
+            list.get(i).first.setSeqNo(i + 1);
+        }
     }
 
     public void loadData(OnDataLoadListener callback) {
@@ -126,15 +169,16 @@ public class CardTreeViewModel extends AndroidViewModel {
             if (i == 0) {
                 foundFlag = dtoList.get(0).getBossNo();
                 nextGroupFlag = dtoList.get(0).getCardNo();
-                hasNext = true;
-            } else {
-                for (CardDTO dto : dtoList) {
-                    if (dto.getBossNo() == nextGroupFlag) {
-                        foundFlag = dto.getBossNo();
-                        nextGroupFlag = dto.getCardNo();
-                        hasNext = true;
-                        break;
-                    }
+                mPresentFlags.add(i, foundFlag);
+                continue;
+            }
+
+            for (CardDTO dto : dtoList) {
+                if (dto.getBossNo() == nextGroupFlag) {
+                    foundFlag = dto.getBossNo();
+                    nextGroupFlag = dto.getCardNo();
+                    hasNext = true;
+                    break;
                 }
             }
 
@@ -149,7 +193,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         List<List<CardDTO>> basket = new ArrayList<>();
         Optional.ofNullable(data).ifPresent(dtoList -> {
             for (CardDTO dto : dtoList) {
-                int position = dto.getContainerNo() - 1;
+                int position = dto.getContainerNo();
                 if (position > basket.size() - 1) {
                     basket.add(new ArrayList<>());
                 }
@@ -173,6 +217,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         return collectBasket;
     }
 
+    //sort here
     private boolean findPresentData(List<List<Pair<CardDTO, CardState>>> basket, List<CardDTO> disorderedData, int orderFlag) {
         List<Pair<CardDTO, CardState>> smallBasket = new ArrayList<>();
         for (CardDTO dto : disorderedData) {

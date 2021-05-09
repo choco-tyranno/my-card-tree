@@ -43,9 +43,9 @@ public abstract class MyCardTreeDataBase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 CardDAO cardDAO = INSTANCE.cardDAO();
-                CardEntity welcomeCardEntity = new CardEntity.Builder().seqNo(0).containerNo(1).bossNo(0).title("초코").contactNumber("010-3899-8450").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity2 =new CardEntity.Builder().seqNo(1).containerNo(1).bossNo(0).title("1ee").contactNumber("010-3523-7735").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity3 =new CardEntity.Builder().seqNo(0).containerNo(2).bossNo(1).title("찹소").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                CardEntity welcomeCardEntity = new CardEntity.Builder().seqNo(0).containerNo(0).bossNo(0).title("초코").contactNumber("010-3899-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                CardEntity welcomeCardEntity2 =new CardEntity.Builder().seqNo(1).containerNo(0).bossNo(0).title("1ee").contactNumber("010-3523-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                CardEntity welcomeCardEntity3 =new CardEntity.Builder().seqNo(0).containerNo(1).bossNo(1).title("찹소").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
                 cardDAO.insertCard(welcomeCardEntity);
                 cardDAO.insertCard(welcomeCardEntity2);
                 cardDAO.insertCard(welcomeCardEntity3);

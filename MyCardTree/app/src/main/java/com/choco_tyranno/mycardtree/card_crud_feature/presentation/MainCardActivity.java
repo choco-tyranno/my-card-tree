@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
@@ -60,6 +61,7 @@ public class MainCardActivity extends AppCompatActivity {
     private void observeCardData() {
         viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
                         liveData.observe(this, (cards) -> {
+                            Toast.makeText(this, "AllLiveData/Observer#onChanged", Toast.LENGTH_SHORT).show();
                             Logger.message("allLiveData - The Data changed");
                             boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
                             if (hasAdapter) {
