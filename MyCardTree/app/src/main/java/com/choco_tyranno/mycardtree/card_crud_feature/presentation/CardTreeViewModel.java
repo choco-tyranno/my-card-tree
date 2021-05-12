@@ -8,6 +8,7 @@ import android.view.DragEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
@@ -21,6 +22,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
@@ -91,25 +93,56 @@ public class CardTreeViewModel extends AndroidViewModel {
         }
         int visibleCardItemPos = layoutManager.findFirstVisibleItemPosition();
 
+//        FrameLayout targetView = (FrameLayout) layoutManager.getChildAt(visibleCardItemPos);
+        ContactCardViewHolder targetViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(visibleCardItemPos);
+        FrameLayout targetView = (FrameLayout)targetViewVH.getBinding().cardContainerFrameLayout;
+
+        if (!Optional.ofNullable(targetView).isPresent()) {
+            throw new RuntimeException("#handleDragEventSingleItemVisibleCase()/layoutManager#getChildAt(visibleCardItemPos) is null / ");
+        }
+        int screenWidth = ((Activity) targetView.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().right;
+
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
-
-                FrameLayout targetView = (FrameLayout) layoutManager.getChildAt(visibleCardItemPos);
-                if (!Optional.ofNullable(targetView).isPresent()) {
-                    throw new RuntimeException("#handleDragEventSingleItemVisibleCase()/layoutManager#getChildAt(visibleCardItemPos) is null");
-                }
-                int screenWidth = ((Activity) targetView.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().right;
                 targetView.animate()
                         .setInterpolator(AnimationUtils.loadInterpolator(targetView.getContext(), android.R.anim.accelerate_decelerate_interpolator))
                         .setDuration(200)
                         .translationXBy(0)
                         .translationX(-screenWidth).start();
-//                CardDTO targetCardDTO = ((ContactCardViewHolder)rv.getChildViewHolder(targetView)).getBinding().getCard();
-
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
+                targetView.animate()
+                        .setInterpolator(AnimationUtils.loadInterpolator(targetView.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                        .setDuration(200)
+                        .translationXBy(-screenWidth)
+                        .translationX(0).start();
                 return true;
             case DragEvent.ACTION_DROP:
+                CardDTO cardDTO = ((ContactCardViewHolder)rv.getChildViewHolder(targetView)).getBinding().getCard();
+                int targetSeqNo = cardDTO.getSeqNo();
+                int targetBossNo = cardDTO.getBossNo();
+                int targetContainerNo = cardDTO.getContainerNo();
+
+                List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(targetContainerNo);
+
+                CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo+1).bossNo(targetBossNo).containerNo(targetContainerNo).build();
+                if (targetContainerCardList.size() > targetSeqNo+1){
+                    mCardRepository.insertCardAndUpdateCardsSeq(newCardDTO.toEntity(), dtoListToEntityList(increaseListCardsSeq(targetContainerCardList, targetSeqNo+1)));
+                }else {
+                    mCardRepository.insertCard(newCardDTO.toEntity());
+                }
+
+                //check is LiveData inserted.
+
+                targetContainerCardList.add(targetSeqNo+1, Pair.create(newCardDTO, new CardState()));
+                rv.getAdapter().notifyItemInserted(targetSeqNo+1);
+                rv.scrollToPosition(targetSeqNo+1);
+
+                targetView.animate()
+                        .setInterpolator(AnimationUtils.loadInterpolator(targetView.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                        .setDuration(200)
+                        .translationXBy(-screenWidth)
+                        .translationX(0).start();
                 return true;
         }
         return false;
@@ -124,14 +157,18 @@ public class CardTreeViewModel extends AndroidViewModel {
         int firstVisibleCardItemPos = layoutManager.findFirstVisibleItemPosition();
         int lastVisibleCardItemPos = layoutManager.findLastVisibleItemPosition();
 
+        ContactCardViewHolder firstVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(firstVisibleCardItemPos);
+        FrameLayout firstVisibleView = (FrameLayout)firstVisibleViewVH.getBinding().cardContainerFrameLayout;
+        ContactCardViewHolder lastVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(lastVisibleCardItemPos);
+        FrameLayout lastVisibleView = (FrameLayout)lastVisibleViewVH.getBinding().cardContainerFrameLayout;
+
+        if (!Optional.ofNullable(firstVisibleView).isPresent() || !Optional.ofNullable(lastVisibleView).isPresent()) {
+            throw new RuntimeException("#handleDragEventSingleItemVisibleCase()/layoutManager#getChildAt(visibleCardItemPos) is null");
+        }
+        int screenWidth = ((Activity) rv.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().right;
+
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
-                FrameLayout firstVisibleView = (FrameLayout) layoutManager.getChildAt(firstVisibleCardItemPos);
-                FrameLayout lastVisibleView = (FrameLayout) layoutManager.getChildAt(lastVisibleCardItemPos);
-                if (!Optional.ofNullable(firstVisibleView).isPresent() || !Optional.ofNullable(lastVisibleView).isPresent()) {
-                    throw new RuntimeException("#handleDragEventSingleItemVisibleCase()/layoutManager#getChildAt(visibleCardItemPos) is null");
-                }
-                int screenWidth = ((Activity) rv.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().right;
                 firstVisibleView.animate()
                         .setInterpolator(AnimationUtils.loadInterpolator(rv.getContext(), android.R.anim.accelerate_decelerate_interpolator))
                         .setDuration(200)
@@ -144,8 +181,47 @@ public class CardTreeViewModel extends AndroidViewModel {
                         .translationX(screenWidth).start();
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
+                firstVisibleView.animate()
+                    .setInterpolator(AnimationUtils.loadInterpolator(rv.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                    .setDuration(200)
+                    .translationXBy(-screenWidth)
+                    .translationX(0).start();
+                lastVisibleView.animate()
+                        .setInterpolator(AnimationUtils.loadInterpolator(rv.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                        .setDuration(200)
+                        .translationXBy(screenWidth)
+                        .translationX(0).start();
                 return true;
             case DragEvent.ACTION_DROP:
+                CardDTO cardDTO = ((ContactCardViewHolder)rv.getChildViewHolder(firstVisibleView)).getBinding().getCard();
+                int targetSeqNo = cardDTO.getSeqNo();
+                int targetBossNo = cardDTO.getBossNo();
+                int targetContainerNo = cardDTO.getContainerNo();
+
+                List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(targetContainerNo);
+                CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo+1).bossNo(targetBossNo).containerNo(targetContainerNo).build();
+
+                if (targetContainerCardList.size() > targetSeqNo+1){
+                    mCardRepository.insertCardAndUpdateCardsSeq(newCardDTO.toEntity(), dtoListToEntityList(increaseListCardsSeq(targetContainerCardList, targetSeqNo+1)));
+                }else {
+                    mCardRepository.insertCard(newCardDTO.toEntity());
+                }
+
+                //check is LiveData inserted.
+
+                targetContainerCardList.add(targetSeqNo+1, Pair.create(newCardDTO, new CardState()));
+                rv.getAdapter().notifyItemInserted(targetSeqNo+1);
+                rv.scrollToPosition(targetSeqNo+1);
+                firstVisibleView.animate()
+                        .setInterpolator(AnimationUtils.loadInterpolator(rv.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                        .setDuration(200)
+                        .translationXBy(-screenWidth)
+                        .translationX(0).start();
+                lastVisibleView.animate()
+                        .setInterpolator(AnimationUtils.loadInterpolator(rv.getContext(), android.R.anim.accelerate_decelerate_interpolator))
+                        .setDuration(200)
+                        .translationXBy(screenWidth)
+                        .translationX(0).start();
                 return true;
         }
         return false;
@@ -167,18 +243,6 @@ public class CardTreeViewModel extends AndroidViewModel {
             result.add(dto.toEntity());
         }
         return result;
-    }
-
-    private void takeListItemsSeqBack(List<Pair<CardDTO, CardState>> list, int start) {
-        for (int i = start; i < list.size(); i++) {
-            list.get(i).first.setSeqNo(i - 1);
-        }
-    }
-
-    private void toPushBackSeqListItems(List<Pair<CardDTO, CardState>> list, int start) {
-        for (int i = start; i < list.size(); i++) {
-            list.get(i).first.setSeqNo(i + 1);
-        }
     }
 
     public void loadData(OnDataLoadListener callback) {

@@ -25,6 +25,11 @@ public class CardState {
     private final Front front;
     private final Back back;
 
+    public CardState(){
+        this.front = new Front(FRONT_DISPLAYING);
+        this.back = new Back(FRONT_DISPLAYING);
+    }
+
     public CardState(int initCardVisibility) {
         this.front = new Front(initCardVisibility);
         this.back = new Back(initCardVisibility);
@@ -100,6 +105,9 @@ public class CardState {
         }
 
         public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO, CardTreeViewModel viewModel) {
+            Toast.makeText(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
+                    +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle(), Toast.LENGTH_SHORT).show();
+
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
