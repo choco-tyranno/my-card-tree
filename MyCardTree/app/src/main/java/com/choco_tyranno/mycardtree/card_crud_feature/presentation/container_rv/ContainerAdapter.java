@@ -39,7 +39,7 @@ public class ContainerAdapter extends RecyclerView.Adapter<CardContainerViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CardContainerViewHolder holder, int position) {
-        holder.bind(position);
+        holder.bind(viewModel, position);
     }
 
     @Override

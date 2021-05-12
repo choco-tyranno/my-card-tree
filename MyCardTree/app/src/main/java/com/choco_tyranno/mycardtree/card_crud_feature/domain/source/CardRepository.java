@@ -34,20 +34,13 @@ public class CardRepository {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> mCardDAO.insertCard(cardEntity));
     }
 
+    public void insertCardAndUpdateCardsSeq(CardEntity cardEntity, List<CardEntity> cardEntityList){
+        MyCardTreeDataBase.databaseWriteExecutor.execute(()-> mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList));
+    }
+
     public void updateCard(CardEntity cardEntity) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
                 mCardDAO.updateCard(cardEntity)
-        );
-    }
-
-    //refactoring needed
-    public void updateCards(List<CardEntity> cardEntityList) {
-        for (CardEntity cardEntity : cardEntityList) {
-            cardEntity.setSeqNo(cardEntityList.indexOf(cardEntity));
-        }
-
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-                mCardDAO.updateCards(cardEntityList)
         );
     }
 

@@ -9,6 +9,9 @@
         <import type="java.util.List"/>
         <import type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO"/>
         <variable
+            name="viewModel"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
+        <variable
             name="container_no"
             type="Integer"/>
     </data>
@@ -71,8 +74,8 @@
             android:layout_marginTop="@dimen/cardRecyclerview_marginTop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parent_item_title"/>
-
+            app:layout_constraintTop_toBottomOf="@+id/parent_item_title"
+            app:onDragListener="@{viewModel.onDragListenerForCardRecyclerView}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

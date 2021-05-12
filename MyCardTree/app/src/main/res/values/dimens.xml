@@ -10,12 +10,12 @@
     <dimen name="containerLayout_paddingBottom">20dp</dimen>
 
     <dimen name="cardFront_titleTextView_paddingStart">20dp</dimen>
-    <dimen name="cardFront_titleTextView_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_titleTextView_paddingEnd">0dp</dimen>
     <dimen name="cardFront_titleTextView_marginStart">20dp</dimen>
     <dimen name="cardFront_titleTextView_marginBottom">20dp</dimen>
 
     <dimen name="cardFront_contactNumberTextView_paddingStart">20dp</dimen>
-    <dimen name="cardFront_contactNumberTextView_paddingEnd">10dp</dimen>
+    <dimen name="cardFront_contactNumberTextView_paddingEnd">0dp</dimen>
     <dimen name="cardFront_contactNumberTextView_marginStart">20dp</dimen>
     <dimen name="cardFront_contactNumberTextView_marginBottom">20dp</dimen>
 
