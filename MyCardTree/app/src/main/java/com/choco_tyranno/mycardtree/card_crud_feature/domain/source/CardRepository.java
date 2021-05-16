@@ -1,11 +1,16 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.domain.source;
 
 import android.app.Application;
+import android.util.Pair;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class CardRepository {
     private final String DEBUG_TAG = "!!!:";
@@ -30,23 +35,34 @@ public class CardRepository {
         return _originData;
     }
 
-    public void insertCard(CardEntity cardEntity) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> mCardDAO.insertCard(cardEntity));
+    public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
+            synchronized (this){
+                CardEntity foundData = mCardDAO.insertAndUpdates(cardEntity, cardEntityList);
+                dropEvent.accept(foundData);
+            }
+        });
     }
 
-    public void insertCardAndUpdateCardsSeq(CardEntity cardEntity, List<CardEntity> cardEntityList){
-        MyCardTreeDataBase.databaseWriteExecutor.execute(()-> mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList));
+    public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
+            synchronized (this){
+                CardEntity foundData = mCardDAO.insert(cardEntity);
+                dropEvent.accept(foundData);
+            }
+        });
     }
 
-    public void updateCard(CardEntity cardEntity) {
+    public void update(CardEntity cardEntity) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
                 mCardDAO.updateCard(cardEntity)
         );
     }
 
-    public void deleteCards(List<CardEntity> invalidCardEntities) {
+    public void deletes(List<CardEntity> cardEntities) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-            mCardDAO.deleteSelectedCards(invalidCardEntities)
+            mCardDAO.deletes(cardEntities)
         );
     }
+
 }
