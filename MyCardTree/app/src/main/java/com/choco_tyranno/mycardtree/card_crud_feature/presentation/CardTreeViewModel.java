@@ -3,6 +3,8 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -87,10 +90,9 @@ public class CardTreeViewModel extends AndroidViewModel {
     }
 
     private boolean handleDragEventSingleItemVisibleCase(RecyclerView rv,int targetCardPosition, DragEvent event) {
-        ContactCardViewHolder targetViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(targetCardPosition);
-        FrameLayout targetView = (FrameLayout) targetViewVH.getBinding().cardContainerFrameLayout;
+        FrameLayout targetView = Objects.requireNonNull((ContactCardViewHolder) rv.findViewHolderForAdapterPosition(targetCardPosition))
+                .getBinding().cardContainerFrameLayout;
         NullPassUtil.checkFrameLayout(targetView);
-
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
                 slowOut(targetView,false,CARD_LOCATION_LEFT);
@@ -108,9 +110,9 @@ public class CardTreeViewModel extends AndroidViewModel {
     //TODO: lastVisibleView not found
     private boolean handleDragEventMultiItemVisibleCase(RecyclerView rv,int firstVisibleCardPosition, int lastVisibleCardPosition, DragEvent event) {
         ContactCardViewHolder firstVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(firstVisibleCardPosition);
-        FrameLayout firstVisibleView = (FrameLayout) firstVisibleViewVH.getBinding().cardContainerFrameLayout;
+        FrameLayout firstVisibleView = Objects.requireNonNull(firstVisibleViewVH).getBinding().cardContainerFrameLayout;
         ContactCardViewHolder lastVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(lastVisibleCardPosition);
-        FrameLayout lastVisibleView = (FrameLayout) lastVisibleViewVH.getBinding().cardContainerFrameLayout;
+        FrameLayout lastVisibleView = Objects.requireNonNull(lastVisibleViewVH).getBinding().cardContainerFrameLayout;
         NullPassUtil.checkFrameLayout(firstVisibleView);
         NullPassUtil.checkFrameLayout(lastVisibleView);
         switch (event.getAction()) {
@@ -312,29 +314,21 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     /* Drop Utils*/
     public interface DropDataInsertListener extends Consumer<CardEntity>{
-        List<Pair<CardDTO, CardState>> targetItemList = new ArrayList<>();
         void accept(CardEntity cardEntity);
-        void setTargetItemList();
         void startDropFinishAnimation();
     }
 
-    public DropDataInsertListener orderDropDataInsertListener(CardDTO targetDTO, List<Pair<CardDTO, CardState>> targetList, RecyclerView targetRecyclerView, View targetView, @Nullable View followingView){
+    public DropDataInsertListener orderDropDataInsertListener(CardDTO targetDTO, List<Pair<CardDTO, CardState>> targetItemList, RecyclerView targetRecyclerView, View targetView, @Nullable View followingView){
         return new DropDataInsertListener() {
             @Override
             public void accept(CardEntity foundEntity) {
-                setTargetItemList();
                 int targetSeqNo = targetDTO.getSeqNo();
                 targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState()));
                 ((Activity)targetView.getContext()).runOnUiThread(()->{
-                    targetRecyclerView.getAdapter().notifyItemInserted(targetSeqNo + 1);
-                    targetRecyclerView.scrollToPosition(targetSeqNo + 1);
-                    startDropFinishAnimation();
+                        Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(targetSeqNo + 1);
+                        targetRecyclerView.scrollToPosition(targetSeqNo + 1);
+                        startDropFinishAnimation();
                 });
-            }
-
-            @Override
-            public void setTargetItemList() {
-                targetItemList.addAll(targetList);
             }
 
             @Override
