@@ -19,20 +19,23 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-public class CardState {
+public class CardState extends BaseObservable{
     public static int FRONT_DISPLAYING = 0;
     public static int BACK_DISPLAYING = 1;
     private final Front front;
     private final Back back;
+    private int removeBtnVisibility;
 
     public CardState(){
         this.front = new Front(FRONT_DISPLAYING);
         this.back = new Back(FRONT_DISPLAYING);
+        this.removeBtnVisibility = View.INVISIBLE;
     }
 
     public CardState(int initCardVisibility) {
         this.front = new Front(initCardVisibility);
         this.back = new Back(initCardVisibility);
+        this.removeBtnVisibility = View.INVISIBLE;
     }
 
     public void displayFront() {
@@ -45,6 +48,9 @@ public class CardState {
         this.front.toInvisible();
     }
 
+    public void editMode(View view){
+        view.bringToFront();
+    }
 
     public static class Front extends BaseObservable {
         public static final int READ_MODE = 0;
@@ -217,5 +223,17 @@ public class CardState {
 
     public Back getBack() {
         return back;
+    }
+
+    @Bindable
+    public int getRemoveBtnVisibility(){
+        return this.removeBtnVisibility;
+    }
+
+    public void setRemoveBtnVisibility(int visibility){
+        if (visibility!=View.INVISIBLE&&visibility!=View.VISIBLE&&visibility!=View.GONE)
+            throw new RuntimeException("CardState#setRemoveBtnVisibility/ has incompatible visibility value");
+        this.removeBtnVisibility = visibility;
+        notifyPropertyChanged(BR.removeBtnVisibility);
     }
 }

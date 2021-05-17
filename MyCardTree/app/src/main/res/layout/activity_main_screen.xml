@@ -51,6 +51,16 @@
                     android:fontFamily="@font/overlock_regular"
                     />
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/main_mode_switch"
+                    android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginEnd="10dp"
+                    />
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 

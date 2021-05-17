@@ -6,6 +6,7 @@
     >
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="cardRootReference"
@@ -52,6 +53,20 @@
             bind:cardState="@{cardState}"
             bind:frontState="@{cardState.front}"
             bind:viewModel="@{viewModel}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/card_remove_btn"
+            android:visibility="@{cardState.removeBtnVisibility}"
+            app:backgroundTint="#00f"
+            app:cornerRadius="13dp"
+            app:elevation="12dp"
+            android:layout_marginTop="-20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:text="X"
+            android:textColor="#fff"
+            android:textSize="13sp"/>
 
     </FrameLayout>
 </layout>

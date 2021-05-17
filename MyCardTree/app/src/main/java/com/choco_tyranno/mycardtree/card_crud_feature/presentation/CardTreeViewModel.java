@@ -64,6 +64,18 @@ public class CardTreeViewModel extends AndroidViewModel {
         initCardRecyclerViewDragListener();
     }
 
+    public void onModeChanged(View view, boolean isOn){
+        int newVisibility = View.INVISIBLE;
+        if (isOn)
+            newVisibility = View.VISIBLE;
+        for (List<Pair<CardDTO, CardState>> containerItems : mPresentData){
+            for (Pair<CardDTO, CardState> item : containerItems){
+                item.second.setRemoveBtnVisibility(newVisibility);
+            }
+        }
+        Toast.makeText(view.getContext(), ""+isOn, Toast.LENGTH_SHORT).show();
+    }
+
     // view : card recyclerView
     private void initCardRecyclerViewDragListener() {
         onDragListenerForCardRecyclerView = (view, event) -> {
@@ -74,6 +86,9 @@ public class CardTreeViewModel extends AndroidViewModel {
                 RecyclerView targetView = (RecyclerView) view;
                 LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
                 NullPassUtil.checkLinearLayoutManager(layoutManager);
+                if (!(layoutManager.getItemCount()>0)){
+                    return false;
+                }
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 boolean result;
