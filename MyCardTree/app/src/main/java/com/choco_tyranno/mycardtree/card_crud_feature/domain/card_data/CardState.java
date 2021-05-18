@@ -236,4 +236,9 @@ public class CardState extends BaseObservable{
         this.removeBtnVisibility = visibility;
         notifyPropertyChanged(BR.removeBtnVisibility);
     }
+
+    public void onRemoveBtnClicked(View view, CardDTO cardDTO){
+        view.bringToFront();
+        Toast.makeText(view.getContext(), "removeBtn Clicked", Toast.LENGTH_SHORT).show();
+    }
 }
