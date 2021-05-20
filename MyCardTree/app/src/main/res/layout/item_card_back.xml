@@ -7,6 +7,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="viewModel"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
+
+        <variable
             name="cardState"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
 
@@ -57,7 +61,7 @@
                 android:id="@+id/backCard_remove_btn"
                 android:layout_width="50dp"
                 android:layout_height="60dp"
-                android:onClick="@{(view)->cardState.onRemoveBtnClicked(view, card)}"
+                android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"
                 android:text="@string/card_remove_btn_text"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp"

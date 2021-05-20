@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.reactivex.Single;
+
 @Dao
 public abstract class CardDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -45,5 +47,5 @@ public abstract class CardDAO {
     public abstract void updateCard(CardEntity cardEntity);
 
     @Delete
-    public abstract void deletes(List<CardEntity> cardEntities);
+    public abstract Single<Integer> deletes(List<CardEntity> cardEntities);
 }

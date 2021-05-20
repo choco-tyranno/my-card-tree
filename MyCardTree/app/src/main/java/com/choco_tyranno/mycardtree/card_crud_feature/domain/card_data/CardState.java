@@ -9,15 +9,12 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.mycardtree.BR;
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 public class CardState extends BaseObservable{
     public static int FRONT_DISPLAYING = 0;
@@ -235,10 +232,5 @@ public class CardState extends BaseObservable{
             throw new RuntimeException("CardState#setRemoveBtnVisibility/ has incompatible visibility value");
         this.removeBtnVisibility = visibility;
         notifyPropertyChanged(BR.removeBtnVisibility);
-    }
-
-    public void onRemoveBtnClicked(View view, CardDTO cardDTO){
-        view.bringToFront();
-        Toast.makeText(view.getContext(), "removeBtn Clicked", Toast.LENGTH_SHORT).show();
     }
 }

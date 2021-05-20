@@ -37,7 +37,7 @@ public class CardRepository {
 
     public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            synchronized (this){
+            synchronized (this) {
                 CardEntity foundData = mCardDAO.insertAndUpdates(cardEntity, cardEntityList);
                 dropEvent.accept(foundData);
             }
@@ -46,7 +46,7 @@ public class CardRepository {
 
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            synchronized (this){
+            synchronized (this) {
                 CardEntity foundData = mCardDAO.insert(cardEntity);
                 dropEvent.accept(foundData);
             }
@@ -59,10 +59,9 @@ public class CardRepository {
         );
     }
 
-    public void deletes(List<CardEntity> cardEntities) {
+    public void deletes(List<CardEntity> cardEntities, Consumer<Integer> deleteEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-            mCardDAO.deletes(cardEntities)
+                deleteEvent.accept(mCardDAO.deletes(cardEntities).blockingGet())
         );
     }
-
 }
