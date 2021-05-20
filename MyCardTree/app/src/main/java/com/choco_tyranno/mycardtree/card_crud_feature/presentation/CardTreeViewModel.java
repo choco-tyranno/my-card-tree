@@ -56,6 +56,7 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     private final View.OnLongClickListener onLongListenerForCreateCardUtilFab;
     private View.OnDragListener onDragListenerForCardRecyclerView;
+    private View.OnDragListener onDragListenerFor;
 
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
@@ -199,6 +200,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                 throw new RuntimeException("#ondrag() : recyclerview not found");
             }
         };
+
     }
 
     private boolean handleDragEventSingleItemVisibleCase(RecyclerView rv, int targetCardPosition, DragEvent event) {
