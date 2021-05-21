@@ -20,6 +20,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.focusChangedListener = listener;
         this.layoutManager = null;
         this.registeredPosition = RecyclerView.NO_POSITION;
+        this.containerPosition = -1;
     }
 
     public void setLayoutManager(LinearLayoutManager layoutManager) {
@@ -37,25 +38,21 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         }
         super.onScrolled(recyclerView, dx, dy);
         int completelyVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-        if (completelyVisibleItemPosition == RecyclerView.NO_POSITION) {
+        if (completelyVisibleItemPosition == RecyclerView.NO_POSITION)
             return;
-        }
+        if(containerPosition==-1)
+            return;
         if (registeredPosition == RecyclerView.NO_POSITION) {
             registeredPosition = completelyVisibleItemPosition;
             return;
         }
-
         if (registeredPosition == completelyVisibleItemPosition)
             return;
-
         if (registeredPosition < completelyVisibleItemPosition) {
-//            Toast.makeText(recyclerView.getContext(), "onNext", Toast.LENGTH_SHORT).show();
             registeredPosition = completelyVisibleItemPosition;
             focusChangedListener.onNextFocused(recyclerView, completelyVisibleItemPosition, containerPosition);
             return;
         }
-
-//        Toast.makeText(recyclerView.getContext(), "onPrev", Toast.LENGTH_SHORT).show();
         registeredPosition = completelyVisibleItemPosition;
         focusChangedListener.onPreviousFocused(recyclerView, completelyVisibleItemPosition, containerPosition);
     }

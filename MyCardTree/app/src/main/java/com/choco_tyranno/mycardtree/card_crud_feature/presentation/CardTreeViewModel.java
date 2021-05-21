@@ -343,11 +343,8 @@ public class CardTreeViewModel extends AndroidViewModel {
         mAllData.addAll(groupedData);
     }
 
-    //TODO : check
     private void resetContainerPresentFlags(int headContainerPosition, int headCardPosition) {
         final int prevFlagListLastPosition = mPresentFlags.size() - 1;
-        if (prevFlagListLastPosition == headContainerPosition)
-            return;
         if (prevFlagListLastPosition > headContainerPosition) {
             mPresentFlags.subList(headContainerPosition + 1, prevFlagListLastPosition + 1).clear();
         }
@@ -417,21 +414,22 @@ public class CardTreeViewModel extends AndroidViewModel {
         return basket;
     }
 
-    // TODO :
     private void resetPresentData(int headContainerPosition, int headCardPosition) {
         CardDTO rootCard = mAllData.get(headContainerPosition).get(headCardPosition);
-        int nextRootNo = rootCard.getCardNo();
+        int rootNo = rootCard.getCardNo();
         final int prevPresentListSize = mPresentData.size();
         if (prevPresentListSize > headContainerPosition + 1) {
             mPresentData.subList(headContainerPosition + 1, prevPresentListSize).clear();
         }
+
         for (int i = headContainerPosition + 1; i < mAllData.size(); i++) {
             List<CardDTO> testList = mAllData.get(i);
             List<Pair<CardDTO, CardState>> collectingList = new ArrayList<>();
             boolean hasFound = false;
+            int nextRootNo = -1;
             for (CardDTO testCard : testList) {
-                if (testCard.getBossNo() != nextRootNo)
-                    return;
+                if (testCard.getBossNo() != rootNo)
+                    continue;
                 collectingList.add(Pair.create(testCard, new CardState()));
                 if (testCard.getSeqNo() == 0)
                     nextRootNo = testCard.getCardNo();
@@ -440,6 +438,7 @@ public class CardTreeViewModel extends AndroidViewModel {
             if (!hasFound)
                 break;
             mPresentData.add(collectingList);
+            rootNo = nextRootNo;
         }
     }
 
@@ -564,7 +563,6 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     //TODO
     public void presentFollowers(RecyclerView cardRecyclerView, int cardPosition, int containerPosition) {
-        Toast.makeText(cardRecyclerView.getContext(), "container:" + containerPosition + "/card:" + cardPosition, Toast.LENGTH_SHORT).show();
         final int prevPresentContainerSize = mPresentData.size();
         resetContainerPresentFlags(containerPosition, cardPosition);
         resetPresentData(containerPosition, cardPosition);
