@@ -30,6 +30,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntit
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
@@ -247,10 +248,10 @@ public class CardTreeViewModel extends AndroidViewModel {
     private void dropAndCreateService(RecyclerView rv, FrameLayout targetView, @Nullable FrameLayout followingView) {
         CardDTO targetCardDTO = ((ContactCardViewHolder) rv.getChildViewHolder(targetView)).getBinding().getCard();
         int targetSeqNo = targetCardDTO.getSeqNo();
-        int targetBossNo = targetCardDTO.getBossNo();
+        int targetRootNo = targetCardDTO.getRootNo();
         int targetContainerNo = targetCardDTO.getContainerNo();
         List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(targetContainerNo);
-        CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo + 1).bossNo(targetBossNo).containerNo(targetContainerNo).build();
+        CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo + 1).rootNo(targetRootNo).containerNo(targetContainerNo).build();
 
         if (targetContainerCardList.size() > targetSeqNo + 1) {
             mCardRepository.insertAndUpdates(newCardDTO.toEntity()
@@ -341,6 +342,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         // TODO : check [following 2 line] is it redundant?
         mAllData.clear();
         mAllData.addAll(groupedData);
+
     }
 
     private void resetContainerPresentFlags(int headContainerPosition, int headCardPosition) {
@@ -348,14 +350,14 @@ public class CardTreeViewModel extends AndroidViewModel {
         if (prevFlagListLastPosition > headContainerPosition) {
             mPresentFlags.subList(headContainerPosition + 1, prevFlagListLastPosition + 1).clear();
         }
-        int nextBossFlag = mAllData.get(headContainerPosition).get(headCardPosition).getCardNo();
+        int nextRootNo = mAllData.get(headContainerPosition).get(headCardPosition).getCardNo();
         for (int i = headContainerPosition + 1; i < mAllData.size(); i++) {
             List<CardDTO> testList = mAllData.get(i);
             boolean hasFound = false;
             for (CardDTO dto : testList) {
-                if (dto.getBossNo() == nextBossFlag && dto.getSeqNo() == 0) {
-                    mPresentFlags.add(nextBossFlag);
-                    nextBossFlag = dto.getCardNo();
+                if (dto.getRootNo() == nextRootNo && dto.getSeqNo() == 0) {
+                    mPresentFlags.add(nextRootNo);
+                    nextRootNo = dto.getCardNo();
                     hasFound = true;
                     break;
                 }
@@ -378,15 +380,15 @@ public class CardTreeViewModel extends AndroidViewModel {
             }
 
             if (i == 0) {
-                foundFlag = dtoList.get(0).getBossNo();
+                foundFlag = dtoList.get(0).getRootNo();
                 nextGroupFlag = dtoList.get(0).getCardNo();
                 mPresentFlags.add(i, foundFlag);
                 continue;
             }
 
             for (CardDTO dto : dtoList) {
-                if (dto.getBossNo() == nextGroupFlag) {
-                    foundFlag = dto.getBossNo();
+                if (dto.getRootNo() == nextGroupFlag) {
+                    foundFlag = dto.getRootNo();
                     nextGroupFlag = dto.getCardNo();
                     hasNext = true;
                     break;
@@ -428,7 +430,7 @@ public class CardTreeViewModel extends AndroidViewModel {
             boolean hasFound = false;
             int nextRootNo = -1;
             for (CardDTO testCard : testList) {
-                if (testCard.getBossNo() != rootNo)
+                if (testCard.getRootNo() != rootNo)
                     continue;
                 collectingList.add(Pair.create(testCard, new CardState()));
                 if (testCard.getSeqNo() == 0)
@@ -463,7 +465,7 @@ public class CardTreeViewModel extends AndroidViewModel {
     private boolean findPresentData(List<List<Pair<CardDTO, CardState>>> basket, List<CardDTO> disorderedData, int orderFlag) {
         List<Pair<CardDTO, CardState>> smallBasket = new ArrayList<>();
         for (CardDTO dto : disorderedData) {
-            if (dto.getBossNo() == orderFlag) {
+            if (dto.getRootNo() == orderFlag) {
                 Pair<CardDTO, CardState> cardDataPair = Pair.create(dto, new CardState(CardState.FRONT_DISPLAYING));
                 smallBasket.add(cardDataPair);
             }

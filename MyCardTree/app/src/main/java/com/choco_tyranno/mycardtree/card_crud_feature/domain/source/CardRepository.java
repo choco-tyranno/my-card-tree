@@ -3,6 +3,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.source;
 import android.app.Application;
 import android.util.Pair;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
@@ -20,15 +21,26 @@ public class CardRepository {
     public CardRepository(Application application) {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
         mCardDAO = db.cardDAO();
+        MyCardTreeDataBase.databaseWriteExecutor.execute(mCardDAO::findLastInsertedCard);
     }
 
     public void readData(OnDataLoadListener callback) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-            synchronized (this) {
-                _originData = mCardDAO.findAllCards();
-                callback.onLoadData();
-            }
-        });
+                    int loopCount = 0;
+                    while (!MyCardTreeDataBase.isAssetInserted()) {
+                        try {
+                            Thread.sleep(1000);
+                            loopCount++;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (loopCount>90)
+                            break;
+                    }
+                    _originData = mCardDAO.findAllCards();
+                    callback.onLoadData();
+                }
+        );
     }
 
     public List<CardEntity> getData() {

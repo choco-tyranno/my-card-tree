@@ -20,8 +20,8 @@ public class CardEntity{
     @ColumnInfo(name = "container_no")
     private int mContainerNo;
 
-    @ColumnInfo(name = "boss_no")
-    private int mBossNo;
+    @ColumnInfo(name = "root_no")
+    private int mRootNo;
 
     @ColumnInfo(name = "type")
     private int mType;
@@ -50,7 +50,7 @@ public class CardEntity{
         this.mCardNo = 0;
         this.mSeqNo = 0;
         this.mContainerNo = 0;
-        this.mBossNo = 0;
+        this.mRootNo = 0;
         this.mType = 0;
         this.mTitle = "";
         this.mSubtitle = "";
@@ -65,7 +65,7 @@ public class CardEntity{
         this.mCardNo = builder.mCardNo;
         this.mSeqNo = builder.mSeqNo;
         this.mContainerNo = builder.mContainerNo;
-        this.mBossNo = builder.mBossNo;
+        this.mRootNo = builder.mRootNo;
         this.mType = builder.mType;
         this.mTitle = builder.mTitle;
         this.mSubtitle = builder.mSubtitle;
@@ -76,11 +76,11 @@ public class CardEntity{
 
     //Use case : prepopulate db data
     @Ignore
-    public CardEntity(int seqNo, int containerNo, int bossNo, int type) {
+    public CardEntity(int seqNo, int containerNo, int rootNo, int type) {
         init();
         this.mSeqNo = seqNo;
         this.mContainerNo = containerNo;
-        this.mBossNo = bossNo;
+        this.mRootNo = rootNo;
         this.mType = type;
     }
 
@@ -101,8 +101,8 @@ public class CardEntity{
         return mContainerNo;
     }
 
-    public int getBossNo() {
-        return mBossNo;
+    public int getRootNo() {
+        return mRootNo;
     }
 
     public int getType() {
@@ -141,8 +141,8 @@ public class CardEntity{
         this.mContainerNo = containerNo;
     }
 
-    public void setBossNo(int bossNo) {
-        this.mBossNo = bossNo;
+    public void setRootNo(int rootNo) {
+        this.mRootNo = rootNo;
     }
 
     public void setType(int type) {
@@ -179,7 +179,7 @@ public class CardEntity{
 
         private int mContainerNo = 0;
 
-        private int mBossNo = 0;
+        private int mRootNo = 0;
 
         private int mType = 0;
 
@@ -201,7 +201,7 @@ public class CardEntity{
             this.mCardNo = 0;
             this.mSeqNo = 0;
             this.mContainerNo = 0;
-            this.mBossNo = 0;
+            this.mRootNo = 0;
             this.mType = 0;
             this.mTitle = "";
             this.mSubtitle = "";
@@ -214,7 +214,7 @@ public class CardEntity{
             this.mCardNo = dto.getCardNo();
             this.mSeqNo = dto.getSeqNo();
             this.mContainerNo = dto.getContainerNo();
-            this.mBossNo = dto.getBossNo();
+            this.mRootNo = dto.getRootNo();
             this.mType = dto.getType();
             this.mTitle = dto.getTitle();
             this.mSubtitle = dto.getSubtitle();
@@ -239,8 +239,8 @@ public class CardEntity{
             return this;
         }
 
-        public CardEntity.Builder bossNo(int bossNo) {
-            this.mBossNo = bossNo;
+        public CardEntity.Builder rootNo(int rootNo) {
+            this.mRootNo = rootNo;
             return this;
         }
 

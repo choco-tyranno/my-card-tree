@@ -16,7 +16,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
 
     private int mContainerNo;
 
-    private int mBossNo;
+    private int mRootNo;
 
     private int mType;
 
@@ -38,7 +38,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
         this.mCardNo = builder.mCardNo;
         this.mSeqNo = builder.mSeqNo;
         this.mContainerNo = builder.mContainerNo;
-        this.mBossNo = builder.mBossNo;
+        this.mRootNo = builder.mRootNo;
         this.mType = builder.mType;
         this.mTitle = builder.mTitle;
         this.mSubtitle = builder.mSubtitle;
@@ -64,7 +64,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
         private int mCardNo;
         private int mSeqNo;
         private int mContainerNo;
-        private int mBossNo;
+        private int mRootNo;
         private int mType;
         private String mTitle;
         private String mSubtitle;
@@ -80,7 +80,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
             this.mCardNo = 0;
             this.mSeqNo = 0;
             this.mContainerNo = 0;
-            this.mBossNo = 0;
+            this.mRootNo = 0;
             this.mType = ContactCardViewHolder.CONTACT_CARD_TYPE;
             this.mTitle = "";
             this.mSubtitle = "";
@@ -93,7 +93,7 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
             this.mCardNo = entity.getCardNo();
             this.mSeqNo = entity.getSeqNo();
             this.mContainerNo = entity.getContainerNo();
-            this.mBossNo = entity.getBossNo();
+            this.mRootNo = entity.getRootNo();
             this.mType = entity.getType();
             this.mTitle = entity.getTitle();
             this.mSubtitle = entity.getSubtitle();
@@ -118,8 +118,8 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
             return this;
         }
 
-        public Builder bossNo(int bossNo) {
-            this.mBossNo = bossNo;
+        public Builder rootNo(int rootNo) {
+            this.mRootNo = rootNo;
             return this;
         }
 
@@ -189,13 +189,13 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
     }
 
     @Bindable
-    public int getBossNo() {
-        return mBossNo;
+    public int getRootNo() {
+        return mRootNo;
     }
 
-    public void setBossNo(int bossNo) {
-        this.mBossNo = bossNo;
-        notifyPropertyChanged(BR.bossNo);
+    public void setRootNo(int rootNo) {
+        this.mRootNo = rootNo;
+        notifyPropertyChanged(BR.rootNo);
     }
 
     @Bindable

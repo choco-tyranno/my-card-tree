@@ -37,6 +37,9 @@ public abstract class CardDAO {
         return findLastInsertedCard();
     }
 
+    @Insert
+    public abstract void insert(List<CardEntity> prepopulateData);
+
     @Update
     public abstract void updateCards(List<CardEntity> cardEntities);
 
