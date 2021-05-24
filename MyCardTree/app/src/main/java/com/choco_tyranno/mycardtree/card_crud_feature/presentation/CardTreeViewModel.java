@@ -252,7 +252,6 @@ public class CardTreeViewModel extends AndroidViewModel {
         int targetContainerNo = targetCardDTO.getContainerNo();
         List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(targetContainerNo);
         CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo + 1).rootNo(targetRootNo).containerNo(targetContainerNo).build();
-
         if (targetContainerCardList.size() > targetSeqNo + 1) {
             mCardRepository.insertAndUpdates(newCardDTO.toEntity()
                     , dtoListToEntityList(increaseListCardsSeq(targetContainerCardList, targetSeqNo + 1))
@@ -491,6 +490,7 @@ public class CardTreeViewModel extends AndroidViewModel {
             public void accept(CardEntity foundEntity) {
                 int targetSeqNo = targetDTO.getSeqNo();
                 targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState()));
+                mAllData.get(targetDTO.getContainerNo()).add(targetSeqNo + 1, foundEntity.toDTO());
                 ((Activity) targetView.getContext()).runOnUiThread(() -> {
                     Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(targetSeqNo + 1);
                     targetRecyclerView.scrollToPosition(targetSeqNo + 1);
@@ -563,7 +563,6 @@ public class CardTreeViewModel extends AndroidViewModel {
         return onDragListenerForCardRecyclerView;
     }
 
-    //TODO
     public void presentFollowers(RecyclerView cardRecyclerView, int cardPosition, int containerPosition) {
         final int prevPresentContainerSize = mPresentData.size();
         resetContainerPresentFlags(containerPosition, cardPosition);
