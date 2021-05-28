@@ -20,8 +20,8 @@
     </data>
 
 
-    <FrameLayout
-        android:id="@+id/backCard_frameLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/backCard_constraintLayout"
         android:layout_width="@dimen/container_width"
         android:layout_height="@dimen/container_height">
 
@@ -29,7 +29,10 @@
             android:id="@+id/backCard_cardView"
             android:layout_width="320dp"
             android:layout_height="140dp"
-            android:layout_gravity="center_vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:checkable="true"
             android:clickable="true"
             android:focusable="true"
@@ -52,9 +55,10 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|top"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="295dp"
+            android:layout_marginBottom="110dp"
+            app:layout_constraintBottom_toBottomOf="@id/backCard_cardView"
+            app:layout_constraintLeft_toLeftOf="@id/backCard_cardView"
             android:elevation="24dp">
 
             <com.google.android.material.button.MaterialButton
@@ -71,5 +75,5 @@
                 app:elevation="24dp" />
         </FrameLayout>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

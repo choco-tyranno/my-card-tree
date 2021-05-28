@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
@@ -18,6 +19,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
 
     public CardContainerViewHolder(@NonNull ItemCardcontainerBinding binding) {
         super(binding.getRoot());
+        Logger.message("contVH#constructor");
         this.mBinding = binding;
         RecyclerView rv = mBinding.cardRecyclerview;
         CardAdapter cardAdapter = new CardAdapter(mBinding.getRoot().getContext());
@@ -26,6 +28,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     }
 
     public void bind(CardTreeViewModel viewModel, int containerPosition){
+        Logger.message("contVH#bind");
         mBinding.setViewModel(viewModel);
         RecyclerView rv = mBinding.cardRecyclerview;
         rv.setLayoutManager(null);
@@ -35,9 +38,14 @@ public class CardContainerViewHolder extends ContainerViewHolder {
             CardAdapter cardAdapter = (CardAdapter)rv.getAdapter();
             cardAdapter.clear();
             cardAdapter.setContainerPosition(containerPosition);
+            mBinding.setContainerNo(containerPosition+1);
             cardAdapter.notifyDataSetChanged();
         } else
             throw new RuntimeException("CardContainerViewHolder#bind/recyclerview has no adapter.");
-        mBinding.setContainerNo(containerPosition+1);
+    }
+
+    public ItemCardcontainerBinding getBinding(){
+        Logger.message("contVH#getBinding");
+        return mBinding;
     }
 }

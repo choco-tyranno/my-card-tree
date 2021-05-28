@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".card_crud_feature.presentation.MainCardActivity">
 
     <data>
 
         <variable
-            name="card_view_model"
+            name="viewModel"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
-
-
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -20,6 +18,7 @@
 
         <include
             android:id="@+id/main_screen"
+            bind:viewModel="@{viewModel}"
             layout="@layout/activity_main_screen" />
 
 

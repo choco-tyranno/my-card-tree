@@ -28,15 +28,18 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
     </data>
 
-    <FrameLayout
-        android:id="@+id/frontCard_frameLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frontCard_constraintLayout"
         android:layout_width="@dimen/container_width"
         android:layout_height="@dimen/container_height"
         >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/frontCard_cardView"
-            android:layout_gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_width="320dp"
             android:layout_height="140dp"
             android:clickable="true"
@@ -168,12 +171,14 @@
         </com.google.android.material.card.MaterialCardView>
 
         <FrameLayout
+            android:id="@+id/frontCard_remove_frame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="24dp"
-            android:layout_gravity="end|top"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="10dp">
+            android:layout_marginBottom="110dp"
+            android:layout_marginStart="295dp"
+            app:layout_constraintBottom_toBottomOf="@id/frontCard_cardView"
+            app:layout_constraintLeft_toLeftOf="@id/frontCard_cardView">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/frontCard_remove_btn"
@@ -188,5 +193,5 @@
                 app:cornerRadius="25dp"
                 app:elevation="24dp" />
         </FrameLayout>
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,4 +13,5 @@
     <string name="card_contact_number_hint">연락처를 입력하세요.</string>
     <string name="card_shadow_text">CARD</string>
     <string name="card_remove_btn_text">X</string>
+    <string name="empty_container_layer_title">add next : </string>
 </resources>

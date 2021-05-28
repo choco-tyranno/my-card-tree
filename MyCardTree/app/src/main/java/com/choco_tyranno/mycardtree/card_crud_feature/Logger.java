@@ -12,6 +12,9 @@ import java.util.List;
 
 public interface Logger {
 
+    static void hotfixMessage(String msg){
+        Log.d("!!hotfix",msg);
+    }
     static void message(String msg) {
         Log.d("!!!:", msg);
     }

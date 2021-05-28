@@ -4,4 +4,5 @@
     <color name="colorSubPrimary">#5685FF</color>
     <color name="colorPrimaryDark">#A6B4C8</color>
     <color name="colorAccent">#000</color>
+    <color name="color_highLight_card">#FFEB3B</color>
 </resources>

@@ -2,10 +2,10 @@
 <resources>
     <dimen name="card_thumbnail_image_width">320dp</dimen>
     <dimen name="card_thumbnail_image_height">140dp</dimen>
-    <dimen name="card_height">140dp</dimen>
-    <dimen name="container_height">170dp</dimen>
-    <dimen name="container_width">350dp</dimen>
+    <dimen name="container_width">411dp</dimen>
+    <dimen name="container_height">200dp</dimen>
     <dimen name="card_width">320dp</dimen>
+    <dimen name="card_height">140dp</dimen>
     <dimen name="cardRecyclerview_marginTop">20dp</dimen>
     <dimen name="containerLayout_paddingBottom">20dp</dimen>
 

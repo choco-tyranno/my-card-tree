@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -29,7 +30,6 @@ import java.util.regex.Pattern;
 public class MainCardActivity extends AppCompatActivity {
     private static CardTreeViewModel viewModel;
     private ActivityMainFrameBinding binding;
-    boolean isStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +37,16 @@ public class MainCardActivity extends AppCompatActivity {
 //        isStart = true;
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
         mainBinding();
-        binding.mainScreen.setViewModel(viewModel);
+        binding.setViewModel(viewModel);
         setContainerRv();
-        viewModel.loadData(()->binding.mainScreen.mainBody.containerRecyclerview.getAdapter().notifyDataSetChanged());
+        viewModel.loadData(()-> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged());
 //        observeCardData();
+        binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainCardActivity.this, ""+viewModel.getFocusedCardPositionSize(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static CardTreeViewModel getViewModel(){
@@ -59,7 +65,7 @@ public class MainCardActivity extends AppCompatActivity {
         RecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
-        rv.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
     }
 
     // TODO : this is for auto notify using DiffUtil
