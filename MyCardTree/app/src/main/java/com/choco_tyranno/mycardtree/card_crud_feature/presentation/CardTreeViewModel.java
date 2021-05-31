@@ -65,11 +65,6 @@ public class CardTreeViewModel extends AndroidViewModel {
     private final MutableLiveData<List<List<CardDTO>>> mListLiveDataByContainer;
     private List<List<CardDTO>> mAllData;
 
-    //to Object : Container
-//    private final List<Integer> mPresentFlags;
-//    private final List<Integer> mFocusCardPositions;
-//    private final List<Boolean> mCardRvLayoutSuppressStates;
-
     private final List<Container> mPresentContainerList;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
 
@@ -79,15 +74,6 @@ public class CardTreeViewModel extends AndroidViewModel {
 
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
-//
-//    public int getPresentFlagSize() {
-//        return mPresentFlags.size();
-//    }
-//
-//    public int getFocusedCardPositionSize() {
-//        Logger.message("VM#getFocusedCardPosSize");
-//        return mFocusCardPositions.size();
-//    }
 
     /* Default constructor*/
     public CardTreeViewModel(Application application) {
@@ -706,8 +692,8 @@ public class CardTreeViewModel extends AndroidViewModel {
         rv.addOnScrollListener(listener);
     }
 
-    @BindingAdapter("scrollEnabled")
-    public static void setScrollEnabled(View view, boolean state) {
+    @BindingAdapter("suppressLayout")
+    public static void setSuppressLayout(View view, boolean state) {
         RecyclerView rv = (RecyclerView) view;
         rv.suppressLayout(state);
     }
@@ -806,7 +792,6 @@ public class CardTreeViewModel extends AndroidViewModel {
     public RecyclerView.OnScrollListener getOnScrollListenerForCardRecyclerView() {
         Logger.message("vm#getOnScrollListenerForCardRecyclerView for data binding");
         CardScrollListener.OnFocusChangedListener onFocusChangedListener = new CardScrollListener.OnFocusChangedListener() {
-
             @Override
             public void onNextFocused(RecyclerView view, int containerPosition, int cardPosition) {
                 mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
@@ -819,12 +804,34 @@ public class CardTreeViewModel extends AndroidViewModel {
                 presentChildren(view, containerPosition, cardPosition);
             }
         };
-        return new CardScrollListener(onFocusChangedListener);
+        CardScrollListener.OnScrollStateChangeListener onScrollStateChangeListener = new CardScrollListener.OnScrollStateChangeListener() {
+            @Override
+            public void onStateIdle(RecyclerView view, int containerPosition) {
+                for (Container container : mPresentContainerList){
+                    container.setLayoutSuppressed(false);
+                }
+            }
+
+            @Override
+            public void onStateDragging(RecyclerView view, int containerPosition) {
+                for (int i = 0 ; i < mPresentContainerList.size(); i++){
+                    Container container =  mPresentContainerList.get(i);
+                    if (i == containerPosition)
+                        continue;
+                    container.setLayoutSuppressed(true);
+                }
+            }
+        };
+        return new CardScrollListener(onFocusChangedListener, onScrollStateChangeListener);
     }
 
     public List<List<Pair<CardDTO, CardState>>> getPresentData() {
         Logger.message("vm#getPresentData");
         return mPresentData;
+    }
+
+    public Container getContainer(int containerPosition){
+        return mPresentContainerList.get(containerPosition);
     }
 
 }

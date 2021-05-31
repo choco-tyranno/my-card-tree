@@ -17,6 +17,7 @@ import java.util.Objects;
 
 public class CardScrollListener extends RecyclerView.OnScrollListener {
     private final OnFocusChangedListener focusChangedListener;
+    private final OnScrollStateChangeListener scrollStateChangeListener;
     private LinearLayoutManager layoutManager;
     private int registeredPosition;
     private int containerPosition;
@@ -30,9 +31,10 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.centerX = centerX;
     }
 
-    public CardScrollListener(OnFocusChangedListener listener) {
+    public CardScrollListener(OnFocusChangedListener focusListener, OnScrollStateChangeListener stateListener) {
         Logger.message("cardScrollListener#constructor");
-        this.focusChangedListener = listener;
+        this.focusChangedListener = focusListener;
+        this.scrollStateChangeListener = stateListener;
         this.layoutManager = null;
         this.registeredPosition = RecyclerView.NO_POSITION;
         this.containerPosition = -1;
@@ -47,6 +49,23 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     public void setContainerPosition(int containerPosition) {
         Logger.message("cardScrollListener#setContainerPos : " + containerPosition);
         this.containerPosition = containerPosition;
+    }
+
+    @Override
+    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        switch (newState){
+            case RecyclerView.SCROLL_STATE_IDLE:
+                Logger.hotfixMessage("SCROLL_STATE_IDLE");
+                scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
+                break;
+            case RecyclerView.SCROLL_STATE_DRAGGING:
+                Logger.hotfixMessage("SCROLL_STATE_DRAGGING");
+                scrollStateChangeListener.onStateDragging(recyclerView, containerPosition);
+
+                break;
+        }
+
     }
 
     @Override
@@ -119,7 +138,11 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
+        void onPreviousFocused(RecyclerView view, int containerPosivtion, int cardPosition);
+    }
 
-        void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
+    public interface OnScrollStateChangeListener{
+        void onStateIdle(RecyclerView view, int containerPosition);
+        void onStateDragging(RecyclerView view, int containerPosition);
     }
 }

@@ -39,6 +39,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
             cardAdapter.clear();
             cardAdapter.setContainerPosition(containerPosition);
             mBinding.setContainerNo(containerPosition+1);
+            mBinding.setContainer(viewModel.getContainer(containerPosition));
             cardAdapter.notifyDataSetChanged();
         } else
             throw new RuntimeException("CardContainerViewHolder#bind/recyclerview has no adapter.");
