@@ -14,6 +14,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.NullPassUtil;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class CardScrollListener extends RecyclerView.OnScrollListener {
     private final OnFocusChangedListener focusChangedListener;
@@ -22,6 +23,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     private int registeredPosition;
     private int containerPosition;
     private int centerX;
+    private Runnable finalEvent;
 
     private int getCenterX() {
         return centerX;
@@ -36,6 +38,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.focusChangedListener = focusListener;
         this.scrollStateChangeListener = stateListener;
         this.layoutManager = null;
+        this.finalEvent = null;
         this.registeredPosition = RecyclerView.NO_POSITION;
         this.containerPosition = -1;
         this.centerX = -1;
@@ -54,15 +57,18 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        switch (newState){
+        switch (newState) {
             case RecyclerView.SCROLL_STATE_IDLE:
                 Logger.hotfixMessage("SCROLL_STATE_IDLE");
+                Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
+                finalEvent = null;
                 scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
                 Logger.hotfixMessage("SCROLL_STATE_DRAGGING");
                 scrollStateChangeListener.onStateDragging(recyclerView, containerPosition);
-
+            case RecyclerView.SCROLL_STATE_SETTLING:
+                Logger.hotfixMessage("SCROLL_STATE_SETTLING");
                 break;
         }
 
@@ -107,42 +113,44 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         }
         if (itemPosition > registeredPosition) {
             registeredPosition = itemPosition;
-            focusChangedListener.onNextFocused(recyclerView, containerPosition, itemPosition);
+            finalEvent = () ->focusChangedListener.onNextFocused(recyclerView, containerPosition, itemPosition);
             return;
         }
         registeredPosition = itemPosition;
-        focusChangedListener.onPreviousFocused(recyclerView, containerPosition, itemPosition);
+        finalEvent = () ->focusChangedListener.onPreviousFocused(recyclerView, containerPosition, itemPosition);
     }
 
     private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstItemPosition, int lastItemPosition) {
         if (firstItemPosition == registeredPosition) {
             float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
-            if (b > centerX){
+            if (b > centerX) {
                 return;
             }
-            Logger.hotfixMessage("onNext / to pos :"+lastItemPosition);
+            Logger.hotfixMessage("onNext / to pos :" + lastItemPosition);
             registeredPosition = lastItemPosition;
-            focusChangedListener.onNextFocused(recyclerView,containerPosition,lastItemPosition);
+
+            finalEvent = () ->focusChangedListener.onNextFocused(recyclerView, containerPosition, lastItemPosition);
         }
 
-        if (lastItemPosition == registeredPosition){
+        if (lastItemPosition == registeredPosition) {
             float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
-            if (b <= centerX){
+            if (b <= centerX) {
                 return;
             }
-            Logger.hotfixMessage("onPrev / to pos :"+firstItemPosition);
+            Logger.hotfixMessage("onPrev / to pos :" + firstItemPosition);
             registeredPosition = firstItemPosition;
-            focusChangedListener.onPreviousFocused(recyclerView,containerPosition,firstItemPosition);
+            finalEvent = () ->focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
         }
     }
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
-        void onPreviousFocused(RecyclerView view, int containerPosivtion, int cardPosition);
+        void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
-    public interface OnScrollStateChangeListener{
+    public interface OnScrollStateChangeListener {
         void onStateIdle(RecyclerView view, int containerPosition);
+
         void onStateDragging(RecyclerView view, int containerPosition);
     }
 }
