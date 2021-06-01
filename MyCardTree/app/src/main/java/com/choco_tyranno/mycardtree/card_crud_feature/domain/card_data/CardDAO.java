@@ -47,9 +47,10 @@ public abstract class CardDAO {
     public abstract Single<Integer> delete(List<CardEntity> cardEntities);
 
     @Transaction
-    public void deleteAndUpdateTransaction(List<CardEntity> deleteData, List<CardEntity> updateData) {
+    public int deleteAndUpdateTransaction(List<CardEntity> deleteData, List<CardEntity> updateData) {
         update(updateData);
-        delete(deleteData);
+        Single<Integer> count = delete(deleteData);
+        return count.blockingGet();
     }
 
     @Update

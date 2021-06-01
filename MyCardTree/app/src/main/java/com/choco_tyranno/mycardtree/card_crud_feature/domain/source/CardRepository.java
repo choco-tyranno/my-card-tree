@@ -87,10 +87,8 @@ public class CardRepository {
     public void deleteAndUpdate(List<CardEntity> deleteCardEntities, List<CardEntity> updateCardEntities, Consumer<Integer> deleteEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
                     synchronized (this){
-                        mCardDAO.update(updateCardEntities);
-                        mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
-//                        int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
-                        deleteEvent.accept(REQ_SUCCESS);
+                        int deleteCount = mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
+                        deleteEvent.accept(deleteCount);
                     }
                 }
         );
