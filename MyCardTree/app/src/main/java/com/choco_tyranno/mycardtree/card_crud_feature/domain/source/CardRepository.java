@@ -17,6 +17,8 @@ public class CardRepository {
     private final String DEBUG_TAG = "!!!:";
     private final CardDAO mCardDAO;
     private List<CardEntity> _originData;
+    private static final int REQ_SUCCESS = 100;
+    private static final int REQ_FAIL = -100;
 
     public CardRepository(Application application) {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
@@ -50,7 +52,7 @@ public class CardRepository {
     public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
             synchronized (this) {
-                CardEntity foundData = mCardDAO.insertAndUpdates(cardEntity, cardEntityList);
+                CardEntity foundData = mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList);
                 dropEvent.accept(foundData);
             }
         });
@@ -59,7 +61,7 @@ public class CardRepository {
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
             synchronized (this) {
-                CardEntity foundData = mCardDAO.insert(cardEntity);
+                CardEntity foundData = mCardDAO.insertTransaction(cardEntity);
                 dropEvent.accept(foundData);
             }
         });
@@ -67,13 +69,30 @@ public class CardRepository {
 
     public void update(CardEntity cardEntity) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-                mCardDAO.updateCard(cardEntity)
+                mCardDAO.update(cardEntity)
         );
     }
 
-    public void deletes(List<CardEntity> cardEntities, Consumer<Integer> deleteEvent) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-                deleteEvent.accept(mCardDAO.deletes(cardEntities).blockingGet())
+    public void delete(List<CardEntity> deleteCardEntities, Consumer<Integer> deleteEvent) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
+                    synchronized (this){
+//                        mCardDAO.delete(deleteCardEntities);
+                        int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
+                        Logger.hotfixMessage("delete result callback Single<Integer>, deleteCount : "+deleteCount);
+                        deleteEvent.accept(deleteCount);
+                    }
+                }
+        );
+    }
+    public void deleteAndUpdate(List<CardEntity> deleteCardEntities, List<CardEntity> updateCardEntities, Consumer<Integer> deleteEvent) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
+                    synchronized (this){
+                        mCardDAO.update(updateCardEntities);
+                        mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
+//                        int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
+                        deleteEvent.accept(REQ_SUCCESS);
+                    }
+                }
         );
     }
 }

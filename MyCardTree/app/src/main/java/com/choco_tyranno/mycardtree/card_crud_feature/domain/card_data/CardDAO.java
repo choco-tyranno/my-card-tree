@@ -19,36 +19,42 @@ import io.reactivex.Single;
 @Dao
 public abstract class CardDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    public abstract void insertCard(CardEntity cardEntity);
+    public abstract void insert(CardEntity cardEntity);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract void insert(List<CardEntity> cardEntities);
+
+    @Transaction
+    public CardEntity insertTransaction(CardEntity insertData) {
+        insert(insertData);
+        return findLastInsertedCard();
+    }
+
+    @Transaction
+    public CardEntity insertAndUpdateTransaction(CardEntity insertData, List<CardEntity> updateData) {
+        insert(insertData);
+        update(updateData);
+        return findLastInsertedCard();
+    }
 
     @Query("select * from table_card")
     public abstract List<CardEntity> findAllCards();
 
-    @Transaction
-    public CardEntity insertAndUpdates(CardEntity toInsertData, List<CardEntity> toUpdateData) {
-        insertCard(toInsertData);
-        updateCards(toUpdateData);
-        return findLastInsertedCard();
-    }
-
-    @Transaction
-    public CardEntity insert(CardEntity toInsertData) {
-        insertCard(toInsertData);
-        return findLastInsertedCard();
-    }
-
-    @Insert
-    public abstract void insert(List<CardEntity> prepopulateData);
-
-    @Update
-    public abstract void updateCards(List<CardEntity> cardEntities);
-
     @Query("select * from table_card order by card_no desc limit 1")
     public abstract CardEntity findLastInsertedCard();
 
-    @Update
-    public abstract void updateCard(CardEntity cardEntity);
-
     @Delete
-    public abstract Single<Integer> deletes(List<CardEntity> cardEntities);
+    public abstract Single<Integer> delete(List<CardEntity> cardEntities);
+
+    @Transaction
+    public void deleteAndUpdateTransaction(List<CardEntity> deleteData, List<CardEntity> updateData) {
+        update(updateData);
+        delete(deleteData);
+    }
+
+    @Update
+    public abstract void update(List<CardEntity> cardEntities);
+
+    @Update
+    public abstract void update(CardEntity cardEntity);
 }

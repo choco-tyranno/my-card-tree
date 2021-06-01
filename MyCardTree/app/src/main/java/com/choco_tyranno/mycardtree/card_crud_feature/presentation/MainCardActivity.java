@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainBodyBinding;
@@ -43,12 +44,15 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel.loadData(()-> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged());
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
-            boolean flag = false;
+            int pos = 2;
             @Override
             public void onClick(View v) {
-                ((CardContainerViewHolder)binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0))
-                        .getBinding().cardRecyclerview.suppressLayout(flag);
-                flag = !flag;
+                ((CardContainerViewHolder) Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0)))
+                        .getBinding().cardRecyclerview.smoothScrollToPosition(pos);
+                if (pos == 2)
+                    pos = 0;
+                else
+                    pos = 2;
             }
         });
     }

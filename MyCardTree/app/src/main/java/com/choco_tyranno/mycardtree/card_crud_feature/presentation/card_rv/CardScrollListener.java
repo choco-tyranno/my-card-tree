@@ -108,19 +108,21 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private synchronized void handelSingleItemVisible(RecyclerView recyclerView, int itemPosition) {
+        Logger.hotfixMessage("handleSingle/itemPos:" + itemPosition + "/reg Pos:" + registeredPosition);
         if (itemPosition == registeredPosition) {
             return;
         }
         if (itemPosition > registeredPosition) {
             registeredPosition = itemPosition;
-            finalEvent = () ->focusChangedListener.onNextFocused(recyclerView, containerPosition, itemPosition);
+            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, itemPosition);
             return;
         }
         registeredPosition = itemPosition;
-        finalEvent = () ->focusChangedListener.onPreviousFocused(recyclerView, containerPosition, itemPosition);
+        finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, itemPosition);
     }
 
     private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstItemPosition, int lastItemPosition) {
+        Logger.hotfixMessage("handleMulti/f itemPos:" + firstItemPosition + "/l itemPos :" + lastItemPosition + "/reg Pos:" + registeredPosition);
         if (firstItemPosition == registeredPosition) {
             float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
             if (b > centerX) {
@@ -128,8 +130,8 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             }
             Logger.hotfixMessage("onNext / to pos :" + lastItemPosition);
             registeredPosition = lastItemPosition;
-
-            finalEvent = () ->focusChangedListener.onNextFocused(recyclerView, containerPosition, lastItemPosition);
+            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, lastItemPosition);
+            return;
         }
 
         if (lastItemPosition == registeredPosition) {
@@ -139,12 +141,27 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             }
             Logger.hotfixMessage("onPrev / to pos :" + firstItemPosition);
             registeredPosition = firstItemPosition;
-            finalEvent = () ->focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
+            finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
+            return;
         }
+
+        if (firstItemPosition < registeredPosition && lastItemPosition < registeredPosition){
+            float lastItemX = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
+            if (lastItemX <= centerX){
+                registeredPosition = lastItemPosition;
+                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, lastItemPosition);
+            }else {
+                registeredPosition = firstItemPosition;
+                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
+            }
+        }
+
+
     }
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
+
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
