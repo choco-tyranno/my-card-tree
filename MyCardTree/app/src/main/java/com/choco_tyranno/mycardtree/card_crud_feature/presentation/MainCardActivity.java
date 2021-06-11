@@ -92,10 +92,19 @@ public class MainCardActivity extends AppCompatActivity {
 //        ));
 //    }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.hotfixMessage("onStop");
+        MySuperToast.cancel();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        android.os.Process.killProcess(android.os.Process.myPid());
+        Logger.hotfixMessage("destroyed");
+        MySuperToast.cancel();
     }
 
     public CardTreeViewModel shareViewModel() {

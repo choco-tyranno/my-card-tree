@@ -8,10 +8,13 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -42,6 +45,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardA
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CloneCardShadow;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
@@ -86,7 +90,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         this.mAllData = new ArrayList<>();
         this.mPresentData = new ArrayList<>();
         this.mPresentContainerList = new ArrayList<>();
-        this.onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(ClipData.newPlainText("", ""), new CardShadow(view), null, 0);
+        this.onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(ClipData.newPlainText("", ""), new CardShadow(view), "CREATE", 0);
         initCardRecyclerViewDragListener();
         initEmptyCardSpaceDragListener();
     }
@@ -132,7 +136,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                 dtoListToEntityList(removeItemList)
                 , (deleteCount) -> {
                     if (deleteCount != removeItemArr.length) {
-                        runOnUiThreadByView(view, () -> Toast.makeText(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show());
+                        runOnUiThreadByView(view, () -> MySuperToast.showTextShort(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요"));
                         return;
                     }
                     removeFromAllList(removeItemArr, targetContainerPosition);
@@ -142,7 +146,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                     RecyclerView containerRecyclerView = getContainerRecyclerViewFromRemoveButton(view);
                     runOnUiThreadByView(view, () -> {
                         Objects.requireNonNull(containerRecyclerView.getAdapter()).notifyItemRangeRemoved(targetContainerPosition, removeContainerCount);
-                        Toast.makeText(view.getContext(), "요청한 카드가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        MySuperToast.showTextShort(view.getContext(), "요청한 카드가 삭제되었습니다.");
                     });
 
                 }
@@ -176,7 +180,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                     if (deleteCount != removeItemArr.length) {
                         Logger.hotfixMessage("deleteCount:" + deleteCount);
                         Logger.hotfixMessage("removeItemArr.length:" + removeItemArr.length);
-                        runOnUiThreadByView(view, () -> Toast.makeText(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show());
+                        runOnUiThreadByView(view, () -> MySuperToast.showTextShort(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요"));
                         return;
                     }
                     removeFromAllList(removeItemArr, targetContainerPosition);
@@ -189,12 +193,12 @@ public class CardTreeViewModel extends AndroidViewModel {
                             int newFocusPosition = findNearestItemPosition(targetContainerPosition, cardDTO.getSeqNo());
                             mPresentContainerList.get(targetContainerPosition).setFocusCardPosition(newFocusPosition);
                             presentChildren(targetCardRecyclerView, targetContainerPosition, newFocusPosition);
-                            Toast.makeText(view.getContext(), "요청한 카드가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            MySuperToast.showTextShort(view.getContext(), "요청한 카드가 삭제되었습니다.");
                         });
                     } else {
                         runOnUiThreadByView(view, () -> {
                             getCardRecyclerViewFromRemoveButton(view).getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
-                            Toast.makeText(view.getContext(), "요청한 카드가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            MySuperToast.showTextShort(view.getContext(), "요청한 카드가 삭제되었습니다.");
                         });
                     }
                 }
@@ -263,7 +267,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                     }
                 })
                 .setNegativeButton("취소", (dialog, which) -> {
-                    Toast.makeText(view.getContext(), "요청이 취소됐습니다.", Toast.LENGTH_SHORT).show();
+                    MySuperToast.showTextShort(view.getContext(), "요청이 취소됐습니다.");
                     dialog.cancel();
                 });
         AlertDialog alertDialog = alertBuilder.create();
@@ -291,7 +295,7 @@ public class CardTreeViewModel extends AndroidViewModel {
                 item.second.setRemoveBtnVisibility(newVisibility);
             }
         }
-        Toast.makeText(view.getContext(), "" + isOn, Toast.LENGTH_SHORT).show();
+        MySuperToast.showTextShort(view.getContext(), "" + isOn);
     }
 
     /* Drag and drop for add new card*/
@@ -304,30 +308,47 @@ public class CardTreeViewModel extends AndroidViewModel {
             }
             if (event.getAction() == DragEvent.ACTION_DRAG_STARTED)
                 return true;
-            if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
-                Animation tremble = AnimationUtils.loadAnimation(view.getContext(), R.anim.card_trembling);
-                view.startAnimation(tremble);
-                return true;
+            String dragType = (String) event.getLocalState();
+            if (TextUtils.equals(dragType, "CREATE")){
+                return handleCreateService(view, event);
             }
-            if (event.getAction() == DragEvent.ACTION_DRAG_EXITED) {
-                view.clearAnimation();
-                return true;
-            }
-            if (event.getAction() == DragEvent.ACTION_DROP) {
-                view.clearAnimation();
-                ConstraintLayout parent = (ConstraintLayout) view.getParent();
-                RecyclerView containerRecyclerView = (RecyclerView) parent.getParent();
-                int targetContainerPosition = containerRecyclerView.getChildAdapterPosition(parent);
-                int rootCardNo = CardDTO.NO_ROOT_CARD;
-                if (targetContainerPosition != 0) {
-                    int rootCardSeqNo = mPresentContainerList.get(targetContainerPosition - 1).getFocusCardPosition();
-                    rootCardNo = mPresentData.get(targetContainerPosition - 1).get(rootCardSeqNo).first.getCardNo();
-                }
-                dropAndCreateService(containerRecyclerView, rootCardNo, targetContainerPosition);
-                return true;
+            if (TextUtils.equals(dragType, "MOVE")){
+                return handleMoveService(view);
             }
             return false;
+
         };
+    }
+
+    private boolean handleMoveService(View view){
+        MySuperToast.showTextShort(view.getContext(), "move");
+        return false;
+    }
+
+    private boolean handleCreateService(View view, DragEvent event){
+        if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
+            Animation tremble = AnimationUtils.loadAnimation(view.getContext(), R.anim.card_trembling);
+            view.startAnimation(tremble);
+            return true;
+        }
+        if (event.getAction() == DragEvent.ACTION_DRAG_EXITED) {
+            view.clearAnimation();
+            return true;
+        }
+        if (event.getAction() == DragEvent.ACTION_DROP) {
+            view.clearAnimation();
+            ConstraintLayout parent = (ConstraintLayout) view.getParent();
+            RecyclerView containerRecyclerView = (RecyclerView) parent.getParent();
+            int targetContainerPosition = containerRecyclerView.getChildAdapterPosition(parent);
+            int rootCardNo = CardDTO.NO_ROOT_CARD;
+            if (targetContainerPosition != 0) {
+                int rootCardSeqNo = mPresentContainerList.get(targetContainerPosition - 1).getFocusCardPosition();
+                rootCardNo = mPresentData.get(targetContainerPosition - 1).get(rootCardSeqNo).first.getCardNo();
+            }
+            dropAndCreateService(containerRecyclerView, rootCardNo, targetContainerPosition);
+            return true;
+        }
+        return false;
     }
 
     private void initCardRecyclerViewDragListener() {
@@ -337,26 +358,41 @@ public class CardTreeViewModel extends AndroidViewModel {
                 if (event.getAction() == DragEvent.ACTION_DRAG_STARTED) {
                     return true;
                 }
+                String dragType = (String) event.getLocalState();
                 RecyclerView targetView = (RecyclerView) view;
-                LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
-                NullPassUtil.checkLinearLayoutManager(layoutManager);
-                if (!(Objects.requireNonNull(layoutManager).getItemCount() > 0)) {
-                    return false;
+                if (TextUtils.equals(dragType, "CREATE")){
+                    return handleCreateService(targetView, event);
                 }
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                boolean result;
-                if (firstVisibleItemPosition == lastVisibleItemPosition) {
-                    result = handleDragEventSingleItemVisibleCase(targetView, firstVisibleItemPosition, event);
-                    return result;
+                if (TextUtils.equals(dragType, "MOVE")){
+                    return handleMoveService(targetView);
                 }
-                result = handleDragEventMultiItemVisibleCase(targetView, firstVisibleItemPosition, lastVisibleItemPosition, event);
-                return result;
             } else {
                 throw new RuntimeException("#ondrag() : recyclerview not found");
             }
+            return false;
         };
+    }
 
+    private boolean handleMoveService(RecyclerView targetView){
+        MySuperToast.showTextShort(targetView.getContext(), "move");
+        return false;
+    }
+
+    private boolean handleCreateService(RecyclerView targetView, DragEvent event){
+        LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
+        NullPassUtil.checkLinearLayoutManager(layoutManager);
+        if (!(Objects.requireNonNull(layoutManager).getItemCount() > 0)) {
+            return false;
+        }
+        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        boolean result;
+        if (firstVisibleItemPosition == lastVisibleItemPosition) {
+            result = handleDragEventSingleItemVisibleCase(targetView, firstVisibleItemPosition, event);
+            return result;
+        }
+        result = handleDragEventMultiItemVisibleCase(targetView, firstVisibleItemPosition, lastVisibleItemPosition, event);
+        return result;
     }
 
     private boolean handleDragEventSingleItemVisibleCase(RecyclerView rv, int targetCardPosition, DragEvent event) {
@@ -406,31 +442,34 @@ public class CardTreeViewModel extends AndroidViewModel {
         return false;
     }
 
+    //Drop target view is recyclerView.
+    //single card case + in crowds case.
+    private void dropAndCreateService(RecyclerView rv, FrameLayout prevSeqCardView, @Nullable FrameLayout nextSeqCardView) {
+        Logger.message("vm#dropAndCreateService : for card space");
+        CardDTO prevSeqCardDTO = ((ContactCardViewHolder) rv.getChildViewHolder(prevSeqCardView)).getBinding().getCard();
+        int prevCardSeqNo = prevSeqCardDTO.getSeqNo();
+        int rootNo = prevSeqCardDTO.getRootNo();
+        int containerNo = prevSeqCardDTO.getContainerNo();
+        List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(containerNo);
+        CardDTO newCardDTO = new CardDTO.Builder().seqNo(prevCardSeqNo + 1).rootNo(rootNo).containerNo(containerNo).build();
+        if (targetContainerCardList.size() > prevCardSeqNo + 1) {
+            mCardRepository.insertAndUpdates(newCardDTO.toEntity()
+                    , dtoListToEntityList(increaseListCardsSeq(targetContainerCardList, prevCardSeqNo + 1))
+                    , orderDropDataInsertListener(prevSeqCardDTO, targetContainerCardList, rv, prevSeqCardView, nextSeqCardView)
+            );
+        } else {
+            mCardRepository.insert(newCardDTO.toEntity()
+                    , orderDropDataInsertListener(prevSeqCardDTO, targetContainerCardList, rv, prevSeqCardView, nextSeqCardView)
+            );
+        }
+    }
+
+    //Drop target view is empty space view.
     private void dropAndCreateService(RecyclerView containerRecyclerView, int rootCardNo, int targetContainerNo) {
         Logger.message("vm#dropAndCreateService : for empty space");
         CardDTO newCardDTO = new CardDTO.Builder().rootNo(rootCardNo).containerNo(targetContainerNo).build();
         mCardRepository.insert(newCardDTO.toEntity()
                 , orderDropDataInsertListenerForEmptySpace(containerRecyclerView, targetContainerNo));
-    }
-
-    private void dropAndCreateService(RecyclerView rv, FrameLayout targetView, @Nullable FrameLayout followingView) {
-        Logger.message("vm#dropAndCreateService : for card space");
-        CardDTO targetCardDTO = ((ContactCardViewHolder) rv.getChildViewHolder(targetView)).getBinding().getCard();
-        int targetSeqNo = targetCardDTO.getSeqNo();
-        int targetRootNo = targetCardDTO.getRootNo();
-        int targetContainerNo = targetCardDTO.getContainerNo();
-        List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(targetContainerNo);
-        CardDTO newCardDTO = new CardDTO.Builder().seqNo(targetSeqNo + 1).rootNo(targetRootNo).containerNo(targetContainerNo).build();
-        if (targetContainerCardList.size() > targetSeqNo + 1) {
-            mCardRepository.insertAndUpdates(newCardDTO.toEntity()
-                    , dtoListToEntityList(increaseListCardsSeq(targetContainerCardList, targetSeqNo + 1))
-                    , orderDropDataInsertListener(targetCardDTO, targetContainerCardList, rv, targetView, followingView)
-            );
-        } else {
-            mCardRepository.insert(newCardDTO.toEntity()
-                    , orderDropDataInsertListener(targetCardDTO, targetContainerCardList, rv, targetView, followingView)
-            );
-        }
     }
 
     //{@param direction} :
@@ -653,7 +692,6 @@ public class CardTreeViewModel extends AndroidViewModel {
     /* Drop Utils*/
     public interface DropDataInsertListener extends Consumer<CardEntity> {
         void accept(CardEntity cardEntity);
-
         void startDropFinishAnimation();
     }
 
@@ -770,6 +808,16 @@ public class CardTreeViewModel extends AndroidViewModel {
     public static void setSuppressLayout(View view, boolean state) {
         RecyclerView rv = (RecyclerView) view;
         rv.suppressLayout(state);
+    }
+
+    public View.OnLongClickListener getOnLongClickListenerForCard(){
+        return (view)->{
+            LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View cloneCardView = layoutInflater.inflate(R.layout.item_card_front_clone, null, false);
+            cloneCardView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            cloneCardView.layout(0, 0, (int)view.getResources().getDimension(R.dimen.cloneCard_width),(int)view.getResources().getDimension(R.dimen.cloneCard_height));
+            return view.startDragAndDrop(ClipData.newPlainText("", ""), new CloneCardShadow(cloneCardView), "MOVE", 0);
+        };
     }
 
     public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab() {
