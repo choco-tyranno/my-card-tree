@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -90,6 +89,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             setCenterX(((Activity) recyclerView.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().centerX());
         }
         int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
         if (firstVisibleItemPosition == -1) {
             return;
         }

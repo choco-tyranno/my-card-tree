@@ -4,31 +4,28 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
+import android.graphics.Color;
+import android.hardware.display.DisplayManager;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.databinding.BaseObservable;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,29 +36,22 @@ import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntit
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardLongClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CloneCardShadow;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ArrowPresenter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
-import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -309,10 +299,10 @@ public class CardTreeViewModel extends AndroidViewModel {
             if (event.getAction() == DragEvent.ACTION_DRAG_STARTED)
                 return true;
             String dragType = (String) event.getLocalState();
-            if (TextUtils.equals(dragType, "CREATE")){
+            if (TextUtils.equals(dragType, "CREATE")) {
                 return handleCreateService(view, event);
             }
-            if (TextUtils.equals(dragType, "MOVE")){
+            if (TextUtils.equals(dragType, "MOVE")) {
                 return handleMoveService(view);
             }
             return false;
@@ -320,12 +310,12 @@ public class CardTreeViewModel extends AndroidViewModel {
         };
     }
 
-    private boolean handleMoveService(View view){
+    private boolean handleMoveService(View view) {
         MySuperToast.showTextShort(view.getContext(), "move");
         return false;
     }
 
-    private boolean handleCreateService(View view, DragEvent event){
+    private boolean handleCreateService(View view, DragEvent event) {
         if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
             Animation tremble = AnimationUtils.loadAnimation(view.getContext(), R.anim.card_trembling);
             view.startAnimation(tremble);
@@ -360,10 +350,10 @@ public class CardTreeViewModel extends AndroidViewModel {
                 }
                 String dragType = (String) event.getLocalState();
                 RecyclerView targetView = (RecyclerView) view;
-                if (TextUtils.equals(dragType, "CREATE")){
+                if (TextUtils.equals(dragType, "CREATE")) {
                     return handleCreateService(targetView, event);
                 }
-                if (TextUtils.equals(dragType, "MOVE")){
+                if (TextUtils.equals(dragType, "MOVE")) {
                     return handleMoveService(targetView);
                 }
             } else {
@@ -373,12 +363,12 @@ public class CardTreeViewModel extends AndroidViewModel {
         };
     }
 
-    private boolean handleMoveService(RecyclerView targetView){
+    private boolean handleMoveService(RecyclerView targetView) {
         MySuperToast.showTextShort(targetView.getContext(), "move");
         return false;
     }
 
-    private boolean handleCreateService(RecyclerView targetView, DragEvent event){
+    private boolean handleCreateService(RecyclerView targetView, DragEvent event) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
         NullPassUtil.checkLinearLayoutManager(layoutManager);
         if (!(Objects.requireNonNull(layoutManager).getItemCount() > 0)) {
@@ -403,11 +393,9 @@ public class CardTreeViewModel extends AndroidViewModel {
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
                 slowOut(targetView, false, CARD_LOCATION_LEFT);
-
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
                 slowOut(targetView, true, CARD_LOCATION_LEFT);
-
                 return true;
             case DragEvent.ACTION_DROP:
                 dropAndCreateService(rv, targetView, null);
@@ -421,7 +409,7 @@ public class CardTreeViewModel extends AndroidViewModel {
         Logger.message("vm#handleDragEventMultiItemVisibleCase");
         ContactCardViewHolder firstVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(firstVisibleCardPosition);
         ContactCardViewHolder lastVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(lastVisibleCardPosition);
-        if (firstVisibleViewVH==null||lastVisibleViewVH==null) {
+        if (firstVisibleViewVH == null || lastVisibleViewVH == null) {
             return false;
         }
         FrameLayout firstVisibleView = Objects.requireNonNull(firstVisibleViewVH).getBinding().cardContainerFrameLayout;
@@ -790,9 +778,22 @@ public class CardTreeViewModel extends AndroidViewModel {
         view.setOnDragListener(listener);
     }
 
-    @BindingAdapter("onLongClickListener")
-    public static void setOnLongClickListener(View view, View.OnLongClickListener listener) {
+    // applied to cardView, createFab.
+    @BindingAdapter(value = {"onLongClickListener", "card"}, requireAll = false)
+    public static void setOnLongClickListener(View view, View.OnLongClickListener listener, @Nullable CardDTO cardDTO) {
+        if (Optional.ofNullable(cardDTO).isPresent()) {
+            ((CardLongClickListener) listener).setCard(cardDTO);
+//            ((CardLongClickListener) listener).setAction(CardLongClickListener.ACTION_DRAG_PREPARE, () -> {
+//                //showArrowIfNecessary
+//                ArrowPresenter.presentArrow(ArrowPresenter.CARD_RECYCLERVIEW
+//                        ,(RecyclerView)findCardRecyclerViewFromCardView((MaterialCardView) view));
+//            });
+        }
         view.setOnLongClickListener(listener);
+    }
+
+    private static RecyclerView findCardRecyclerViewFromCardView(MaterialCardView cardView) {
+        return (RecyclerView) cardView.getParent().getParent().getParent();
     }
 
     @BindingAdapter(value = {"onScrollListener", "containerPosition"})
@@ -808,16 +809,6 @@ public class CardTreeViewModel extends AndroidViewModel {
     public static void setSuppressLayout(View view, boolean state) {
         RecyclerView rv = (RecyclerView) view;
         rv.suppressLayout(state);
-    }
-
-    public View.OnLongClickListener getOnLongClickListenerForCard(){
-        return (view)->{
-            LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View cloneCardView = layoutInflater.inflate(R.layout.item_card_front_clone, null, false);
-            cloneCardView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            cloneCardView.layout(0, 0, (int)view.getResources().getDimension(R.dimen.cloneCard_width),(int)view.getResources().getDimension(R.dimen.cloneCard_height));
-            return view.startDragAndDrop(ClipData.newPlainText("", ""), new CloneCardShadow(cloneCardView), "MOVE", 0);
-        };
     }
 
     public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab() {
@@ -986,4 +977,8 @@ public class CardTreeViewModel extends AndroidViewModel {
         return mPresentData.get(containerPos);
     }
 
+    /* TODO : drag card and move card item */
+    public View.OnLongClickListener getOnLongClickListenerForCard() {
+        return new CardLongClickListener();
+    }
 }

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
@@ -41,7 +40,7 @@ public class MainCardActivity extends AppCompatActivity {
         mainBinding();
         binding.setViewModel(viewModel);
         setContainerRv();
-        viewModel.loadData(()-> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged());
+        viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
             int pos = 2;

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class MySuperToast {
-
     public static Toast mySuperToast;
 
     private MySuperToast() {

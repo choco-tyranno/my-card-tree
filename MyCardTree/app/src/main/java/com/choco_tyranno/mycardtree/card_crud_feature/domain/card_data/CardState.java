@@ -2,7 +2,6 @@ package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
 
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.BaseObservable;
@@ -10,6 +9,7 @@ import androidx.databinding.Bindable;
 
 import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MySuperToast;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Locale;
@@ -108,8 +108,8 @@ public class CardState extends BaseObservable{
         }
 
         public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO, CardTreeViewModel viewModel) {
-            Toast.makeText(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
-                    +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle(), Toast.LENGTH_SHORT).show();
+            MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
+                    +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle());
 
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
@@ -140,12 +140,12 @@ public class CardState extends BaseObservable{
 
             if (isTitleChanged||isContactNumberChanged){
                 viewModel.updateCard(cardDTO);
-                Toast.makeText(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다.");
                 switchView.setChecked(false);
                 return;
             }
 
-            Toast.makeText(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다.", Toast.LENGTH_SHORT).show();
+            MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다.");
         }
 
         public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO) {

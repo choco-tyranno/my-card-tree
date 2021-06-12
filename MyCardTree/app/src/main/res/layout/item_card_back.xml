@@ -27,7 +27,6 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/backCard_cardView"
-            app:onLongClickListener="@{viewModel.onLongClickListenerForCard}"
             android:layout_width="320dp"
             android:layout_height="140dp"
             app:layout_constraintRight_toRightOf="parent"
