@@ -50,6 +50,23 @@ public class CardState extends BaseObservable{
         view.bringToFront();
     }
 
+    public static class Builder{
+        private final CardState instance;
+
+        public Builder(){
+            instance = new CardState();
+        }
+
+        public Builder removeBtnVisibility(int removeBtnVisibility){
+            instance.setRemoveBtnVisibility(removeBtnVisibility);
+            return Builder.this;
+        }
+
+        public CardState build(){
+            return instance;
+        }
+    }
+
     public static class Front extends BaseObservable {
         public static final int READ_MODE = 0;
         public static final int EDIT_MODE = 1;

@@ -36,7 +36,9 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.Conta
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ArrowPresenter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
+import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +79,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initEmptyCardSpaceDragListener();
     }
 
-    /* remove card*/
+    /* remove card */
 
     public void onRemoveBtnClicked(View view, CardDTO targetCard) {
         int targetContainerPosition = findContainerPositionByRemoveBtn(view);
@@ -203,7 +205,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return cardRecyclerView.getChildAdapterPosition(cardFrameLayout);
     }
 
-
     private List<CardDTO> findChildrenCards(CardDTO rootCard, int rootContainerPosition) {
         List<CardDTO> foundChildrenCardCollector = new ArrayList<>();
         int testRootNo = rootCard.getCardNo();
@@ -267,16 +268,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         int newVisibility = View.INVISIBLE;
         if (isOn)
             newVisibility = View.VISIBLE;
+
         for (List<Pair<CardDTO, CardState>> containerItems : mPresentData) {
             for (Pair<CardDTO, CardState> item : containerItems) {
                 item.second.setRemoveBtnVisibility(newVisibility);
             }
         }
-        runOnUiThread(() ->
-                        SingleToastManager.show(
-                                SingleToaster.makeTextShort(view.getContext(), "" + isOn)
-                        )
-                , view.getContext());
     }
 
     /* Drag and drop for add new card*/
@@ -294,7 +291,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 return true;
             String dragType = (String) event.getLocalState();
             if (TextUtils.equals(dragType, "CREATE")) {
-                return handleCreateService(view, event);
+                return handleCreateServiceForEmptySpace(view, event);
             }
             if (TextUtils.equals(dragType, "MOVE")) {
                 return handleMoveService(EMPTY_CARD_SPACE, view, event);
@@ -305,7 +302,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
 
-    private boolean handleCreateService(View view, DragEvent event) {
+    private boolean handleCreateServiceForEmptySpace(View view, DragEvent event) {
         if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
             Animation tremble = AnimationUtils.loadAnimation(view.getContext(), R.anim.card_trembling);
             view.startAnimation(tremble);
@@ -325,7 +322,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 int rootCardSeqNo = mPresentContainerList.get(targetContainerPosition - 1).getFocusCardPosition();
                 rootCardNo = mPresentData.get(targetContainerPosition - 1).get(rootCardSeqNo).first.getCardNo();
             }
-            dropAndCreateService(containerRecyclerView, rootCardNo, targetContainerPosition);
+            dropAndCreateServiceForEmptySpace(containerRecyclerView, rootCardNo, targetContainerPosition);
             return true;
         }
         return false;
@@ -344,7 +341,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 String dragType = (String) event.getLocalState();
                 RecyclerView targetView = (RecyclerView) view;
                 if (TextUtils.equals(dragType, "CREATE")) {
-                    return handleCreateService(targetView, event);
+                    return handleCreateServiceForContainer(targetView, event);
                 }
                 if (TextUtils.equals(dragType, "MOVE")) {
                     return handleMoveService(CARD_RECYCLERVIEW, targetView, event);
@@ -384,7 +381,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return false;
     }
 
-    private boolean handleCreateService(RecyclerView targetView, DragEvent event) {
+    private boolean handleCreateServiceForContainer(RecyclerView targetView, DragEvent event) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
         if (!(NullPassUtil.checkLinearLayoutManager(layoutManager).getItemCount() > 0)) {
             return false;
@@ -414,7 +411,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 return true;
             case DragEvent.ACTION_DROP:
                 slowOut(targetView, true, CARD_LOCATION_LEFT);
-                dropAndCreateService(rv, targetView, null);
+                dropAndCreateServiceForContainer(rv, targetView);
                 return true;
         }
         return false;
@@ -442,7 +439,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             case DragEvent.ACTION_DROP:
                 slowOut(firstVisibleView, true, CARD_LOCATION_LEFT);
                 slowOut(lastVisibleView, true, CARD_LOCATION_RIGHT);
-                dropAndCreateService(rv, firstVisibleView, lastVisibleView);
+                dropAndCreateServiceForContainer(rv, firstVisibleView);
                 return true;
         }
         return false;
@@ -450,9 +447,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     //Drop target view is recyclerView.
     //single card case + in crowds case.
-    private void dropAndCreateService(RecyclerView rv, FrameLayout prevSeqCardView, @Nullable FrameLayout nextSeqCardView) {
+    private void dropAndCreateServiceForContainer(RecyclerView rv, FrameLayout prevSeqCardView) {
         Logger.message("vm#dropAndCreateService : for card space");
-        CardDTO prevSeqCardDTO = ((ContactCardViewHolder) rv.getChildViewHolder(prevSeqCardView)).getBinding().getCard();
+        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) rv.getChildViewHolder(prevSeqCardView)).getBinding();
+        CardDTO prevSeqCardDTO = cardFrameBinding.getCard();
+        CardState prevCardState = cardFrameBinding.getCardState();
         int prevCardSeqNo = prevSeqCardDTO.getSeqNo();
         int rootNo = prevSeqCardDTO.getRootNo();
         int containerNo = prevSeqCardDTO.getContainerNo();
@@ -463,21 +462,25 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     newCardDTO.toEntity()
                     , dtoListToEntityList(
                             increaseListCardsSeq(targetContainerCardList, prevCardSeqNo + 1))
-                    , orderDropDataInsertListener(prevSeqCardDTO, targetContainerCardList, rv, prevSeqCardView, nextSeqCardView)
+                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
             );
         } else {
             mCardRepository.insert(newCardDTO.toEntity()
-                    , orderDropDataInsertListener(prevSeqCardDTO, targetContainerCardList, rv, prevSeqCardView, nextSeqCardView)
+                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
             );
         }
     }
 
     //Drop target view is empty space view.
-    private void dropAndCreateService(RecyclerView containerRecyclerView, int rootCardNo, int targetContainerNo) {
+    private void dropAndCreateServiceForEmptySpace(RecyclerView containerRecyclerView, int rootCardNo, int targetContainerNo) {
         Logger.message("vm#dropAndCreateService : for empty space");
+        SwitchMaterial removeBtn = ((View)containerRecyclerView.getParent()).findViewById(R.id.main_mode_switch);
+        int removeBtnVisibility = View.INVISIBLE;
+        if (removeBtn.isChecked())
+            removeBtnVisibility = View.VISIBLE;
         CardDTO newCardDTO = new CardDTO.Builder().rootNo(rootCardNo).containerNo(targetContainerNo).build();
         mCardRepository.insert(newCardDTO.toEntity()
-                , orderDropDataInsertListenerForEmptySpace(containerRecyclerView, targetContainerNo));
+                , orderDropDataInsertListenerForEmptySpace(containerRecyclerView, targetContainerNo, removeBtnVisibility));
     }
 
     //{@param direction} :
@@ -653,11 +656,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return valueCollector;
     }
 
-    private void resetChildrenPresentData(int rootContainerPosition, Integer[] childrenRootNoArr) {
+    private void resetChildrenPresentData(int rootContainerPosition, int rootCardPosition, Integer[] childrenRootNoArr) {
         Logger.message("vm#resetChildrenPresentData");
         Queue<Integer> childrenRootNoQueue = new LinkedList<>();
         Stream.of(childrenRootNoArr).forEach(childrenRootNoQueue::offer);
         final int prevPresentListSize = mPresentData.size();
+        int removeBtnVisibility = mPresentData.get(rootContainerPosition).get(rootCardPosition).second.getRemoveBtnVisibility();
         if (rootContainerPosition + 1 < prevPresentListSize) {
             mPresentData.subList(rootContainerPosition + 1, prevPresentListSize).clear();
         }
@@ -669,7 +673,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             for (CardDTO testCard : testList) {
                 if (testCard.getRootNo() != Objects.requireNonNull(childrenRootNoQueue.peek()))
                     continue;
-                presentCardCollector.add(Pair.create(testCard, new CardState()));
+                presentCardCollector.add(Pair.create(testCard, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             }
             mPresentData.add(presentCardCollector);
             childrenRootNoQueue.poll();
@@ -704,12 +708,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         void accept(CardEntity cardEntity);
     }
 
-    public DropDataInsertListener orderDropDataInsertListenerForEmptySpace(RecyclerView containerRecyclerView, int targetPosition) {
+    public DropDataInsertListener orderDropDataInsertListenerForEmptySpace(RecyclerView containerRecyclerView, int targetPosition, int removeBtnVisibility) {
         return cardEntity -> {
             mPresentContainerList.add(new Container());
             mPresentData.add(new ArrayList<>());
             CardDTO newCard = cardEntity.toDTO();
-            mPresentData.get(targetPosition).add(Pair.create(newCard, new CardState()));
+            mPresentData.get(targetPosition).add(Pair.create(newCard, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             if (mAllData.size() < targetPosition + 1) {
                 mAllData.add(new ArrayList<>());
             }
@@ -720,12 +724,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         };
     }
 
-    public DropDataInsertListener orderDropDataInsertListener(CardDTO targetDTO, List<Pair<CardDTO, CardState>> targetItemList
-            , RecyclerView targetRecyclerView, View targetView, @Nullable View followingView) {
+    public DropDataInsertListener orderDropDataInsertListenerForContainer(CardDTO targetDTO, CardState targetCardState, List<Pair<CardDTO, CardState>> targetItemList
+            , RecyclerView targetRecyclerView) {
         return foundEntity -> {
             Logger.hotfixMessage("DropDataInsertListener#accept");
             int targetSeqNo = targetDTO.getSeqNo();
-            targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState()));
+            int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
+            targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             mAllData.get(targetDTO.getContainerNo()).add(targetSeqNo + 1, foundEntity.toDTO());
             runOnUiThread(() -> {
                 Logger.hotfixMessage("runOnUiThread");
@@ -825,7 +830,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         Integer[] childrenRootNoArr = resetPresentContainerList(rootContainerPosition, rootCardPosition);
         resetChildrenPresentContainerRootNo(rootContainerPosition + 1, childrenRootNoArr);
         resetChildrenFocusedCardPosition(rootContainerPosition);
-        resetChildrenPresentData(rootContainerPosition, childrenRootNoArr);
+        resetChildrenPresentData(rootContainerPosition, rootCardPosition, childrenRootNoArr);
         notifyContainerItemChanged(((RecyclerView) cardRecyclerView.getParent().getParent()), getContainerAdapterFromCardRecyclerView(cardRecyclerView)
                 , prevPresentContainerSize, mPresentData.size()
                 , rootContainerPosition);
@@ -964,25 +969,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     // Utils
-
-//    private void runOnUiThread(View view, Runnable action) {
-//        ((Activity) view.getContext()).runOnUiThread(action);
-//    }
-
-//    private void throwToMainHandlerWithDelay(View view, Runnable action, int delay) {
-//        Handler mainHandler = ((MainCardActivity) view.getContext()).getMainHandler();
-//        if (!Optional.ofNullable(mainHandler).isPresent()) {
-//            throw new RuntimeException("CardViewModel#throwToMainHandlerWithDelay - getMainHandler is null");
-//        }
-//        mainHandler.postDelayed(action, delay);
-//    }
-
-    private static final int NOTIFY_ITEM_INSERTED = 1;
-    private static final int NOTIFY_ITEM_REMOVED = 2;
-
-    private void notifyForCardRecyclerViewAdapter(View view, RecyclerView.Adapter<CardViewHolder> adapter, int position, int changeFlag) {
-        runOnUiThread(() -> adapter.notifyItemInserted(position), view.getContext());
-    }
 
     private ContainerAdapter getContainerAdapterFromCardRecyclerView(RecyclerView cardRecyclerView) {
         Logger.message("vm#getContainerAdapterFromCardRecyclerView : util");
