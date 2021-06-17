@@ -2,7 +2,6 @@ package com.choco_tyranno.mycardtree;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,7 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +26,7 @@ import java.util.List;
 public class DbTest {
     private CardDAO cardDAO;
     private MyCardTreeDataBase testDb;
-    private CardTreeViewModel viewModel;
+    private CardViewModel viewModel;
 
     @Before
     public void createDb() {
@@ -45,7 +44,7 @@ public class DbTest {
     public void writeCardAndReadCardList() throws Exception {
         List<CardEntity> testCardEntities = TestUtil.createCards(5);
         CardEntity testCardEntity = testCardEntities.get(0);
-        cardDAO.insertCards(testCardEntities);
+        cardDAO.insert(testCardEntities);
 //        LiveData<List<CardEntity>> cards = cardDAO.findAllCards();
 //        assertThat(cards.getValue().get(0), is(testCardEntity));
     }

@@ -1,10 +1,8 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemCardEmptyBinding;
 
 public class EmptyCardSpaceViewHolder extends ContainerViewHolder{
@@ -15,7 +13,7 @@ public class EmptyCardSpaceViewHolder extends ContainerViewHolder{
         mBinding = binding;
     }
 
-    public void bind(CardTreeViewModel viewModel, int position){
+    public void bind(CardViewModel viewModel, int position){
         mBinding.setViewModel(viewModel);
     }
 }

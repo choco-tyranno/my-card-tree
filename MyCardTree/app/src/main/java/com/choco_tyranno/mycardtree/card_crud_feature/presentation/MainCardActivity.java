@@ -1,62 +1,54 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
-import android.view.MotionEvent;
+import android.os.Handler;
 import android.view.View;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.MyCardTreeDataBase;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
-import com.choco_tyranno.mycardtree.databinding.ActivityMainBodyBinding;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 
 public class MainCardActivity extends AppCompatActivity {
-    private static CardTreeViewModel viewModel;
+    private static CardViewModel viewModel;
     private ActivityMainFrameBinding binding;
+    private Handler mMainHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Optional.ofNullable(mMainHandler).isPresent())
+        mMainHandler = new Handler(getMainLooper());
 //        isStart = true;
-        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardTreeViewModel.class);
+        viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         mainBinding();
         binding.setViewModel(viewModel);
         setContainerRv();
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
-            int pos = 2;
+//            int pos = 2;
             @Override
             public void onClick(View v) {
-                ((CardContainerViewHolder) Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0)))
-                        .getBinding().cardRecyclerview.smoothScrollToPosition(pos);
-                if (pos == 2)
-                    pos = 0;
-                else
-                    pos = 2;
+
+//                ((CardContainerViewHolder) Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0)))
+//                        .getBinding().cardRecyclerview.smoothScrollToPosition(pos);
+//                if (pos == 2)
+//                    pos = 0;
+//                else
+//                    pos = 2;
             }
         });
     }
 
-    public static CardTreeViewModel getViewModel(){
+    public static CardViewModel getViewModel(){
         if (Optional.ofNullable(viewModel).isPresent())
         return viewModel;
         throw new RuntimeException("MainCardActivity#getViewModel is null");
@@ -95,19 +87,23 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.hotfixMessage("onStop");
-        MySuperToast.cancel();
+        Logger.message("onStop");
+        SingleToastManager.clear();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.hotfixMessage("destroyed");
-        MySuperToast.cancel();
+        Logger.message("destroyed");
+        SingleToastManager.clear();
     }
 
-    public CardTreeViewModel shareViewModel() {
+    public CardViewModel getCardViewModel() {
         return viewModel;
+    }
+
+    public Handler getMainHandler(){
+        return mMainHandler;
     }
 
 }

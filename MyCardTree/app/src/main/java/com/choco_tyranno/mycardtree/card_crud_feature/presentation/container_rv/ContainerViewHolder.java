@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 
 abstract class ContainerViewHolder extends RecyclerView.ViewHolder {
     public final static int CARD_LAYER_TYPE = 1000;
@@ -13,5 +13,5 @@ abstract class ContainerViewHolder extends RecyclerView.ViewHolder {
     public ContainerViewHolder(@NonNull View itemView) {
         super(itemView);
     }
-    public abstract void bind(CardTreeViewModel viewModel,int position);
+    public abstract void bind(CardViewModel viewModel, int position);
 }

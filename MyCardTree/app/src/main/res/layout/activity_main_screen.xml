@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

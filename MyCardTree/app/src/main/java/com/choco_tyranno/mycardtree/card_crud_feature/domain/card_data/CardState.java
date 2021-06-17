@@ -8,8 +8,9 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.mycardtree.BR;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MySuperToast;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Locale;
@@ -107,9 +108,9 @@ public class CardState extends BaseObservable{
                 toReadMode();
         }
 
-        public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO, CardTreeViewModel viewModel) {
-            MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
-                    +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle());
+        public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO, CardViewModel viewModel) {
+            SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
+                    +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle()));
 
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
@@ -140,12 +141,12 @@ public class CardState extends BaseObservable{
 
             if (isTitleChanged||isContactNumberChanged){
                 viewModel.updateCard(cardDTO);
-                MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다.");
+                SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다."));
                 switchView.setChecked(false);
                 return;
             }
 
-            MySuperToast.showTextShort(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다.");
+            SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다."));
         }
 
         public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDTO cardDTO) {

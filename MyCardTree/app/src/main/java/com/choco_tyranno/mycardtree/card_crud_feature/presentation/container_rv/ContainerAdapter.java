@@ -5,31 +5,22 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardEmptyBinding;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> {
-    private final CardTreeViewModel viewModel;
+    private final CardViewModel viewModel;
     private static final int CARD_TYPE = 0;
     private static final int EMPTY_CARD_TYPE = 1;
 
     public ContainerAdapter(Context context) {
         Logger.message("contAdapter#constructor");
-        this.viewModel = ((MainCardActivity) context).shareViewModel();
+        this.viewModel = ((MainCardActivity) context).getCardViewModel();
     }
 
     @NonNull

@@ -36,7 +36,7 @@ public class CardRepository {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (loopCount>90)
+                        if (loopCount>30)
                             break;
                     }
                     _originData = mCardDAO.findAllCards();
@@ -76,9 +76,7 @@ public class CardRepository {
     public void delete(List<CardEntity> deleteCardEntities, Consumer<Integer> deleteEvent) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
                     synchronized (this){
-//                        mCardDAO.delete(deleteCardEntities);
                         int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
-                        Logger.hotfixMessage("delete result callback Single<Integer>, deleteCount : "+deleteCount);
                         deleteEvent.accept(deleteCount);
                     }
                 }

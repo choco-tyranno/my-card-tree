@@ -25,15 +25,8 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.Optional;
 
 public class CloneCardShadow extends View.DragShadowBuilder {
-//    LayoutInflater layoutInflater;
-//    View cloneCardView;
-
     public CloneCardShadow(View view) {
         super(view);
-        Logger.hotfixMessage("CloneCardShadow/getView.getWidth:"+getView().getWidth()+"/height:"+getView().getHeight());
-//        layoutInflater = ((Activity) view.getContext()).getLayoutInflater();
-//        cloneCardView = layoutInflater.inflate(R.layout.item_card_front_clone, (ViewGroup) getView().getRootView(), false);
-//        cloneCardView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
     }
 
     @Override

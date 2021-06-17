@@ -1,8 +1,6 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,23 +8,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
-    private final CardTreeViewModel viewModel;
+    private final CardViewModel viewModel;
     private int mContainerPosition;
+    private int position;
 
     public CardAdapter(Context context) {
         Logger.message("cardAdapter#constructor");
-        this.viewModel = ((MainCardActivity) context).shareViewModel();
+        this.viewModel = ((MainCardActivity) context).getCardViewModel();
         mContainerPosition = -1;
     }
 
@@ -47,7 +40,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     @Override
     public int getItemCount() {
         Logger.message("cardAdapter#getItemCount");
-        if (mContainerPosition==-1){
+        if (mContainerPosition == -1) {
             Logger.message("container pos -1 detected.");
             return 0;
         }
@@ -64,7 +57,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     }
 
     public void setContainerPosition(int containerPosition) {
-        Logger.message("cardAdapter#setContainerPos :"+containerPosition);
+        Logger.message("cardAdapter#setContainerPos :" + containerPosition);
         this.mContainerPosition = containerPosition;
     }
 }

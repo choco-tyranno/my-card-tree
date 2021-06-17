@@ -23,6 +23,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     private int containerPosition;
     private int centerX;
     private Runnable finalEvent;
+    private boolean dragStart;
 
     private int getCenterX() {
         return centerX;
@@ -58,16 +59,19 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         super.onScrollStateChanged(recyclerView, newState);
         switch (newState) {
             case RecyclerView.SCROLL_STATE_IDLE:
-                Logger.hotfixMessage("SCROLL_STATE_IDLE");
+                Logger.message("SCROLL_STATE_IDLE");
                 Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
                 finalEvent = null;
                 scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
+                this.dragStart = false;
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                Logger.hotfixMessage("SCROLL_STATE_DRAGGING");
-                scrollStateChangeListener.onStateDragging(recyclerView, containerPosition);
+                Logger.message("SCROLL_STATE_DRAGGING");
+                if (!this.dragStart)
+                scrollStateChangeListener.onStateDragStart(recyclerView, containerPosition);
+                dragStart = true;
             case RecyclerView.SCROLL_STATE_SETTLING:
-                Logger.hotfixMessage("SCROLL_STATE_SETTLING");
+                Logger.message("SCROLL_STATE_SETTLING");
                 break;
         }
 
@@ -108,7 +112,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private synchronized void handelSingleItemVisible(RecyclerView recyclerView, int itemPosition) {
-        Logger.hotfixMessage("handleSingle/itemPos:" + itemPosition + "/reg Pos:" + registeredPosition);
+        Logger.message("handleSingle/itemPos:" + itemPosition + "/reg Pos:" + registeredPosition);
         if (itemPosition == registeredPosition) {
             return;
         }
@@ -122,13 +126,13 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstItemPosition, int lastItemPosition) {
-        Logger.hotfixMessage("handleMulti/f itemPos:" + firstItemPosition + "/l itemPos :" + lastItemPosition + "/reg Pos:" + registeredPosition);
+        Logger.message("handleMulti/f itemPos:" + firstItemPosition + "/l itemPos :" + lastItemPosition + "/reg Pos:" + registeredPosition);
         if (firstItemPosition == registeredPosition) {
             float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
             if (b > centerX) {
                 return;
             }
-            Logger.hotfixMessage("onNext / to pos :" + lastItemPosition);
+            Logger.message("onNext / to pos :" + lastItemPosition);
             registeredPosition = lastItemPosition;
             finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, lastItemPosition);
             return;
@@ -139,7 +143,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             if (b <= centerX) {
                 return;
             }
-            Logger.hotfixMessage("onPrev / to pos :" + firstItemPosition);
+            Logger.message("onPrev / to pos :" + firstItemPosition);
             registeredPosition = firstItemPosition;
             finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
             return;
@@ -161,13 +165,11 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
-
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
     public interface OnScrollStateChangeListener {
         void onStateIdle(RecyclerView view, int containerPosition);
-
-        void onStateDragging(RecyclerView view, int containerPosition);
+        void onStateDragStart(RecyclerView view, int containerPosition);
     }
 }

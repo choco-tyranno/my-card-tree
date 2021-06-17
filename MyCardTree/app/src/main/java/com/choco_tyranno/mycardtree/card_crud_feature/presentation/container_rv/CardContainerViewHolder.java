@@ -5,12 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardTreeViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -27,7 +25,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
     }
 
-    public void bind(CardTreeViewModel viewModel, int containerPosition){
+    public void bind(CardViewModel viewModel, int containerPosition){
         Logger.message("contVH#bind");
         mBinding.setViewModel(viewModel);
         RecyclerView rv = mBinding.cardRecyclerview;

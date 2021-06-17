@@ -17,8 +17,6 @@ import java.util.Optional;
 
 public class CardLongClickListener implements View.OnLongClickListener {
     private CardDTO cardDTO;
-    //    private HashMap<Integer, Runnable> actions = new HashMap<>();
-    public static final int ACTION_DRAG_PREPARE = 1;
 
     public CardLongClickListener() {
     }
@@ -27,9 +25,6 @@ public class CardLongClickListener implements View.OnLongClickListener {
     public boolean onLongClick(View view) {
         if (!Optional.ofNullable(cardDTO).isPresent())
             throw new RuntimeException("CardLongClickListener#onLongClick - cardDTO is null");
-        RecyclerView recyclerView = (RecyclerView) view.getParent().getParent().getParent();
-//        consumeAction(ACTION_DRAG_PREPARE);
-        ArrowPresenter.presentArrow(ArrowPresenter.CARD_RECYCLERVIEW, recyclerView);
         return view.startDragAndDrop(ClipData.newPlainText("", "")
                 , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDTO))
                 , "MOVE", 0);
@@ -39,14 +34,5 @@ public class CardLongClickListener implements View.OnLongClickListener {
         cardDTO = card;
     }
 
-//    public void setAction(int type, Runnable action){
-//        actions.put(type, action);
-//    }
-
-//    private void consumeAction(int type){
-//        if (actions.containsKey(type)){
-//            actions.get(type).run();
-//        }
-//    }
 
 }

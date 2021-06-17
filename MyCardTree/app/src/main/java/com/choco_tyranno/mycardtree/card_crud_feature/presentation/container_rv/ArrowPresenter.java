@@ -23,8 +23,8 @@ public class ArrowPresenter {
     public static final int ONLY_PREVIOUS_ARROW_NEEDED = 1;
     public static final int ONLY_NEXT_ARROW_NEEDED = 2;
 
-    public static void presentArrow(int type, RecyclerView recyclerView) {
-        Logger.hotfixMessage("#presentArrow");
+    public static void fadeInArrowsIfNecessary(int type, RecyclerView recyclerView) {
+        Logger.message("#presentArrow");
         if (type != CARD_RECYCLERVIEW && type != CONTAINER_RECYCLERVIEW)
             return;
         if (type == CARD_RECYCLERVIEW) {
@@ -35,32 +35,34 @@ public class ArrowPresenter {
             handleContainerRecyclerViewCase(recyclerView);
     }
 
+    public static void fadeOutArrowsIfNecessary(){}
+
     private static void handleCardRecyclerViewCase(RecyclerView recyclerView) {
-        Logger.hotfixMessage("#handleCardRecyclerViewCase");
+        Logger.message("#handleCardRecyclerViewCase");
         int direction = testPresentNecessaryDirection(recyclerView);
-        Logger.hotfixMessage("#handleCardRecyclerViewCase - direction"+direction);
+        Logger.message("#handleCardRecyclerViewCase - direction"+direction);
         ConstraintLayout containerLayout = ((ConstraintLayout) recyclerView.getParent());
         switch (direction) {
             case NO_ARROW_NEEDED:
                 break;
             case TWO_WAY_ARROW_NEEDED:
-                Logger.hotfixMessage("#handleCardRecyclerViewCase - TWO_WAY_ARROW_NEEDED");
+                Logger.message("#handleCardRecyclerViewCase - TWO_WAY_ARROW_NEEDED");
                 showLeftArrow(containerLayout, recyclerView);
                 showRightArrow(containerLayout, recyclerView);
                 break;
             case ONLY_PREVIOUS_ARROW_NEEDED:
-                Logger.hotfixMessage("#handleCardRecyclerViewCase - ONLY_PREVIOUS_ARROW_NEEDED");
+                Logger.message("#handleCardRecyclerViewCase - ONLY_PREVIOUS_ARROW_NEEDED");
                 showLeftArrow(containerLayout, recyclerView);
                 break;
             case ONLY_NEXT_ARROW_NEEDED:
-                Logger.hotfixMessage("#handleCardRecyclerViewCase - ONLY_NEXT_ARROW_NEEDED");
+                Logger.message("#handleCardRecyclerViewCase - ONLY_NEXT_ARROW_NEEDED");
                 showRightArrow(containerLayout, recyclerView);
                 break;
         }
     }
 
     private static void handleContainerRecyclerViewCase(RecyclerView recyclerView) {
-        Logger.hotfixMessage("#handleContainerRecyclerViewCase");
+        Logger.message("#handleContainerRecyclerViewCase");
         int directionArr = testPresentNecessaryDirection(recyclerView);
         ConstraintLayout containerLayout = ((ConstraintLayout) recyclerView.getParent());
         switch (directionArr) {
@@ -80,7 +82,7 @@ public class ArrowPresenter {
     //needOperationFlag[0] : left || top.
     //needOperationFlag[1] : right || bottom.
     private static int testPresentNecessaryDirection(RecyclerView recyclerView) {
-        Logger.hotfixMessage("#testPresentNecessaryDirection");
+        Logger.message("#testPresentNecessaryDirection");
         int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         int lastVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
         int containerItemCount = recyclerView.getAdapter().getItemCount();
@@ -102,7 +104,7 @@ public class ArrowPresenter {
             result = ONLY_PREVIOUS_ARROW_NEEDED;
         if (!needOperationFlag[0] && needOperationFlag[1])
             result = ONLY_NEXT_ARROW_NEEDED;
-        Logger.hotfixMessage("#testPresentNecessaryDirection  - result : "+result);
+        Logger.message("#testPresentNecessaryDirection  - result : "+result);
         return result;
     }
 
