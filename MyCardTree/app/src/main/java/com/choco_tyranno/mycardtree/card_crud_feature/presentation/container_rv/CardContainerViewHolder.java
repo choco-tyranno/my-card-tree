@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
@@ -19,7 +20,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         super(binding.getRoot());
         Logger.message("contVH#constructor");
         this.mBinding = binding;
-        RecyclerView rv = mBinding.cardRecyclerview;
+        CardRecyclerView rv = mBinding.cardRecyclerview;
         CardAdapter cardAdapter = new CardAdapter(mBinding.getRoot().getContext());
         rv.setAdapter(cardAdapter);
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
@@ -28,7 +29,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     public void bind(CardViewModel viewModel, int containerPosition){
         Logger.message("contVH#bind");
         mBinding.setViewModel(viewModel);
-        RecyclerView rv = mBinding.cardRecyclerview;
+        CardRecyclerView rv = mBinding.cardRecyclerview;
         rv.setLayoutManager(null);
         rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
         boolean hasAdapter = Optional.ofNullable(((CardAdapter)rv.getAdapter())).isPresent();

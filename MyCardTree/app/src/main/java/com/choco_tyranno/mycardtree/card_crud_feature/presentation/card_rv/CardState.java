@@ -1,4 +1,4 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data;
+package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
@@ -8,6 +8,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.mycardtree.BR;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;

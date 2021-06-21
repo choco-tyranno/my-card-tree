@@ -36,8 +36,10 @@ public class Container extends BaseObservable {
         notifyPropertyChanged(BR.layoutSuppressed);
     }
 
+    // Do notify if necessary.
     public void setContainerScrollState(Bundle scrollState){
         this.mContainerScrollState = scrollState;
+
     }
 
     public Bundle getContainerScrollState(){

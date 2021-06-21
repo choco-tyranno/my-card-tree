@@ -19,7 +19,7 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView
         android:id="@+id/container_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

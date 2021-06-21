@@ -17,11 +17,11 @@
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState" />
 
         <variable
             name="frontState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState.Front" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState.Front" />
 
         <variable
             name="viewModel"

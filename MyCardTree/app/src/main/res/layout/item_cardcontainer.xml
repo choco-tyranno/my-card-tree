@@ -41,7 +41,7 @@
 
         <!--Child RecyclerView-->
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView
             android:id="@+id/card_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="@dimen/container_height"

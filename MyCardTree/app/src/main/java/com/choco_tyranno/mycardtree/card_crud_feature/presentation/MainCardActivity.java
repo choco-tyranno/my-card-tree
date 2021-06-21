@@ -3,16 +3,20 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.View;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,7 +41,10 @@ public class MainCardActivity extends AppCompatActivity {
 //            int pos = 2;
             @Override
             public void onClick(View v) {
-
+                List<Pair<CardDTO, CardState>> containerItem0 =viewModel.getTargetPositionPresentData(0);
+                List<Pair<CardDTO, CardState>> containerItem1 =viewModel.getTargetPositionPresentData(1);
+                Logger.hotfixMessage("layer 1 : "+containerItem0.size());
+                Logger.hotfixMessage("layer 2 :"+containerItem1.size());
 //                ((CardContainerViewHolder) Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0)))
 //                        .getBinding().cardRecyclerview.smoothScrollToPosition(pos);
 //                if (pos == 2)
@@ -61,7 +68,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void setContainerRv() {
-        RecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
+        ContainerRecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();

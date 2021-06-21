@@ -3,7 +3,6 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
@@ -26,12 +25,11 @@ import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardLongClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ArrowPresenter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
@@ -39,7 +37,6 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -66,6 +63,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int CARD_LOCATION_RIGHT = 1;
 
     /* Default constructor*/
+
     public CardViewModel(Application application) {
         super(application);
         Logger.message("VM#constructor");
@@ -928,28 +926,53 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         CardScrollListener.OnScrollStateChangeListener onScrollStateChangeListener = new CardScrollListener.OnScrollStateChangeListener() {
             @Override
             public void onStateIdle(RecyclerView view, int containerPosition) {
-                throwToMainHandlerWithDelay(() -> {
-                            synchronized (mPresentContainerList) {
-                                for (Container container : mPresentContainerList) {
-                                    container.setLayoutSuppressed(false);
-                                }
-                            }
-                        }, 500
-                        , view.getContext());
+                runOnUiThread(()->{
+                    Logger.hotfixMessage("onStateIdle");
+                    synchronized (mPresentContainerList) {
+                        Logger.hotfixMessage("onStateIdle -mPresentContainerList:"+mPresentContainerList.size());
+                        for (Container container : mPresentContainerList) {
+                            container.setLayoutSuppressed(false);
+                        }
+                    }
+                }, view.getContext());
+
+//                throwToMainHandlerWithDelay(() -> {
+//                            synchronized (mPresentContainerList) {
+//                                for (Container container : mPresentContainerList) {
+//                                    container.setLayoutSuppressed(false);
+//                                }
+//                            }
+//                        }, 500
+//                        , view.getContext());
             }
 
             @Override
             public void onStateDragStart(RecyclerView view, int containerPosition) {
-                synchronized (mPresentContainerList) {
-                    for (int i = 0; i < mPresentContainerList.size(); i++) {
-                        Container container = mPresentContainerList.get(i);
-                        if (i == containerPosition) {
-                            container.setLayoutSuppressed(false);
-                            continue;
+                runOnUiThread(()->{
+                    Logger.hotfixMessage("onStateDragStart");
+                    synchronized (mPresentContainerList) {
+                        Logger.hotfixMessage("onStateDragStart -mPresentContainerList:"+mPresentContainerList.size());
+                        for (int i = 0; i < mPresentContainerList.size(); i++) {
+                            Container container = mPresentContainerList.get(i);
+                            if (i == containerPosition) {
+                                container.setLayoutSuppressed(false);
+                                continue;
+                            }
+                            container.setLayoutSuppressed(true);
                         }
-                        container.setLayoutSuppressed(true);
                     }
-                }
+                }, view.getContext());
+
+//                synchronized (mPresentContainerList) {
+//                    for (int i = 0; i < mPresentContainerList.size(); i++) {
+//                        Container container = mPresentContainerList.get(i);
+//                        if (i == containerPosition) {
+//                            container.setLayoutSuppressed(false);
+//                            continue;
+//                        }
+//                        container.setLayoutSuppressed(true);
+//                    }
+//                }
             }
         };
         return new CardScrollListener(onFocusChangedListener, onScrollStateChangeListener);

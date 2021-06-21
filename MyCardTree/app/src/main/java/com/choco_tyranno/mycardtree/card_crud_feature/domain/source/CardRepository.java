@@ -7,7 +7,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDAO;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardState;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
