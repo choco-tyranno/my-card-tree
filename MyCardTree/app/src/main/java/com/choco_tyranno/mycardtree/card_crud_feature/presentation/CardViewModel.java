@@ -26,6 +26,7 @@ import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
@@ -38,6 +39,8 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -343,7 +346,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 return handleCreateServiceForEmptySpace(view, event);
             }
             if (TextUtils.equals(dragType, "MOVE")) {
-                return handleMoveService(EMPTY_CARD_SPACE, view, event);
+                return handleMoveServiceForEmptySpace((TextView) view, event);
             }
             return false;
 
@@ -393,7 +396,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     return handleCreateServiceForContainer(targetView, event);
                 }
                 if (TextUtils.equals(dragType, "MOVE")) {
-                    return handleMoveService(CARD_RECYCLERVIEW, targetView, event);
+                    return handleMoveServiceForCardRecyclerView(targetView, event);
                 }
             } else {
                 throw new RuntimeException("#ondrag() : recyclerview not found");
@@ -402,27 +405,34 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         };
     }
 
-    private boolean handleMoveService(int targetType, View targetView, DragEvent event) {
-        if (targetType == EMPTY_CARD_SPACE) {
-            TextView targetTextView = (TextView) targetView;
-            switch (event.getAction()) {
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    break;
-                case DragEvent.ACTION_DROP:
-                    break;
-            }
-            return false;
-        }
-
-        RecyclerView targetRecyclerView = (RecyclerView) targetView;
+    private boolean handleMoveServiceForEmptySpace(TextView targetView, DragEvent event) {
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
-                ArrowPresenter.fadeInArrowsIfNecessary(ArrowPresenter.CARD_RECYCLERVIEW, targetRecyclerView);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                ArrowPresenter.fadeOutArrowsIfNecessary();
+                break;
+            case DragEvent.ACTION_DROP:
+        }
+        return false;
+    }
+
+    private boolean handleMoveServiceForCardRecyclerView(RecyclerView targetView, DragEvent event) {
+        int containerPosition = ((CardAdapter) targetView.getAdapter()).getPosition();
+        if (containerPosition == -1)
+            return false;
+        Container container = mPresentContainerList.get(containerPosition);
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_ENTERED:
+                ArrowPresenter.fadeInArrowsIfNecessary(
+                        ArrowPresenter.CARD_RECYCLERVIEW
+                        , targetView
+                        , container);
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                ArrowPresenter.fadeOutArrowsIfNecessary(targetView, container);
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+//                ArrowPresenter.fadeOutArrowsIfNecessary();
                 break;
             case DragEvent.ACTION_DROP:
                 break;

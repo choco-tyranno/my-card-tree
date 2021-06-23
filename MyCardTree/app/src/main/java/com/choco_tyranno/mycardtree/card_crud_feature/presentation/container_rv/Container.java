@@ -2,6 +2,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -11,7 +12,9 @@ import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Container extends BaseObservable {
     private int mRootNo;
@@ -19,6 +22,7 @@ public class Container extends BaseObservable {
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
     private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
+    private Queue<View> arrowStorage;
     private static final int NO_ROOT_NO = -999;
     private static final int DEFAULT_CARD_POSITION = 0;
 
@@ -26,6 +30,15 @@ public class Container extends BaseObservable {
         this.mRootNo = NO_ROOT_NO;
         this.mFocusCardPosition = DEFAULT_CARD_POSITION;
         this.mCardScrollListener = new CardScrollListener();
+        this.arrowStorage = new LinkedList<>();
+    }
+
+    public void enqueueArrowView(View arrow){
+        arrowStorage.add(arrow);
+    }
+
+    public Queue<View> getArrowStorage(){
+        return arrowStorage;
     }
 
     public CardScrollListener getCardScrollListener() {

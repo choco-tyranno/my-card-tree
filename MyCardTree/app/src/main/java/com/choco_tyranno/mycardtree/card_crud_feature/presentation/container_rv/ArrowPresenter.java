@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,21 +24,30 @@ public class ArrowPresenter {
     public static final int ONLY_PREVIOUS_ARROW_NEEDED = 1;
     public static final int ONLY_NEXT_ARROW_NEEDED = 2;
 
-    public static void fadeInArrowsIfNecessary(int type, RecyclerView recyclerView) {
+    public static void fadeInArrowsIfNecessary(int type, RecyclerView recyclerView, @Nullable Container container) {
         Logger.message("#presentArrow");
         if (type != CARD_RECYCLERVIEW && type != CONTAINER_RECYCLERVIEW)
             return;
         if (type == CARD_RECYCLERVIEW) {
-            handleCardRecyclerViewCase(recyclerView);
+            handleCardRecyclerViewCase(recyclerView, container);
             return;
         }
         if (type == CONTAINER_RECYCLERVIEW)
             handleContainerRecyclerViewCase(recyclerView);
     }
 
-    public static void fadeOutArrowsIfNecessary(){}
+    public static void fadeOutArrowsIfNecessary(RecyclerView recyclerView, @Nullable Container container){
+        ConstraintLayout containerLayout = ((ConstraintLayout) recyclerView.getParent());
+        if (container!=null){
+            Queue<View> arrowStorage = container.getArrowStorage();
+            while (!arrowStorage.isEmpty()){
+                View arrow = arrowStorage.poll();
+                containerLayout.removeView(arrow);
+            }
+        }
+    }
 
-    private static void handleCardRecyclerViewCase(RecyclerView recyclerView) {
+    private static void handleCardRecyclerViewCase(RecyclerView recyclerView, Container container) {
         Logger.message("#handleCardRecyclerViewCase");
         int direction = testPresentNecessaryDirection(recyclerView);
         Logger.message("#handleCardRecyclerViewCase - direction"+direction);
@@ -47,16 +57,16 @@ public class ArrowPresenter {
                 break;
             case TWO_WAY_ARROW_NEEDED:
                 Logger.message("#handleCardRecyclerViewCase - TWO_WAY_ARROW_NEEDED");
-                showLeftArrow(containerLayout, recyclerView);
-                showRightArrow(containerLayout, recyclerView);
+                showLeftArrow(containerLayout, recyclerView, container);
+                showRightArrow(containerLayout, recyclerView, container);
                 break;
             case ONLY_PREVIOUS_ARROW_NEEDED:
                 Logger.message("#handleCardRecyclerViewCase - ONLY_PREVIOUS_ARROW_NEEDED");
-                showLeftArrow(containerLayout, recyclerView);
+                showLeftArrow(containerLayout, recyclerView, container);
                 break;
             case ONLY_NEXT_ARROW_NEEDED:
                 Logger.message("#handleCardRecyclerViewCase - ONLY_NEXT_ARROW_NEEDED");
-                showRightArrow(containerLayout, recyclerView);
+                showRightArrow(containerLayout, recyclerView, container);
                 break;
         }
     }
@@ -108,7 +118,7 @@ public class ArrowPresenter {
         return result;
     }
 
-    private static void showLeftArrow(ConstraintLayout containerLayout, RecyclerView recyclerView) {
+    private static void showLeftArrow(ConstraintLayout containerLayout, RecyclerView recyclerView, Container container) {
         ImageView imageView = new ImageView(recyclerView.getContext());
         imageView.setImageResource(R.drawable.ic_baseline_arrow_back_ios_new_24);
         imageView.setContentDescription(recyclerView.getContext().getResources().getString(R.string.prev_arrow_desc));
@@ -132,9 +142,10 @@ public class ArrowPresenter {
                     , ConstraintSet.BOTTOM);
             set.applyTo(containerLayout);
         });
+        container.enqueueArrowView(imageView);
     }
 
-    private static void showRightArrow(ConstraintLayout containerLayout, RecyclerView recyclerView) {
+    private static void showRightArrow(ConstraintLayout containerLayout, RecyclerView recyclerView, Container container) {
         ImageView imageView = new ImageView(recyclerView.getContext());
         imageView.setImageResource(R.drawable.ic_baseline_arrow_forward_ios_24);
         imageView.setContentDescription(recyclerView.getContext().getResources().getString(R.string.next_arrow_desc));
@@ -158,11 +169,11 @@ public class ArrowPresenter {
                     , ConstraintSet.BOTTOM);
             set.applyTo(containerLayout);
         });
+        container.enqueueArrowView(imageView);
     }
 
     private static void showTopArrow(ConstraintLayout containerLayout, RecyclerView recyclerView) {
     }
-
     private static void showBottomArrow(ConstraintLayout containerLayout, RecyclerView recyclerView) {
     }
 }

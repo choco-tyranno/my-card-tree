@@ -3,12 +3,14 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
 import android.view.View;
 
+import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
@@ -36,11 +38,7 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
-        binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        binding.mainScreen.appNameFab.setOnClickListener((view)->{});
     }
 
     public static CardViewModel getViewModel(){
@@ -61,6 +59,7 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setLayoutManager(new ContainerRecyclerView.ItemScrollingControlLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
     }
+
 
     // TODO : this is for auto notify using DiffUtil
 //    private void observeCardData() {
