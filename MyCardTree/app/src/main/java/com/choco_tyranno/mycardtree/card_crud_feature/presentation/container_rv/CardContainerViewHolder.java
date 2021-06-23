@@ -35,6 +35,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     //TODO:
     // need ? (create new cardAdapter).
     public void bind(int containerPosition) {
+        Logger.hotfixMessage("bind :"+containerPosition);
         Logger.message("contVH#bind");
         CardRecyclerView rv = mBinding.cardRecyclerview;
         rv.suppressLayout();
@@ -52,13 +53,21 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         cardAdapter.initialize(containerPosition);
 
         CardScrollListener scrollListener = targetContainer.getCardScrollListener();
-        scrollListener.initialize(targetContainer.getLayoutManager(), mViewModel.getOnFocusChangedListener(), containerPosition);
+        scrollListener.initialize(
+                targetContainer.getLayoutManager()
+                , mViewModel.getOnFocusChangedListener()
+                , mViewModel.getOnScrollStateChangeListener()
+                , containerPosition);
         rv.addOnScrollListener(scrollListener);
 
         mBinding.setContainerNo(containerPosition + 1);
         mBinding.setContainer(targetContainer);
 
         rv.unsuppressLayout();
+        if (targetContainer.hasSavedState()){
+            Logger.hotfixMessage("hasSavedState pos :"+containerPosition);
+            rv.getLayoutManager().onRestoreInstanceState(targetContainer.getSavedScrollState());
+        }
         cardAdapter.notifyDataSetChanged();
     }
 

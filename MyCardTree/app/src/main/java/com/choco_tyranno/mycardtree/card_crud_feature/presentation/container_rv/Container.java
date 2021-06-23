@@ -1,6 +1,7 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -15,7 +16,7 @@ import java.util.List;
 public class Container extends BaseObservable {
     private int mRootNo;
     private int mFocusCardPosition;
-    private Bundle mContainerScrollState;
+    private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
     private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
     private static final int NO_ROOT_NO = -999;
@@ -53,13 +54,16 @@ public class Container extends BaseObservable {
         notifyPropertyChanged(BR.focusCardPosition);
     }
 
-    // Do notify if necessary.
-    public void setContainerScrollState(Bundle scrollState) {
-        this.mContainerScrollState = scrollState;
+    public boolean hasSavedState(){
+        return mSavedScrollState != null;
     }
 
-    public Bundle getContainerScrollState() {
-        return mContainerScrollState;
+    public void setSavedScrollState(Parcelable scrollState) {
+        this.mSavedScrollState = scrollState;
+    }
+
+    public Parcelable getSavedScrollState() {
+        return mSavedScrollState;
     }
 
     @Bindable

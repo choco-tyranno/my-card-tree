@@ -26,7 +26,6 @@ public class CardRecyclerView extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
-
     public void setLayoutManager(@Nullable ScrollingControlLayoutManager layout) {
         if (layout==null){
             super.setLayoutManager(null);

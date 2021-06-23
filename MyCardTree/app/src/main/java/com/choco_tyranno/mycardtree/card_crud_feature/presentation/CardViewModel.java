@@ -3,6 +3,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
@@ -37,6 +38,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -60,6 +62,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForCardRecyclerView;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
+    private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
 
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
@@ -75,21 +78,34 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         this.mPresentData = new ArrayList<>();
         this.mPresentContainerList = new ArrayList<>();
         this.onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(ClipData.newPlainText("", ""), new CardShadow(view), "CREATE", 0);
-        this.computingLayout =false;
+        this.computingLayout = false;
         initCardRecyclerViewDragListener();
         initEmptyCardSpaceDragListener();
         initOnFocusChangedListener();
+        initOnScrollStateChangeListener();
     }
 
-    public boolean isComputingLayout(){
+    public boolean isComputingLayout() {
         return computingLayout;
     }
 
-    public void setComputingLayout(boolean computingLayout){
+    public void setComputingLayout(boolean computingLayout) {
         this.computingLayout = computingLayout;
     }
 
-    private void initOnFocusChangedListener(){
+    private void initOnScrollStateChangeListener() {
+        mOnScrollStateChangeListener = (savedScrollState, containerPosition) -> {
+            if (mPresentContainerList.size() > containerPosition) {
+                mPresentContainerList.get(containerPosition).setSavedScrollState(savedScrollState);
+            }
+        };
+    }
+
+    public CardScrollListener.OnScrollStateChangeListener getOnScrollStateChangeListener() {
+        return mOnScrollStateChangeListener;
+    }
+
+    private void initOnFocusChangedListener() {
         mOnFocusChangedListener = new CardScrollListener.OnFocusChangedListener() {
             @Override
             public void onNextFocused(RecyclerView view, int containerPosition, int cardPosition) {
@@ -99,6 +115,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     presentChildren(view, containerPosition, cardPosition);
                 }
             }
+
             @Override
             public void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition) {
                 synchronized (mPresentData) {
@@ -109,6 +126,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             }
         };
     }
+
 
     /* remove card */
 
@@ -505,7 +523,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     //Drop target view is empty space view.
     private void dropAndCreateServiceForEmptySpace(RecyclerView containerRecyclerView, int rootCardNo, int targetContainerNo) {
         Logger.message("vm#dropAndCreateService : for empty space");
-        SwitchMaterial removeBtn = ((View)containerRecyclerView.getParent()).findViewById(R.id.main_mode_switch);
+        SwitchMaterial removeBtn = ((View) containerRecyclerView.getParent()).findViewById(R.id.main_mode_switch);
         int removeBtnVisibility = View.INVISIBLE;
         if (removeBtn.isChecked())
             removeBtnVisibility = View.VISIBLE;
@@ -791,7 +809,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return 0;
     }
 
-    public int getPresentContainerCount(){
+    public int getPresentContainerCount() {
         return mPresentData.size();
     }
 
@@ -863,7 +881,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public void presentChildren(RecyclerView cardRecyclerView, int rootContainerPosition, int rootCardPosition) {
         Logger.message("vm#presentChildren/ rootContainerPosition :" + rootContainerPosition + "/rootCardPosition" + rootCardPosition);
         final int prevPresentContainerSize = mPresentContainerList.size();
-        synchronized (mPresentData){
+        synchronized (mPresentData) {
             Integer[] childrenRootNoArr = resetPresentContainerList(rootContainerPosition, rootCardPosition);
             resetChildrenPresentContainerRootNo(rootContainerPosition + 1, childrenRootNoArr);
             resetChildrenFocusedCardPosition(rootContainerPosition);
@@ -941,7 +959,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 , containerRecyclerView.getContext());
     }
 
-    public CardScrollListener.OnFocusChangedListener getOnFocusChangedListener(){
+    public CardScrollListener.OnFocusChangedListener getOnFocusChangedListener() {
         return mOnFocusChangedListener;
     }
 

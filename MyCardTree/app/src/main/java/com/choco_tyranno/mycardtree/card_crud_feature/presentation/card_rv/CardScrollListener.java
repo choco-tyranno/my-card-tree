@@ -2,6 +2,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -14,9 +15,11 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.NullPassUtil;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class CardScrollListener extends RecyclerView.OnScrollListener {
     private OnFocusChangedListener focusChangedListener;
+    private OnScrollStateChangeListener onStateChangeListener;
     private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
     private int registeredPosition;
     private int containerPosition;
@@ -30,6 +33,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     private void setCenterX(int centerX) {
         this.centerX = centerX;
     }
+
 
 //    public CardScrollListener(OnFocusChangedListener focusListener, OnScrollStateChangeListener stateListener) {
 //        Logger.message("cardScrollListener#constructor");
@@ -49,26 +53,19 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.centerX = -1;
     }
 
-    public void initialize(CardRecyclerView.ScrollingControlLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, int containerPosition){
+    public void initialize(CardRecyclerView.ScrollingControlLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, OnScrollStateChangeListener stateChangeListener, int containerPosition){
         if (!hasLayoutManager()){
             setLayoutManager(layoutManager);
         }
         if (!hasFocusChangeListener()){
             setFocusChangedListener(focusChangedListener);
         }
+        if (!hasStateChangeListener()){
+            setOnStateChangeListener(stateChangeListener);
+        }
         this.finalEvent = null;
         this.containerPosition = containerPosition;
     }
-//
-//    public CardScrollListener(OnFocusChangedListener focusListener) {
-//        Logger.message("cardScrollListener#constructor");
-//        this.focusChangedListener = focusListener;
-//        this.layoutManager = null;
-//        this.finalEvent = null;
-//        this.registeredPosition = RecyclerView.NO_POSITION;
-//        this.containerPosition = -1;
-//        this.centerX = -1;
-//    }
 
     public boolean hasFocusChangeListener(){
         return focusChangedListener != null;
@@ -76,6 +73,13 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public void setFocusChangedListener(OnFocusChangedListener focusChangedListener){
         this.focusChangedListener = focusChangedListener;
+    }
+
+    public boolean hasStateChangeListener(){
+        return onStateChangeListener != null;
+    }
+    public void setOnStateChangeListener(OnScrollStateChangeListener onStateChangeListener){
+        this.onStateChangeListener = onStateChangeListener;
     }
 
     public boolean hasLayoutManager(){
@@ -95,19 +99,10 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        switch (newState) {
-            case RecyclerView.SCROLL_STATE_IDLE:
-                Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
-                finalEvent = null;
-//                scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
-//                this.dragStart = false;
-                break;
-            case RecyclerView.SCROLL_STATE_DRAGGING:
-//                if (!this.dragStart)
-//                    scrollStateChangeListener.onStateDragStart(recyclerView, containerPosition);
-//                dragStart = true;
-            case RecyclerView.SCROLL_STATE_SETTLING:
-                break;
+        if (newState==RecyclerView.SCROLL_STATE_IDLE){
+            Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
+            onStateChangeListener.onStateIdle(layoutManager.onSaveInstanceState(), containerPosition);
+            finalEvent = null;
         }
     }
 
@@ -208,9 +203,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
-//    public interface OnScrollStateChangeListener {
-//        void onStateIdle(RecyclerView view, int containerPosition);
-//
-//        void onStateDragStart(RecyclerView view, int containerPosition);
-//    }
+    public interface OnScrollStateChangeListener {
+        void onStateIdle(Parcelable savedScrollState, int containerPosition);
+    }
 }
