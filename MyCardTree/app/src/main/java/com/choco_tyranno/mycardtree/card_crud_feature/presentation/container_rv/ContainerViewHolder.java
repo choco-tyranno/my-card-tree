@@ -13,5 +13,5 @@ abstract class ContainerViewHolder extends RecyclerView.ViewHolder {
     public ContainerViewHolder(@NonNull View itemView) {
         super(itemView);
     }
-    public abstract void bind(CardViewModel viewModel, int position);
+    public abstract void bind(int position);
 }

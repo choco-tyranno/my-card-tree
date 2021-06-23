@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.choco_tyranno.mycardtree.R;
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UiTestActivity extends AppCompatActivity {
 
@@ -30,26 +32,26 @@ public class UiTestActivity extends AppCompatActivity {
             itemList.add(i);
         }
 
+
+        AtomicBoolean flag = new AtomicBoolean(true);
         RecyclerView rv = findViewById(R.id.test_rv);
         MaterialButton fireBtn = findViewById(R.id.fire_btn);
         fireBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                synchronized (this){
-                    itemList.remove(0);
-                    itemList.remove(1);
-                    itemList.remove(3);
-                    itemList.remove(4);
-                    rv.getAdapter().notifyItemRemoved(0);
-                    rv.getAdapter().notifyItemRemoved(1);
-                    rv.getAdapter().notifyItemRemoved(3);
-                    rv.getAdapter().notifyItemRemoved(4);
-                }
+                flag.set(!flag.get());
             }
         });
 
-
-        rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+            @Override
+            public boolean canScrollVertically() {
+//                final boolean canScroll = flag.get();
+//                flag.set(!canScroll);
+                return flag.get();
+//                return super.canScrollVertically();
+            }
+        });
         rv.setAdapter(new RecyclerView.Adapter() {
             @NonNull
             @Override

@@ -30,7 +30,6 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
         mMainHandler = new Handler(getMainLooper());
-//        isStart = true;
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         mainBinding();
         binding.setViewModel(viewModel);
@@ -38,19 +37,8 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener(new View.OnClickListener() {
-//            int pos = 2;
             @Override
             public void onClick(View v) {
-                List<Pair<CardDTO, CardState>> containerItem0 =viewModel.getTargetPositionPresentData(0);
-                List<Pair<CardDTO, CardState>> containerItem1 =viewModel.getTargetPositionPresentData(1);
-                Logger.hotfixMessage("layer 1 : "+containerItem0.size());
-                Logger.hotfixMessage("layer 2 :"+containerItem1.size());
-//                ((CardContainerViewHolder) Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.findViewHolderForAdapterPosition(0)))
-//                        .getBinding().cardRecyclerview.smoothScrollToPosition(pos);
-//                if (pos == 2)
-//                    pos = 0;
-//                else
-//                    pos = 2;
             }
         });
     }
@@ -70,7 +58,7 @@ public class MainCardActivity extends AppCompatActivity {
     private void setContainerRv() {
         ContainerRecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
         rv.setAdapter(new ContainerAdapter(this));
-        rv.setLayoutManager(new LinearLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
+        rv.setLayoutManager(new ContainerRecyclerView.ItemScrollingControlLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
     }
 

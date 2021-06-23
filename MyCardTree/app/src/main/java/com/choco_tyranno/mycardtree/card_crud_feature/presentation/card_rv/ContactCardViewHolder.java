@@ -9,20 +9,21 @@ import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 
 public class ContactCardViewHolder extends CardViewHolder {
-
     private final ItemCardFrameBinding mBinding;
+    private final CardViewModel viewModel;
 
-    public ContactCardViewHolder(@NonNull ItemCardFrameBinding binding) {
+    public ContactCardViewHolder(@NonNull ItemCardFrameBinding binding, CardViewModel viewModel) {
         super(binding.getRoot());
         this.mBinding = binding;
+        this.viewModel = viewModel;
+        mBinding.setViewModel(viewModel);
+        mBinding.setCardRootReference((ItemCardFrameBindingImpl) mBinding);
     }
 
     @Override
-    public void bind(CardViewModel viewModel, CardDTO cardDTO, CardState cardState) {
-        mBinding.setViewModel(viewModel);
+    public void bind(CardDTO cardDTO, CardState cardState) {
         mBinding.setCardState(cardState);
         mBinding.setCard(cardDTO);
-        mBinding.setCardRootReference((ItemCardFrameBindingImpl) mBinding);
         mBinding.executePendingBindings();
     }
 

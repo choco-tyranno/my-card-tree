@@ -8,6 +8,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
 import java.util.Optional;
@@ -15,36 +16,53 @@ import java.util.Optional;
 
 public class CardContainerViewHolder extends ContainerViewHolder {
     private final ItemCardcontainerBinding mBinding;
+    private final CardViewModel mViewModel;
 
-    public CardContainerViewHolder(@NonNull ItemCardcontainerBinding binding) {
+    public CardContainerViewHolder(@NonNull ItemCardcontainerBinding binding, CardViewModel viewModel) {
         super(binding.getRoot());
         Logger.message("contVH#constructor");
         this.mBinding = binding;
+        this.mViewModel = viewModel;
+        this.mBinding.setViewModel(viewModel);
         CardRecyclerView rv = mBinding.cardRecyclerview;
-        CardAdapter cardAdapter = new CardAdapter(mBinding.getRoot().getContext());
-        rv.setAdapter(cardAdapter);
-        rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
+        rv.setAdapter(new CardAdapter(mBinding.getRoot().getContext()));
     }
 
-    public void bind(CardViewModel viewModel, int containerPosition){
+    public CardRecyclerView.ScrollingControlLayoutManager createLayoutManager() {
+        return new CardRecyclerView.ScrollingControlLayoutManager(mBinding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
+    }
+
+    //TODO:
+    // need ? (create new cardAdapter).
+    public void bind(int containerPosition) {
         Logger.message("contVH#bind");
-        mBinding.setViewModel(viewModel);
         CardRecyclerView rv = mBinding.cardRecyclerview;
-        rv.setLayoutManager(null);
-        rv.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
-        boolean hasAdapter = Optional.ofNullable(((CardAdapter)rv.getAdapter())).isPresent();
-        if (hasAdapter){
-            CardAdapter cardAdapter = (CardAdapter)rv.getAdapter();
-            cardAdapter.clear();
-            cardAdapter.setContainerPosition(containerPosition);
-            mBinding.setContainerNo(containerPosition+1);
-            mBinding.setContainer(viewModel.getContainer(containerPosition));
-            cardAdapter.notifyDataSetChanged();
-        } else
-            throw new RuntimeException("CardContainerViewHolder#bind/recyclerview has no adapter.");
+        rv.suppressLayout();
+        rv.clearOnScrollListeners();
+        CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
+        cardAdapter.clear();
+
+        Container targetContainer =mViewModel.getContainer(containerPosition);
+
+        if (!targetContainer.hasLayoutManager()){
+            targetContainer.setLayoutManager(createLayoutManager());
+        }
+
+        rv.setLayoutManager(targetContainer.getLayoutManager());
+        cardAdapter.initialize(containerPosition);
+
+        CardScrollListener scrollListener = targetContainer.getCardScrollListener();
+        scrollListener.initialize(targetContainer.getLayoutManager(), mViewModel.getOnFocusChangedListener(), containerPosition);
+        rv.addOnScrollListener(scrollListener);
+
+        mBinding.setContainerNo(containerPosition + 1);
+        mBinding.setContainer(targetContainer);
+
+        rv.unsuppressLayout();
+        cardAdapter.notifyDataSetChanged();
     }
 
-    public ItemCardcontainerBinding getBinding(){
+    public ItemCardcontainerBinding getBinding() {
         Logger.message("contVH#getBinding");
         return mBinding;
     }

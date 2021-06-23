@@ -29,10 +29,10 @@ public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> 
         Logger.message("contAdapter#onCreateVH");
         if (viewType==EMPTY_CARD_TYPE){
             ItemCardEmptyBinding binding = ItemCardEmptyBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new EmptyCardSpaceViewHolder(binding);
+            return new EmptyCardSpaceViewHolder(binding, viewModel);
         }
         ItemCardcontainerBinding binding = ItemCardcontainerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CardContainerViewHolder(binding);
+        return new CardContainerViewHolder(binding, viewModel);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ContainerViewHolder holder, int position) {
         Logger.message("contAdapter#onBindVH pos :"+position);
-        holder.bind(viewModel, position);
+        holder.bind(position);
     }
 
     @Override

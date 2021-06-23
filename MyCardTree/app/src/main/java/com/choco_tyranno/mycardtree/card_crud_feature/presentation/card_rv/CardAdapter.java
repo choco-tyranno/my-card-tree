@@ -12,10 +12,13 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
+/**
+ *  It is recommended that CardAdapter instance be recycled. Use #clear().
+ *
+ * */
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private final CardViewModel viewModel;
     private int mContainerPosition;
-    private int position;
 
     public CardAdapter(Context context) {
         Logger.message("cardAdapter#constructor");
@@ -23,18 +26,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
         mContainerPosition = -1;
     }
 
+    public void initialize(int containerPosition){
+        this.mContainerPosition = containerPosition;
+    }
+
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Logger.message("cardAdapter/onCreateVH");
         ItemCardFrameBinding binding = ItemCardFrameBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ContactCardViewHolder(binding);
+        return new ContactCardViewHolder(binding, viewModel);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int cardPosition) {
         Logger.message("cardAdapter/onBindVH");
-        holder.bind(viewModel, viewModel.getCardDTO(mContainerPosition, cardPosition), viewModel.getCardState(mContainerPosition, cardPosition));
+        holder.bind(viewModel.getCardDTO(mContainerPosition, cardPosition), viewModel.getCardState(mContainerPosition, cardPosition));
     }
 
     @Override
@@ -44,11 +51,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
             Logger.message("container pos -1 detected.");
             return 0;
         }
+//        if (viewModel.getPresentContainerCount()>mContainerPosition)
         return viewModel.getPresentCardCount(mContainerPosition);
+//        return 0;
     }
 
     public void clear() {
-        Logger.message("cardAdapter#clear : mContainerPos -> -1");
         this.mContainerPosition = -1;
     }
 
@@ -59,5 +67,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public void setContainerPosition(int containerPosition) {
         Logger.message("cardAdapter#setContainerPos :" + containerPosition);
         this.mContainerPosition = containerPosition;
+    }
+
+    public int getPosition(){
+        return mContainerPosition;
     }
 }

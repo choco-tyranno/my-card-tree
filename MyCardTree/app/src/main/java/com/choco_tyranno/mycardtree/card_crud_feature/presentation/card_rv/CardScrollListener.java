@@ -16,14 +16,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CardScrollListener extends RecyclerView.OnScrollListener {
-    private final OnFocusChangedListener focusChangedListener;
-    private final OnScrollStateChangeListener scrollStateChangeListener;
-    private LinearLayoutManager layoutManager;
+    private OnFocusChangedListener focusChangedListener;
+    private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
     private int registeredPosition;
     private int containerPosition;
     private int centerX;
     private Runnable finalEvent;
-    private boolean dragStart;
 
     private int getCenterX() {
         return centerX;
@@ -33,18 +31,58 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.centerX = centerX;
     }
 
-    public CardScrollListener(OnFocusChangedListener focusListener, OnScrollStateChangeListener stateListener) {
+//    public CardScrollListener(OnFocusChangedListener focusListener, OnScrollStateChangeListener stateListener) {
+//        Logger.message("cardScrollListener#constructor");
+//        this.focusChangedListener = focusListener;
+//        this.scrollStateChangeListener = stateListener;
+//        this.layoutManager = null;
+//        this.finalEvent = null;
+//        this.registeredPosition = RecyclerView.NO_POSITION;
+//        this.containerPosition = -1;
+//        this.centerX = -1;
+//    }
+
+    public CardScrollListener() {
         Logger.message("cardScrollListener#constructor");
-        this.focusChangedListener = focusListener;
-        this.scrollStateChangeListener = stateListener;
-        this.layoutManager = null;
-        this.finalEvent = null;
         this.registeredPosition = RecyclerView.NO_POSITION;
         this.containerPosition = -1;
         this.centerX = -1;
     }
 
-    public void setLayoutManager(LinearLayoutManager layoutManager) {
+    public void initialize(CardRecyclerView.ScrollingControlLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, int containerPosition){
+        if (!hasLayoutManager()){
+            setLayoutManager(layoutManager);
+        }
+        if (!hasFocusChangeListener()){
+            setFocusChangedListener(focusChangedListener);
+        }
+        this.finalEvent = null;
+        this.containerPosition = containerPosition;
+    }
+//
+//    public CardScrollListener(OnFocusChangedListener focusListener) {
+//        Logger.message("cardScrollListener#constructor");
+//        this.focusChangedListener = focusListener;
+//        this.layoutManager = null;
+//        this.finalEvent = null;
+//        this.registeredPosition = RecyclerView.NO_POSITION;
+//        this.containerPosition = -1;
+//        this.centerX = -1;
+//    }
+
+    public boolean hasFocusChangeListener(){
+        return focusChangedListener != null;
+    }
+
+    public void setFocusChangedListener(OnFocusChangedListener focusChangedListener){
+        this.focusChangedListener = focusChangedListener;
+    }
+
+    public boolean hasLayoutManager(){
+        return layoutManager != null;
+    }
+
+    public void setLayoutManager(CardRecyclerView.ScrollingControlLayoutManager layoutManager) {
         Logger.message("cardScrollLsn#setLM");
         this.layoutManager = layoutManager;
     }
@@ -59,22 +97,18 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         super.onScrollStateChanged(recyclerView, newState);
         switch (newState) {
             case RecyclerView.SCROLL_STATE_IDLE:
-                Logger.message("SCROLL_STATE_IDLE");
                 Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
                 finalEvent = null;
-                scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
-                this.dragStart = false;
+//                scrollStateChangeListener.onStateIdle(recyclerView, containerPosition);
+//                this.dragStart = false;
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                Logger.message("SCROLL_STATE_DRAGGING");
-                if (!this.dragStart)
-                scrollStateChangeListener.onStateDragStart(recyclerView, containerPosition);
-                dragStart = true;
+//                if (!this.dragStart)
+//                    scrollStateChangeListener.onStateDragStart(recyclerView, containerPosition);
+//                dragStart = true;
             case RecyclerView.SCROLL_STATE_SETTLING:
-                Logger.message("SCROLL_STATE_SETTLING");
                 break;
         }
-
     }
 
     @Override
@@ -106,57 +140,65 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
         if (firstVisibleItemPosition == lastVisibleItemPosition) {
             handelSingleItemVisible(recyclerView, firstVisibleItemPosition);
-        } else {
-            handleMultiItemVisible(recyclerView, firstVisibleItemPosition, lastVisibleItemPosition);
+            return;
         }
+        handleMultiItemVisible(recyclerView, firstVisibleItemPosition, lastVisibleItemPosition);
     }
 
-    private synchronized void handelSingleItemVisible(RecyclerView recyclerView, int itemPosition) {
-        Logger.message("handleSingle/itemPos:" + itemPosition + "/reg Pos:" + registeredPosition);
-        if (itemPosition == registeredPosition) {
+    private synchronized void handelSingleItemVisible(RecyclerView recyclerView, int visiblePosition) {
+        Logger.message("handleSingle/itemPos:" + visiblePosition + "/reg Pos:" + registeredPosition);
+        if (visiblePosition == registeredPosition) {
             return;
         }
-        if (itemPosition > registeredPosition) {
-            registeredPosition = itemPosition;
-            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, itemPosition);
+        if (visiblePosition > registeredPosition) {
+            registeredPosition = visiblePosition;
+            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, visiblePosition);
             return;
         }
-        registeredPosition = itemPosition;
-        finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, itemPosition);
+        registeredPosition = visiblePosition;
+        finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, visiblePosition);
     }
 
-    private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstItemPosition, int lastItemPosition) {
-        Logger.message("handleMulti/f itemPos:" + firstItemPosition + "/l itemPos :" + lastItemPosition + "/reg Pos:" + registeredPosition);
-        if (firstItemPosition == registeredPosition) {
-            float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
-            if (b > centerX) {
+    private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstVisibleItemPosition, int lastVisibleItemPosition) {
+        Logger.message("handleMulti/f itemPos:" + firstVisibleItemPosition + "/l itemPos :" + lastVisibleItemPosition + "/reg Pos:" + registeredPosition);
+        float lastVisibleItemX = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
+
+        if (firstVisibleItemPosition == registeredPosition) {
+            if (lastVisibleItemX > centerX) {
                 return;
             }
-            Logger.message("onNext / to pos :" + lastItemPosition);
-            registeredPosition = lastItemPosition;
-            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, lastItemPosition);
+            registeredPosition = lastVisibleItemPosition;
+            finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, lastVisibleItemPosition);
             return;
         }
 
-        if (lastItemPosition == registeredPosition) {
-            float b = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
-            if (b <= centerX) {
+        if (lastVisibleItemPosition == registeredPosition) {
+            if (lastVisibleItemX <= centerX) {
                 return;
             }
-            Logger.message("onPrev / to pos :" + firstItemPosition);
-            registeredPosition = firstItemPosition;
-            finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
+            registeredPosition = firstVisibleItemPosition;
+            finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstVisibleItemPosition);
             return;
         }
 
-        if (firstItemPosition < registeredPosition && lastItemPosition < registeredPosition){
-            float lastItemX = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
-            if (lastItemX <= centerX){
-                registeredPosition = lastItemPosition;
-                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, lastItemPosition);
-            }else {
-                registeredPosition = firstItemPosition;
-                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstItemPosition);
+        if (firstVisibleItemPosition < registeredPosition && lastVisibleItemPosition < registeredPosition) {
+            if (lastVisibleItemX <= centerX) {
+                registeredPosition = lastVisibleItemPosition;
+                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, lastVisibleItemPosition);
+            } else {
+                registeredPosition = firstVisibleItemPosition;
+                finalEvent = () -> focusChangedListener.onPreviousFocused(recyclerView, containerPosition, firstVisibleItemPosition);
+            }
+            return;
+        }
+
+        if (firstVisibleItemPosition > registeredPosition && lastVisibleItemPosition > registeredPosition) {
+            if (lastVisibleItemX <= centerX) {
+                registeredPosition = lastVisibleItemPosition;
+                finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, lastVisibleItemPosition);
+            } else {
+                registeredPosition = firstVisibleItemPosition;
+                finalEvent = () -> focusChangedListener.onNextFocused(recyclerView, containerPosition, firstVisibleItemPosition);
             }
         }
     }
@@ -166,8 +208,9 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
-    public interface OnScrollStateChangeListener {
-        void onStateIdle(RecyclerView view, int containerPosition);
-        void onStateDragStart(RecyclerView view, int containerPosition);
-    }
+//    public interface OnScrollStateChangeListener {
+//        void onStateIdle(RecyclerView view, int containerPosition);
+//
+//        void onStateDragStart(RecyclerView view, int containerPosition);
+//    }
 }
