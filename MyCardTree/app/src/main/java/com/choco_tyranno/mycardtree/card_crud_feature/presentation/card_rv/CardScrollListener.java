@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 public class CardScrollListener extends RecyclerView.OnScrollListener {
     private OnFocusChangedListener focusChangedListener;
     private OnScrollStateChangeListener onStateChangeListener;
-    private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
+    private CardRecyclerView.ScrollControllableLayoutManager layoutManager;
     private int registeredPosition;
     private int containerPosition;
     private int centerX;
@@ -53,7 +53,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.centerX = -1;
     }
 
-    public void initialize(CardRecyclerView.ScrollingControlLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, OnScrollStateChangeListener stateChangeListener, int containerPosition){
+    public void initialize(CardRecyclerView.ScrollControllableLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, OnScrollStateChangeListener stateChangeListener, int containerPosition){
         if (!hasLayoutManager()){
             setLayoutManager(layoutManager);
         }
@@ -86,7 +86,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         return layoutManager != null;
     }
 
-    public void setLayoutManager(CardRecyclerView.ScrollingControlLayoutManager layoutManager) {
+    public void setLayoutManager(CardRecyclerView.ScrollControllableLayoutManager layoutManager) {
         Logger.message("cardScrollLsn#setLM");
         this.layoutManager = layoutManager;
     }

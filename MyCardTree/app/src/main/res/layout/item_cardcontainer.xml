@@ -53,5 +53,29 @@
             app:layout_constraintTop_toBottomOf="@+id/parent_item_title"
             app:onDragListener="@{viewModel.onDragListenerForCardRecyclerView}"/>
 
+        <ImageView
+            android:id="@+id/next_arrow"
+            android:visibility="invisible"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.65"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:contentDescription="@string/next_arrow_desc" />
+
+        <ImageView
+            android:id="@+id/prev_arrow"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.65"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/prev_arrow_desc"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

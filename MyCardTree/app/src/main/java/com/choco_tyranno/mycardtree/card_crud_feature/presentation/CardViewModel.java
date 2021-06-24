@@ -3,15 +3,15 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -35,14 +35,11 @@ import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadLi
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardLongClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ArrowPresenter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -419,55 +416,71 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         int containerPosition = ((CardAdapter) targetView.getAdapter()).getPosition();
         if (containerPosition == -1)
             return false;
-        Container container = mPresentContainerList.get(containerPosition);
-        final int focusedCardPosition = container.getFocusCardPosition();
+        final int screenWidth = DisplayUtil.getScreenWidth(targetView.getContext());
+        final int MOVE_BOUNDARY_WIDTH = 200;
+        CardRecyclerView.ScrollControllableLayoutManager layoutManager = targetView.getLayoutManager();
+        ImageView prevArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.prev_arrow);
+        ImageView nextArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.next_arrow);
+
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_LOCATION:
-                CardRecyclerView.ScrollingControlLayoutManager layoutManager = targetView.getLayoutManager();
-                final int screenWidth = DisplayUtil.getScreenWidth(targetView.getContext());
-                final int MOVE_BOUNDARY_WIDTH = 200;
-                if (event.getX() < MOVE_BOUNDARY_WIDTH && focusedCardPosition != 0) {
-                    if (layoutManager.hasScrollAction()){
+                if (layoutManager.hasScrollAction()) {
+                    return false;
+                }
+                synchronized (mPresentData){
+                    final int cardCount = mPresentData.get(containerPosition).size();
+                    Container container = mPresentContainerList.get(containerPosition);
+                    final int focusedCardPosition = container.getFocusCardPosition();
+                    if (event.getX() < MOVE_BOUNDARY_WIDTH && focusedCardPosition != 0) {
+                        layoutManager.setScrollAction(() -> {
+                            targetView.smoothScrollToPosition(focusedCardPosition - 1);
+                            if (focusedCardPosition - 1 == 0)
+                                prevArrow.setVisibility(View.INVISIBLE);
+                            if (nextArrow.getVisibility()==View.INVISIBLE)
+                                nextArrow.setVisibility(View.VISIBLE);
+                        });
+                        layoutManager.scrollDelayed(500);
                         return true;
                     }
-                    layoutManager.setScrollAction(()->targetView.smoothScrollToPosition(focusedCardPosition - 1));
-                    Handler mainHandler = ((MainCardActivity) targetView.getContext()).getMainHandler();
-                    mainHandler.postDelayed(
-                            ()->{
-                                layoutManager.executeScroll();
-                                layoutManager.clearScrollAction();
-                            }
-                            ,1000
-                    );
-                    return true;
+
+                    if (event.getX() > screenWidth - MOVE_BOUNDARY_WIDTH && focusedCardPosition != cardCount - 1) {
+                        layoutManager.setScrollAction(() ->{
+                            targetView.smoothScrollToPosition(focusedCardPosition + 1);
+                            if (focusedCardPosition + 1 == cardCount - 1)
+                                nextArrow.setVisibility(View.INVISIBLE);
+                            if (prevArrow.getVisibility()==View.INVISIBLE)
+                                prevArrow.setVisibility(View.VISIBLE);
+                        });
+                        layoutManager.scrollDelayed(500);
+                    }
                 }
 
-                final int cardCount = mPresentData.get(containerPosition).size();
-                if (event.getX() > screenWidth - MOVE_BOUNDARY_WIDTH && focusedCardPosition != cardCount - 1) {
-                    if (layoutManager.hasScrollAction()){
-                        return true;
-                    }
-                    layoutManager.setScrollAction(()->targetView.smoothScrollToPosition(focusedCardPosition + 1));
-                    Handler mainHandler = ((MainCardActivity) targetView.getContext()).getMainHandler();
-                    mainHandler.postDelayed(
-                            ()->{
-                                layoutManager.executeScroll();
-                                layoutManager.clearScrollAction();
-                            }
-                            ,1000
-                    );
-                }
                 return true;
 
             case DragEvent.ACTION_DRAG_ENTERED:
-                ArrowPresenter.fadeInArrowsIfNecessary(
-                        ArrowPresenter.CARD_RECYCLERVIEW
-                        , targetView
-                        , container);
+                synchronized (mPresentData){
+                    final int cardCount = mPresentData.get(containerPosition).size();
+                    Container container = mPresentContainerList.get(containerPosition);
+                    final int focusedCardPosition = container.getFocusCardPosition();
+                    if (focusedCardPosition != 0) {
+                        prevArrow.setVisibility(View.VISIBLE);
+                    }
+                    if (focusedCardPosition < cardCount - 1) {
+                        nextArrow.setVisibility(View.VISIBLE);
+                    }
+                }
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
             case DragEvent.ACTION_DRAG_ENDED:
-                ArrowPresenter.fadeOutArrowsIfNecessary(targetView, container);
+                if (layoutManager.hasScrollAction()){
+                    layoutManager.setExitAction(()->{
+                        prevArrow.setVisibility(View.INVISIBLE);
+                        nextArrow.setVisibility(View.INVISIBLE);
+                    });
+                    return true;
+                }
+                prevArrow.setVisibility(View.INVISIBLE);
+                nextArrow.setVisibility(View.INVISIBLE);
                 return true;
             case DragEvent.ACTION_DROP:
                 return true;

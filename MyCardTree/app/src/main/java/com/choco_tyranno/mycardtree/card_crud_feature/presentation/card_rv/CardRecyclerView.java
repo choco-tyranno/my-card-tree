@@ -1,6 +1,9 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -26,7 +29,7 @@ public class CardRecyclerView extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setLayoutManager(@Nullable ScrollingControlLayoutManager layout) {
+    public void setLayoutManager(@Nullable ScrollControllableLayoutManager layout) {
         if (layout == null) {
             super.setLayoutManager(null);
             return;
@@ -51,8 +54,8 @@ public class CardRecyclerView extends RecyclerView {
 
     @Nullable
     @Override
-    public ScrollingControlLayoutManager getLayoutManager() {
-        return (ScrollingControlLayoutManager) super.getLayoutManager();
+    public ScrollControllableLayoutManager getLayoutManager() {
+        return (ScrollControllableLayoutManager) super.getLayoutManager();
     }
 
     /**
@@ -60,10 +63,19 @@ public class CardRecyclerView extends RecyclerView {
      *
      * @see ContainerRecyclerView.ItemScrollingControlLayoutManager
      */
-    public static class ScrollingControlLayoutManager extends LinearLayoutManager {
+    public static class ScrollControllableLayoutManager extends LinearLayoutManager {
         private boolean scrollable;
         private CardRecyclerView mRecyclerView;
         private Runnable scrollAction;
+        private Runnable exitAction;
+
+        public void setExitAction(Runnable exitAction) {
+            this.exitAction = exitAction;
+        }
+
+        public void clearExitAction() {
+            this.exitAction = null;
+        }
 
         public boolean hasScrollAction() {
             return scrollAction != null;
@@ -73,12 +85,27 @@ public class CardRecyclerView extends RecyclerView {
             this.scrollAction = scrollAction;
         }
 
-        public void executeScroll() {
-            if (scrollAction != null)
-                scrollAction.run();
+        public void scrollDelayed(int delay) {
+            if (mRecyclerView == null)
+                return;
+            if (scrollAction == null)
+                return;
+            ((Activity) mRecyclerView.getContext()).runOnUiThread(() -> {
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.postDelayed(() -> {
+                    if (exitAction != null) {
+                        clearScrollAction();
+                        exitAction.run();
+                        clearExitAction();
+                    } else {
+                        scrollAction.run();
+                        clearScrollAction();
+                    }
+                }, delay);
+            });
         }
 
-        public void clearScrollAction(){
+        public void clearScrollAction() {
             this.scrollAction = null;
         }
 
@@ -87,17 +114,17 @@ public class CardRecyclerView extends RecyclerView {
             return scrollable;
         }
 
-        public ScrollingControlLayoutManager(Context context) {
+        public ScrollControllableLayoutManager(Context context) {
             super(context);
             this.scrollable = true;
         }
 
-        public ScrollingControlLayoutManager(Context context, int orientation, boolean reverseLayout) {
+        public ScrollControllableLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
             this.scrollable = true;
         }
 
-        public ScrollingControlLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        public ScrollControllableLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
             super(context, attrs, defStyleAttr, defStyleRes);
             this.scrollable = true;
         }
@@ -157,6 +184,10 @@ public class CardRecyclerView extends RecyclerView {
 
         private void setRecyclerView(CardRecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
+        }
+
+        public static class Scroller {
+
         }
 
     }

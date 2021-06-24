@@ -16,12 +16,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Container.class will be injected into CardViewModel.class
+ * So, only data instance can be available into field.
+ * */
 public class Container extends BaseObservable {
     private int mRootNo;
     private int mFocusCardPosition;
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
-    private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
+    private CardRecyclerView.ScrollControllableLayoutManager layoutManager;
     //arrowStorage to LM.
     private Queue<View> arrowStorage;
     private static final int NO_ROOT_NO = -999;
@@ -46,11 +50,11 @@ public class Container extends BaseObservable {
         return this.mCardScrollListener;
     }
 
-    public void setLayoutManager(CardRecyclerView.ScrollingControlLayoutManager layoutManager) {
+    public void setLayoutManager(CardRecyclerView.ScrollControllableLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
     }
 
-    public CardRecyclerView.ScrollingControlLayoutManager getLayoutManager(){
+    public CardRecyclerView.ScrollControllableLayoutManager getLayoutManager(){
         return this.layoutManager;
     }
 

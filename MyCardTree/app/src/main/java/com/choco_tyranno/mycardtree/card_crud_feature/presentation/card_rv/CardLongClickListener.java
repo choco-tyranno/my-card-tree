@@ -2,16 +2,10 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv;
 
 import android.content.ClipData;
 import android.view.View;
-import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ArrowPresenter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CloneCardShadow;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 

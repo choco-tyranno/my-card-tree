@@ -14,6 +14,6 @@
     <string name="card_shadow_text">CARD</string>
     <string name="card_remove_btn_text">X</string>
     <string name="empty_container_layer_title">add next : </string>
-    <string name="next_arrow_desc">arrow image of moving focus to next item.</string>
-    <string name="prev_arrow_desc">arrow image of moving focus to previous item.</string>
+    <string name="next_arrow_desc">next arrow for indicate next item is exist.</string>
+    <string name="prev_arrow_desc">previos arrow for indicate previous item is exist.</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv;
 
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,12 +31,10 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         rv.setAdapter(new CardAdapter(mBinding.getRoot().getContext()));
     }
 
-    public CardRecyclerView.ScrollingControlLayoutManager createLayoutManager() {
-        return new CardRecyclerView.ScrollingControlLayoutManager(mBinding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
+    public CardRecyclerView.ScrollControllableLayoutManager createLayoutManager() {
+        return new CardRecyclerView.ScrollControllableLayoutManager(mBinding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
     }
 
-    //TODO:
-    // need ? (create new cardAdapter).
     public void bind(int containerPosition) {
         Logger.message("contVH#bind");
         CardRecyclerView rv = mBinding.cardRecyclerview;
@@ -42,7 +43,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
         cardAdapter.clear();
 
-        Container targetContainer =mViewModel.getContainer(containerPosition);
+        Container targetContainer = mViewModel.getContainer(containerPosition);
 
         if (!targetContainer.hasLayoutManager()){
             targetContainer.setLayoutManager(createLayoutManager());
@@ -58,6 +59,9 @@ public class CardContainerViewHolder extends ContainerViewHolder {
                 , mViewModel.getOnScrollStateChangeListener()
                 , containerPosition);
         rv.addOnScrollListener(scrollListener);
+
+        mBinding.prevArrow.setVisibility(View.INVISIBLE);
+        mBinding.nextArrow.setVisibility(View.INVISIBLE);
 
         mBinding.setContainerNo(containerPosition + 1);
         mBinding.setContainer(targetContainer);
