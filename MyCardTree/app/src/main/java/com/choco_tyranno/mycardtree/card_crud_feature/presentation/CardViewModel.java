@@ -3,6 +3,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -27,6 +28,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
@@ -383,15 +385,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private void initCardRecyclerViewDragListener() {
         Logger.message("vm#initCardRecyclerViewDragListener");
         onDragListenerForCardRecyclerView = (view, event) -> {
-            if (view instanceof RecyclerView) {
+            if (view instanceof CardRecyclerView) {
                 if (event.getAction() == DragEvent.ACTION_DRAG_STARTED) {
                     return true;
                 }
-                if (event.getAction() == DragEvent.ACTION_DRAG_LOCATION) {
-                    return true;
-                }
                 String dragType = (String) event.getLocalState();
-                RecyclerView targetView = (RecyclerView) view;
+                CardRecyclerView targetView = (CardRecyclerView) view;
                 if (TextUtils.equals(dragType, "CREATE")) {
                     return handleCreateServiceForContainer(targetView, event);
                 }
@@ -416,26 +415,62 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return false;
     }
 
-    private boolean handleMoveServiceForCardRecyclerView(RecyclerView targetView, DragEvent event) {
+    private boolean handleMoveServiceForCardRecyclerView(CardRecyclerView targetView, DragEvent event) {
         int containerPosition = ((CardAdapter) targetView.getAdapter()).getPosition();
         if (containerPosition == -1)
             return false;
         Container container = mPresentContainerList.get(containerPosition);
+        final int focusedCardPosition = container.getFocusCardPosition();
         switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_LOCATION:
+                CardRecyclerView.ScrollingControlLayoutManager layoutManager = targetView.getLayoutManager();
+                final int screenWidth = DisplayUtil.getScreenWidth(targetView.getContext());
+                final int MOVE_BOUNDARY_WIDTH = 200;
+                if (event.getX() < MOVE_BOUNDARY_WIDTH && focusedCardPosition != 0) {
+                    if (layoutManager.hasScrollAction()){
+                        return true;
+                    }
+                    layoutManager.setScrollAction(()->targetView.smoothScrollToPosition(focusedCardPosition - 1));
+                    Handler mainHandler = ((MainCardActivity) targetView.getContext()).getMainHandler();
+                    mainHandler.postDelayed(
+                            ()->{
+                                layoutManager.executeScroll();
+                                layoutManager.clearScrollAction();
+                            }
+                            ,1000
+                    );
+                    return true;
+                }
+
+                final int cardCount = mPresentData.get(containerPosition).size();
+                if (event.getX() > screenWidth - MOVE_BOUNDARY_WIDTH && focusedCardPosition != cardCount - 1) {
+                    if (layoutManager.hasScrollAction()){
+                        return true;
+                    }
+                    layoutManager.setScrollAction(()->targetView.smoothScrollToPosition(focusedCardPosition + 1));
+                    Handler mainHandler = ((MainCardActivity) targetView.getContext()).getMainHandler();
+                    mainHandler.postDelayed(
+                            ()->{
+                                layoutManager.executeScroll();
+                                layoutManager.clearScrollAction();
+                            }
+                            ,1000
+                    );
+                }
+                return true;
+
             case DragEvent.ACTION_DRAG_ENTERED:
                 ArrowPresenter.fadeInArrowsIfNecessary(
                         ArrowPresenter.CARD_RECYCLERVIEW
                         , targetView
                         , container);
-                break;
+                return true;
             case DragEvent.ACTION_DRAG_EXITED:
-                ArrowPresenter.fadeOutArrowsIfNecessary(targetView, container);
-                break;
             case DragEvent.ACTION_DRAG_ENDED:
-//                ArrowPresenter.fadeOutArrowsIfNecessary();
-                break;
+                ArrowPresenter.fadeOutArrowsIfNecessary(targetView, container);
+                return true;
             case DragEvent.ACTION_DROP:
-                break;
+                return true;
         }
         return false;
     }

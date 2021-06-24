@@ -22,6 +22,7 @@ public class Container extends BaseObservable {
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
     private CardRecyclerView.ScrollingControlLayoutManager layoutManager;
+    //arrowStorage to LM.
     private Queue<View> arrowStorage;
     private static final int NO_ROOT_NO = -999;
     private static final int DEFAULT_CARD_POSITION = 0;

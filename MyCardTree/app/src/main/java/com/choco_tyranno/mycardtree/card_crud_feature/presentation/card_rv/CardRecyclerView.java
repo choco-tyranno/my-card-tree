@@ -27,7 +27,7 @@ public class CardRecyclerView extends RecyclerView {
     }
 
     public void setLayoutManager(@Nullable ScrollingControlLayoutManager layout) {
-        if (layout==null){
+        if (layout == null) {
             super.setLayoutManager(null);
             return;
         }
@@ -36,16 +36,16 @@ public class CardRecyclerView extends RecyclerView {
         layout.setRecyclerView(this);
     }
 
-    public void clearLayoutManager(){
-        if (getLayoutManager()!=null)
+    public void clearLayoutManager() {
+        if (getLayoutManager() != null)
             super.setLayoutManager(null);
     }
 
-    public void suppressLayout(){
+    public void suppressLayout() {
         this.suppressLayout(true);
     }
 
-    public void unsuppressLayout(){
+    public void unsuppressLayout() {
         this.suppressLayout(false);
     }
 
@@ -56,13 +56,31 @@ public class CardRecyclerView extends RecyclerView {
     }
 
     /**
-     *
      * Nested RecyclerView the child item of ContainerRecyclerView delegates scroll control to ItemScrollingControlLayoutManager.
+     *
      * @see ContainerRecyclerView.ItemScrollingControlLayoutManager
      */
     public static class ScrollingControlLayoutManager extends LinearLayoutManager {
         private boolean scrollable;
         private CardRecyclerView mRecyclerView;
+        private Runnable scrollAction;
+
+        public boolean hasScrollAction() {
+            return scrollAction != null;
+        }
+
+        public void setScrollAction(Runnable scrollAction) {
+            this.scrollAction = scrollAction;
+        }
+
+        public void executeScroll() {
+            if (scrollAction != null)
+                scrollAction.run();
+        }
+
+        public void clearScrollAction(){
+            this.scrollAction = null;
+        }
 
         @Override
         public boolean canScrollHorizontally() {
@@ -94,13 +112,13 @@ public class CardRecyclerView extends RecyclerView {
 
         @Override
         public void onScrollStateChanged(int state) {
-            if (mRecyclerView==null)
+            if (mRecyclerView == null)
                 return;
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) mRecyclerView.getParent().getParent();
             if (containerRecyclerView == null)
                 return;
             ContainerRecyclerView.ItemScrollingControlLayoutManager itemScrollingControlLayoutManager = containerRecyclerView.getLayoutManager();
-            if (itemScrollingControlLayoutManager==null)
+            if (itemScrollingControlLayoutManager == null)
                 return;
             CardAdapter cardAdapter = (CardAdapter) mRecyclerView.getAdapter();
             int position = NO_POSITION;
@@ -129,11 +147,11 @@ public class CardRecyclerView extends RecyclerView {
             super.onScrollStateChanged(state);
         }
 
-        private void unlockScroll(){
+        private void unlockScroll() {
             setScrollable(true);
         }
 
-        private void lockScroll(){
+        private void lockScroll() {
             setScrollable(false);
         }
 
