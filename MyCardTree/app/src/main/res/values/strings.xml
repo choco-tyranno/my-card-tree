@@ -15,5 +15,5 @@
     <string name="card_remove_btn_text">X</string>
     <string name="empty_container_layer_title">add next : </string>
     <string name="next_arrow_desc">next arrow for indicate next item is exist.</string>
-    <string name="prev_arrow_desc">previos arrow for indicate previous item is exist.</string>
+    <string name="prev_arrow_desc">previous arrow for indicate previous item is exist.</string>
 </resources>

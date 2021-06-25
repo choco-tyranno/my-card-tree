@@ -53,36 +53,36 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         this.centerX = -1;
     }
 
-    public void initialize(CardRecyclerView.ScrollControllableLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, OnScrollStateChangeListener stateChangeListener, int containerPosition){
-        if (!hasLayoutManager()){
-            setLayoutManager(layoutManager);
-        }
-        if (!hasFocusChangeListener()){
+    public void initialize(CardRecyclerView.ScrollControllableLayoutManager layoutManager, OnFocusChangedListener focusChangedListener, OnScrollStateChangeListener stateChangeListener, int containerPosition) {
+        this.layoutManager = null;
+        setLayoutManager(layoutManager);
+        if (!hasFocusChangeListener()) {
             setFocusChangedListener(focusChangedListener);
         }
-        if (!hasStateChangeListener()){
+        if (!hasStateChangeListener()) {
             setOnStateChangeListener(stateChangeListener);
         }
         this.finalEvent = null;
         this.containerPosition = containerPosition;
     }
 
-    public boolean hasFocusChangeListener(){
+    public boolean hasFocusChangeListener() {
         return focusChangedListener != null;
     }
 
-    public void setFocusChangedListener(OnFocusChangedListener focusChangedListener){
+    public void setFocusChangedListener(OnFocusChangedListener focusChangedListener) {
         this.focusChangedListener = focusChangedListener;
     }
 
-    public boolean hasStateChangeListener(){
+    public boolean hasStateChangeListener() {
         return onStateChangeListener != null;
     }
-    public void setOnStateChangeListener(OnScrollStateChangeListener onStateChangeListener){
+
+    public void setOnStateChangeListener(OnScrollStateChangeListener onStateChangeListener) {
         this.onStateChangeListener = onStateChangeListener;
     }
 
-    public boolean hasLayoutManager(){
+    public boolean hasLayoutManager() {
         return layoutManager != null;
     }
 
@@ -99,7 +99,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        if (newState==RecyclerView.SCROLL_STATE_IDLE){
+        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
             Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
             onStateChangeListener.onStateIdle(layoutManager.onSaveInstanceState(), containerPosition);
             finalEvent = null;
@@ -200,6 +200,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
+
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 

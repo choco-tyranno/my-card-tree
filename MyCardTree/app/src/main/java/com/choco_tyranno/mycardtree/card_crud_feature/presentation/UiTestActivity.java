@@ -28,7 +28,7 @@ public class UiTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ui_test);
 
         List<Integer> itemList = new ArrayList<>();
-        for (int i =0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             itemList.add(i);
         }
 
@@ -36,14 +36,21 @@ public class UiTestActivity extends AppCompatActivity {
         AtomicBoolean flag = new AtomicBoolean(true);
         RecyclerView rv = findViewById(R.id.test_rv);
         MaterialButton fireBtn = findViewById(R.id.fire_btn);
-        fireBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                flag.set(!flag.get());
-            }
-        });
+        AtomicBoolean switchFlag = new AtomicBoolean(false);
+        fireBtn.setOnClickListener(
+                view -> {
+                    rv.smoothScrollToPosition(0);
+                    rv.smoothScrollToPosition(9);
+//                    if (switchFlag.get()) {
+//                        rv.smoothScrollToPosition(0);
+//                        switchFlag.set(false);
+//                    } else {
+//                        rv.smoothScrollToPosition(9);
+//                        switchFlag.set(true);
+//                    }
+                });
 
-        rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false) {
             @Override
             public boolean canScrollVertically() {
 //                final boolean canScroll = flag.get();
@@ -63,7 +70,7 @@ public class UiTestActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                ((TestViewHolder)holder).bind(itemList.get(position));
+                ((TestViewHolder) holder).bind(itemList.get(position));
             }
 
             @Override
@@ -74,7 +81,7 @@ public class UiTestActivity extends AppCompatActivity {
 
     }
 
-    public static class TestViewHolder extends RecyclerView.ViewHolder{
+    public static class TestViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
         public TestViewHolder(@NonNull View itemView) {
@@ -82,7 +89,7 @@ public class UiTestActivity extends AppCompatActivity {
             textView = itemView.findViewById(R.id.test_textView);
         }
 
-        public void bind(int text){
+        public void bind(int text) {
             textView.setText(String.valueOf(text));
         }
     }

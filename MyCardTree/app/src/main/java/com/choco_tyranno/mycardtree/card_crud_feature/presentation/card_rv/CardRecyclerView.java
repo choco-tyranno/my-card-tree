@@ -30,17 +30,12 @@ public class CardRecyclerView extends RecyclerView {
     }
 
     public void setLayoutManager(@Nullable ScrollControllableLayoutManager layout) {
-        if (layout == null) {
-            super.setLayoutManager(null);
-            return;
-        }
-        clearLayoutManager();
         super.setLayoutManager(layout);
+        if (layout!=null)
         layout.setRecyclerView(this);
     }
 
     public void clearLayoutManager() {
-        if (getLayoutManager() != null)
             super.setLayoutManager(null);
     }
 
@@ -184,10 +179,6 @@ public class CardRecyclerView extends RecyclerView {
 
         private void setRecyclerView(CardRecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
-        }
-
-        public static class Scroller {
-
         }
 
     }

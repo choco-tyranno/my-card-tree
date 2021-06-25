@@ -25,9 +25,6 @@ public class Container extends BaseObservable {
     private int mFocusCardPosition;
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
-    private CardRecyclerView.ScrollControllableLayoutManager layoutManager;
-    //arrowStorage to LM.
-    private Queue<View> arrowStorage;
     private static final int NO_ROOT_NO = -999;
     private static final int DEFAULT_CARD_POSITION = 0;
 
@@ -35,31 +32,10 @@ public class Container extends BaseObservable {
         this.mRootNo = NO_ROOT_NO;
         this.mFocusCardPosition = DEFAULT_CARD_POSITION;
         this.mCardScrollListener = new CardScrollListener();
-        this.arrowStorage = new LinkedList<>();
-    }
-
-    public void enqueueArrowView(View arrow){
-        arrowStorage.add(arrow);
-    }
-
-    public Queue<View> getArrowStorage(){
-        return arrowStorage;
     }
 
     public CardScrollListener getCardScrollListener() {
         return this.mCardScrollListener;
-    }
-
-    public void setLayoutManager(CardRecyclerView.ScrollControllableLayoutManager layoutManager) {
-        this.layoutManager = layoutManager;
-    }
-
-    public CardRecyclerView.ScrollControllableLayoutManager getLayoutManager(){
-        return this.layoutManager;
-    }
-
-    public boolean hasLayoutManager() {
-        return layoutManager != null;
     }
 
     public void setRootNo(int rootNo) {

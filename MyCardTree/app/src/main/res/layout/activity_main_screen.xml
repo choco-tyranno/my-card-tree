@@ -87,5 +87,35 @@
             android:elevation="12dp"
             app:layout_anchor="@+id/bottomAppBar" />
 
+        <ImageView
+            android:id="@+id/prev_container_arrow"
+            android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
+            android:visibility="visible"
+            app:layout_anchor="@+id/app_name_fab"
+            app:layout_anchorGravity="center_horizontal|bottom"
+            android:layout_marginTop="70dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="30dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+            android:contentDescription="@string/prev_arrow_desc"/>
+
+        <ImageView
+            android:id="@+id/next_container_arrow"
+            android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
+            android:visibility="visible"
+            app:layout_anchor="@+id/bottomAppBar"
+            app:layout_anchorGravity="center_horizontal|bottom"
+            android:layout_marginBottom="70dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="30dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:contentDescription="@string/next_arrow_desc"/>
+
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

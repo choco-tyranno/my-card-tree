@@ -14,6 +14,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardA
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -38,37 +39,35 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     public void bind(int containerPosition) {
         Logger.message("contVH#bind");
         CardRecyclerView rv = mBinding.cardRecyclerview;
+        CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
+        if (cardAdapter==null)
+            return;
         rv.suppressLayout();
         rv.clearOnScrollListeners();
-        CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
         cardAdapter.clear();
+        rv.clearLayoutManager();
+        rv.setLayoutManager(createLayoutManager());
+        cardAdapter.initialize(containerPosition);
 
         Container targetContainer = mViewModel.getContainer(containerPosition);
 
-        if (!targetContainer.hasLayoutManager()){
-            targetContainer.setLayoutManager(createLayoutManager());
-        }
-
-        rv.setLayoutManager(targetContainer.getLayoutManager());
-        cardAdapter.initialize(containerPosition);
-
         CardScrollListener scrollListener = targetContainer.getCardScrollListener();
         scrollListener.initialize(
-                targetContainer.getLayoutManager()
+                rv.getLayoutManager()
                 , mViewModel.getOnFocusChangedListener()
                 , mViewModel.getOnScrollStateChangeListener()
                 , containerPosition);
         rv.addOnScrollListener(scrollListener);
 
-        mBinding.prevArrow.setVisibility(View.INVISIBLE);
-        mBinding.nextArrow.setVisibility(View.INVISIBLE);
+        mBinding.prevCardArrow.setVisibility(View.INVISIBLE);
+        mBinding.nextCardArrow.setVisibility(View.INVISIBLE);
 
         mBinding.setContainerNo(containerPosition + 1);
         mBinding.setContainer(targetContainer);
 
         rv.unsuppressLayout();
-        if (targetContainer.hasSavedState()){
-            rv.getLayoutManager().onRestoreInstanceState(targetContainer.getSavedScrollState());
+        if (targetContainer.hasSavedState()) {
+            Objects.requireNonNull(rv.getLayoutManager()).onRestoreInstanceState(targetContainer.getSavedScrollState());
         }
         cardAdapter.notifyDataSetChanged();
     }
