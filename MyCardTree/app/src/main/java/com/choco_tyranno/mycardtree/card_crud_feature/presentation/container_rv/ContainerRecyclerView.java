@@ -1,6 +1,8 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -8,12 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ContainerRecyclerView extends RecyclerView {
-//    private AtomicBoolean computingLayout;
 
     public ContainerRecyclerView(@NonNull Context context) {
         super(context);
@@ -27,12 +31,9 @@ public class ContainerRecyclerView extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
-//    public void setComputingLayoutAtomicInstance(AtomicBoolean atomicInstance){
-//        this.computingLayout = atomicInstance;
-//    }
-
     public void setLayoutManager(@Nullable ItemScrollingControlLayoutManager layout) {
         super.setLayoutManager(layout);
+        layout.setContainerRecyclerView(ContainerRecyclerView.this);
     }
 
     public ItemScrollingControlLayoutManager getLayoutManager() {
@@ -40,31 +41,87 @@ public class ContainerRecyclerView extends RecyclerView {
     }
 
     public static class ItemScrollingControlLayoutManager extends LinearLayoutManager {
-        private boolean scrollItemExist;
+        private RecyclerView containerRecyclerView;
+        private Runnable containerScrollAction;
+        private Runnable exitAction;
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
 
         public ItemScrollingControlLayoutManager(Context context) {
             super(context);
-            scrollItemExist = false;
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
         }
 
         public ItemScrollingControlLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
-            scrollItemExist = false;
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
         }
 
         public ItemScrollingControlLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
             super(context, attrs, defStyleAttr, defStyleRes);
-            scrollItemExist = false;
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
         }
+
+        public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView){
+            this.containerRecyclerView = containerRecyclerView;
+        }
+
+        /*
+        * Below :
+        * As ContainerRecyclerViews scroll
+        * */
+
+        public void scrollDelayed(int delayed){
+            if (containerRecyclerView==null)
+                return;
+            Logger.hotfixMessage("scrollDelayed : "+delayed);
+            mainHandler().postDelayed(()->{
+                if (exitAction!=null){
+                    clearContainerScrollAction();
+                    exitAction.run();
+                    clearContainerExitAction();
+                    return;
+                }
+                containerScrollAction.run();
+                clearContainerScrollAction();
+            }, delayed);
+            Logger.hotfixMessage("executed / scrollDelayed : "+delayed);
+        }
+
+        private Handler mainHandler(){
+            if (containerRecyclerView==null)
+                return null;
+            return ((MainCardActivity)containerRecyclerView.getContext()).getMainHandler();
+        }
+
+        public boolean hasScrollAction(){
+            return containerScrollAction !=null;
+        }
+
+        public void setContainerScrollAction(Runnable containerScrollAction){
+            this.containerScrollAction = containerScrollAction;
+        }
+
+        public void clearContainerScrollAction(){
+            this.containerScrollAction = null;
+        }
+
+        public void setExitAction(Runnable exitAction) {
+            this.exitAction = exitAction;
+        }
+
+        public void clearContainerExitAction(){
+            this.exitAction = null;
+        }
+
+        /*
+        * Below :
+        * Children Nested RecyclerView scrolls control
+        * */
 
         public void unlockAll(){
             while (!scrollLockedQueue.isEmpty()){
@@ -74,14 +131,6 @@ public class ContainerRecyclerView extends RecyclerView {
 
         public void enqueueLockedItem(Runnable unlockAction){
             scrollLockedQueue.add(unlockAction);
-        }
-
-        public boolean isScrollingItemExist() {
-            return scrollItemExist;
-        }
-
-        public void setScrollItemExist(boolean sign) {
-            scrollItemExist = sign;
         }
 
         public void registerScrollOccupyingContainerPosition(int position) {

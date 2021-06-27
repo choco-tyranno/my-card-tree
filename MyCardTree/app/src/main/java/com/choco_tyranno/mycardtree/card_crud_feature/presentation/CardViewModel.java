@@ -110,11 +110,23 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         Logger.message("vm#initCardRecyclerViewDragListener");
         onDragListenerForCardRecyclerView = (view, event) -> {
             if (view instanceof CardRecyclerView) {
+                CardRecyclerView targetView = (CardRecyclerView) view;
                 if (event.getAction() == DragEvent.ACTION_DRAG_STARTED) {
+                    ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) targetView.getParent().getParent();
+                    LinearLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
+                    final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
+                    final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
+                    final int itemCount = containerLayoutManager.getItemCount();
+                    ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
+                    if (firstVisibleContainerPosition != 0) {
+                        viewGroup.findViewById(R.id.prev_container_arrow).setVisibility(View.VISIBLE);
+                    }
+                    if (lastVisibleContainerPosition < itemCount - 1) {
+                        viewGroup.findViewById(R.id.next_container_arrow).setVisibility(View.VISIBLE);
+                    }
                     return true;
                 }
                 String dragType = (String) event.getLocalState();
-                CardRecyclerView targetView = (CardRecyclerView) view;
                 if (TextUtils.equals(dragType, "CREATE")) {
                     return handleCreateServiceForContainer(targetView, event);
                 }
@@ -137,36 +149,78 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 if (moveDragEvent)
                     return true;
             }
-            if (action == DragEvent.ACTION_DRAG_ENTERED) {
-                Logger.hotfixMessage("[Vertical Arrow] entered.");
-                ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent()).findViewById(R.id.main_body);
-                LinearLayoutManager layoutManager = containerRecyclerView.getLayoutManager();
-                if (layoutManager == null)
+
+            ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent()).findViewById(R.id.main_body);
+            ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
+            if (containerLayoutManager == null)
+                return false;
+            ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
+            View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
+            View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
+
+            if (action == DragEvent.ACTION_DRAG_LOCATION) {
+                if (containerLayoutManager.hasScrollAction())
                     return false;
+
                 String verticalArrowId = view.getResources().getResourceEntryName(view.getId());
 
                 if (TextUtils.equals(verticalArrowId, "prev_container_arrow")) {
-                    final int firstCompletelyVisibleContainerPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    final int firstCompletelyVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
                     if (firstCompletelyVisibleContainerPosition < 0)
                         return false;
                     if (firstCompletelyVisibleContainerPosition != 0) {
-                        containerRecyclerView.smoothScrollToPosition(firstCompletelyVisibleContainerPosition - 1);
+                        containerLayoutManager.setContainerScrollAction(() -> {
+                            containerRecyclerView.smoothScrollToPosition(firstCompletelyVisibleContainerPosition - 1);
+                            if (firstCompletelyVisibleContainerPosition - 1 == 0) {
+                                view.setVisibility(View.INVISIBLE);
+                            }
+                            nextContainerArrow.setVisibility(View.VISIBLE);
+                        });
+                        containerLayoutManager.scrollDelayed(100);
                         return true;
-                    }
-                    return false;
+                    } else
+                        return false;
                 }
+
                 if (TextUtils.equals(verticalArrowId, "next_container_arrow")) {
-                    final int lastCompletelyVisibleContainerPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                    final int lastCompletelyVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
                     if (lastCompletelyVisibleContainerPosition < 0)
                         return false;
-                    final int containerCount = layoutManager.getItemCount();
+                    final int containerCount = containerLayoutManager.getItemCount();
                     if (lastCompletelyVisibleContainerPosition != containerCount - 1) {
-                        containerRecyclerView.smoothScrollToPosition(lastCompletelyVisibleContainerPosition + 1);
+                        containerLayoutManager.setContainerScrollAction(()->{
+                            containerRecyclerView.smoothScrollToPosition(lastCompletelyVisibleContainerPosition + 1);
+                            if (lastCompletelyVisibleContainerPosition + 1 == containerCount - 1) {
+                                view.setVisibility(View.INVISIBLE);
+                            }
+                            prevContainerArrow.setVisibility(View.VISIBLE);
+                        });
+                        containerLayoutManager.scrollDelayed(100);
                         return true;
-                    }
-                    return false;
+                    } else
+                        return false;
                 }
+
+                return false;
             }
+
+            if (action == DragEvent.ACTION_DRAG_ENTERED) {
+                return true;
+            }
+
+            if (action == DragEvent.ACTION_DRAG_ENDED) {
+                if (containerLayoutManager.hasScrollAction()) {
+                    containerLayoutManager.setExitAction(() -> {
+                        prevContainerArrow.setVisibility(View.INVISIBLE);
+                        nextContainerArrow.setVisibility(View.INVISIBLE);
+                    });
+                    return true;
+                }
+                prevContainerArrow.setVisibility(View.INVISIBLE);
+                nextContainerArrow.setVisibility(View.INVISIBLE);
+                return true;
+            }
+
             return false;
         };
     }
@@ -495,7 +549,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         ImageView prevArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.prev_card_arrow);
         ImageView nextArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.next_card_arrow);
 
-        if (layoutManager==null)
+        if (layoutManager == null)
             return false;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_LOCATION:
@@ -577,7 +631,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean handleCreateServiceForContainer(RecyclerView targetView, DragEvent event) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
-        if (layoutManager==null)
+        if (layoutManager == null)
             return false;
         if (!(layoutManager.getItemCount() > 0)) {
             return false;

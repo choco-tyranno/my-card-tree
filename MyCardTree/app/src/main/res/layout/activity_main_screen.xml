@@ -90,7 +90,7 @@
         <ImageView
             android:id="@+id/prev_container_arrow"
             android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_anchor="@+id/app_name_fab"
             app:layout_anchorGravity="center_horizontal|bottom"
             android:layout_marginTop="70dp"
@@ -104,7 +104,7 @@
         <ImageView
             android:id="@+id/next_container_arrow"
             android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_anchor="@+id/bottomAppBar"
             app:layout_anchorGravity="center_horizontal|bottom"
             android:layout_marginBottom="70dp"

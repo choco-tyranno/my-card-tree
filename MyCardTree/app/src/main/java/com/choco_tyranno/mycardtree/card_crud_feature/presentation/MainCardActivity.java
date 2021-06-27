@@ -60,7 +60,6 @@ public class MainCardActivity extends AppCompatActivity {
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
     }
 
-
     // TODO : this is for auto notify using DiffUtil
 //    private void observeCardData() {
 //        viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
@@ -76,7 +75,6 @@ public class MainCardActivity extends AppCompatActivity {
 //                ))
 //        ));
 //    }
-
 
     @Override
     protected void onStop() {

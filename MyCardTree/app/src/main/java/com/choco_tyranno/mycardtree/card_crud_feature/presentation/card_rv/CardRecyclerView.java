@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
 
 public class CardRecyclerView extends RecyclerView {
@@ -31,12 +32,12 @@ public class CardRecyclerView extends RecyclerView {
 
     public void setLayoutManager(@Nullable ScrollControllableLayoutManager layout) {
         super.setLayoutManager(layout);
-        if (layout!=null)
-        layout.setRecyclerView(this);
+        if (layout != null)
+            layout.setRecyclerView(this);
     }
 
     public void clearLayoutManager() {
-            super.setLayoutManager(null);
+        super.setLayoutManager(null);
     }
 
     public void suppressLayout() {
@@ -85,23 +86,26 @@ public class CardRecyclerView extends RecyclerView {
                 return;
             if (scrollAction == null)
                 return;
-            ((Activity) mRecyclerView.getContext()).runOnUiThread(() -> {
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                mainHandler.postDelayed(() -> {
-                    if (exitAction != null) {
-                        clearScrollAction();
-                        exitAction.run();
-                        clearExitAction();
-                    } else {
-                        scrollAction.run();
-                        clearScrollAction();
-                    }
-                }, delay);
-            });
+            mainHandler().postDelayed(() -> {
+                if (exitAction != null) {
+                    clearScrollAction();
+                    exitAction.run();
+                    clearExitAction();
+                } else {
+                    scrollAction.run();
+                    clearScrollAction();
+                }
+            }, delay);
         }
 
         public void clearScrollAction() {
             this.scrollAction = null;
+        }
+
+        private Handler mainHandler() {
+            if (mRecyclerView == null)
+                throw new RuntimeException("CardRecyclerView.ScrollControllableLayoutManager's recyclerView instance is null");
+            return ((MainCardActivity) mRecyclerView.getContext()).getMainHandler();
         }
 
         @Override
