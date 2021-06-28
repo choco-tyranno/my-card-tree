@@ -47,6 +47,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -172,18 +173,18 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             //move data. remove fromData , add toData
             //
             // loop remove
-            while (!fromData.isEmpty()){
+            while (!fromData.isEmpty()) {
                 Pair<Integer, List<CardDTO>> dequeueItem = fromData.poll();
-                if (dequeueItem==null)
+                if (dequeueItem == null)
                     return;
                 final int theContainerPosition = dequeueItem.first;
                 final List<CardDTO> theContainerItems = dequeueItem.second;
                 //verify removeAll.
                 mAllData.get(theContainerPosition).removeAll(theContainerItems);
             }
-            while (!toData.isEmpty()){
+            while (!toData.isEmpty()) {
                 Pair<Integer, List<CardDTO>> dequeueItem = toData.poll();
-                if (dequeueItem==null)
+                if (dequeueItem == null)
                     return;
                 final int theContainerPosition = dequeueItem.first;
                 final List<CardDTO> theContainerItems = dequeueItem.second;
@@ -888,8 +889,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void loadData(OnDataLoadListener callback) {
         Logger.message("vm#loadData");
-        mCardRepository.readData(() -> {
-            setData();
+        mCardRepository.readData((lastContainerNo) -> {
+            setData(lastContainerNo);
             callback.onLoadData();
         });
     }
@@ -930,10 +931,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return rootNoCollector.toArray(new Integer[0]);
     }
 
-    private void setData() {
+    private void setData(int lastContainerNo) {
+        Logger.hotfixMessage("lastContainerNo:" + lastContainerNo);
         Logger.message("vm#setData");
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
-        List<List<CardDTO>> groupedData = groupDataByContainerNo(allDTOs);
+//        List<List<CardDTO>> groupedData = groupDataByContainerNo(allDTOs);
+        List<List<CardDTO>> groupedData = groupByContainerNo(allDTOs, lastContainerNo + 1);
+//        groupByContainerNoAndRootNo(allDTOs, lastContainerNo);
         Integer[] rootNoArr = initContainerList(groupedData);
         initContainerRootNo(rootNoArr);
         mPresentData.clear();
@@ -946,6 +950,71 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         // TODO : check [following 2 line] is it redundant?
         mAllData.clear();
         mAllData.addAll(groupedData);
+    }
+
+
+    private List<List<CardDTO>> groupDataByContainerNo(List<CardDTO> data) {
+        Logger.message("vm#groupDataByContainerNo");
+        List<List<CardDTO>> valueCollector = new ArrayList<>();
+        Optional.ofNullable(data).ifPresent(dtoList -> {
+            for (CardDTO dto : dtoList) {
+                int position = dto.getContainerNo();
+                if (position > valueCollector.size() - 1) {
+                    valueCollector.add(new ArrayList<>());
+                }
+                valueCollector.get(position).add(dto);
+            }
+        });
+        return valueCollector;
+    }
+
+    private List<List<CardDTO>> groupByContainerNo(List<CardDTO> data, int containerSize) {
+        Logger.message("vm#groupDataByContainerNo");
+        List<List<CardDTO>> result = new ArrayList<>();
+        if (data == null || data.isEmpty())
+            return result;
+        for (int i = 0; i < containerSize; i++) {
+            result.add(new ArrayList<>());
+        }
+        for (CardDTO testDto : data) {
+            int containerPosition = testDto.getContainerNo();
+            result.get(containerPosition).add(testDto);
+        }
+        return result;
+    }
+
+    private List<HashMap<Integer, List<CardDTO>>> groupByContainerNoAndRootNo(List<CardDTO> data, int lastContainerNo) {
+        List<HashMap<Integer, List<CardDTO>>> result = new ArrayList<>();
+        if (data == null)
+            return result;
+        synchronized (data) {
+            for (CardDTO testCardDTO : data) {
+                final int containerNo = testCardDTO.getContainerNo();
+                if (result.size() < containerNo + 1) {
+                    final int resultSize = result.size();
+                    for (int i = resultSize; i < containerNo + 1; i++) {
+                        result.add(new HashMap<>());
+                    }
+                }
+                final int testRootNo = testCardDTO.getRootNo();
+                HashMap<Integer, List<CardDTO>> targetMap = result.get(containerNo);
+                if (targetMap == null)
+                    throw new RuntimeException("#groupByContainerNoAndRootNo targetMap is null");
+                if (!targetMap.containsKey(testRootNo))
+                    targetMap.put(testRootNo, new ArrayList<>());
+                targetMap.get(testRootNo).add(testCardDTO);
+            }
+        }
+        Logger.hotfixMessage("[verify] VM#groupByContainerNoAndRootNo() -> result size:" + result.size());
+        for (HashMap<Integer, List<CardDTO>> map : result) {
+            Iterator<Integer> keys = map.keySet().iterator();
+            StringBuffer keySum = new StringBuffer();
+            while (keys.hasNext()) {
+                keySum.append(" / ").append(keys.next());
+            }
+            Logger.hotfixMessage("keys : " + keySum.toString());
+        }
+        return result;
     }
 
     private void resetChildrenFocusedCardPosition(int rootContainerPosition) {
@@ -979,21 +1048,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         }
         if (!rootNoQueue.isEmpty())
             throw new RuntimeException("vm#initContainerRootNo/after work, queue is not empty.");
-    }
-
-    private List<List<CardDTO>> groupDataByContainerNo(List<CardDTO> data) {
-        Logger.message("vm#groupDataByContainerNo");
-        List<List<CardDTO>> valueCollector = new ArrayList<>();
-        Optional.ofNullable(data).ifPresent(dtoList -> {
-            for (CardDTO dto : dtoList) {
-                int position = dto.getContainerNo();
-                if (position > valueCollector.size() - 1) {
-                    valueCollector.add(new ArrayList<>());
-                }
-                valueCollector.get(position).add(dto);
-            }
-        });
-        return valueCollector;
     }
 
     private void resetChildrenPresentData(int rootContainerPosition, int rootCardPosition, Integer[] childrenRootNoArr) {
@@ -1068,14 +1122,18 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             , RecyclerView targetRecyclerView) {
         return foundEntity -> {
             Logger.message("DropDataInsertListener#accept");
-            int targetSeqNo = targetDTO.getSeqNo();
-            int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
-            targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
-            mAllData.get(targetDTO.getContainerNo()).add(targetSeqNo + 1, foundEntity.toDTO());
+            final int targetSeqNo = targetDTO.getSeqNo();
+            final int newCardSeqNo = targetSeqNo +1;
+            final int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
+            targetItemList.add(newCardSeqNo, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
+            final int targetContainerNo = targetDTO.getContainerNo();
+            mAllData.get(targetContainerNo).add(newCardSeqNo, foundEntity.toDTO());
             runOnUiThread(() -> {
                 Logger.message("runOnUiThread");
-                Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(targetSeqNo + 1);
-                targetRecyclerView.scrollToPosition(targetSeqNo + 1);
+                Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(newCardSeqNo);
+                targetRecyclerView.scrollToPosition(newCardSeqNo);
+                mPresentContainerList.get(targetContainerNo).setFocusCardPosition(newCardSeqNo);
+                presentChildren(targetRecyclerView, targetContainerNo, newCardSeqNo);
             }, targetRecyclerView.getContext());
         };
     }

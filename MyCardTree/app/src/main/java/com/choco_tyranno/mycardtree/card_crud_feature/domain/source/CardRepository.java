@@ -26,12 +26,31 @@ public class CardRepository {
         execute(mCardDAO::findLastInsertedCard);
     }
 
-    public void readData(OnDataLoadListener callback) {
+//    public void readData(OnDataLoadListener callback) {
+//        execute(()->{
+//            int loopCount = 0;
+//            while (!MyCardTreeDataBase.isAssetInserted()) {
+//                try {
+//                    Thread.sleep(500);
+//                    loopCount++;
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                if (loopCount > 30)
+//                    break;
+//            }
+//            _originData = mCardDAO.findAllCards();
+//            mCardDAO.findLastContainerNo();
+//            callback.onLoadData();
+//        });
+//    }
+
+    public void readData(Consumer<Integer> callback) {
         execute(()->{
             int loopCount = 0;
             while (!MyCardTreeDataBase.isAssetInserted()) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     loopCount++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -40,7 +59,8 @@ public class CardRepository {
                     break;
             }
             _originData = mCardDAO.findAllCards();
-            callback.onLoadData();
+            int lastContainerNo = mCardDAO.findLastContainerNo();
+            callback.accept(lastContainerNo);
         });
     }
 

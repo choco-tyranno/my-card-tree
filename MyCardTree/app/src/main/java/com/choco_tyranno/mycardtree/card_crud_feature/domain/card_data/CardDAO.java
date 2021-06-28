@@ -40,6 +40,9 @@ public abstract class CardDAO {
     @Query("select * from table_card")
     public abstract List<CardEntity> findAllCards();
 
+    @Query("select MAX(container_no) from table_card")
+    public abstract int findLastContainerNo();
+
     @Query("select * from table_card order by card_no desc limit 1")
     public abstract CardEntity findLastInsertedCard();
 
