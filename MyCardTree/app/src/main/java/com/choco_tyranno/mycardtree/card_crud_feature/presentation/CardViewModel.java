@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -59,6 +60,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final CardRepository mCardRepository;
     private final MutableLiveData<List<List<CardDTO>>> mLiveData;
     private List<List<CardDTO>> mAllData;
+    private List<HashMap<Integer, List<CardDTO>>> refactoredAllData;
     private final List<Container> mPresentContainerList;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
     private boolean computingLayout;
@@ -81,6 +83,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         this.mCardRepository = new CardRepository(application);
         this.mLiveData = new MutableLiveData<>();
         this.mAllData = new ArrayList<>();
+        this.refactoredAllData = new ArrayList<>();
         this.mPresentData = new ArrayList<>();
         this.mPresentContainerList = new ArrayList<>();
         this.computingLayout = false;
@@ -105,6 +108,123 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 , "CREATE"
                 , 0);
     }
+
+    //Drop target view is recyclerView.
+    //single card case + in crowds case.
+    private void dropAndCreateServiceForContainer(RecyclerView rv, FrameLayout prevSeqCardView) {
+        Logger.message("vm#dropAndCreateService : for card space");
+        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) rv.getChildViewHolder(prevSeqCardView)).getBinding();
+        CardDTO prevSeqCardDTO = cardFrameBinding.getCard();
+        CardState prevCardState = cardFrameBinding.getCardState();
+        int prevCardSeqNo = prevSeqCardDTO.getSeqNo();
+        int rootNo = prevSeqCardDTO.getRootNo();
+        int containerNo = prevSeqCardDTO.getContainerNo();
+        List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(containerNo);
+        CardDTO newCardDTO = new CardDTO.Builder().seqNo(prevCardSeqNo + 1).rootNo(rootNo).containerNo(containerNo).build();
+        if (targetContainerCardList.size() > prevCardSeqNo + 1) {
+            mCardRepository.insertAndUpdates(
+                    newCardDTO.toEntity()
+                    , dtoListToEntityList(
+                            increaseListCardsSeq(targetContainerCardList, prevCardSeqNo + 1))
+                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
+            );
+        } else {
+            mCardRepository.insert(newCardDTO.toEntity()
+                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
+            );
+        }
+    }
+
+
+    //TODO : update target / update existing dropped container items.
+    private void dropAndMoveService(@NonNull CardRecyclerView cardRecyclerView) {
+        ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
+        ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
+        final int targetContainerPosition = containerLayoutManager.getCardRecyclerViewPosition(cardRecyclerView);
+        LinearLayoutManager cardLayoutManager = cardRecyclerView.getLayoutManager();
+        final int firstVisibleCardPosition = cardLayoutManager.findFirstVisibleItemPosition();
+        final int lastVisibleCardPosition = cardLayoutManager.findLastVisibleItemPosition();
+        //drop to next of firstVisible CardPosition.\
+        int rootCardPosition = RecyclerView.NO_POSITION;
+        if (targetContainerPosition != 0) {
+            rootCardPosition = mPresentContainerList.get(targetContainerPosition - 1).getFocusCardPosition();
+            Pair<CardDTO, CardState> rootCardPair = mPresentData.get(targetContainerPosition - 1).get(rootCardPosition);
+            CardDTO rootCardDTO = rootCardPair.first;
+            CardState rootCardState = rootCardPair.second;
+
+        }
+
+        if (firstVisibleCardPosition == lastVisibleCardPosition) {
+
+        }
+    }
+
+    /*
+     *
+     * The fromData & toData, outer Pair first : containerPosition , second : item.
+     * */
+    public DropDataUpdateListener<Integer> orderDropDataUpdateListener(int targetContainerPosition, int targetCardPosition
+            , RecyclerView targetCardRecyclerView, Queue<Pair<Integer, List<CardDTO>>> fromData
+            , Queue<Pair<Integer, List<CardDTO>>> toData) {
+
+        return updateCount -> {
+            Logger.hotfixMessage("updateCount:" + updateCount);
+            //move data. remove fromData , add toData
+            //
+            // loop remove
+            while (!fromData.isEmpty()){
+                Pair<Integer, List<CardDTO>> dequeueItem = fromData.poll();
+                if (dequeueItem==null)
+                    return;
+                final int theContainerPosition = dequeueItem.first;
+                final List<CardDTO> theContainerItems = dequeueItem.second;
+                //verify removeAll.
+                mAllData.get(theContainerPosition).removeAll(theContainerItems);
+            }
+            while (!toData.isEmpty()){
+                Pair<Integer, List<CardDTO>> dequeueItem = toData.poll();
+                if (dequeueItem==null)
+                    return;
+                final int theContainerPosition = dequeueItem.first;
+                final List<CardDTO> theContainerItems = dequeueItem.second;
+                //verify addAll.
+            }
+
+
+//            targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
+//            mAllData.get(targetDTO.getContainerNo()).add(targetSeqNo + 1, foundEntity.toDTO());
+//            runOnUiThread(() -> {
+//                Logger.message("runOnUiThread");
+//                Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(targetSeqNo + 1);
+//                targetRecyclerView.scrollToPosition(targetSeqNo + 1);
+//            }, targetRecyclerView.getContext());
+
+
+            mPresentContainerList.get(targetContainerPosition).setFocusCardPosition(targetCardPosition);
+            presentChildren(targetCardRecyclerView, targetContainerPosition, targetCardPosition);
+        };
+    }
+
+    public interface DropDataUpdateListener<E> {
+        void onUpdate(E updateCount);
+    }
+
+//    public DropDataInsertListener orderDropDataInsertListenerForContainer(CardDTO targetDTO, CardState targetCardState, List<Pair<CardDTO, CardState>> targetItemList
+//            , RecyclerView targetRecyclerView) {
+//        return foundEntity -> {
+//            Logger.message("DropDataInsertListener#accept");
+//            int targetSeqNo = targetDTO.getSeqNo();
+//            int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
+//            targetItemList.add(targetSeqNo + 1, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
+//            mAllData.get(targetDTO.getContainerNo()).add(targetSeqNo + 1, foundEntity.toDTO());
+//            runOnUiThread(() -> {
+//                Logger.message("runOnUiThread");
+//                Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(targetSeqNo + 1);
+//                targetRecyclerView.scrollToPosition(targetSeqNo + 1);
+//            }, targetRecyclerView.getContext());
+//        };
+//    }
+
 
     private void initCardRecyclerViewDragListener() {
         Logger.message("vm#initCardRecyclerViewDragListener");
@@ -188,7 +308,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         return false;
                     final int containerCount = containerLayoutManager.getItemCount();
                     if (lastCompletelyVisibleContainerPosition != containerCount - 1) {
-                        containerLayoutManager.setContainerScrollAction(()->{
+                        containerLayoutManager.setContainerScrollAction(() -> {
                             containerRecyclerView.smoothScrollToPosition(lastCompletelyVisibleContainerPosition + 1);
                             if (lastCompletelyVisibleContainerPosition + 1 == containerCount - 1) {
                                 view.setVisibility(View.INVISIBLE);
@@ -220,7 +340,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 nextContainerArrow.setVisibility(View.INVISIBLE);
                 return true;
             }
-
             return false;
         };
     }
@@ -498,6 +617,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
 
+    /*
+     * Below :
+     * Service handling code.
+     * */
+
     private boolean handleCreateServiceForEmptySpace(View view, DragEvent event) {
         if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
             Animation tremble = AnimationUtils.loadAnimation(view.getContext(), R.anim.card_trembling);
@@ -583,15 +707,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         });
                         layoutManager.scrollDelayed(500);
                     }
-
-//                    ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) targetView.getParent().getParent();
-//                    LinearLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
-//                    final boolean firstItemVisible = containerLayoutManager.findFirstCompletelyVisibleItemPosition() == 0;
-//                    Rect rect = new Rect();
-//                    targetView.getDrawingRect(rect);
-//                    int[] location = new int[2];
-//                    targetView.getLocationOnScreen(location);
-//                    rect.offset(location[0], location[1]);
                 }
 
                 return true;
@@ -624,6 +739,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 nextArrow.setVisibility(View.INVISIBLE);
                 return true;
             case DragEvent.ACTION_DROP:
+                dropAndMoveService(targetView);
                 return true;
         }
         return false;
@@ -693,32 +809,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 return true;
         }
         return false;
-    }
-
-    //Drop target view is recyclerView.
-    //single card case + in crowds case.
-    private void dropAndCreateServiceForContainer(RecyclerView rv, FrameLayout prevSeqCardView) {
-        Logger.message("vm#dropAndCreateService : for card space");
-        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) rv.getChildViewHolder(prevSeqCardView)).getBinding();
-        CardDTO prevSeqCardDTO = cardFrameBinding.getCard();
-        CardState prevCardState = cardFrameBinding.getCardState();
-        int prevCardSeqNo = prevSeqCardDTO.getSeqNo();
-        int rootNo = prevSeqCardDTO.getRootNo();
-        int containerNo = prevSeqCardDTO.getContainerNo();
-        List<Pair<CardDTO, CardState>> targetContainerCardList = mPresentData.get(containerNo);
-        CardDTO newCardDTO = new CardDTO.Builder().seqNo(prevCardSeqNo + 1).rootNo(rootNo).containerNo(containerNo).build();
-        if (targetContainerCardList.size() > prevCardSeqNo + 1) {
-            mCardRepository.insertAndUpdates(
-                    newCardDTO.toEntity()
-                    , dtoListToEntityList(
-                            increaseListCardsSeq(targetContainerCardList, prevCardSeqNo + 1))
-                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
-            );
-        } else {
-            mCardRepository.insert(newCardDTO.toEntity()
-                    , orderDropDataInsertListenerForContainer(prevSeqCardDTO, prevCardState, targetContainerCardList, rv)
-            );
-        }
     }
 
     //Drop target view is empty space view.

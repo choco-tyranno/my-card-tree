@@ -23,26 +23,25 @@ public class CardRepository {
     public CardRepository(Application application) {
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
         mCardDAO = db.cardDAO();
-        MyCardTreeDataBase.databaseWriteExecutor.execute(mCardDAO::findLastInsertedCard);
+        execute(mCardDAO::findLastInsertedCard);
     }
 
     public void readData(OnDataLoadListener callback) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
-                    int loopCount = 0;
-                    while (!MyCardTreeDataBase.isAssetInserted()) {
-                        try {
-                            Thread.sleep(1000);
-                            loopCount++;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (loopCount>30)
-                            break;
-                    }
-                    _originData = mCardDAO.findAllCards();
-                    callback.onLoadData();
+        execute(()->{
+            int loopCount = 0;
+            while (!MyCardTreeDataBase.isAssetInserted()) {
+                try {
+                    Thread.sleep(1000);
+                    loopCount++;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-        );
+                if (loopCount > 30)
+                    break;
+            }
+            _originData = mCardDAO.findAllCards();
+            callback.onLoadData();
+        });
     }
 
     public List<CardEntity> getData() {
@@ -50,7 +49,7 @@ public class CardRepository {
     }
 
     public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
+        execute(() -> {
             synchronized (this) {
                 CardEntity foundData = mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList);
                 dropEvent.accept(foundData);
@@ -59,7 +58,7 @@ public class CardRepository {
     }
 
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() -> {
+        execute(() -> {
             synchronized (this) {
                 CardEntity foundData = mCardDAO.insertTransaction(cardEntity);
                 dropEvent.accept(foundData);
@@ -68,27 +67,37 @@ public class CardRepository {
     }
 
     public void update(CardEntity cardEntity) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->
-                mCardDAO.update(cardEntity)
-        );
+        execute(() -> mCardDAO.update(cardEntity));
     }
 
     public void delete(List<CardEntity> deleteCardEntities, Consumer<Integer> deleteEvent) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
-                    synchronized (this){
-                        int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
-                        deleteEvent.accept(deleteCount);
-                    }
-                }
-        );
+        execute(() -> {
+            synchronized (this) {
+                int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
+                deleteEvent.accept(deleteCount);
+            }
+        });
     }
+
     public void deleteAndUpdate(List<CardEntity> deleteCardEntities, List<CardEntity> updateCardEntities, Consumer<Integer> deleteEvent) {
-        MyCardTreeDataBase.databaseWriteExecutor.execute(() ->{
-                    synchronized (this){
-                        int deleteCount = mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
-                        deleteEvent.accept(deleteCount);
-                    }
-                }
-        );
+        execute(() -> {
+            synchronized (this) {
+                int deleteCount = mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
+                deleteEvent.accept(deleteCount);
+            }
+        });
+    }
+
+    public void update(List<CardEntity> updateCardEntities, Runnable endAction) {
+        execute(()->{
+            synchronized (this){
+                mCardDAO.update(updateCardEntities);
+                endAction.run();
+            }
+        });
+    }
+
+    private void execute(Runnable action) {
+        MyCardTreeDataBase.databaseWriteExecutor.execute(action);
     }
 }

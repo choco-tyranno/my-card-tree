@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -66,6 +68,14 @@ public class ContainerRecyclerView extends RecyclerView {
             this.scrollLockedQueue = new LinkedList<>();
         }
 
+        public int getCardRecyclerViewPosition(@NonNull CardRecyclerView childCardRecyclerView){
+            if (containerRecyclerView==null)
+                throw new RuntimeException("ItemScrollingControlLayoutManager#getCardRecyclerViewPosition - containerRecyclerView is null");
+            final int pos = containerRecyclerView.getChildAdapterPosition((View)childCardRecyclerView.getParent());
+            Logger.hotfixMessage("pos:"+pos);
+            return 0;
+        }
+
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView){
             this.containerRecyclerView = containerRecyclerView;
         }
@@ -78,7 +88,6 @@ public class ContainerRecyclerView extends RecyclerView {
         public void scrollDelayed(int delayed){
             if (containerRecyclerView==null)
                 return;
-            Logger.hotfixMessage("scrollDelayed : "+delayed);
             mainHandler().postDelayed(()->{
                 if (exitAction!=null){
                     clearContainerScrollAction();
@@ -89,7 +98,6 @@ public class ContainerRecyclerView extends RecyclerView {
                 containerScrollAction.run();
                 clearContainerScrollAction();
             }, delayed);
-            Logger.hotfixMessage("executed / scrollDelayed : "+delayed);
         }
 
         private Handler mainHandler(){
