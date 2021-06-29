@@ -26,10 +26,16 @@ public class Container extends BaseObservable {
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
     private static final int NO_ROOT_NO = -999;
-    private static final int DEFAULT_CARD_POSITION = 0;
+    public static final int DEFAULT_CARD_POSITION = 0;
 
     public Container() {
         this.mRootNo = NO_ROOT_NO;
+        this.mFocusCardPosition = DEFAULT_CARD_POSITION;
+        this.mCardScrollListener = new CardScrollListener();
+    }
+
+    public Container(int rootNo) {
+        this.mRootNo = rootNo;
         this.mFocusCardPosition = DEFAULT_CARD_POSITION;
         this.mCardScrollListener = new CardScrollListener();
     }

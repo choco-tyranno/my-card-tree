@@ -46,6 +46,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,9 +60,9 @@ import java.util.stream.Stream;
 
 public class CardViewModel extends AndroidViewModel implements UiThreadAccessible {
     private final CardRepository mCardRepository;
-    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
-    private List<List<CardDTO>> mAllData;
-    private List<HashMap<Integer, List<CardDTO>>> refactoredAllData;
+//    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
+    private List<HashMap<Integer, List<CardDTO>>> mAllData;
+    private HashMap<Integer, CardDTO> cardIdMap;
     private final List<Container> mPresentContainerList;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
     private boolean computingLayout;
@@ -82,11 +83,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         super(application);
         Logger.message("VM#constructor");
         this.mCardRepository = new CardRepository(application);
-        this.mLiveData = new MutableLiveData<>();
+//        this.mLiveData = new MutableLiveData<>();
         this.mAllData = new ArrayList<>();
-        this.refactoredAllData = new ArrayList<>();
         this.mPresentData = new ArrayList<>();
         this.mPresentContainerList = new ArrayList<>();
+        this.cardIdMap = new HashMap<>();
         this.computingLayout = false;
         initListeners();
     }
@@ -180,7 +181,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 final int theContainerPosition = dequeueItem.first;
                 final List<CardDTO> theContainerItems = dequeueItem.second;
                 //verify removeAll.
-                mAllData.get(theContainerPosition).removeAll(theContainerItems);
+//                mAllData.get(theContainerPosition).removeAll(theContainerItems);
             }
             while (!toData.isEmpty()) {
                 Pair<Integer, List<CardDTO>> dequeueItem = toData.poll();
@@ -226,36 +227,19 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 //        };
 //    }
 
-
     private void initCardRecyclerViewDragListener() {
         Logger.message("vm#initCardRecyclerViewDragListener");
         onDragListenerForCardRecyclerView = (view, event) -> {
-            if (view instanceof CardRecyclerView) {
-                CardRecyclerView targetView = (CardRecyclerView) view;
-                if (event.getAction() == DragEvent.ACTION_DRAG_STARTED) {
-                    ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) targetView.getParent().getParent();
-                    LinearLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
-                    final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
-                    final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
-                    final int itemCount = containerLayoutManager.getItemCount();
-                    ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-                    if (firstVisibleContainerPosition != 0) {
-                        viewGroup.findViewById(R.id.prev_container_arrow).setVisibility(View.VISIBLE);
-                    }
-                    if (lastVisibleContainerPosition < itemCount - 1) {
-                        viewGroup.findViewById(R.id.next_container_arrow).setVisibility(View.VISIBLE);
-                    }
-                    return true;
-                }
-                String dragType = (String) event.getLocalState();
-                if (TextUtils.equals(dragType, "CREATE")) {
-                    return handleCreateServiceForContainer(targetView, event);
-                }
-                if (TextUtils.equals(dragType, "MOVE")) {
-                    return handleMoveServiceForCardRecyclerView(targetView, event);
-                }
-            } else {
-                throw new RuntimeException("#ondrag() : recyclerview not found");
+            if (!(view instanceof CardRecyclerView))
+                return false;
+            CardRecyclerView targetView = (CardRecyclerView) view;
+            String dragType = (String) event.getLocalState();
+
+            if (TextUtils.equals(dragType, "CREATE")) {
+                return handleCreateServiceForContainer(targetView, event);
+            }
+            if (TextUtils.equals(dragType, "MOVE")) {
+                return handleMoveServiceForCardRecyclerView(targetView, event);
             }
             return false;
         };
@@ -376,14 +360,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         };
     }
 
-    public boolean isComputingLayout() {
-        return computingLayout;
-    }
-
-    public void setComputingLayout(boolean computingLayout) {
-        this.computingLayout = computingLayout;
-    }
-
     public CardScrollListener.OnScrollStateChangeListener getOnScrollStateChangeListener() {
         return mOnScrollStateChangeListener;
     }
@@ -393,33 +369,17 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void onRemoveBtnClicked(View view, CardDTO targetCard) {
         int targetContainerPosition = findContainerPositionByRemoveBtn(view);
-        List<CardDTO> removeItemList = new ArrayList<>(findChildrenCards(targetCard, targetContainerPosition));
+        List<CardDTO> removeItemList = new ArrayList<>();
+        findChildrenCards(targetCard, removeItemList);
         removeItemList.add(targetCard);
         alertDeleteWarningDialog(view, targetCard, removeItemList, targetContainerPosition);
     }
 
-    private void removeFromAllList(CardDTO[] removeItemArr, int targetContainerPosition) {
-        Queue<CardDTO> removeItemQueue = new LinkedList<>();
-        Stream.of(removeItemArr).forEach(removeItemQueue::offer);
-        Logger.message("[before] removeItemQueue size :" + removeItemQueue.size());
-        HashMap<Integer, Queue<CardDTO>> containerPositionMap = new HashMap<>();
-        while (!removeItemQueue.isEmpty()) {
-            CardDTO testCard = removeItemQueue.poll();
-            int testContainerNo = Objects.requireNonNull(testCard).getContainerNo();
-            if (!containerPositionMap.containsKey(testContainerNo)) {
-                containerPositionMap.put(testCard.getContainerNo(), new LinkedList<>());
-            }
-            Objects.requireNonNull(containerPositionMap.get(testContainerNo)).offer(testCard);
-        }
-        Logger.message("#removeFromAllList/fin while loop. map size : " + containerPositionMap.size());
-
-        for (int i = targetContainerPosition; i < mAllData.size(); i++) {
-            if (!containerPositionMap.containsKey(i))
-                break;
-            Queue<CardDTO> testQueue = containerPositionMap.get(i);
-            while (!Objects.requireNonNull(testQueue).isEmpty()) {
-                mAllData.get(i).remove(testQueue.poll());
-            }
+    private void removeFromAllList(CardDTO[] removeItemArr) {
+        for (final CardDTO testDto : removeItemArr) {
+            final int testRootNo = testDto.getRootNo();
+            final int testContainerNo = testDto.getContainerNo();
+            mAllData.get(testContainerNo).get(testRootNo).remove(testDto);
         }
     }
 
@@ -433,8 +393,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         runOnUiThread(() -> SingleToastManager.show(SingleToaster.makeTextShort(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요")), view.getContext());
                         return;
                     }
-                    removeFromAllList(removeItemArr, targetContainerPosition);
-                    mLiveData.postValue(mAllData);
+                    removeFromAllList(removeItemArr);
+//                    mLiveData.postValue(mAllData);
                     mPresentData.subList(targetContainerPosition, mPresentData.size()).clear();
                     mPresentContainerList.subList(targetContainerPosition, mPresentContainerList.size()).clear();
                     RecyclerView containerRecyclerView = getContainerRecyclerViewFromRemoveButton(view);
@@ -477,8 +437,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         runOnUiThread(() -> SingleToastManager.show(SingleToaster.makeTextShort(view.getContext(), "삭제요청 실패. 잠시후 다시 시도해주세요")), view.getContext());
                         return;
                     }
-                    removeFromAllList(removeItemArr, targetContainerPosition);
-                    mLiveData.postValue(mAllData);
+                    removeFromAllList(removeItemArr);
+//                    mLiveData.postValue(mAllData);
                     mPresentData.get(targetContainerPosition).remove(cardDTO.getSeqNo());
                     if (focusedTarget) {
                         runOnUiThread(() -> {
@@ -515,26 +475,20 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return containerRecyclerView.getChildAdapterPosition(containerLayout);
     }
 
-    private int findCardPositionByRemoveBtn(View view) {
-        FrameLayout cardFrameLayout = (FrameLayout) view.getParent().getParent().getParent();
-        RecyclerView cardRecyclerView = (RecyclerView) cardFrameLayout.getParent();
-        return cardRecyclerView.getChildAdapterPosition(cardFrameLayout);
-    }
-
-    private List<CardDTO> findChildrenCards(CardDTO rootCard, int rootContainerPosition) {
-        List<CardDTO> foundChildrenCardCollector = new ArrayList<>();
-        int testRootNo = rootCard.getCardNo();
-        int childContainerPosition = rootContainerPosition + 1;
-        if (mAllData.size() >= childContainerPosition + 1) {
-            List<CardDTO> testList = mAllData.get(rootContainerPosition + 1);
-            for (CardDTO testCard : testList) {
-                if (testCard.getRootNo() != testRootNo)
-                    continue;
-                foundChildrenCardCollector.add(testCard);
-                foundChildrenCardCollector.addAll(findChildrenCards(testCard, childContainerPosition));
-            }
+    private void findChildrenCards(CardDTO rootCard, List<CardDTO> foundChildrenCollector) {
+        final int testRootNo = rootCard.getCardNo();
+        final int testContainerNo = rootCard.getContainerNo() + 1;
+        final boolean hasNextContainerData = mAllData.size() > testContainerNo;
+        if (!hasNextContainerData) {
+            return;
         }
-        return foundChildrenCardCollector;
+        List<CardDTO> foundCards = mAllData.get(testContainerNo).get(testRootNo);
+        if (foundCards == null || foundCards.isEmpty())
+            return;
+        foundChildrenCollector.addAll(foundCards);
+        for (CardDTO foundCard : foundCards) {
+            findChildrenCards(foundCard, foundChildrenCollector);
+        }
     }
 
     private void alertDeleteWarningDialog(View view, CardDTO targetCardDTO, List<CardDTO> removeItemList, int targetContainerPosition) {
@@ -712,6 +666,20 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
                 return true;
 
+            case DragEvent.ACTION_DRAG_STARTED:
+                ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) targetView.getParent().getParent();
+                LinearLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
+                final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
+                final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
+                final int itemCount = containerLayoutManager.getItemCount();
+                ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
+                if (firstVisibleContainerPosition != 0) {
+                    viewGroup.findViewById(R.id.prev_container_arrow).setVisibility(View.VISIBLE);
+                }
+                if (lastVisibleContainerPosition < itemCount - 1) {
+                    viewGroup.findViewById(R.id.next_container_arrow).setVisibility(View.VISIBLE);
+                }
+                return true;
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (containerPosition > mPresentData.size() - 1)
                     return false;
@@ -750,9 +718,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
         if (layoutManager == null)
             return false;
-        if (!(layoutManager.getItemCount() > 0)) {
-            return false;
-        }
+        if (event.getAction()==DragEvent.ACTION_DRAG_STARTED)
+            return true;
         int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
         Logger.message("#handleCreateService - firstVisibleItemPosition :" + firstVisibleItemPosition
@@ -890,82 +857,98 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public void loadData(OnDataLoadListener callback) {
         Logger.message("vm#loadData");
         mCardRepository.readData((lastContainerNo) -> {
-            setData(lastContainerNo);
+            initData(lastContainerNo);
             callback.onLoadData();
         });
     }
 
-    private Integer[] initContainerList(List<List<CardDTO>> groupedData) {
-        Logger.message("vm#initContainerList");
-        List<Integer> rootNoCollector = new ArrayList<>();
-        final int testSize = groupedData.size();
-        int testRootNo = -1;
-        for (int i = 0; i < testSize; i++) {
-            List<CardDTO> dtoList = groupedData.get(i);
-            boolean hasNext = false;
-
-            if (groupedData.get(i).isEmpty()) {
-                break;
-            }
-
-            for (CardDTO dto : dtoList) {
-                if (testRootNo == -1 && i == 0 && dto.getSeqNo() == 0) {
-                    rootNoCollector.add(dto.getRootNo());
-                    testRootNo = dto.getCardNo();
-                    mPresentContainerList.add(new Container());
-                    hasNext = true;
-                    break;
-                }
-                if (dto.getRootNo() == testRootNo) {
-                    rootNoCollector.add(testRootNo);
-                    testRootNo = dto.getCardNo();
-                    mPresentContainerList.add(new Container());
-                    hasNext = true;
-                    break;
-                }
-            }
-
-            if (!hasNext)
-                break;
+    private void initPresentData(List<HashMap<Integer, List<CardDTO>>> dataGroupedByRootNo) {
+        mPresentData.clear();
+        if (!(mPresentContainerList.size() > 0))
+            return;
+        if (dataGroupedByRootNo == null || dataGroupedByRootNo.isEmpty())
+            return;
+        for (int i = 0; i < mPresentContainerList.size(); i++) {
+            List<Pair<CardDTO, CardState>> foundItemCollector = new ArrayList<>();
+            final int testRootNo = mPresentContainerList.get(i).getRootNo();
+            List<CardDTO> foundDtoList = dataGroupedByRootNo.get(i).get(testRootNo);
+            if (foundDtoList == null || foundDtoList.isEmpty())
+                return;
+            foundDtoList.forEach(dto -> foundItemCollector.add(Pair.create(dto, new CardState())));
+            if (!foundItemCollector.isEmpty())
+                mPresentData.add(foundItemCollector);
         }
-        return rootNoCollector.toArray(new Integer[0]);
     }
 
-    private void setData(int lastContainerNo) {
-        Logger.hotfixMessage("lastContainerNo:" + lastContainerNo);
+    private void initData(int lastContainerNo) {
         Logger.message("vm#setData");
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
-//        List<List<CardDTO>> groupedData = groupDataByContainerNo(allDTOs);
-        List<List<CardDTO>> groupedData = groupByContainerNo(allDTOs, lastContainerNo + 1);
-//        groupByContainerNoAndRootNo(allDTOs, lastContainerNo);
-        Integer[] rootNoArr = initContainerList(groupedData);
-        initContainerRootNo(rootNoArr);
-        mPresentData.clear();
-        mPresentData.addAll(collectPresentData(groupedData, rootNoArr));
-        for (List<Pair<CardDTO, CardState>> presentContainerItem : mPresentData) {
-            presentContainerItem.sort((a, b) -> a.first.compareTo(b.first));
-        }
+        List<List<CardDTO>> dataGroupedByContainerNo = groupByContainerNo(allDTOs, lastContainerNo + 1);
+        List<HashMap<Integer, List<CardDTO>>> dataGroupedByRootNo = groupByRootNo(dataGroupedByContainerNo);
+        orderBySeqNo(dataGroupedByRootNo);
+        initContainerList(dataGroupedByRootNo);
+        initPresentData(dataGroupedByRootNo);
         // for Search func
-        mLiveData.postValue(groupedData);
+//        mLiveData.postValue(dataGroupedByContainerNo);
         // TODO : check [following 2 line] is it redundant?
         mAllData.clear();
-        mAllData.addAll(groupedData);
+        mAllData.addAll(dataGroupedByRootNo);
     }
 
-
-    private List<List<CardDTO>> groupDataByContainerNo(List<CardDTO> data) {
-        Logger.message("vm#groupDataByContainerNo");
-        List<List<CardDTO>> valueCollector = new ArrayList<>();
-        Optional.ofNullable(data).ifPresent(dtoList -> {
-            for (CardDTO dto : dtoList) {
-                int position = dto.getContainerNo();
-                if (position > valueCollector.size() - 1) {
-                    valueCollector.add(new ArrayList<>());
-                }
-                valueCollector.get(position).add(dto);
+    private void initContainerList(List<HashMap<Integer, List<CardDTO>>> orderedData) {
+        if (orderedData == null || orderedData.isEmpty())
+            return;
+        List<CardDTO> firstLayerItems = orderedData.get(0).get(CardDTO.NO_ROOT_CARD);
+        if (firstLayerItems == null || firstLayerItems.isEmpty())
+            return;
+        mPresentContainerList.add(new Container(CardDTO.NO_ROOT_CARD));
+        int rootCardNo = firstLayerItems.get(Container.DEFAULT_CARD_POSITION).getCardNo();
+        for (int i = 1; i < orderedData.size(); i++) {
+            HashMap<Integer, List<CardDTO>> testMap = orderedData.get(i);
+            if (testMap.containsKey(rootCardNo)) {
+                List<CardDTO> testList = testMap.get(rootCardNo);
+                if (testList == null || testList.isEmpty())
+                    return;
+                mPresentContainerList.add(new Container(rootCardNo));
+                rootCardNo = testList.get(0).getCardNo();
+                continue;
             }
-        });
-        return valueCollector;
+            break;
+        }
+    }
+
+    private void orderBySeqNo(List<HashMap<Integer, List<CardDTO>>> groupedData) {
+        for (HashMap<Integer, List<CardDTO>> testContainerMap : groupedData) {
+            for (int key : testContainerMap.keySet()) {
+                List<CardDTO> testDtoList = testContainerMap.get(key);
+                if (testDtoList != null)
+                    Collections.sort(testDtoList);
+            }
+        }
+    }
+
+    private List<HashMap<Integer, List<CardDTO>>> groupByRootNo(List<List<CardDTO>> dataGroupedByContainerNo) {
+        List<HashMap<Integer, List<CardDTO>>> result = new ArrayList<>();
+        if (dataGroupedByContainerNo == null || dataGroupedByContainerNo.isEmpty())
+            return result;
+        for (int i = 0; i < dataGroupedByContainerNo.size(); i++) {
+            result.add(new HashMap<>());
+        }
+        final int containerCount = dataGroupedByContainerNo.size();
+        for (int i = 0; i < containerCount; i++) {
+            List<CardDTO> testContainerCardDtoList = dataGroupedByContainerNo.get(i);
+            for (CardDTO testCardDto : testContainerCardDtoList) {
+                final int testRootNo = testCardDto.getRootNo();
+                final HashMap<Integer, List<CardDTO>> testMap = result.get(i);
+                if (!testMap.containsKey(testRootNo))
+                    testMap.put(testRootNo, new ArrayList<>());
+                Objects.requireNonNull(testMap.get(testRootNo)).add(testCardDto);
+            }
+//            for (int key : result.get(i).keySet()){
+//                Logger.hotfixMessage("["+i+"] key :"+key+"/ size:"+result.get(i).get(key).size());
+//            }
+        }
+        return result;
     }
 
     private List<List<CardDTO>> groupByContainerNo(List<CardDTO> data, int containerSize) {
@@ -977,102 +960,63 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             result.add(new ArrayList<>());
         }
         for (CardDTO testDto : data) {
-            int containerPosition = testDto.getContainerNo();
+            final int containerPosition = testDto.getContainerNo();
             result.get(containerPosition).add(testDto);
         }
         return result;
     }
 
-    private List<HashMap<Integer, List<CardDTO>>> groupByContainerNoAndRootNo(List<CardDTO> data, int lastContainerNo) {
-        List<HashMap<Integer, List<CardDTO>>> result = new ArrayList<>();
-        if (data == null)
-            return result;
-        synchronized (data) {
-            for (CardDTO testCardDTO : data) {
-                final int containerNo = testCardDTO.getContainerNo();
-                if (result.size() < containerNo + 1) {
-                    final int resultSize = result.size();
-                    for (int i = resultSize; i < containerNo + 1; i++) {
-                        result.add(new HashMap<>());
-                    }
-                }
-                final int testRootNo = testCardDTO.getRootNo();
-                HashMap<Integer, List<CardDTO>> targetMap = result.get(containerNo);
-                if (targetMap == null)
-                    throw new RuntimeException("#groupByContainerNoAndRootNo targetMap is null");
-                if (!targetMap.containsKey(testRootNo))
-                    targetMap.put(testRootNo, new ArrayList<>());
-                targetMap.get(testRootNo).add(testCardDTO);
-            }
+    private void resetChildrenPresentData(int rootContainerPosition, int rootCardPosition) {
+        Logger.message("vm#resetChildrenPresentData");
+        Pair<CardDTO, CardState> rootCardPair = mPresentData.get(rootContainerPosition).get(rootCardPosition);
+        CardDTO rootCardDto = rootCardPair.first;
+        CardState rootCardState = rootCardPair.second;
+        final int removeBtnVisibility = rootCardState.getRemoveBtnVisibility();
+        final int prevPresentListSize = mPresentData.size();
+        final boolean hasUselessContainer = prevPresentListSize > rootContainerPosition + 1;
+        if (hasUselessContainer) {
+            mPresentData.subList(rootContainerPosition + 1, prevPresentListSize).clear();
         }
-        Logger.hotfixMessage("[verify] VM#groupByContainerNoAndRootNo() -> result size:" + result.size());
-        for (HashMap<Integer, List<CardDTO>> map : result) {
-            Iterator<Integer> keys = map.keySet().iterator();
-            StringBuffer keySum = new StringBuffer();
-            while (keys.hasNext()) {
-                keySum.append(" / ").append(keys.next());
+
+        boolean hasNextContainerData = mAllData.size() > rootContainerPosition + 1;
+        while (hasNextContainerData) {
+            final int rootCardNo = rootCardDto.getCardNo();
+            HashMap<Integer, List<CardDTO>> testMap = mAllData.get(rootContainerPosition + 1);
+            if (testMap == null || testMap.isEmpty())
+                break;
+            if (!testMap.containsKey(rootCardNo)) {
+                break;
             }
-            Logger.hotfixMessage("keys : " + keySum.toString());
+            List<CardDTO> foundList = testMap.get(rootCardNo);
+            if (foundList == null || foundList.isEmpty())
+                break;
+            mPresentData.add(
+                    dtoListToPairList(foundList, removeBtnVisibility)
+            );
+            rootContainerPosition++;
+            hasNextContainerData = mAllData.size() > rootContainerPosition + 1;
+            rootCardDto = foundList.get(Container.DEFAULT_CARD_POSITION);
+        }
+    }
+
+    private List<Pair<CardDTO, CardState>> dtoListToPairList(List<CardDTO> dtoList) {
+        List<Pair<CardDTO, CardState>> result = new ArrayList<>();
+        if (dtoList == null || dtoList.isEmpty())
+            return result;
+        for (CardDTO dto : dtoList) {
+            result.add(Pair.create(dto, new CardState.Builder().build()));
         }
         return result;
     }
 
-    private void resetChildrenFocusedCardPosition(int rootContainerPosition) {
-        Logger.message("vm#resetChildFocusedCardPositions");
-        if (rootContainerPosition == mPresentContainerList.size() - 1)
-            return;
-        for (int i = rootContainerPosition + 1; i < mPresentContainerList.size(); i++) {
-            mPresentContainerList.get(i).setFocusCardPosition(0);
+    private List<Pair<CardDTO, CardState>> dtoListToPairList(List<CardDTO> dtoList, int removeBtnVisibility) {
+        List<Pair<CardDTO, CardState>> result = new ArrayList<>();
+        if (dtoList == null || dtoList.isEmpty())
+            return result;
+        for (CardDTO dto : dtoList) {
+            result.add(Pair.create(dto, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
         }
-    }
-
-    private void resetChildrenPresentContainerRootNo(int childContainerStartPosition, Integer[] childrenRootNoArr) {
-        Logger.message("vm#resetContainerPresentFlags");
-        Queue<Integer> childrenRootNoQueue = new LinkedList<>();
-        Stream.of(childrenRootNoArr).forEach(childrenRootNoQueue::offer);
-        if (childrenRootNoQueue.isEmpty())
-            return;
-        for (int i = childContainerStartPosition; i < mPresentContainerList.size(); i++) {
-            mPresentContainerList.get(i).setRootNo(Objects.requireNonNull(childrenRootNoQueue.poll()));
-        }
-        if (!childrenRootNoQueue.isEmpty())
-            throw new RuntimeException("vm#resetContainerPresentFlags/ after method childRootNoStack is not empty");
-    }
-
-    private void initContainerRootNo(Integer[] rootNoArr) {
-        Logger.message("vm#initContainerPresentFlags");
-        Queue<Integer> rootNoQueue = new LinkedList<>();
-        Stream.of(rootNoArr).forEach(rootNoQueue::offer);
-        for (Container container : mPresentContainerList) {
-            container.setRootNo(Objects.requireNonNull(rootNoQueue.poll()));
-        }
-        if (!rootNoQueue.isEmpty())
-            throw new RuntimeException("vm#initContainerRootNo/after work, queue is not empty.");
-    }
-
-    private void resetChildrenPresentData(int rootContainerPosition, int rootCardPosition, Integer[] childrenRootNoArr) {
-        Logger.message("vm#resetChildrenPresentData");
-        Queue<Integer> childrenRootNoQueue = new LinkedList<>();
-        Stream.of(childrenRootNoArr).forEach(childrenRootNoQueue::offer);
-        final int prevPresentListSize = mPresentData.size();
-        int removeBtnVisibility = mPresentData.get(rootContainerPosition).get(rootCardPosition).second.getRemoveBtnVisibility();
-        if (rootContainerPosition + 1 < prevPresentListSize) {
-            mPresentData.subList(rootContainerPosition + 1, prevPresentListSize).clear();
-        }
-        if (childrenRootNoQueue.isEmpty())
-            return;
-        for (int i = rootContainerPosition + 1; !childrenRootNoQueue.isEmpty(); i++) {
-            List<CardDTO> testList = mAllData.get(i);
-            List<Pair<CardDTO, CardState>> presentCardCollector = new ArrayList<>();
-            for (CardDTO testCard : testList) {
-                if (testCard.getRootNo() != Objects.requireNonNull(childrenRootNoQueue.peek()))
-                    continue;
-                presentCardCollector.add(Pair.create(testCard, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
-            }
-            mPresentData.add(presentCardCollector);
-            childrenRootNoQueue.poll();
-        }
-        Logger.message("resetPresentData / result size :" + mPresentData.size());
+        return result;
     }
 
     private List<List<Pair<CardDTO, CardState>>> collectPresentData(List<List<CardDTO>> disorderedData, Integer[] rootNoArr) {
@@ -1102,17 +1046,22 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         void accept(CardEntity cardEntity);
     }
 
+    //TODO : mAllData ->mAllData.
     public DropDataInsertListener orderDropDataInsertListenerForEmptySpace(RecyclerView containerRecyclerView, int targetPosition, int removeBtnVisibility) {
         return cardEntity -> {
             mPresentContainerList.add(new Container());
             mPresentData.add(new ArrayList<>());
             CardDTO newCard = cardEntity.toDTO();
             mPresentData.get(targetPosition).add(Pair.create(newCard, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
-            if (mAllData.size() < targetPosition + 1) {
-                mAllData.add(new ArrayList<>());
+            final boolean noValueInAllData = mAllData.size() < targetPosition + 1;
+            if (noValueInAllData) {
+                HashMap<Integer, List<CardDTO>> dtoListMap = new HashMap<>();
+                mAllData.add(dtoListMap);
+                List<CardDTO> newDtoList = new ArrayList<>();
+                newDtoList.add(newCard);
+                dtoListMap.put(newCard.getRootNo(), newDtoList);
             }
-            mAllData.get(targetPosition).add(newCard);
-            mLiveData.postValue(mAllData);
+//            mLiveData.postValue(mAllData);
             runOnUiThread(() ->
                     Objects.requireNonNull(containerRecyclerView.getAdapter()).notifyItemInserted(targetPosition), containerRecyclerView.getContext());
         };
@@ -1123,11 +1072,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return foundEntity -> {
             Logger.message("DropDataInsertListener#accept");
             final int targetSeqNo = targetDTO.getSeqNo();
-            final int newCardSeqNo = targetSeqNo +1;
+            final int newCardSeqNo = targetSeqNo + 1;
             final int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
             targetItemList.add(newCardSeqNo, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             final int targetContainerNo = targetDTO.getContainerNo();
-            mAllData.get(targetContainerNo).add(newCardSeqNo, foundEntity.toDTO());
+
+            //TODO : verify this.
+            mAllData.get(targetContainerNo).get(foundEntity.getRootNo()).add(newCardSeqNo, foundEntity.toDTO());
             runOnUiThread(() -> {
                 Logger.message("runOnUiThread");
                 Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(newCardSeqNo);
@@ -1231,44 +1182,38 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return onDragListenerForEmptyCardSpace;
     }
 
+    /* TODO : this*/
     public void presentChildren(RecyclerView cardRecyclerView, int rootContainerPosition, int rootCardPosition) {
         Logger.message("vm#presentChildren/ rootContainerPosition :" + rootContainerPosition + "/rootCardPosition" + rootCardPosition);
         synchronized (mPresentData) {
             final int prevPresentContainerSize = mPresentContainerList.size();
-            Integer[] childrenRootNoArr = resetPresentContainerList(rootContainerPosition, rootCardPosition);
-            resetChildrenPresentContainerRootNo(rootContainerPosition + 1, childrenRootNoArr);
-            resetChildrenFocusedCardPosition(rootContainerPosition);
-            resetChildrenPresentData(rootContainerPosition, rootCardPosition, childrenRootNoArr);
+            resetPresentContainerList(rootContainerPosition, rootCardPosition);
+            resetChildrenPresentData(rootContainerPosition, rootCardPosition);
             notifyContainerItemChanged(((RecyclerView) cardRecyclerView.getParent().getParent()), getContainerAdapterFromCardRecyclerView(cardRecyclerView)
                     , prevPresentContainerSize, mPresentData.size()
                     , rootContainerPosition);
         }
     }
 
-    private Integer[] resetPresentContainerList(int rootContainerPosition, int rootCardPosition) {
-        Logger.message("vm#resetPresentContainerList");
-        List<Integer> rootNoCollector = new ArrayList<>();
+
+    private void resetPresentContainerList(int rootContainerPosition, int rootCardPosition) {
         final int prevLastPosition = mPresentContainerList.size() - 1;
         if (prevLastPosition > rootContainerPosition) {
             mPresentContainerList.subList(rootContainerPosition + 1, prevLastPosition + 1).clear();
         }
-        int testRootNo = mAllData.get(rootContainerPosition).get(rootCardPosition).getCardNo();
-        for (int i = rootContainerPosition + 1; i < mAllData.size(); i++) {
-            List<CardDTO> testList = mAllData.get(i);
-            boolean hasFound = false;
-            for (CardDTO dto : testList) {
-                if (dto.getRootNo() == testRootNo && dto.getSeqNo() == 0) {
-                    mPresentContainerList.add(new Container());
-                    rootNoCollector.add(testRootNo);
-                    testRootNo = dto.getCardNo();
-                    hasFound = true;
-                    break;
-                }
-            }
-            if (!hasFound)
-                break;
+
+        boolean hasNextContainer = mAllData.size() > rootContainerPosition + 1;
+        CardDTO rootCard = mPresentData.get(rootContainerPosition).get(rootCardPosition).first;
+        while (hasNextContainer) {
+            final int rootCardNo = rootCard.getCardNo();
+            List<CardDTO> testList = mAllData.get(rootContainerPosition + 1).get(rootCardNo);
+            if (testList == null || testList.isEmpty())
+                return;
+            mPresentContainerList.add(new Container(rootCardNo));
+            rootContainerPosition++;
+            hasNextContainer = mAllData.size() > rootContainerPosition + 1;
+            rootCard = testList.get(0);
         }
-        return rootNoCollector.toArray(new Integer[0]);
     }
 
     private void notifyContainerItemChanged(RecyclerView containerRecyclerView, ContainerAdapter containerAdapter, int prevContainerSize, int nextContainerSize, int rootContainerPosition) {

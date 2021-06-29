@@ -17,6 +17,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActiv
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
 
 public class CardRecyclerView extends RecyclerView {
+    public static final int DEFAULT_CARD_POSITION = 0;
 
     public CardRecyclerView(@NonNull Context context) {
         super(context);
