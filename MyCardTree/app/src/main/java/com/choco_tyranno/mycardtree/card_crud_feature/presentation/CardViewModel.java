@@ -60,7 +60,7 @@ import java.util.stream.Stream;
 
 public class CardViewModel extends AndroidViewModel implements UiThreadAccessible {
     private final CardRepository mCardRepository;
-//    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
+    //    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
     private List<HashMap<Integer, List<CardDTO>>> mAllData;
     private HashMap<Integer, CardDTO> cardIdMap;
     private final List<Container> mPresentContainerList;
@@ -367,19 +367,36 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     /* remove card */
 
+    //TODO : reverse sort removeItemList.
     public void onRemoveBtnClicked(View view, CardDTO targetCard) {
         int targetContainerPosition = findContainerPositionByRemoveBtn(view);
         List<CardDTO> removeItemList = new ArrayList<>();
         findChildrenCards(targetCard, removeItemList);
         removeItemList.add(targetCard);
+        removeItemList.sort((o1, o2) -> Integer.compare(o2.getContainerNo(), o1.getContainerNo()));
         alertDeleteWarningDialog(view, targetCard, removeItemList, targetContainerPosition);
     }
 
     private void removeFromAllList(CardDTO[] removeItemArr) {
         for (final CardDTO testDto : removeItemArr) {
-            final int testRootNo = testDto.getRootNo();
-            final int testContainerNo = testDto.getContainerNo();
-            mAllData.get(testContainerNo).get(testRootNo).remove(testDto);
+            Logger.hotfixMessage("In");
+            Logger.hotfixMessage("removeFromAllList - container :" + testDto.getContainerNo() + "/cardNo : " + testDto.getCardNo() + "/seq:" + testDto.getSeqNo());
+            final int targetRootNo = testDto.getRootNo();
+            final int targetContainerNo = testDto.getContainerNo();
+            HashMap<Integer, List<CardDTO>> targetContainerMap = mAllData.get(targetContainerNo);
+            Logger.hotfixMessage("map key[" + targetRootNo + "] count:" + targetContainerMap.size());
+            List<CardDTO> targetCardList = targetContainerMap.get(targetRootNo);
+            Logger.hotfixMessage("list size:" + targetCardList.size());
+            targetCardList.remove(testDto);
+            if (targetCardList.isEmpty()) {
+                Logger.hotfixMessage("List is empty");
+                targetContainerMap.remove(targetRootNo);
+            }
+            if (targetContainerMap.isEmpty()) {
+                Logger.hotfixMessage("Map is empty");
+                mAllData.remove(targetContainerMap);
+            }
+            Logger.hotfixMessage("Out");
         }
     }
 
@@ -491,6 +508,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         }
     }
 
+    //TODO : verify data remove accepted to mAllData.
     private void alertDeleteWarningDialog(View view, CardDTO targetCardDTO, List<CardDTO> removeItemList, int targetContainerPosition) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(view.getContext());
         String targetTitle = targetCardDTO.getTitle();
@@ -718,7 +736,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         LinearLayoutManager layoutManager = (LinearLayoutManager) targetView.getLayoutManager();
         if (layoutManager == null)
             return false;
-        if (event.getAction()==DragEvent.ACTION_DRAG_STARTED)
+        if (event.getAction() == DragEvent.ACTION_DRAG_STARTED)
             return true;
         int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
@@ -1055,12 +1073,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             mPresentData.get(targetPosition).add(Pair.create(newCard, new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             final boolean noValueInAllData = mAllData.size() < targetPosition + 1;
             if (noValueInAllData) {
-                HashMap<Integer, List<CardDTO>> dtoListMap = new HashMap<>();
-                mAllData.add(dtoListMap);
-                List<CardDTO> newDtoList = new ArrayList<>();
-                newDtoList.add(newCard);
-                dtoListMap.put(newCard.getRootNo(), newDtoList);
+                mAllData.add(new HashMap<>());
             }
+            HashMap<Integer, List<CardDTO>> targetMap = mAllData.get(targetPosition);
+            if (!targetMap.containsKey(newCard.getRootNo()))
+                targetMap.put(newCard.getRootNo(), new ArrayList<>());
+            targetMap.get(newCard.getRootNo()).add(newCard);
 //            mLiveData.postValue(mAllData);
             runOnUiThread(() ->
                     Objects.requireNonNull(containerRecyclerView.getAdapter()).notifyItemInserted(targetPosition), containerRecyclerView.getContext());
