@@ -38,6 +38,15 @@ public class ContainerRecyclerView extends RecyclerView {
         layout.setContainerRecyclerView(ContainerRecyclerView.this);
     }
 
+    @Nullable
+    @Override
+    public CardContainerViewHolder findViewHolderForAdapterPosition(int position) {
+        ViewHolder viewHolder = super.findViewHolderForAdapterPosition(position);
+        if (viewHolder instanceof CardContainerViewHolder)
+            return (CardContainerViewHolder) viewHolder;
+        throw new RuntimeException("containerRecyclerView#findViewHolderForAdapterPosition() - the position item is not CardContainerViewHolder instance.");
+    }
+
     public ItemScrollingControlLayoutManager getLayoutManager() {
         return (ItemScrollingControlLayoutManager) super.getLayoutManager();
     }
@@ -68,28 +77,28 @@ public class ContainerRecyclerView extends RecyclerView {
             this.scrollLockedQueue = new LinkedList<>();
         }
 
-        public int getCardRecyclerViewPosition(@NonNull CardRecyclerView childCardRecyclerView){
-            if (containerRecyclerView==null)
+        public int getCardRecyclerViewPosition(@NonNull CardRecyclerView childCardRecyclerView) {
+            if (containerRecyclerView == null)
                 throw new RuntimeException("ItemScrollingControlLayoutManager#getCardRecyclerViewPosition - containerRecyclerView is null");
-            final int pos = containerRecyclerView.getChildAdapterPosition((View)childCardRecyclerView.getParent());
-            Logger.hotfixMessage("pos:"+pos);
+            final int pos = containerRecyclerView.getChildAdapterPosition((View) childCardRecyclerView.getParent());
+            Logger.hotfixMessage("pos:" + pos);
             return 0;
         }
 
-        public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView){
+        public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {
             this.containerRecyclerView = containerRecyclerView;
         }
 
         /*
-        * Below :
-        * As ContainerRecyclerViews scroll
-        * */
+         * Below :
+         * As ContainerRecyclerViews scroll
+         * */
 
-        public void scrollDelayed(int delayed){
-            if (containerRecyclerView==null)
+        public void scrollDelayed(int delayed) {
+            if (containerRecyclerView == null)
                 return;
-            mainHandler().postDelayed(()->{
-                if (exitAction!=null){
+            mainHandler().postDelayed(() -> {
+                if (exitAction != null) {
                     clearContainerScrollAction();
                     exitAction.run();
                     clearContainerExitAction();
@@ -100,21 +109,21 @@ public class ContainerRecyclerView extends RecyclerView {
             }, delayed);
         }
 
-        private Handler mainHandler(){
-            if (containerRecyclerView==null)
+        private Handler mainHandler() {
+            if (containerRecyclerView == null)
                 return null;
-            return ((MainCardActivity)containerRecyclerView.getContext()).getMainHandler();
+            return ((MainCardActivity) containerRecyclerView.getContext()).getMainHandler();
         }
 
-        public boolean hasScrollAction(){
-            return containerScrollAction !=null;
+        public boolean hasScrollAction() {
+            return containerScrollAction != null;
         }
 
-        public void setContainerScrollAction(Runnable containerScrollAction){
+        public void setContainerScrollAction(Runnable containerScrollAction) {
             this.containerScrollAction = containerScrollAction;
         }
 
-        public void clearContainerScrollAction(){
+        public void clearContainerScrollAction() {
             this.containerScrollAction = null;
         }
 
@@ -122,22 +131,22 @@ public class ContainerRecyclerView extends RecyclerView {
             this.exitAction = exitAction;
         }
 
-        public void clearContainerExitAction(){
+        public void clearContainerExitAction() {
             this.exitAction = null;
         }
 
         /*
-        * Below :
-        * Children Nested RecyclerView scrolls control
-        * */
+         * Below :
+         * Children Nested RecyclerView scrolls control
+         * */
 
-        public void unlockAll(){
-            while (!scrollLockedQueue.isEmpty()){
+        public void unlockAll() {
+            while (!scrollLockedQueue.isEmpty()) {
                 scrollLockedQueue.poll().run();
             }
         }
 
-        public void enqueueLockedItem(Runnable unlockAction){
+        public void enqueueLockedItem(Runnable unlockAction) {
             scrollLockedQueue.add(unlockAction);
         }
 

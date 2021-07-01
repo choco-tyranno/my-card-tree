@@ -49,6 +49,11 @@ public class CardRecyclerView extends RecyclerView {
         this.suppressLayout(false);
     }
 
+    @Override
+    public CardAdapter getAdapter(){
+        return (CardAdapter)super.getAdapter();
+    }
+
     @Nullable
     @Override
     public ScrollControllableLayoutManager getLayoutManager() {

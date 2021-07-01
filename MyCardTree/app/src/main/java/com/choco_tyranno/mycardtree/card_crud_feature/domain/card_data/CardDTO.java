@@ -9,6 +9,9 @@ import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
     public static final int NO_ROOT_CARD = 0;
 
@@ -32,8 +35,37 @@ public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
 
     private String mImagePath;
 
-    CardDTO() {
+    CardDTO(CardDTO origin) {
+        this.mCardNo = origin.getCardNo();
+        this.mSeqNo = origin.getSeqNo();
+        this.mContainerNo = origin.getContainerNo();
+        this.mRootNo = origin.getRootNo();
+        this.mType = origin.getType();
+        this.mTitle = origin.getTitle();
+        this.mSubtitle = origin.getSubtitle();
+        this.mContactNumber = origin.getContactNumber();
+        this.mFreeNote = origin.getFreeNote();
+        this.mImagePath = origin.getImagePath();
+    }
 
+    public static void orderByContainerNoDesc(List<CardDTO> list){
+        list.sort((o1,o2)->Integer.compare(o2.getContainerNo(), o1.getContainerNo()));
+    }
+
+    public static void orderByContainerNoAsc(List<CardDTO> list){
+        list.sort((o1,o2)->Integer.compare(o1.getContainerNo(), o2.getContainerNo()));
+    }
+
+    public static List<CardDTO> cloneList(List<CardDTO> origin){
+        List<CardDTO> result = new ArrayList<>();
+        for (CardDTO cardDTO : origin){
+            result.add(cardDTO.cloneInstance());
+        }
+        return result;
+    }
+
+    public CardDTO cloneInstance(){
+        return new CardDTO(this);
     }
 
     CardDTO(Builder builder) {

@@ -5,7 +5,7 @@ import android.widget.Toast;
 import java.util.Optional;
 
 public class SingleToastManager {
-    public static Store toastStore;
+    private static Store toastStore;
 
     public static void show(Toast toast) {
         if(!Optional.ofNullable(toastStore).isPresent())

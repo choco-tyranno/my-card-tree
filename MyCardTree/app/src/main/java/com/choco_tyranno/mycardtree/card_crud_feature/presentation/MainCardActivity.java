@@ -14,6 +14,7 @@ import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
@@ -23,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class MainCardActivity extends AppCompatActivity {
-    private static CardViewModel viewModel;
+    private CardViewModel viewModel;
     private ActivityMainFrameBinding binding;
     private Handler mMainHandler;
 
@@ -41,12 +42,6 @@ public class MainCardActivity extends AppCompatActivity {
         binding.mainScreen.appNameFab.setOnClickListener((view)->{});
     }
 
-    public static CardViewModel getViewModel(){
-        if (Optional.ofNullable(viewModel).isPresent())
-        return viewModel;
-        throw new RuntimeException("MainCardActivity#getViewModel is null");
-    }
-
     private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -58,6 +53,10 @@ public class MainCardActivity extends AppCompatActivity {
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new ContainerRecyclerView.ItemScrollingControlLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
+    }
+
+    public ActivityMainFrameBinding getMainBinding(){
+        return binding;
     }
 
     // TODO : this is for auto notify using DiffUtil
@@ -87,6 +86,7 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Logger.message("destroyed");
+        CardViewShadowProvider.onDestroy();
         SingleToastManager.clear();
     }
 

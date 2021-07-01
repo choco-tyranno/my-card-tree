@@ -18,6 +18,11 @@ public class CardViewShadowProvider {
 
     }
 
+    public static void onDestroy() {
+        if (holder != null)
+            holder = null;
+    }
+
     public static View getInstance(Context context, CardDTO cardDTO) {
         if (holder == null) {
             holder = new LazyHolder();
