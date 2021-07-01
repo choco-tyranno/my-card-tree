@@ -57,7 +57,21 @@ public class ContainerRecyclerView extends RecyclerView {
         private Runnable exitAction;
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
+        private Runnable cardMoveRollbackAction;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
+
+        public boolean hasRollbackAction() {
+            return cardMoveRollbackAction != null;
+        }
+
+        public void setCardMoveRollback(Runnable action) {
+            this.cardMoveRollbackAction = action;
+        }
+
+        public void executeRollback() {
+            mainHandler().postDelayed(cardMoveRollbackAction, 500);
+            cardMoveRollbackAction = null;
+        }
 
         public ItemScrollingControlLayoutManager(Context context) {
             super(context);
