@@ -95,9 +95,13 @@ public class CardRecyclerView extends RecyclerView {
             mainHandler().postDelayed(() -> {
                 if (exitAction != null) {
                     clearScrollAction();
+                    if (exitAction==null)
+                        return;
                     exitAction.run();
                     clearExitAction();
                 } else {
+                    if (scrollAction == null)
+                        return;
                     scrollAction.run();
                     clearScrollAction();
                 }

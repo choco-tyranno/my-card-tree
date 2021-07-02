@@ -139,6 +139,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public void increaseListSeq(List<CardDTO> list) {
+        if (list == null || list.isEmpty())
+            return;
         for (CardDTO cardDTO : list) {
             cardDTO.setSeqNo(cardDTO.getSeqNo() + 1);
         }
@@ -153,9 +155,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     //TODO : update target / update existing dropped container items.
     //refactor after item detaching execution.
     private void dropAndMoveServiceForContainer(@NonNull CardRecyclerView cardRecyclerView, DragEvent event) {
-        Pair<CardDTO, List<CardDTO>> savedOriginData = (Pair<CardDTO, List<CardDTO>>) (((Pair<String, Pair>) event.getLocalState()).second);
+        Pair<CardDTO, Pair> savedOriginData = (Pair<CardDTO, Pair>) (((Pair<String, Pair>) event.getLocalState()).second);
         CardDTO movingRootCard = savedOriginData.first;
-        List<CardDTO> movingCards = savedOriginData.second;
+        Pair<List<CardDTO>, List<CardDTO>> movingCardsAndNextCards = savedOriginData.second;
+        List<CardDTO> movingCards = movingCardsAndNextCards.first;
+        List<CardDTO> nextCards = movingCardsAndNextCards.second;
+        Logger.hotfixMessage("movingCards:" + movingCards.size());
+        Logger.hotfixMessage("nextCards:" + nextCards.size());
 //        CardDTO.orderByContainerNoDesc(movingCards);
         //sort?
 //        Logger.hotfixMessage("movingCards size:"+movingCards.size());
@@ -231,40 +237,49 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private void addToAllData(CardDTO[] cardArr) {
+        Logger.hotfixMessage("[!!]addToAllData In.");
         if (cardArr == null || cardArr.length == 0)
             return;
         Arrays.sort(cardArr, (o1, o2) -> Integer.compare(o1.getContainerNo(), o2.getContainerNo()));
-        for (CardDTO cardDTO : cardArr) {
-            final int targetContainerPosition = cardDTO.getContainerNo();
-            if (!(mAllData.size() > targetContainerPosition + 1)) {
+        final int lastContainerPosition = cardArr[cardArr.length - 1].getContainerNo();
+        if (mAllData.size() < lastContainerPosition + 1) {
+            while (mAllData.size() < lastContainerPosition + 1) {
                 mAllData.add(new HashMap<>());
             }
+        }
+        for (CardDTO cardDTO : cardArr) {
+            final int targetContainerPosition = cardDTO.getContainerNo();
+//            if (mAllData.size() < targetContainerPosition + 1) {
+//                mAllData.add(new HashMap<>());
+//                if (mAllData.size() < targetContainerPosition + 1)
+//                    throw new RuntimeException("#addToAllData - mAllData.add(new HashMap<>()) but not enough.");
+//            }
             final int targetRootNo = cardDTO.getRootNo();
             final HashMap<Integer, List<CardDTO>> targetMap = mAllData.get(targetContainerPosition);
+
             if (!targetMap.containsKey(targetRootNo)) {
                 targetMap.put(targetRootNo, new ArrayList<>());
             }
-            final List<CardDTO> targetList = targetMap.get(targetRootNo);
-            targetList.add(cardDTO.getSeqNo(), cardDTO);
+            List<CardDTO> targetList = targetMap.get(targetRootNo);
+            targetList.add(cardDTO);
+            Collections.sort(targetList);
         }
     }
 
     /*
      * @param flagCardPosition is exclude position.
      * */
-    public List<CardDTO> findNextCards(int containerPosition, int lastExceptCardPosition) {
-        List<CardDTO> result = new ArrayList<>();
+    public void findNextCards(int containerPosition, int lastExceptCardPosition, List<CardDTO> foundItemCollector) {
         if (mPresentData.size() < containerPosition + 1)
-            return result;
+            return;
         List<Pair<CardDTO, CardState>> targetContainerCards = mPresentData.get(containerPosition);
         if (targetContainerCards.isEmpty() || targetContainerCards == null)
-            return result;
+            return;
         if (targetContainerCards.size() > lastExceptCardPosition + 1) {
             List<Pair<CardDTO, CardState>> filteredSubList = targetContainerCards.subList(lastExceptCardPosition + 1, targetContainerCards.size());
             pairListToCardDtoList(filteredSubList);
-            result.addAll(pairListToCardDtoList(filteredSubList));
+            foundItemCollector.addAll(pairListToCardDtoList(filteredSubList));
         }
-        return result;
     }
 
     /*
@@ -285,7 +300,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         final int seqNo = cardDTO.getSeqNo();
         if (mPresentData.size() < containerNo + 1)
             mPresentData.add(new ArrayList<>());
-        mPresentData.get(containerNo).add(cardDTO.getSeqNo(), Pair.create(cardDTO, new CardState()));
+        mPresentData.get(containerNo).add(seqNo, Pair.create(cardDTO, new CardState()));
     }
 
     public void clearContainerPositionPresentData(int startContainerPosition) {
@@ -344,7 +359,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public void clearContainerAtPosition(int containerNo) {
-        mPresentContainerList.subList(containerNo,mPresentContainerList.size()).clear();
+        mPresentContainerList.subList(containerNo, mPresentContainerList.size()).clear();
     }
 
     public interface DropDataUpdateListener<E> {
@@ -518,9 +533,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void removeFromAllList(CardDTO[] removeItemArr) {
         Arrays.sort(removeItemArr, (o1, o2) -> Integer.compare(o2.getContainerNo(), o1.getContainerNo()));
-        for (final CardDTO testDto : removeItemArr) {
-            final int targetRootNo = testDto.getRootNo();
+        if (removeItemArr.length == 0 || removeItemArr == null)
+            return;
+        for (CardDTO testDto : removeItemArr) {
             final int targetContainerNo = testDto.getContainerNo();
+            final int targetRootNo = testDto.getRootNo();
             HashMap<Integer, List<CardDTO>> targetContainerMap = mAllData.get(targetContainerNo);
             List<CardDTO> targetCardList = targetContainerMap.get(targetRootNo);
             targetCardList.remove(testDto);
@@ -782,8 +799,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         final int screenWidth = DisplayUtil.getScreenWidth(targetView.getContext());
         final int MOVE_BOUNDARY_WIDTH = 200;
         CardRecyclerView.ScrollControllableLayoutManager layoutManager = targetView.getLayoutManager();
-        ImageView prevArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.prev_card_arrow);
-        ImageView nextArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.next_card_arrow);
+        ImageView prevCardArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.prev_card_arrow);
+        ImageView nextCardArrow = ((ViewGroup) targetView.getParent()).findViewById(R.id.next_card_arrow);
+
+        ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
+        ImageView prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
+        ImageView nextContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
 
         if (layoutManager == null)
             return false;
@@ -801,9 +822,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         layoutManager.setScrollAction(() -> {
                             targetView.smoothScrollToPosition(focusedCardPosition - 1);
                             if (focusedCardPosition - 1 == 0)
-                                prevArrow.setVisibility(View.INVISIBLE);
-                            if (nextArrow.getVisibility() == View.INVISIBLE)
-                                nextArrow.setVisibility(View.VISIBLE);
+                                prevCardArrow.setVisibility(View.INVISIBLE);
+                            if (nextCardArrow.getVisibility() == View.INVISIBLE)
+                                nextCardArrow.setVisibility(View.VISIBLE);
                         });
                         layoutManager.scrollDelayed(500);
                         return true;
@@ -813,9 +834,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         layoutManager.setScrollAction(() -> {
                             targetView.smoothScrollToPosition(focusedCardPosition + 1);
                             if (focusedCardPosition + 1 == cardCount - 1)
-                                nextArrow.setVisibility(View.INVISIBLE);
-                            if (prevArrow.getVisibility() == View.INVISIBLE)
-                                prevArrow.setVisibility(View.VISIBLE);
+                                nextCardArrow.setVisibility(View.INVISIBLE);
+                            if (prevCardArrow.getVisibility() == View.INVISIBLE)
+                                prevCardArrow.setVisibility(View.VISIBLE);
                         });
                         layoutManager.scrollDelayed(500);
                     }
@@ -827,7 +848,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
                 final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
                 final int itemCount = containerLayoutManager.getItemCount();
-                ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
                 if (firstVisibleContainerPosition != 0) {
                     viewGroup.findViewById(R.id.prev_container_arrow).setVisibility(View.VISIBLE);
                 }
@@ -843,54 +863,99 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     Container container = mPresentContainerList.get(containerPosition);
                     final int focusedCardPosition = container.getFocusCardPosition();
                     if (focusedCardPosition != 0) {
-                        prevArrow.setVisibility(View.VISIBLE);
+                        prevCardArrow.setVisibility(View.VISIBLE);
                     }
                     if (focusedCardPosition < cardCount - 1) {
-                        nextArrow.setVisibility(View.VISIBLE);
+                        nextCardArrow.setVisibility(View.VISIBLE);
                     }
                 }
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
-                if (layoutManager.hasScrollAction()){
+                if (layoutManager.hasScrollAction()) {
                     layoutManager.setExitAction(() -> {
-                        prevArrow.setVisibility(View.INVISIBLE);
-                        nextArrow.setVisibility(View.INVISIBLE);
+                        if (prevCardArrow.getVisibility() == View.VISIBLE)
+                            prevCardArrow.setVisibility(View.INVISIBLE);
+                        if (nextCardArrow.getVisibility() == View.VISIBLE)
+                            nextCardArrow.setVisibility(View.INVISIBLE);
+//                        prevCardArrow.setVisibility(View.INVISIBLE);
+//                        nextCardArrow.setVisibility(View.INVISIBLE);
                     });
                 }
                 layoutManager.scrollDelayed(500);
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:
+                //ACTION_DRAG_ENDED has duplicate called each listener...
+
+                //post to Handler.
+                //cause location event is singled and postDelayed by Handler.
+                //cause possibility of already posted set event that horizontal arrow to Visible.
                 if (layoutManager.hasScrollAction()) {
                     layoutManager.setExitAction(() -> {
-                        prevArrow.setVisibility(View.INVISIBLE);
-                        nextArrow.setVisibility(View.INVISIBLE);
+                        if (prevCardArrow.getVisibility() == View.VISIBLE)
+                            prevCardArrow.setVisibility(View.INVISIBLE);
+                        if (nextCardArrow.getVisibility() == View.VISIBLE)
+                            nextCardArrow.setVisibility(View.INVISIBLE);
                     });
+                    layoutManager.scrollDelayed(500);
+                } else {
+                    if (prevCardArrow.getVisibility() == View.VISIBLE)
+                        prevCardArrow.setVisibility(View.INVISIBLE);
+                    if (nextCardArrow.getVisibility() == View.VISIBLE)
+                        nextCardArrow.setVisibility(View.INVISIBLE);
                 }
-                layoutManager.scrollDelayed(500);
 
-//                containerLayoutManager.setContainerScrollAction(rollback);
-
-                if (!event.getResult()) {
-                    if (containerLayoutManager.hasRollbackAction())
-                        return false;
-                    Runnable rollback = () -> {
-                        /*Pair<CardDTO, List<CardDTO>> savedOriginData = (Pair<CardDTO, List<CardDTO>>) (((Pair<String, Pair>) event.getLocalState()).second);
-                        CardDTO movingRootCard = savedOriginData.first;
-                        List<CardDTO> movingCards = savedOriginData.second;
-                        final int rootCardContainerPosition = movingRootCard.getContainerNo();
-                        final int firstVisiblePosition = containerLayoutManager.findFirstVisibleItemPosition();
-                        final int lastVisiblePosition = containerLayoutManager.findLastVisibleItemPosition();
-                        if (firstVisiblePosition != RecyclerView.NO_POSITION) {
-                            containerRecyclerView.smoothScrollToPosition(lastVisiblePosition);
-                        }
-                        addToAllData(movingCards.toArray(new CardDTO[0]));
-                        addSinglePresentCardDto(movingRootCard);
-                        increaseListSeq(findNextCards(movingRootCard.getContainerNo(), movingRootCard.getSeqNo()));
-*/
-                        SingleToastManager.show(SingleToaster.makeTextShort(targetView.getContext(), "rollback"));
+                if (!containerLayoutManager.hasVerticalArrowRemoveAction()) {
+                    Runnable verticalArrowRemoveAction = () -> {
+                        if (prevContainerArrow.getVisibility() == View.VISIBLE)
+                            prevContainerArrow.setVisibility(View.INVISIBLE);
+                        if (nextContainerArrow.getVisibility() == View.VISIBLE)
+                            nextContainerArrow.setVisibility(View.INVISIBLE);
                     };
-                    containerLayoutManager.executeRollback();
+                    containerLayoutManager.putVerticalArrowRemoveActionForDragMoveEnd(verticalArrowRemoveAction);
                 }
+                if (!event.getResult()) {
+                    Pair<String, Pair<CardDTO, Pair<List<CardDTO>, List<CardDTO>>>> pair1 = (Pair) event.getLocalState();
+
+                    if (!containerLayoutManager.hasRollbackAction()) {
+                        Runnable rollbackAction = () -> {
+                            Pair<CardDTO, Pair<List<CardDTO>, List<CardDTO>>> pair2 = pair1.second;
+                            Pair<List<CardDTO>, List<CardDTO>> pair3 = pair2.second;
+                            CardDTO movingCard = pair2.first;
+                            List<CardDTO> movingCardList = pair3.first;
+                            List<CardDTO> nextCardList = pair3.second;
+                            addToAllData(movingCardList.toArray(new CardDTO[0]));
+                            final boolean noPresentContainer = mPresentData.size() < movingCard.getContainerNo() + 1;
+                            addSinglePresentCardDto(movingCard);
+                            //TODO : presentDto insert position check
+                            if (noPresentContainer) {
+                                Logger.hotfixMessage("noPresentContainer case");
+                                addContainer(movingCard.getContainerNo(), movingCard.getRootNo());
+                                containerRecyclerView.getAdapter().notifyItemInserted(movingCard.getContainerNo());
+                                if (hasChildInAllData(movingCard)){
+                                    Logger.hotfixMessage("noPresentContainer / but, hasChildInAllData");
+                                    containerLayoutManager.waitLayoutForPresentChildrenIfNecessary(movingCard.getContainerNo(), ()->{
+                                        CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, movingCard.getContainerNo());
+                                        presentChildren(targetCardRecyclerView, movingCard.getContainerNo(), movingCard.getSeqNo());
+                                    });
+                                }
+                                return;
+                            } else {
+                                Logger.hotfixMessage("hasPresentContainer case.");
+                                increaseListSeq(nextCardList);
+                                CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, movingCard.getContainerNo());
+                                targetCardRecyclerView.getAdapter().notifyItemInserted(movingCard.getSeqNo());
+                                targetCardRecyclerView.smoothScrollToPosition(movingCard.getSeqNo());
+                            }
+                            CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, movingCard.getContainerNo());
+                            presentChildren(targetCardRecyclerView, movingCard.getContainerNo(), movingCard.getSeqNo());
+                            //TODO: make rollback.
+                            SingleToastManager.show(SingleToaster.makeTextShort(targetView.getContext(), "rollback"));
+                        };
+
+                        containerLayoutManager.putCardRollbackActionForDragMoveEnd(rollbackAction);
+                    }
+                }
+                containerLayoutManager.executeDragMoveEndAction();
                 return true;
             case DragEvent.ACTION_DROP:
                 dropAndMoveServiceForContainer(targetView, event);
@@ -899,6 +964,27 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return false;
     }
 
+    private boolean hasChildInAllData(CardDTO cardDTO) {
+        final int rootCardContainerNo = cardDTO.getContainerNo();
+        if (!(mAllData.size() > rootCardContainerNo + 1))
+            return false;
+        final boolean hasChildList = mAllData.get(rootCardContainerNo + 1).containsKey(cardDTO.getRootNo());
+        if (hasChildList) {
+            final boolean childExist = !mAllData.get(rootCardContainerNo + 1).get(cardDTO.getRootNo()).isEmpty();
+            return childExist;
+        }
+        return false;
+    }
+
+    private void addContainer(int containerPosition, int rootNo) {
+        while (mPresentContainerList.size() < containerPosition + 1) {
+            mPresentContainerList.add(new Container(rootNo));
+        }
+    }
+
+    private CardRecyclerView findCardRecyclerViewFromContainerRecyclerView(ContainerRecyclerView containerRecyclerView, int containerPosition) {
+        return containerRecyclerView.findViewHolderForAdapterPosition(containerPosition).getBinding().cardRecyclerview;
+    }
 
     // new ArrayList has no exception?
     private void addCardToPresentData(List<CardDTO> cards, int removeBtnVisibility) {
@@ -956,6 +1042,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     //Null in lastVisibleViewVH
     private boolean handleDragEventMultiItemVisibleCase(RecyclerView rv, int firstVisibleCardPosition, int lastVisibleCardPosition, DragEvent event) {
         Logger.message("vm#handleDragEventMultiItemVisibleCase");
+//        TODO : verify every time visiblePosition is not -1?
+        if (firstVisibleCardPosition==RecyclerView.NO_POSITION)
+            return false;
         ContactCardViewHolder firstVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(firstVisibleCardPosition);
         ContactCardViewHolder lastVisibleViewVH = (ContactCardViewHolder) rv.findViewHolderForAdapterPosition(lastVisibleCardPosition);
         if (firstVisibleViewVH == null || lastVisibleViewVH == null) {
@@ -1380,11 +1469,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return onDragListenerForEmptyCardSpace;
     }
 
-    public void clearPresentContainerList(){
+    public void clearPresentContainerList() {
         mPresentContainerList.clear();
     }
 
-    public void clearPresentData(){
+    public void clearPresentData() {
         mPresentData.clear();
     }
 
