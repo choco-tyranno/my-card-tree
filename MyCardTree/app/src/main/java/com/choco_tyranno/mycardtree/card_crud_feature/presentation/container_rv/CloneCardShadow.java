@@ -33,6 +33,7 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CloneCardShadow extends View.DragShadowBuilder {
@@ -63,7 +64,6 @@ public class CloneCardShadow extends View.DragShadowBuilder {
 //        CardDTO.orderByContainerNoDesc(moveItemList);
 //        viewModel.removeFromAllList(moveItemList.toArray(new CardDTO[0]));
 //
-//        //TODO : temp seq Update -> this can be rollback.
 //        List<CardDTO> foundNextCards = viewModel.findNextCards(cardDTO.getContainerNo(), cardDTO.getSeqNo());
 //
 //        if (!foundNextCards.isEmpty()) {
@@ -94,7 +94,7 @@ public class CloneCardShadow extends View.DragShadowBuilder {
 
     private CardRecyclerView findTargetCardRecyclerView() {
         ContainerRecyclerView containerRecyclerView = ((MainCardActivity) getView().getContext()).getMainBinding().mainScreen.mainBody.containerRecyclerview;
-        return containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo()).getBinding().cardRecyclerview;
+        return Objects.requireNonNull(containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo())).getBinding().cardRecyclerview;
     }
 
     private CardViewModel findCardViewModel(){

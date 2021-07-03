@@ -39,7 +39,10 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
-        binding.mainScreen.appNameFab.setOnClickListener((view)->{});
+        binding.mainScreen.appNameFab.setOnClickListener((view)->{
+//            viewModel.traceAllData();
+//            viewModel.tracePresentData();
+        });
     }
 
     private void mainBinding() {
@@ -59,7 +62,6 @@ public class MainCardActivity extends AppCompatActivity {
         return binding;
     }
 
-    // TODO : this is for auto notify using DiffUtil
 //    private void observeCardData() {
 //        viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
 //                        liveData.observe(this, (cards) -> {

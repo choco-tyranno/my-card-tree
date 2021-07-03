@@ -14,6 +14,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -23,17 +24,20 @@ public class CardLongClickListener implements View.OnLongClickListener {
     public CardLongClickListener() {
     }
 
-    //TODO : savedOriginData - List<CardDTO> ->Pair<List<CardDTO>, List<CardDTO>> .
 
     @Override
     public boolean onLongClick(View view) {
         if (!Optional.ofNullable(cardDTO).isPresent())
             throw new RuntimeException("CardLongClickListener#onLongClick - cardDTO is null");
+        //check init AllData
 //        Pair<List<CardDTO>, List<CardDTO>> savedOriginData = prepareDragStart(view);
         Pair<List<CardDTO>, List<CardDTO>> savedOriginData = prepareDragStart(view);
-        return view.startDragAndDrop(ClipData.newPlainText("", "")
+        view.startDragAndDrop(ClipData.newPlainText("", "")
                 , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDTO), cardDTO)
                 , Pair.create("MOVE", Pair.create(cardDTO, savedOriginData)), 0);
+//        CardRecyclerView cardRecyclerView = findTargetCardRecyclerView(view);
+//        cardRecyclerView.setAdapter(null);
+        return true;
     }
 
     public void setCard(CardDTO card) {
@@ -41,6 +45,7 @@ public class CardLongClickListener implements View.OnLongClickListener {
     }
 
     /*
+     * Prepare moving cards data & detach moving cards.
      * moving data - has no change. for drop.
      * next data - seq reduced. for rollback.
      * return : Pair<> (first : moving-data, second : next data),
@@ -56,51 +61,46 @@ public class CardLongClickListener implements View.OnLongClickListener {
 
         viewModel.findChildrenCards(cardDTO, savedMovingData);
         savedMovingData.add(cardDTO);
-        //clone
         viewModel.findNextCards(cardDTO.getContainerNo(),cardDTO.getSeqNo(),savedNextData);
-//        savedNextData.addAll();
-//        movingItemList.addAll(CardDTO.cloneList(movingItemList));
-        //remove from allList
         viewModel.removeFromAllList(savedMovingData.toArray(new CardDTO[0]));
-//        List<CardDTO> foundNextCards = viewModel.findNextCards(cardDTO.getContainerNo(), cardDTO.getSeqNo());
 
-        final boolean hasLeftItem = viewModel.removeSinglePresentCardDto(cardDTO);
-
+        //Start detaching moving card views.
+        final boolean hasLeftItemInTargetContainer = viewModel.removeSinglePresentCardDto(cardDTO);
         //reduce next cards seqNo.
         if (!savedNextData.isEmpty()) {
             viewModel.reduceListSeq(savedNextData);
         }
 
-        //remove from PresentData
-        cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
 
-        if (!hasLeftItem) {
+        //remove from PresentData
+        if(hasLeftItemInTargetContainer){
+            if (cardRecyclerView.getAdapter()==null)
+                throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
+            cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
+            final int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
+            viewModel.getContainer(cardDTO.getContainerNo()).setFocusCardPosition(newFocusPosition);
+            cardRecyclerView.smoothScrollToPosition(newFocusPosition);
+            viewModel.presentChildren(cardRecyclerView, cardDTO.getContainerNo(), newFocusPosition);
+
+        }else {
             viewModel.clearContainerPositionPresentData(cardDTO.getContainerNo());
             viewModel.clearContainerAtPosition(cardDTO.getContainerNo());
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
-            if (cardDTO.getContainerNo()!=0){
-                final int aboveContainerPosition = cardDTO.getContainerNo()-1;
-                //TODO : (Null detected) verify Displayed or created viewholder is existing?
-                CardRecyclerView aboveCardRecyclerView = containerRecyclerView.findViewHolderForAdapterPosition(aboveContainerPosition).getBinding().cardRecyclerview;
-                final int aboveFocusCardPosition = viewModel.getContainer(aboveContainerPosition).getFocusCardPosition();
-                viewModel.presentChildren(aboveCardRecyclerView, aboveContainerPosition, aboveFocusCardPosition);
-
-            }else {
-                final int prevContainerSize = viewModel.presentContainerCount()-1;
-                viewModel.clearPresentContainerList();
-                viewModel.clearPresentData();
-                containerRecyclerView.getAdapter().notifyItemRangeRemoved(0, prevContainerSize);
+            if (cardDTO.getContainerNo()==0){
+                Objects.requireNonNull(containerRecyclerView.getAdapter()).notifyDataSetChanged();
+                return preparedData;
             }
-            return preparedData;
+            final int aboveContainerPosition =cardDTO.getContainerNo()-1;
+            //to clear method.
+            containerRecyclerView.smoothScrollToPosition(aboveContainerPosition);
+            //delay needed?
+            findMainHandler(view).postDelayed(()->{
+                CardRecyclerView aboveCardRecyclerView = Objects.requireNonNull(containerRecyclerView.findViewHolderForAdapterPosition(aboveContainerPosition)).getBinding().cardRecyclerview;
+                final int aboveContainerFocusCardPosition = viewModel.getContainer(aboveContainerPosition).getFocusCardPosition();
+                viewModel.presentChildren(aboveCardRecyclerView, aboveContainerPosition, aboveContainerFocusCardPosition);
+            },260);
+//            cardRecyclerView.setAdapter(null);
         }
-
-        cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
-        int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
-        viewModel.getContainer(cardDTO.getContainerNo()).setFocusCardPosition(newFocusPosition);
-        findMainHandler(view).postDelayed(() -> {
-            cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-            viewModel.presentChildren(cardRecyclerView, cardDTO.getContainerNo(), newFocusPosition);
-        }, 500);
         return preparedData;
     }
 
@@ -110,7 +110,7 @@ public class CardLongClickListener implements View.OnLongClickListener {
 
     private CardRecyclerView findTargetCardRecyclerView(View view) {
         ContainerRecyclerView containerRecyclerView = ((MainCardActivity) view.getContext()).getMainBinding().mainScreen.mainBody.containerRecyclerview;
-        return containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo()).getBinding().cardRecyclerview;
+        return Objects.requireNonNull(containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo())).getBinding().cardRecyclerview;
     }
 
     private CardViewModel findCardViewModel(View view) {

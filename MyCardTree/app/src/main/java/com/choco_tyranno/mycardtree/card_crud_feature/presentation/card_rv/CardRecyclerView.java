@@ -6,15 +6,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CardRecyclerView extends RecyclerView {
     public static final int DEFAULT_CARD_POSITION = 0;
@@ -50,8 +55,8 @@ public class CardRecyclerView extends RecyclerView {
     }
 
     @Override
-    public CardAdapter getAdapter(){
-        return (CardAdapter)super.getAdapter();
+    public CardAdapter getAdapter() {
+        return (CardAdapter) super.getAdapter();
     }
 
     @Nullable
@@ -68,48 +73,111 @@ public class CardRecyclerView extends RecyclerView {
     public static class ScrollControllableLayoutManager extends LinearLayoutManager {
         private boolean scrollable;
         private CardRecyclerView mRecyclerView;
-        private Runnable scrollAction;
-        private Runnable exitAction;
+        private ImageView leftArrow;
+        private ImageView rightArrow;
+        public static final int DIRECTION_NO_ARROW = -1;
+        public static final int DIRECTION_TWO_WAY_ARROW = 0;
+        public static final int DIRECTION_LEFT_ARROW = 1;
+        public static final int DIRECTION_RIGHT_ARROW = 2;
+        private AtomicBoolean layoutArrows;
+        private AtomicBoolean movingDragExited;
+        private AtomicBoolean movingDragEnded;
 
-        public void setExitAction(Runnable exitAction) {
-            this.exitAction = exitAction;
+        public void setMovingDragExited(boolean exited) {
+            movingDragExited.set(exited);
         }
 
-        public void clearExitAction() {
-            this.exitAction = null;
+        public boolean isMovingDragExited() {
+            if (movingDragExited == null)
+                throw new RuntimeException("#isMovingDragExited() - AtomicBoolean.Class movingDragExited is null");
+            return movingDragExited.get();
         }
 
-        public boolean hasScrollAction() {
-            return scrollAction != null;
+        public void setMovingDragEnded(boolean ended) {
+            movingDragEnded.set(ended);
         }
 
-        public void setScrollAction(Runnable scrollAction) {
-            this.scrollAction = scrollAction;
+        public boolean isMovingDragEnded() {
+            if (movingDragEnded == null)
+                throw new RuntimeException("#isMovingDragExited() - AtomicBoolean.Class movingDragExited is null");
+            return movingDragEnded.get();
         }
 
-        public void scrollDelayed(int delay) {
+        public void smoothScrollToPosition(int toPosition) {
+            mRecyclerView.smoothScrollToPosition(toPosition);
+        }
+
+        public boolean isLayoutArrows() {
+            if (layoutArrows == null)
+                throw new RuntimeException("#isLayoutArrows() - AtomicBoolean.Class layoutArrows is null");
+            return layoutArrows.get();
+        }
+
+
+        private void initArrows() {
             if (mRecyclerView == null)
                 return;
-            if (scrollAction == null)
-                return;
-            mainHandler().postDelayed(() -> {
-                if (exitAction != null) {
-                    clearScrollAction();
-                    if (exitAction==null)
-                        return;
-                    exitAction.run();
-                    clearExitAction();
-                } else {
-                    if (scrollAction == null)
-                        return;
-                    scrollAction.run();
-                    clearScrollAction();
-                }
-            }, delay);
+            ViewGroup viewGroup = ((ViewGroup) mRecyclerView.getParent());
+            this.leftArrow = viewGroup.findViewById(R.id.prev_card_arrow);
+            this.rightArrow = viewGroup.findViewById(R.id.next_card_arrow);
+            layoutArrows = new AtomicBoolean(false);
         }
 
-        public void clearScrollAction() {
-            this.scrollAction = null;
+        private void showLeftArrow() {
+            if (leftArrow.getVisibility() == INVISIBLE)
+                leftArrow.setVisibility(VISIBLE);
+        }
+
+        private void hideLeftArrow() {
+            if (leftArrow.getVisibility() == VISIBLE)
+                leftArrow.setVisibility(INVISIBLE);
+        }
+
+        private void showRightArrow() {
+            if (rightArrow.getVisibility() == INVISIBLE)
+                rightArrow.setVisibility(VISIBLE);
+        }
+
+        private void hideRightArrow() {
+            if (rightArrow.getVisibility() == VISIBLE)
+                rightArrow.setVisibility(INVISIBLE);
+        }
+
+        private void showCardArrows(int direction) {
+            switch (direction) {
+                case DIRECTION_TWO_WAY_ARROW:
+                    showLeftArrow();
+                    showRightArrow();
+                    break;
+                case DIRECTION_LEFT_ARROW:
+                    hideRightArrow();
+                    showLeftArrow();
+                    break;
+                case DIRECTION_RIGHT_ARROW:
+                    hideLeftArrow();
+                    showRightArrow();
+                    break;
+                case DIRECTION_NO_ARROW:
+                    hideLeftArrow();
+                    hideRightArrow();
+                    break;
+            }
+
+        }
+
+        public void showCardArrowsDelayed(int direction) {
+            final int duration = 260;
+            layoutArrows.set(true);
+            mainHandler().postDelayed(() -> {
+                if ((!isMovingDragExited() && !isMovingDragEnded()) || direction == DIRECTION_NO_ARROW) {
+                    showCardArrows(direction);
+                    if (isMovingDragExited())
+                        setMovingDragExited(false);
+                    if (isMovingDragEnded())
+                        setMovingDragEnded(false);
+                }
+                layoutArrows.set(false);
+            }, duration);
         }
 
         private Handler mainHandler() {
@@ -156,7 +224,7 @@ public class CardRecyclerView extends RecyclerView {
             ContainerRecyclerView.ItemScrollingControlLayoutManager itemScrollingControlLayoutManager = containerRecyclerView.getLayoutManager();
             if (itemScrollingControlLayoutManager == null)
                 return;
-            CardAdapter cardAdapter = (CardAdapter) mRecyclerView.getAdapter();
+            CardAdapter cardAdapter = mRecyclerView.getAdapter();
             int position = NO_POSITION;
             if (cardAdapter != null) {
                 position = cardAdapter.getPosition();
@@ -193,6 +261,9 @@ public class CardRecyclerView extends RecyclerView {
 
         private void setRecyclerView(CardRecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
+            initArrows();
+            this.movingDragEnded = new AtomicBoolean(false);
+            this.movingDragExited = new AtomicBoolean(false);
         }
 
     }
