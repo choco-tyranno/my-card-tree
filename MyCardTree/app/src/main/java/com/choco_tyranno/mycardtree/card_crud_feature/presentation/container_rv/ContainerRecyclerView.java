@@ -17,6 +17,7 @@ import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
+import com.choco_tyranno.mycardtree.databinding.ItemCardcontainerBinding;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,36 +40,10 @@ public class ContainerRecyclerView extends RecyclerView {
     }
 
     public void setLayoutManager(@Nullable ItemScrollingControlLayoutManager layout) {
-        if (layout==null)
+        if (layout == null)
             throw new RuntimeException("ContainerRecyclerView#setLayoutManager - ItemScrollingControlLayoutManager.class layout is null");
         super.setLayoutManager(layout);
         layout.setContainerRecyclerView(ContainerRecyclerView.this);
-    }
-
-    @Nullable
-    @Override
-    public CardContainerViewHolder findViewHolderForAdapterPosition(int position) {
-        ViewHolder viewHolder = super.findViewHolderForAdapterPosition(position);
-        final boolean mDataSetHasChangedAfterLayout = viewHolder == null;
-        if (mDataSetHasChangedAfterLayout) {
-            int waitSec = 0;
-            Handler mainHandler = ((MainCardActivity) this.getContext()).getMainHandler();
-            while (waitSec < 10) {
-                mainHandler.postDelayed(() -> {
-                }, 1000);
-                waitSec++;
-                ViewHolder testViewHolder = super.findViewHolderForAdapterPosition(position);
-                if (testViewHolder != null) {
-                    viewHolder = testViewHolder;
-                    break;
-                }
-            }
-            if (viewHolder == null)
-                return null;
-        }
-        if (viewHolder instanceof CardContainerViewHolder)
-            return (CardContainerViewHolder) viewHolder;
-        throw new RuntimeException("[className : " + viewHolder.getClass().getName() + "]containerRecyclerView#findViewHolderForAdapterPosition(" + position + ") - the position item is not CardContainerViewHolder instance.");
     }
 
     public ItemScrollingControlLayoutManager getLayoutManager() {
@@ -77,7 +52,7 @@ public class ContainerRecyclerView extends RecyclerView {
 
     //Nested recyclerView listener's events handled singly by ItemScrollingControlLayoutManager.
     public static class ItemScrollingControlLayoutManager extends LinearLayoutManager {
-        private RecyclerView mContainerRecyclerView;
+        private ContainerRecyclerView mContainerRecyclerView;
         private ImageView topArrow;
         private ImageView bottomArrow;
         private Runnable containerScrollAction;
@@ -100,6 +75,25 @@ public class ContainerRecyclerView extends RecyclerView {
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
 
         /* now work start*/
+
+        public void clearListener(int startPosition) {
+            int itemCount = getItemCount();
+            for (int i = startPosition; i < itemCount; i++) {
+                CardRecyclerView cardRecyclerView = findCardRecyclerView(i);
+                if (cardRecyclerView == null) {
+                    continue;
+                }
+                cardRecyclerView.clearOnScrollListeners();
+            }
+        }
+
+        private CardRecyclerView findCardRecyclerView(int position) {
+            RecyclerView.ViewHolder viewHolder = mContainerRecyclerView.findViewHolderForAdapterPosition(position);
+            if (viewHolder instanceof CardContainerViewHolder) {
+                return ((CardContainerViewHolder) viewHolder).getBinding().cardRecyclerview;
+            }
+            return null;
+        }
 
         public boolean isContainerRollback() {
             if (containerRollback == null)

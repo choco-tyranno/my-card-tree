@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
@@ -27,6 +28,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActiv
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 
@@ -54,38 +56,6 @@ public class CloneCardShadow extends View.DragShadowBuilder {
     @Override
     public void onDrawShadow(Canvas canvas) {
         super.onDrawShadow(canvas);
-//
-//        CardRecyclerView cardRecyclerView = findTargetCardRecyclerView();
-//        CardViewModel viewModel = findCardViewModel();
-//        List<CardDTO> moveItemList = new ArrayList<>();
-//
-//        viewModel.findChildrenCards(cardDTO, moveItemList);
-//        moveItemList.add(cardDTO);
-//        CardDTO.orderByContainerNoDesc(moveItemList);
-//        viewModel.removeFromAllList(moveItemList.toArray(new CardDTO[0]));
-//
-//        List<CardDTO> foundNextCards = viewModel.findNextCards(cardDTO.getContainerNo(), cardDTO.getSeqNo());
-//
-//        if (!foundNextCards.isEmpty()) {
-//            viewModel.reduceListSeq(foundNextCards);
-//            for (CardDTO dto:foundNextCards){
-//                Logger.hotfixMessage("dto seq : ("+dto.getSeqNo()+")");
-//            }
-//        }
-//
-//        final boolean hasLeftItem =viewModel.removeSinglePresentCardDto(cardDTO);
-//        cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
-//
-//        if (!hasLeftItem){
-//            viewModel.clearContainerPositionPresentData(cardDTO.getContainerNo());
-//            return;
-//        }
-//        int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
-//        viewModel.getContainer(cardDTO.getContainerNo()).setFocusCardPosition(newFocusPosition);
-//        findMainHandler().postDelayed(()->{
-//            cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-//            viewModel.presentChildren(cardRecyclerView, cardDTO.getContainerNo(), newFocusPosition);
-//        },500);
     }
 
     private Handler findMainHandler(){
@@ -94,7 +64,14 @@ public class CloneCardShadow extends View.DragShadowBuilder {
 
     private CardRecyclerView findTargetCardRecyclerView() {
         ContainerRecyclerView containerRecyclerView = ((MainCardActivity) getView().getContext()).getMainBinding().mainScreen.mainBody.containerRecyclerview;
-        return Objects.requireNonNull(containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo())).getBinding().cardRecyclerview;
+        RecyclerView.ViewHolder viewHolder = containerRecyclerView.findViewHolderForAdapterPosition(cardDTO.getContainerNo());
+        if (viewHolder==null)
+            return null;
+        if (!(viewHolder instanceof CardContainerViewHolder)){
+            return null;
+        }
+        CardContainerViewHolder containerViewHolder =(CardContainerViewHolder) viewHolder;
+        return containerViewHolder.getBinding().cardRecyclerview;
     }
 
     private CardViewModel findCardViewModel(){
