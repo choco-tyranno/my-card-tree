@@ -74,7 +74,6 @@ public class ContainerRecyclerView extends RecyclerView {
         private static final int CARD_ROLLBACK_ACTION = 2;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
 
-        /* now work start*/
 
         public void clearListener(int startPosition) {
             int itemCount = getItemCount();

@@ -75,7 +75,6 @@ public class CardLongClickListener implements View.OnLongClickListener {
                 throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
             cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
             final int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
-            Logger.hotfixMessage("[now work] newFocusPosition:" + newFocusPosition);
             Container container = viewModel.getContainer(cardDTO.getContainerNo());
             if (container == null)
                 return preparedData;
