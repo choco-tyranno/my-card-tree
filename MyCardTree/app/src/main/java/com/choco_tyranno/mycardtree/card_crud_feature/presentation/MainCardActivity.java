@@ -40,8 +40,8 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener((view)->{
-//            viewModel.traceAllData();
-//            viewModel.tracePresentData();
+            viewModel.printContainers();
+            viewModel.printAllData();
         });
     }
 

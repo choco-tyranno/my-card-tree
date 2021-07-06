@@ -36,7 +36,6 @@ public class CardLongClickListener implements View.OnLongClickListener {
         if (!Optional.ofNullable(cardDTO).isPresent())
             throw new RuntimeException("CardLongClickListener#onLongClick - cardDTO is null");
         Pair<List<CardDTO>, List<CardDTO>> savedOriginData = prepareDragStart(view);
-        Logger.hotfixMessage("1st");
         view.startDragAndDrop(ClipData.newPlainText("", "")
                 , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDTO), cardDTO)
                 , Pair.create("MOVE", Pair.create(cardDTO, savedOriginData)), 0);
