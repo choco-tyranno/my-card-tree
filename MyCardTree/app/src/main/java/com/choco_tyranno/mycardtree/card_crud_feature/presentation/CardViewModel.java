@@ -166,6 +166,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         CardDTO movingRootCard = savedDataPair.first;
         Pair<List<CardDTO>, List<CardDTO>> movingCardsAndNextCards = savedDataPair.second;
         List<CardDTO> movingCards = movingCardsAndNextCards.first;
+        List<CardDTO> pastNextCards = movingCardsAndNextCards.second;
         CardAdapter targetContainerCardAdapter = targetContainerCardRecyclerView.getAdapter();
         if (targetContainerCardAdapter == null)
             return;
@@ -177,7 +178,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
         //prepare update.
         //-find target container nextCards & increase seq.
-        //-set seqNo for movingRootCard.
+        //-set seqNo/rootNo for movingRootCard.
         //-set containerNo for movingCards.
         //->
         if (mPresentContainerList.size() < targetContainerPosition + 1)
@@ -186,32 +187,50 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         if (targetContainer == null)
             return;
         final int targetContainerFocusCardPosition = targetContainer.getFocusCardPosition();
-        List<CardDTO> nextCards = new ArrayList<>();
-        findNextCards(targetContainerPosition, targetContainerFocusCardPosition - 1, nextCards);
-        increaseListSeq(nextCards);
-
+        List<CardDTO> targetContainerNextCards = new ArrayList<>();
+        findNextCards(targetContainerPosition, targetContainerFocusCardPosition - 1, targetContainerNextCards);
+        increaseListSeq(targetContainerNextCards);
+        int targetContainerRootNo = targetContainer.getRootNo();
+        if (targetContainerRootNo == Container.NO_ROOT_NO)
+            throw new RuntimeException("[now work]targetContainerRootNo == Container.NO_ROOT_NO / #onMovingCardDroppedInContainer /");
+        movingRootCard.setRootNo(targetContainer.getRootNo());
         movingRootCard.setSeqNo(targetContainerFocusCardPosition);
-
         final int adjustContainerNoCount = targetContainerPosition - movingRootCard.getContainerNo();
         adjustListContainerNo(movingCards, adjustContainerNoCount);
         //fin
 
         //updateData
-        //add movingCards into AllData
+        List<CardDTO> dataToUpdate = new ArrayList<>();
+        dataToUpdate.addAll(movingCards);
+        dataToUpdate.addAll(pastNextCards);
+        dataToUpdate.addAll(targetContainerNextCards);
+        //movingCards, nextCards, targetContainerNextCards.
+        //->
+        Runnable uiUpdateAction = () -> {
+            //add movingCards into AllData
+            addToAllData(movingCards.toArray(new CardDTO[0]));
 
-        //update UI
-        //(later) animate blow away kicked out card && after notifyInserted, animate return.
-        //
-        //add movingRootCard into mPresentData && target container CardRecyclerView.notifyItemInserted.
-        //setFocusCardPosition to target container. && {later} smoothScrollTOPosition(movingRootCard.getSeqNo) && presentChildren()
-
+            //update UI
+            //(later) animate blow away kicked out card && after notifyInserted, animate return.
+            //
+            //add movingRootCard into mPresentData && target container CardRecyclerView.notifyItemInserted.
+            //setFocusCardPosition to target container. && {later} smoothScrollToPosition(movingRootCard.getSeqNo) && presentChildren().
+            addSinglePresentCardDto(movingRootCard);
+            runOnUiThread(()->targetContainerCardRecyclerView.getAdapter().notifyItemInserted(movingRootCard.getSeqNo())
+                    , targetContainerCardRecyclerView.getContext());
+            throwToMainHandlerWithDelay(() -> {
+                targetContainerCardRecyclerView.smoothScrollToPosition(movingRootCard.getSeqNo());
+                presentChildren(targetContainerCardRecyclerView, movingRootCard.getContainerNo(), movingRootCard.getSeqNo());
+            }, 150, targetContainerCardRecyclerView.getContext());
+        };
+        mCardRepository.update(dtoListToEntityList(dataToUpdate), uiUpdateAction);
     }
 
     private void adjustListContainerNo(List<CardDTO> cards, int adjustCount) {
-        if (cards==null)
+        if (cards == null)
             return;
         for (CardDTO card : cards) {
-            card.setContainerNo(containerNo);
+            card.setContainerNo(card.getContainerNo() + adjustCount);
         }
     }
 

@@ -55,7 +55,7 @@ public class CardLongClickListener implements View.OnLongClickListener {
      * */
     private Pair<List<CardDTO>, List<CardDTO>> prepareDragStart(View view) {
         CardRecyclerView cardRecyclerView = findTargetCardRecyclerView(view);
-        if (cardRecyclerView==null)
+        if (cardRecyclerView == null)
             return null;
         CardViewModel viewModel = findCardViewModel(view);
 
@@ -74,13 +74,15 @@ public class CardLongClickListener implements View.OnLongClickListener {
             if (cardRecyclerView.getAdapter() == null)
                 throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
             cardRecyclerView.getAdapter().notifyItemRemoved(cardDTO.getSeqNo());
-            final int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
-            Container container = viewModel.getContainer(cardDTO.getContainerNo());
-            if (container == null)
-                return preparedData;
-            container.setFocusCardPosition(newFocusPosition);
-            cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-            viewModel.presentChildren(cardRecyclerView, cardDTO.getContainerNo(), newFocusPosition);
+            ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
+                final int newFocusPosition = viewModel.findNearestItemPosition(cardDTO.getContainerNo(), cardDTO.getSeqNo());
+                Container container = viewModel.getContainer(cardDTO.getContainerNo());
+                if (container != null) {
+                    container.setFocusCardPosition(newFocusPosition);
+                    cardRecyclerView.smoothScrollToPosition(newFocusPosition);
+                    viewModel.presentChildren(cardRecyclerView, cardDTO.getContainerNo(), newFocusPosition);
+                }
+            }, 150);
         } else {
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
             ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();

@@ -108,11 +108,11 @@ public class CardRepository {
         });
     }
 
-    public void update(List<CardEntity> updateCardEntities, Runnable endAction) {
+    public void update(List<CardEntity> cardEntitiesToUpdate, Runnable finalAction) {
         execute(()->{
             synchronized (this){
-                mCardDAO.update(updateCardEntities);
-                endAction.run();
+                mCardDAO.update(cardEntitiesToUpdate);
+                finalAction.run();
             }
         });
     }

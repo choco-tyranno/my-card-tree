@@ -25,7 +25,7 @@ public class Container extends BaseObservable {
     private int mFocusCardPosition;
     private Parcelable mSavedScrollState;
     private CardScrollListener mCardScrollListener;
-    private static final int NO_ROOT_NO = -999;
+    public static final int NO_ROOT_NO = -999;
     public static final int DEFAULT_CARD_POSITION = 0;
 
     public Container() {
