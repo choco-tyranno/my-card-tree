@@ -36,8 +36,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/frontCard_cardView"
-            app:onLongClickListener="@{viewModel.onLongClickListenerForCard}"
-            app:card="@{card}"
+            app:onCardTouchListener="@{viewModel.onTouchListener}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -174,16 +173,17 @@
 
         <FrameLayout
             android:id="@+id/frontCard_remove_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="270dp"
+            android:layout_marginBottom="90dp"
             android:elevation="24dp"
-            android:layout_marginBottom="110dp"
-            android:layout_marginStart="295dp"
             app:layout_constraintBottom_toBottomOf="@id/frontCard_cardView"
             app:layout_constraintLeft_toLeftOf="@id/frontCard_cardView">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/frontCard_remove_btn"
+                android:layout_gravity="end|top"
                 android:layout_width="50dp"
                 android:layout_height="60dp"
                 android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"

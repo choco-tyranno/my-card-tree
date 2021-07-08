@@ -1,6 +1,7 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
@@ -37,13 +41,19 @@ public class MainCardActivity extends AppCompatActivity {
         mainBinding();
         binding.setViewModel(viewModel);
         setContainerRv();
+        CardGestureListener cardGestureListener = new CardGestureListener();
+        GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
+        viewModel.setCardGestureListener(cardGestureListener);
+        viewModel.setCardGestureDetector(cardGestureDetector);
+        viewModel.connectGestureUtilsToOnCardTouchListener();
         viewModel.loadData(()-> runOnUiThread(()->Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener((view)->{
-            viewModel.printContainers();
-            viewModel.printAllData();
+//            viewModel.printContainers();
+//            viewModel.printAllData();
         });
     }
+
 
     private void mainBinding() {
         binding = ActivityMainFrameBinding.inflate(getLayoutInflater());

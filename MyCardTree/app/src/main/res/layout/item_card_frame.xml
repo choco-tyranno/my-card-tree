@@ -34,18 +34,15 @@
         <include
             android:id="@+id/cardBackLayout"
             layout="@layout/item_card_back"
-            android:alpha="@{cardState.Back.alpha}"
-            android:rotationX="@{cardState.Back.rotationX}"
-            android:visibility="@{cardState.Back.visibility}"
+            android:visibility="@{cardState.back.cardBackVisibility}"
             bind:card="@{card}"
-            bind:cardState="@{cardState}" />
+            bind:cardState="@{cardState}"
+            bind:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/cardFrontLayout"
             layout="@layout/item_card_front"
-            android:alpha="@{cardState.Front.alpha}"
-            android:rotationX="@{cardState.Front.rotationX}"
-            android:visibility="@{cardState.Front.visibility}"
+            android:visibility="@{cardState.front.cardFrontVisibility}"
             bind:CardRootReference="@{cardRootReference}"
             bind:card="@{card}"
             bind:cardState="@{cardState}"

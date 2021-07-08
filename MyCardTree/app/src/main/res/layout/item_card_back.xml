@@ -27,6 +27,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/backCard_cardView"
+            app:onTouchListener="@{viewModel.onTouchListener}"
             android:layout_width="320dp"
             android:layout_height="140dp"
             app:layout_constraintRight_toRightOf="parent"
@@ -53,16 +54,17 @@
 
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="295dp"
-            android:layout_marginBottom="110dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="270dp"
+            android:layout_marginBottom="90dp"
             app:layout_constraintBottom_toBottomOf="@id/backCard_cardView"
             app:layout_constraintLeft_toLeftOf="@id/backCard_cardView"
             android:elevation="24dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/backCard_remove_btn"
+                android:layout_gravity="end|top"
                 android:layout_width="50dp"
                 android:layout_height="60dp"
                 android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"
@@ -73,6 +75,14 @@
                 app:backgroundTint="@color/colorPrimaryDark"
                 app:cornerRadius="25dp"
                 app:elevation="24dp" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageView_to_fullscreen"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_baseline_fullscreen_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

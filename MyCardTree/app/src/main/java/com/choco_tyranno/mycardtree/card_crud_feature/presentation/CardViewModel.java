@@ -3,27 +3,24 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
-import android.content.Context;
-import android.graphics.Rect;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,12 +29,14 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.OnDataLoadListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardLongClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
@@ -51,12 +50,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,8 +77,62 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
     private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
 
+    private CardTouchListener cardTouchListener;
+    private GestureDetectorCompat cardGestureDetector;
+
+    private CardGestureListener cardGestureListener;
+
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
+
+
+//    TODO : [latest], [now work]
+    /*
+    * move onCardTouchListener.setCardDto to VH#bind.
+    *
+    *
+    * */
+
+//    public boolean onCardDoubleTaped() {
+//        return false;
+//    }
+
+    public void connectGestureUtilsToOnCardTouchListener() {
+        if (cardTouchListener!=null&&cardGestureDetector!=null&&cardGestureListener!=null){
+            cardTouchListener.setCardGestureDetectorCompat(cardGestureDetector);
+            cardTouchListener.setCardGestureListener(cardGestureListener);
+        }
+    }
+
+    public void setCardGestureListener(CardGestureListener listener) {
+        this.cardGestureListener = listener;
+    }
+
+    public void setCardGestureDetector(GestureDetectorCompat cardGestureDetector) {
+        this.cardGestureDetector = cardGestureDetector;
+    }
+
+    public View.OnTouchListener getOnTouchListener() {
+        return cardTouchListener;
+    }
+
+    public CardGestureListener getCardGestureListener() {
+        return cardGestureListener;
+    }
+
+    public GestureDetectorCompat getCardGestureDetector() {
+        return cardGestureDetector;
+    }
+
+    @BindingAdapter("onCardTouchListener")
+    public static void setOnCardTouchListener(View view, View.OnTouchListener touchListener) {
+        view.setOnTouchListener(touchListener);
+    }
+
+    /*
+     * DO NEXT : flip card.
+     *
+     * */
 
     public void printContainers() {
         Logger.hotfixMessage("#printContainers() start");
@@ -157,7 +210,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initVerticalArrowOnDragListener();
         initOnFocusChangedListener();
         initOnScrollStateChangeListener();
+        initCardTouchListener();
     }
+
+    private void initCardTouchListener() {
+        cardTouchListener = new CardTouchListener();
+    }
+
 
     private void initCreateCardUtilFabOnLongClickListener() {
         this.onLongListenerForCreateCardUtilFab
@@ -251,7 +310,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 return;
             ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();
 
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 containerAdapter.notifyItemInserted(targetContainerPosition);
                 throwToMainHandlerWithDelay(() -> {
                     containerRecyclerView.smoothScrollToPosition(targetContainerPosition);
@@ -262,7 +321,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         presentChildren(targetContainerCardRecyclerView, targetContainerPosition, movingRootCard.getSeqNo());
                     }, 250, containerRecyclerView.getContext());
                 }, 150, containerRecyclerView.getContext());
-            },containerRecyclerView.getContext());
+            }, containerRecyclerView.getContext());
         };
 
         List<CardDTO> dataToUpdate = new ArrayList<>();
@@ -271,7 +330,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         movingRootCard.setContainerNo(targetContainerPosition);
         if (targetContainerPosition == 0) {
             movingRootCard.setRootNo(CardDTO.NO_ROOT_CARD);
-            mCardRepository.update(dtoListToEntityList(dataToUpdate),uiUpdateAction);
+            mCardRepository.update(dtoListToEntityList(dataToUpdate), uiUpdateAction);
 //            throwToMainHandlerWithDelay(uiUpdateAction, 150, containerRecyclerView.getContext());
         } else {
             final int aboveContainerPosition = targetContainerPosition - 1;
@@ -282,7 +341,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     final int aboveContainerFocusCardPosition = aboveContainer.getFocusCardPosition();
                     final int aboveFocusCardNo = mPresentData.get(aboveContainerPosition).get(aboveContainerFocusCardPosition).first.getCardNo();
                     movingRootCard.setRootNo(aboveFocusCardNo);
-                    mCardRepository.update(dtoListToEntityList(dataToUpdate),uiUpdateAction);
+                    mCardRepository.update(dtoListToEntityList(dataToUpdate), uiUpdateAction);
 //                    throwToMainHandlerWithDelay(uiUpdateAction, 150, containerRecyclerView.getContext());
                 }
             };
@@ -563,6 +622,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public synchronized void clearContainerAtPosition(int containerNo) {
         mPresentContainerList.subList(containerNo, mPresentContainerList.size()).clear();
     }
+
 
     public interface DropDataUpdateListener<E> {
         void onUpdate(E updateCount);
@@ -1608,10 +1668,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         mCardRepository.update(cardDTO.toEntity());
     }
 
-    @BindingAdapter("onTouchListener")
-    public static void setOnTouchListener(View view, View.OnTouchListener listener) {
-        view.setOnTouchListener(listener);
-    }
+//    @BindingAdapter("onTouchListener")
+//    public static void setOnTouchListener(View view, View.OnTouchListener listener) {
+//        view.setOnTouchListener(listener);
+//    }
 
     @BindingAdapter("onDragListener")
     public static void setOnDragListener(View view, View.OnDragListener listener) {
@@ -1761,6 +1821,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public View.OnLongClickListener getOnLongClickListenerForCard() {
         return new CardLongClickListener();
     }
+
 
     // Utils
 

@@ -37,6 +37,10 @@ public class CardState extends BaseObservable{
         this.removeBtnVisibility = View.INVISIBLE;
     }
 
+    public boolean isFlipped(){
+        return getFront().visibility == View.INVISIBLE;
+    }
+
     public void displayFront() {
         this.front.toVisible();
         this.back.toInvisible();
@@ -85,15 +89,21 @@ public class CardState extends BaseObservable{
         }
 
         private void toVisible() {
-            this.alpha = 1.0f;
-            this.rotationX = 0f;
-            this.visibility = View.VISIBLE;
+            setCardFrontAlpha(1.0f);
+            setCardFrontRotationX(0f);
+            setCardFrontVisibility(View.VISIBLE);
+//            this.alpha = 1.0f;
+//            this.rotationX = 0f;
+//            this.visibility = View.VISIBLE;
         }
 
         private void toInvisible() {
-            this.alpha = 0.0f;
-            this.rotationX = 0f;
-            this.visibility = View.INVISIBLE;
+            setCardFrontAlpha(0.0f);
+            setCardFrontRotationX(0f);
+            setCardFrontVisibility(View.INVISIBLE);
+//            this.alpha = 0.0f;
+//            this.rotationX = 0f;
+//            this.visibility = View.INVISIBLE;
         }
 
         private void toReadMode() {
@@ -177,26 +187,43 @@ public class CardState extends BaseObservable{
         }
 
         //Getter
-        public int getVisibility() {
+        @Bindable
+        public int getCardFrontVisibility() {
             return visibility;
         }
 
-        public float getAlpha() {
+        @Bindable
+        public float getCardFrontAlpha() {
             return alpha;
         }
 
-        public float getRotationX() {
+        @Bindable
+        public float getCardFrontRotationX() {
             return rotationX;
         }
 
-        //BR. id create
+        public void setCardFrontVisibility(int visibility){
+            this.visibility = visibility;
+            notifyPropertyChanged(BR.cardFrontVisibility);
+        }
+
+        public void setCardFrontAlpha(float alpha){
+            this.alpha = alpha;
+            notifyPropertyChanged(BR.cardFrontAlpha);
+        }
+
+        public void setCardFrontRotationX(float rotationX){
+            this.rotationX =rotationX;
+            notifyPropertyChanged(BR.cardFrontRotationX);
+        }
+
         @Bindable
         public int getMode() {
             return mode;
         }
     }
 
-    public static class Back {
+    public static class Back extends BaseObservable{
         private float alpha;
         private float rotationX;
         private int visibility;
@@ -209,27 +236,44 @@ public class CardState extends BaseObservable{
         }
 
         public void toVisible() {
-            this.alpha = 1.0f;
-            this.rotationX = 0f;
-            this.visibility = View.VISIBLE;
+            setAlpha(1.0f);
+            setRotationX(0f);
+            setVisibility(View.VISIBLE);
         }
 
         public void toInvisible() {
-            this.alpha = 0f;
-            this.rotationX = 0f;
-            this.visibility = View.INVISIBLE;
+            setAlpha(0f);
+            setRotationX(0f);
+            setVisibility(View.INVISIBLE);
         }
 
-        public float getAlpha() {
+        @Bindable
+        public float getCardBackAlpha() {
             return alpha;
         }
 
-        public float getRotationX() {
+        @Bindable
+        public float getCardBackRotationX() {
             return rotationX;
         }
 
-        public int getVisibility() {
+        @Bindable
+        public int getCardBackVisibility() {
             return visibility;
+        }
+
+        public void setAlpha(float alpha){
+            this.alpha = alpha;
+            notifyPropertyChanged(BR.cardBackAlpha);
+        }
+
+        public void setRotationX(float rotationX){
+            this.rotationX = rotationX;
+            notifyPropertyChanged(BR.cardBackRotationX);
+        }
+        public void setVisibility(int visibility){
+            this.visibility = visibility;
+            notifyPropertyChanged(BR.cardBackVisibility);
         }
     }
 
