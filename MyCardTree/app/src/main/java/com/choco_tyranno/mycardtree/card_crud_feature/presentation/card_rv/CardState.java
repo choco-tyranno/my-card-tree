@@ -38,7 +38,7 @@ public class CardState extends BaseObservable{
     }
 
     public boolean isFlipped(){
-        return getFront().visibility == View.INVISIBLE;
+        return getBack().visibility == View.VISIBLE;
     }
 
     public void displayFront() {

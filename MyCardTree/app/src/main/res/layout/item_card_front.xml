@@ -36,6 +36,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/frontCard_cardView"
+            android:alpha="@{cardState.front.cardFrontAlpha}"
+            android:visibility="@{cardState.front.cardFrontVisibility}"
             app:onCardTouchListener="@{viewModel.onTouchListener}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
+import androidx.databinding.BaseObservable;
+
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
@@ -19,6 +21,12 @@ import com.google.android.material.card.MaterialCardView;
 
 public class CardGestureListener extends GestureDetector.SimpleOnGestureListener {
     private View view;
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        Logger.hotfixMessage("onLongPress");
+        super.onLongPress(e);
+    }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {

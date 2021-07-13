@@ -27,6 +27,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/backCard_cardView"
+            android:alpha="@{cardState.back.cardBackAlpha}"
+            android:visibility="@{cardState.back.cardBackVisibility}"
             app:onTouchListener="@{viewModel.onTouchListener}"
             android:layout_width="320dp"
             android:layout_height="140dp"
@@ -43,12 +45,15 @@
 
             <ImageView
                 android:id="@+id/backCard_imageView"
+                android:visibility="@{cardState.back.cardBackVisibility}"
+                app:viewModel="@{viewModel}"
+                app:cardNo="@{card.cardNo}"
                 android:layout_width="@dimen/card_thumbnail_image_width"
                 android:layout_height="@dimen/card_thumbnail_image_height"
                 android:contentDescription="@string/description_image_1"
                 android:scaleType="centerCrop"
-                android:src="@drawable/default_card_image_01"
                 android:transitionName="shared_element_img" />
+<!--            @drawable/default_card_image_01-->
 
         </com.google.android.material.card.MaterialCardView>
 
