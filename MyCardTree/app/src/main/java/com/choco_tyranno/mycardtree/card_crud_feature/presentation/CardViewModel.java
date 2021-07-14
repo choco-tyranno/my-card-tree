@@ -42,6 +42,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardL
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ImageToFullScreenClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
@@ -73,15 +74,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     //    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
     private List<HashMap<Integer, List<CardDTO>>> mAllData;
     private HashMap<Integer, ObservableBitmap> cardImageMap;
-    //    private HashMap<Integer, Warp> cardImageMap;
-    private final List<Container> mPresentContainerList;
-    private final List<List<Pair<CardDTO, CardState>>> mPresentData;
-    private boolean computingLayout;
+    private List<Container> mPresentContainerList;
+    private List<List<Pair<CardDTO, CardState>>> mPresentData;
 
     private View.OnLongClickListener onLongListenerForCreateCardUtilFab;
     private View.OnDragListener onDragListenerForCardRecyclerView;
     private View.OnDragListener onDragListenerForVerticalArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
+    private View.OnClickListener onClickListenerForImageViewToFullScreen;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
     private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
 
@@ -94,6 +94,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int CARD_LOCATION_RIGHT = 1;
 
 //    TODO : [latest], [now work]
+
+    public int getRepositoryDataSize(){
+        return mCardRepository.getData().size();
+    }
 
     public void addCardImageValue(CardDTO cardDTO){
         cardImageMap.put(cardDTO.getCardNo(), new ObservableBitmap());
@@ -163,6 +167,15 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     @BindingAdapter("onCardTouchListener")
     public static void setOnCardTouchListener(View view, View.OnTouchListener touchListener) {
         view.setOnTouchListener(touchListener);
+    }
+
+    @BindingAdapter("onClickListener")
+    public static void setOnClickListener(View view, View.OnClickListener clickListener){
+        view.setOnClickListener(clickListener);
+    }
+
+    public View.OnClickListener getOnImageViewToFullscreenClickListener(){
+        return onClickListenerForImageViewToFullScreen;
     }
 
     /*
@@ -242,6 +255,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public CardViewModel(Application application) {
         super(application);
+        Logger.hotfixMessage("VM#constructor");
         Logger.message("VM#constructor");
         this.mCardRepository = new CardRepository(application);
 //        this.mLiveData = new MutableLiveData<>();
@@ -249,7 +263,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         this.mPresentData = new ArrayList<>();
         this.mPresentContainerList = new ArrayList<>();
         this.cardImageMap = new HashMap<>();
-        this.computingLayout = false;
         initListeners();
     }
 
@@ -262,6 +275,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnFocusChangedListener();
         initOnScrollStateChangeListener();
         initCardTouchListener();
+        initImageToFullScreenClickListener();
+    }
+
+    private void initImageToFullScreenClickListener() {
+        onClickListenerForImageViewToFullScreen = new ImageToFullScreenClickListener();
     }
 
     private void initCardTouchListener() {

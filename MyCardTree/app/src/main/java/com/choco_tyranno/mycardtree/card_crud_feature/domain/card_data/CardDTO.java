@@ -9,10 +9,11 @@ import com.choco_tyranno.mycardtree.BR;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardDTO extends BaseObservable implements Comparable<CardDTO> {
+public class CardDTO extends BaseObservable implements Comparable<CardDTO>, Serializable {
     public static final int NO_ROOT_CARD = 0;
 
     private int mCardNo;
