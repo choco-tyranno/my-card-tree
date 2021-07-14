@@ -17,6 +17,9 @@
         <variable
             name="card"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+        <variable
+            name="cardImage"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap" />
     </data>
 
 
@@ -46,8 +49,8 @@
             <ImageView
                 android:id="@+id/backCard_imageView"
                 android:visibility="@{cardState.back.cardBackVisibility}"
-                app:viewModel="@{viewModel}"
-                app:cardNo="@{card.cardNo}"
+                app:cardThumbnail="@{cardImage.thumbnail}"
+                app:defaultCardThumbnail="@{viewModel.defaultCardThumbnail}"
                 android:layout_width="@dimen/card_thumbnail_image_width"
                 android:layout_height="@dimen/card_thumbnail_image_height"
                 android:contentDescription="@string/description_image_1"

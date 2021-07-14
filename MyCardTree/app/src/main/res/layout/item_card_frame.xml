@@ -20,6 +20,10 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
 
         <variable
+            name="cardImage"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap" />
+
+        <variable
             name="viewModel"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
     </data>
@@ -36,6 +40,7 @@
             layout="@layout/item_card_back"
             android:visibility="@{cardState.back.cardBackVisibility}"
             bind:card="@{card}"
+            bind:cardImage="@{cardImage}"
             bind:cardState="@{cardState}"
             bind:viewModel="@{viewModel}" />
 

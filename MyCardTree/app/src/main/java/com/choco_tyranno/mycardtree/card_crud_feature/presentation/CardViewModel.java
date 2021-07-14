@@ -42,6 +42,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardL
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
@@ -50,6 +51,8 @@ import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.sql.SQLException;
+import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,7 +72,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final CardRepository mCardRepository;
     //    private final MutableLiveData<List<List<CardDTO>>> mLiveData;
     private List<HashMap<Integer, List<CardDTO>>> mAllData;
-    private HashMap<Integer, Bitmap> cardImageMap;
+    private HashMap<Integer, ObservableBitmap> cardImageMap;
+    //    private HashMap<Integer, Warp> cardImageMap;
     private final List<Container> mPresentContainerList;
     private final List<List<Pair<CardDTO, CardState>>> mPresentData;
     private boolean computingLayout;
@@ -89,32 +93,31 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
 
-
 //    TODO : [latest], [now work]
-    /*
-    * move onCardTouchListener.setCardDto to VH#bind.
-    *
-    *
-    * */
 
-//    public boolean onCardDoubleTaped() {
-//        return false;
-//    }
-
-    public Bitmap getCardImage(int cardNo){
-        boolean hasKey = cardImageMap.containsKey(cardNo);
-        if (hasKey){
-            Logger.hotfixMessage("#getCardImage - hasKey");
-            return cardImageMap.get(cardNo);
-        }
-        Logger.hotfixMessage("#getCardImage - noKey");
-        return cardImageMap.get(CardDTO.NO_ROOT_CARD);
+    public void addCardImageValue(CardDTO cardDTO){
+        cardImageMap.put(cardDTO.getCardNo(), new ObservableBitmap());
     }
 
-    @BindingAdapter(value = {"viewModel","cardNo"}, requireAll = true)
-    public static void loadCardImage(ImageView view, CardViewModel viewModel,int cardNo){
-        Logger.hotfixMessage("loadCardImage");
-        view.setImageBitmap(viewModel.getCardImage(cardNo));
+    public boolean hasDefaultCardImage() {
+        return cardImageMap.containsKey(CardDTO.NO_ROOT_CARD);
+    }
+
+    public Bitmap getDefaultCardThumbnail() {
+        return Objects.requireNonNull(cardImageMap.get(CardDTO.NO_ROOT_CARD)).getThumbnail();
+    }
+
+    @BindingAdapter(value = {"cardThumbnail", "defaultCardThumbnail"})
+    public static void loadCardThumbnail(ImageView view, Bitmap cardThumbnail, Bitmap defaultCardThumbnail) {
+        if (cardThumbnail == null)
+            view.setImageBitmap(defaultCardThumbnail);
+        else
+            view.setImageBitmap(cardThumbnail);
+
+//    @BindingAdapter(value = {"viewModel","cardNo"}, requireAll = true)
+//    public static void loadCardImage(ImageView view, CardViewModel viewModel,int cardNo){
+//        Logger.hotfixMessage("loadCardImage");
+//        view.setImageBitmap(viewModel.getCardImage(cardNo));
 
 //        int width = Math.round(view.getResources().getDimension(R.dimen.card_thumbnail_image_width));
 //        int height = Math.round(view.getResources().getDimension(R.dimen.card_thumbnail_image_height));
@@ -126,12 +129,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public void setDefaultCardImage(Bitmap defaultCardImage) {
-        cardImageMap.put(CardDTO.NO_ROOT_CARD, defaultCardImage);
+        cardImageMap.put(CardDTO.NO_ROOT_CARD, new ObservableBitmap(defaultCardImage));
     }
 
 
     public void connectGestureUtilsToOnCardTouchListener() {
-        if (cardTouchListener!=null&&cardGestureDetector!=null&&cardGestureListener!=null){
+        if (cardTouchListener != null && cardGestureDetector != null && cardGestureListener != null) {
             cardTouchListener.setCardGestureDetectorCompat(cardGestureDetector);
             cardTouchListener.setCardGestureListener(cardGestureListener);
         }
@@ -167,19 +170,19 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
      *
      * */
 
-    public void printTargetCard(int containerNo, int cardSeqNo){
+    public void printTargetCard(int containerNo, int cardSeqNo) {
         CardState cardState = mPresentData.get(containerNo).get(cardSeqNo).second;
         boolean flipped = cardState.isFlipped();
         CardState.Front front = cardState.getFront();
         CardState.Back back = cardState.getBack();
-        Logger.hotfixMessage("front - alpha: "+front.getCardFrontAlpha()
-        +"/ visibility : "+front.getCardFrontVisibility()
-        +"/rotationX : "+front.getCardFrontRotationX());
+        Logger.hotfixMessage("front - alpha: " + front.getCardFrontAlpha()
+                + "/ visibility : " + front.getCardFrontVisibility()
+                + "/rotationX : " + front.getCardFrontRotationX());
 
-        Logger.hotfixMessage("back - alpha: "+back.getCardBackAlpha()
-                +"/ visibility : "+back.getCardBackVisibility()
-                +"/rotationX : "+back.getCardBackRotationX());
-        Logger.hotfixMessage("flipped"+flipped);
+        Logger.hotfixMessage("back - alpha: " + back.getCardBackAlpha()
+                + "/ visibility : " + back.getCardBackVisibility()
+                + "/rotationX : " + back.getCardBackRotationX());
+        Logger.hotfixMessage("flipped" + flipped);
     }
 
     public void printContainers() {
@@ -672,7 +675,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
 
-
     public interface DropDataUpdateListener<E> {
         void onUpdate(E updateCount);
     }
@@ -842,6 +844,24 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         alertDeleteWarningDialog(view, targetCard, removeItemList, targetContainerPosition);
     }
 
+    public void removeFromCardImageMap(CardDTO[] removeItemArr) {
+        if (removeItemArr.length == 0)
+            return;
+
+        for (CardDTO testDto : removeItemArr) {
+            int testCardNo = testDto.getCardNo();
+            if (!cardImageMap.containsKey(testCardNo))
+                throw new RuntimeException("#removeFromCardImageMap in loop, but there is no key");
+
+            ObservableBitmap theCardImage = cardImageMap.get(testCardNo);
+
+            if (!cardImageMap.containsValue(theCardImage))
+                throw new RuntimeException("#removeFromCardImageMap in loop, but there is no value");
+
+            cardImageMap.remove(theCardImage);
+        }
+    }
+
     public synchronized void removeFromAllList(CardDTO[] removeItemArr) {
         Arrays.sort(removeItemArr, (o1, o2) -> Integer.compare(o2.getContainerNo(), o1.getContainerNo()));
         if (removeItemArr.length == 0)
@@ -877,6 +897,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         return;
                     }
                     removeFromAllList(removeItemArr);
+                    removeFromCardImageMap(removeItemArr);
 //                    mLiveData.postValue(mAllData);
                     mPresentData.subList(targetContainerPosition, mPresentData.size()).clear();
                     mPresentContainerList.subList(targetContainerPosition, mPresentContainerList.size()).clear();
@@ -925,6 +946,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         return;
                     }
                     removeFromAllList(removeItemArr);
+                    removeFromCardImageMap(removeItemArr);
 //                    mLiveData.postValue(mAllData);
                     mPresentData.get(targetContainerPosition).remove(cardDTO.getSeqNo());
                     if (focusedTarget) {
@@ -1477,7 +1499,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         }
     }
 
-//    TODO : loadImage.
+    //    TODO : loadImage.
     private void initData(int lastContainerNo) {
         Logger.message("vm#setData");
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
@@ -1486,12 +1508,18 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         orderBySeqNo(dataGroupedByRootNo);
         initContainerList(dataGroupedByRootNo);
         initPresentData(dataGroupedByRootNo);
+        initCardImageMap(allDTOs);
         // for Search func
 //        mLiveData.postValue(dataGroupedByContainerNo);
         mAllData.clear();
         mAllData.addAll(dataGroupedByRootNo);
+    }
 
-//        cardImageMap
+    private void initCardImageMap(List<CardDTO> allDtoList){
+        for (CardDTO theCardDTO : allDtoList){
+            int theCardNo = theCardDTO.getCardNo();
+            cardImageMap.put(theCardNo, new ObservableBitmap());
+        }
     }
 
     private void initContainerList(List<HashMap<Integer, List<CardDTO>>> orderedData) {
@@ -1659,6 +1687,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             if (!targetMap.containsKey(newCard.getRootNo()))
                 targetMap.put(newCard.getRootNo(), new ArrayList<>());
             Objects.requireNonNull(targetMap.get(newCard.getRootNo())).add(newCard);
+            addCardImageValue(newCard);
 //            mLiveData.postValue(mAllData);
             runOnUiThread(() ->
                     Objects.requireNonNull(containerRecyclerView.getAdapter()).notifyItemInserted(targetPosition), containerRecyclerView.getContext());
@@ -1672,9 +1701,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             final int targetSeqNo = targetDTO.getSeqNo();
             final int newCardSeqNo = targetSeqNo + 1;
             final int removeBtnVisibility = targetCardState.getRemoveBtnVisibility();
+            CardDTO newCard = foundEntity.toDTO();
             targetItemList.add(newCardSeqNo, Pair.create(foundEntity.toDTO(), new CardState.Builder().removeBtnVisibility(removeBtnVisibility).build()));
             final int targetContainerNo = targetDTO.getContainerNo();
-            Objects.requireNonNull(mAllData.get(targetContainerNo).get(foundEntity.getRootNo())).add(newCardSeqNo, foundEntity.toDTO());
+            Objects.requireNonNull(mAllData.get(targetContainerNo).get(foundEntity.getRootNo())).add(newCardSeqNo, newCard);
+            addCardImageValue(newCard);
             runOnUiThread(() -> {
                 Logger.message("runOnUiThread");
                 Objects.requireNonNull(targetRecyclerView.getAdapter()).notifyItemInserted(newCardSeqNo);
@@ -1703,6 +1734,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             }
         }
         return 0;
+    }
+
+    //sync with allData
+    public ObservableBitmap getCardImage(int containerPosition, int cardPosition) {
+        int cardNo = getCardDTO(containerPosition, cardPosition).getCardNo();
+        return cardImageMap.get(cardNo);
     }
 
     public CardDTO getCardDTO(int containerPosition, int cardPosition) {

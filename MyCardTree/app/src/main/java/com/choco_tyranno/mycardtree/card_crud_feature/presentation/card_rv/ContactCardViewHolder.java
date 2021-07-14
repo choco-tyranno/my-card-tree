@@ -22,9 +22,10 @@ public class ContactCardViewHolder extends CardViewHolder {
     }
 
     @Override
-    public void bind(CardDTO cardDTO, CardState cardState) {
+    public void bind(CardDTO cardDTO, CardState cardState, ObservableBitmap cardImage) {
         mBinding.setCardState(cardState);
         mBinding.setCard(cardDTO);
+        mBinding.setCardImage(cardImage);
         mBinding.executePendingBindings();
     }
 

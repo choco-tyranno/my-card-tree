@@ -1,5 +1,6 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
@@ -14,7 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardGestureListener;
@@ -41,18 +46,19 @@ public class MainCardActivity extends AppCompatActivity {
         if (!Optional.ofNullable(mMainHandler).isPresent())
             mMainHandler = new Handler(getMainLooper());
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
+        loadDefaultCardImage();
         mainBinding();
         binding.setViewModel(viewModel);
         setContainerRv();
-        Bitmap defaultCardImage = loadDefaultCardImage();
+
+        // worker thread's job available.
         CardGestureListener cardGestureListener = new CardGestureListener();
         GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
         viewModel.setCardGestureListener(cardGestureListener);
         viewModel.setCardGestureDetector(cardGestureDetector);
         viewModel.connectGestureUtilsToOnCardTouchListener();
-        viewModel.setDefaultCardImage(defaultCardImage);
-        Logger.hotfixMessage("is defaultCardImage null? : "+defaultCardImage==null?"null":"nonNull");
-        viewModel.loadData(() -> runOnUiThread(() -> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).notifyDataSetChanged()));
+
+        viewModel.loadData(() ->waitCardImageLoading(new Handler(getMainLooper())));
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener((view) -> {
 //            ContainerRecyclerView containerRecyclerView = binding.mainScreen.mainBody.containerRecyclerview;
@@ -69,16 +75,45 @@ public class MainCardActivity extends AppCompatActivity {
         });
     }
 
-    private Bitmap loadDefaultCardImage() {
-        try {
-            int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
-            int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
-            return Glide.with(MainCardActivity.this).asBitmap()
-                    .load(R.drawable.default_card_image_01).submit(width, height).get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void waitCardImageLoading(Handler handler){
+        handler.postDelayed(()->{
+            if (viewModel.hasDefaultCardImage()){
+                showContainerCardUi();
+            }else {
+                waitCardImageLoading(handler);
+            }
+        },1000);
+    }
+
+    public void showContainerCardUi(){
+        runOnUiThread(() -> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter())
+                .notifyDataSetChanged());
+    }
+
+    private void loadDefaultCardImage() {
+        new Thread(() -> {
+            try {
+                int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
+                int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
+                Glide.with(MainCardActivity.this).asBitmap()
+                        .load(R.drawable.default_card_image_01).addListener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        Logger.hotfixMessage("onResourceReady");
+                        viewModel.setDefaultCardImage(resource);
+                        return false;
+                    }
+                }).submit(width, height);
+                Logger.hotfixMessage("out");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 
