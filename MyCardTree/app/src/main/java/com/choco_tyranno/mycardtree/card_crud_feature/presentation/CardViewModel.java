@@ -28,6 +28,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
@@ -51,6 +55,8 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.sql.Wrapper;
@@ -93,13 +99,21 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
 
-//    TODO : [latest], [now work]
-
-    public int getRepositoryDataSize(){
-        return mCardRepository.getData().size();
+    public void applyCardFromDetailActivity(CardDTO updatedCardDto) {
+        CardDTO foundCardDto = getCardDTO(updatedCardDto.getContainerNo(), updatedCardDto.getSeqNo());
+        if (!TextUtils.equals(foundCardDto.getTitle(), updatedCardDto.getTitle()))
+            foundCardDto.setTitle(updatedCardDto.getTitle());
+        if (!TextUtils.equals(foundCardDto.getSubtitle(), updatedCardDto.getSubtitle()))
+            foundCardDto.setSubtitle(updatedCardDto.getSubtitle());
+        if (!TextUtils.equals(foundCardDto.getContactNumber(), updatedCardDto.getContactNumber()))
+            foundCardDto.setContactNumber(updatedCardDto.getContactNumber());
+        if (!TextUtils.equals(foundCardDto.getFreeNote(), updatedCardDto.getFreeNote()))
+            foundCardDto.setFreeNote(updatedCardDto.getFreeNote());
+        if (!TextUtils.equals(foundCardDto.getImagePath(), updatedCardDto.getImagePath()))
+            foundCardDto.setImagePath(updatedCardDto.getImagePath());
     }
 
-    public void addCardImageValue(CardDTO cardDTO){
+    public void addCardImageValue(CardDTO cardDTO) {
         cardImageMap.put(cardDTO.getCardNo(), new ObservableBitmap());
     }
 
@@ -170,11 +184,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     @BindingAdapter("onClickListener")
-    public static void setOnClickListener(View view, View.OnClickListener clickListener){
+    public static void setOnClickListener(View view, View.OnClickListener clickListener) {
         view.setOnClickListener(clickListener);
     }
 
-    public View.OnClickListener getOnImageViewToFullscreenClickListener(){
+    public View.OnClickListener getOnImageViewToFullscreenClickListener() {
         return onClickListenerForImageViewToFullScreen;
     }
 
@@ -183,7 +197,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
      *
      * */
 
-    public void printTargetCard(int containerNo, int cardSeqNo) {
+    public void printTargetCardDto(int containerNo, int cardSeqNo) {
+        CardDTO cardDTO = mPresentData.get(containerNo).get(cardSeqNo).first;
+        Logger.hotfixMessage("cardDTO -  title :" + cardDTO.getTitle());
+        Logger.hotfixMessage("//" + cardDTO.toString());
+    }
+
+    public void printTargetCardState(int containerNo, int cardSeqNo) {
         CardState cardState = mPresentData.get(containerNo).get(cardSeqNo).second;
         boolean flipped = cardState.isFlipped();
         CardState.Front front = cardState.getFront();
@@ -342,7 +362,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
 
-    //TODO : [latest] / [now work]
     private void onMovingCardDroppedInEmptySpace(ContainerRecyclerView containerRecyclerView, DragEvent event) {
         Pair<String, Pair<CardDTO, Pair<List<CardDTO>, List<CardDTO>>>> nestedDataPair = (Pair<String, Pair<CardDTO, Pair<List<CardDTO>, List<CardDTO>>>>) event.getLocalState();
         Pair<CardDTO, Pair<List<CardDTO>, List<CardDTO>>> savedDataPair = nestedDataPair.second;
@@ -449,7 +468,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         findNextCards(targetContainerPosition, targetContainerFocusCardPosition - 1, targetContainerNextCards);
         increaseListSeq(targetContainerNextCards);
         int targetContainerRootNo = targetContainer.getRootNo();
-        //TODO : this
         if (targetContainerRootNo == Container.NO_ROOT_NO)
             throw new RuntimeException("[now work]targetContainerRootNo == Container.NO_ROOT_NO / #onMovingCardDroppedInContainer /");
         movingRootCard.setRootNo(targetContainer.getRootNo());
@@ -1493,10 +1511,16 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void loadData(OnDataLoadListener callback) {
         Logger.message("vm#loadData");
-        mCardRepository.readData((lastContainerNo) -> {
-            initData(lastContainerNo);
+        if (!mCardRepository.isDataPrepared()){
+            mCardRepository.readData((lastContainerNo) -> {
+                initData(lastContainerNo);
+                callback.onLoadData();
+            });
+        }else {
+            if (!mCardRepository.getData().isEmpty())
+                initData(mCardRepository.getData().size()-1);
             callback.onLoadData();
-        });
+        }
     }
 
     private void initPresentData(List<HashMap<Integer, List<CardDTO>>> dataGroupedByRootNo) {
@@ -1517,7 +1541,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         }
     }
 
-    //    TODO : loadImage.
     private void initData(int lastContainerNo) {
         Logger.message("vm#setData");
         List<CardDTO> allDTOs = mCardRepository.getData().stream().map(CardEntity::toDTO).collect(Collectors.toList());
@@ -1533,8 +1556,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         mAllData.addAll(dataGroupedByRootNo);
     }
 
-    private void initCardImageMap(List<CardDTO> allDtoList){
-        for (CardDTO theCardDTO : allDtoList){
+    private void initCardImageMap(List<CardDTO> allDtoList) {
+        for (CardDTO theCardDTO : allDtoList) {
             int theCardNo = theCardDTO.getCardNo();
             cardImageMap.put(theCardNo, new ObservableBitmap());
         }

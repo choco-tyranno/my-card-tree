@@ -7,37 +7,69 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
 
-public class DetailPageViewModel extends AndroidViewModel {
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 
-    View.OnClickListener onClickListenerForModeSwitchBtn;
-    View.OnClickListener onClickListenerForBackBtn;
-    View.OnClickListener onClickListenerForSaveBtn;
-    DetailPageState pageState;
+import java.util.List;
+
+public class DetailPageViewModel extends AndroidViewModel {
+    private CardRepository repository;
+    private View.OnClickListener onClickListenerForModeSwitchBtn;
+    private View.OnClickListener onClickListenerForBackBtn;
+    private View.OnClickListener onClickListenerForSaveBtn;
+    private View.OnClickListener onClickListenerForUtilContainerFab;
+    private View.OnClickListener onClickListenerForTakePictureFab;
+    private View.OnClickListener onClickListenerForOpenGalleryFab;
+    private View.OnClickListener onClickListenerForLoadContactInfoFab;
+    private DetailPageState pageState;
 
     public DetailPageViewModel(@NonNull Application application) {
         super(application);
+        this.repository = CardRepository.getInstance();
     }
 
-    public void setPageState(DetailPageState pageState){
+    public void setPageState(DetailPageState pageState) {
         this.pageState = pageState;
-    };
+    }
 
-    public void initListeners(){
+    public void initListeners() {
         this.onClickListenerForModeSwitchBtn = new OnClickListenerForModeSwitchBtn(pageState);
         this.onClickListenerForBackBtn = new OnClickListenerForBackBtn();
-        this.onClickListenerForSaveBtn = new OnClickListenerForSaveBtn();
+        this.onClickListenerForSaveBtn = new OnClickListenerForSaveBtn(this);
+        onClickListenerForUtilContainerFab = new OnClickListenerForUtilContainerFab();
+        onClickListenerForTakePictureFab = new OnClickListenerForTakePictureFab();
+        onClickListenerForOpenGalleryFab = new OnClickListenerForOpenGalleryFab();
+        onClickListenerForLoadContactInfoFab = new OnClickListenerForLoadContactInfoFab();
     }
 
-    public View.OnClickListener getOnClickListenerForModeSwitchBtn(){
+    public View.OnClickListener getOnClickListenerForModeSwitchBtn() {
         return onClickListenerForModeSwitchBtn;
     }
 
-    public View.OnClickListener getOnClickListenerForBackBtn(){
+    public View.OnClickListener getOnClickListenerForBackBtn() {
         return onClickListenerForBackBtn;
     }
 
-    public View.OnClickListener getOnClickListenerForSaveBtn(){
+    public View.OnClickListener getOnClickListenerForSaveBtn() {
         return onClickListenerForSaveBtn;
+    }
+
+    public View.OnClickListener getOnClickListenerForUtilContainerFab() {
+        return onClickListenerForUtilContainerFab;
+    }
+    public View.OnClickListener getOnClickListenerForTakePictureFab() {
+        return onClickListenerForTakePictureFab;
+    }
+    public View.OnClickListener getOnClickListenerForOpenGalleryFab() {
+        return onClickListenerForOpenGalleryFab;
+    }
+    public View.OnClickListener getOnClickListenerForLoadContactInfoFab() {
+        return onClickListenerForLoadContactInfoFab;
+    }
+
+    public void update(CardDTO cardDTO) {
+        repository.update(cardDTO.toEntity());
     }
 
 }

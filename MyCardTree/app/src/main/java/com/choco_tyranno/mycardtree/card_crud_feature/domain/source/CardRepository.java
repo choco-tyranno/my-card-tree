@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class CardRepository {
+    private static CardRepository instance;
     private final String DEBUG_TAG = "!!!:";
     private final CardDAO mCardDAO;
     private List<CardEntity> _originData;
@@ -21,9 +22,18 @@ public class CardRepository {
     private static final int REQ_FAIL = -100;
 
     public CardRepository(Application application) {
+        instance = this;
         MyCardTreeDataBase db = MyCardTreeDataBase.getDatabase(application);
         mCardDAO = db.cardDAO();
         execute(mCardDAO::findLastInsertedCard);
+    }
+
+    public static CardRepository getInstance() {
+        return instance;
+    }
+
+    public boolean isDataPrepared(){
+        return _originData != null;
     }
 
 //    public void readData(OnDataLoadListener callback) {
@@ -46,7 +56,7 @@ public class CardRepository {
 //    }
 
     public void readData(Consumer<Integer> callback) {
-        execute(()->{
+        execute(() -> {
             int loopCount = 0;
             while (!MyCardTreeDataBase.isAssetInserted()) {
                 try {
@@ -109,8 +119,8 @@ public class CardRepository {
     }
 
     public void update(List<CardEntity> cardEntitiesToUpdate, Runnable finalAction) {
-        execute(()->{
-            synchronized (this){
+        execute(() -> {
+            synchronized (this) {
                 mCardDAO.update(cardEntitiesToUpdate);
                 finalAction.run();
             }

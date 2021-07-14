@@ -18,6 +18,8 @@ import com.google.android.material.card.MaterialCardView;
 
 public class ImageToFullScreenClickListener implements OnClickListener {
 
+    public static final int REQ_MANAGE_DETAIL = 1;
+
     public ImageToFullScreenClickListener(){}
 
     @Override
@@ -33,6 +35,6 @@ public class ImageToFullScreenClickListener implements OnClickListener {
         intent.putExtra("post_card", cardDTO);
         Pair<View, String> pairImg = Pair.create(cardImageView, cardImageView.getTransitionName());
         ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mainCardActivity, pairImg);
-        mainCardActivity.startActivity(intent, activityOptionsCompat.toBundle());
+        mainCardActivity.startActivityForResult(intent, REQ_MANAGE_DETAIL, activityOptionsCompat.toBundle());
     }
 }

@@ -11,9 +11,25 @@ public class DetailPageState extends BaseObservable {
     public static final int READ_MODE = 0;
     public static final int EDIT_MODE = 1;
     private int mode;
+    private boolean utilContainerOpened;
 
     public DetailPageState() {
         mode = READ_MODE;
+        utilContainerOpened = false;
+    }
+
+    public void toggleUtilContainerState(){
+        setUtilContainerOpened(!utilContainerOpened);
+    }
+
+    @Bindable
+    public boolean isUtilContainerOpened(){
+        return utilContainerOpened;
+    }
+
+    public void setUtilContainerOpened(boolean state){
+        utilContainerOpened = state;
+        notifyPropertyChanged(BR.utilContainerOpened);
     }
 
     @Bindable
@@ -35,15 +51,11 @@ public class DetailPageState extends BaseObservable {
         notifyPropertyChanged(BR.pageMode);
     }
 
-    public int isEditMode() {
-        if (mode == EDIT_MODE)
-            return View.VISIBLE;
-        return View.INVISIBLE;
+    public boolean isEditMode() {
+        return mode == EDIT_MODE;
     }
 
-    public int isReadMode() {
-        if (mode == READ_MODE)
-            return View.VISIBLE;
-        return View.INVISIBLE;
+    public boolean isReadMode() {
+        return mode == READ_MODE;
     }
 }

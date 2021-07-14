@@ -7,6 +7,7 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,9 +23,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ImageToFullScreenClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
@@ -66,10 +69,8 @@ public class MainCardActivity extends AppCompatActivity {
 //            ContactCardViewHolder cardViewHolder = (ContactCardViewHolder)containerViewHolder.getBinding().cardRecyclerview.findViewHolderForAdapterPosition(0);
 //            ConstraintLayout backLayout = cardViewHolder.getBinding().cardBackLayout.backCardConstraintLayout;
 //            ConstraintLayout frontLayout = cardViewHolder.getBinding().cardFrontLayout.frontCardConstraintLayout;
-//            Logger.hotfixMessage("backLayout: visibility"+backLayout.getVisibility());
-//            Logger.hotfixMessage("frontLayout: visibility"+frontLayout.getVisibility());
-//            Logger.hotfixMessage("frontCardCardView: visibility"+cardViewHolder.getBinding().cardFrontLayout.frontCardCardView.getVisibility());
-//            viewModel.printTargetCard(1, 0);
+//            viewModel.printTargetCardState(0, 0);
+            viewModel.printTargetCardDto(0, 0);
 //            viewModel.printContainers();
 //            viewModel.printAllData();
         });
@@ -172,4 +173,12 @@ public class MainCardActivity extends AppCompatActivity {
         return mMainHandler;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode== ImageToFullScreenClickListener.REQ_MANAGE_DETAIL){
+            CardDTO updatedCardDto = (CardDTO) data.getSerializableExtra("post_card");
+            viewModel.applyCardFromDetailActivity(updatedCardDto);
+        }
+    }
 }
