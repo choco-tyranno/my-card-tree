@@ -17,7 +17,7 @@
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
         <variable
             name="pageState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPageState" />
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPage" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -56,7 +56,7 @@
                             android:contentDescription="content_description_media"
                             android:scaleType="centerCrop"
                             android:transitionName="shared_element_img"
-                            app:srcCompat="@drawable/card_back_img01" />
+                            app:cardImage="@{pageState.cardImage}" />
 
                         <FrameLayout
                             android:layout_width="match_parent"

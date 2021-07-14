@@ -1,17 +1,16 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
-
-import java.util.List;
 
 public class DetailPageViewModel extends AndroidViewModel {
     private CardRepository repository;
@@ -22,19 +21,25 @@ public class DetailPageViewModel extends AndroidViewModel {
     private View.OnClickListener onClickListenerForTakePictureFab;
     private View.OnClickListener onClickListenerForOpenGalleryFab;
     private View.OnClickListener onClickListenerForLoadContactInfoFab;
-    private DetailPageState pageState;
+    private DetailPage detailPage;
+
+
+    @BindingAdapter("cardImage")
+    public static void setCardImage(ImageView view, Bitmap resource){
+        view.setImageBitmap(resource);
+    }
 
     public DetailPageViewModel(@NonNull Application application) {
         super(application);
         this.repository = CardRepository.getInstance();
     }
 
-    public void setPageState(DetailPageState pageState) {
-        this.pageState = pageState;
+    public void setDetailPage(DetailPage detailPage) {
+        this.detailPage = detailPage;
     }
 
     public void initListeners() {
-        this.onClickListenerForModeSwitchBtn = new OnClickListenerForModeSwitchBtn(pageState);
+        this.onClickListenerForModeSwitchBtn = new OnClickListenerForModeSwitchBtn(detailPage);
         this.onClickListenerForBackBtn = new OnClickListenerForBackBtn();
         this.onClickListenerForSaveBtn = new OnClickListenerForSaveBtn(this);
         onClickListenerForUtilContainerFab = new OnClickListenerForUtilContainerFab();
@@ -71,5 +76,4 @@ public class DetailPageViewModel extends AndroidViewModel {
     public void update(CardDTO cardDTO) {
         repository.update(cardDTO.toEntity());
     }
-
 }

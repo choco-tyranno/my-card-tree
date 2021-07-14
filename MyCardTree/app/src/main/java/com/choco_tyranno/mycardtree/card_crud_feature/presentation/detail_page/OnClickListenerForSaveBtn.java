@@ -9,7 +9,6 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
-import com.google.android.material.button.MaterialButton;
 
 public class OnClickListenerForSaveBtn implements View.OnClickListener {
     DetailPageViewModel viewModel;
@@ -21,7 +20,7 @@ public class OnClickListenerForSaveBtn implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         ActivityDetailFrameBinding binding = ((DetailCardActivity) v.getContext()).getBinding();
-        DetailPageState pageState = binding.getPageState();
+        DetailPage pageState = binding.getPageState();
         compareAndSave(binding);
         pageState.switchMode();
     }
