@@ -16,4 +16,13 @@
     <string name="empty_container_layer_title">add next : </string>
     <string name="next_arrow_desc">next arrow for indicate next item is exist.</string>
     <string name="prev_arrow_desc">previous arrow for indicate previous item is exist.</string>
+    <string name="detail_main_image_view_desc">card image. click to spread image.</string>
+    <string name="util_container_fab_desc">floating button. click to spread util buttons.</string>
+    <string name="take_picture_fab_desc">floating button. click to spread util buttons.</string>
+    <string name="open_gallery_fab_desc">floating button. click to spread util buttons.</string>
+    <string name="load_contact_info_fab_desc">floating button. click to spread util buttons.</string>
+    <string name="detail_modify_btn_text">수정</string>
+    <string name="detail_back_btn_text">되돌아가기</string>
+    <string name="detail_save_btn_text">저장</string>
+    <string name="detail_cancel_btn_text">취소</string>
 </resources>

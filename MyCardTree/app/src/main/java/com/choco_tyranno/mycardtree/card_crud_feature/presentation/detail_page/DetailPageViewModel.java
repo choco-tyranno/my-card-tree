@@ -22,6 +22,7 @@ public class DetailPageViewModel extends AndroidViewModel {
     private View.OnClickListener onClickListenerForTakePictureFab;
     private View.OnClickListener onClickListenerForOpenGalleryFab;
     private View.OnClickListener onClickListenerForLoadContactInfoFab;
+    private View.OnClickListener onClickListenerForSpreadingImage;
     private DetailPage detailPage;
     private Bitmap defaultCardImage;
 
@@ -34,11 +35,8 @@ public class DetailPageViewModel extends AndroidViewModel {
         return defaultCardImage;
     }
 
-    @BindingAdapter(value = {"cardImage", "defaultCardImage"}, requireAll = true)
+    @BindingAdapter(value = {"cardImage", "defaultCardImage"})
     public static void setCardImage(ImageView view, Bitmap pictureCardImage, Bitmap defaultCardImage) {
-        Logger.hotfixMessage("@BindingAdapter - setCardImage");
-        Logger.hotfixMessage("pictureCardImage null? :"+pictureCardImage==null? "null" : "nonNull");
-        Logger.hotfixMessage("defaultCardImage null? :"+defaultCardImage==null? "null" : "nonNull");
         if (pictureCardImage != null)
             view.setImageBitmap(pictureCardImage);
         else
@@ -62,6 +60,11 @@ public class DetailPageViewModel extends AndroidViewModel {
         onClickListenerForTakePictureFab = new OnClickListenerForTakePictureFab();
         onClickListenerForOpenGalleryFab = new OnClickListenerForOpenGalleryFab();
         onClickListenerForLoadContactInfoFab = new OnClickListenerForLoadContactInfoFab();
+        onClickListenerForSpreadingImage = new OnClickListenerForSpreadingImage();
+    }
+
+    public View.OnClickListener getOnClickListenerForSpreadingImage() {
+        return onClickListenerForSpreadingImage;
     }
 
     public View.OnClickListener getOnClickListenerForModeSwitchBtn() {

@@ -51,7 +51,6 @@ public class DetailCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(DetailCardActivity.this).get(DetailPageViewModel.class);
-
         Intent intent = getIntent();
         ownerCardDTO = (CardDTO) intent.getSerializableExtra("post_card");
         detailPage = new DetailPage();
