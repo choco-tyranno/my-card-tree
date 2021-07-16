@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "table_card")
 public class CardEntity{
     @Ignore
@@ -43,6 +45,19 @@ public class CardEntity{
 
     public CardEntity() {
         init();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CardEntity that = (CardEntity) o;
+        return mCardNo == that.mCardNo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mCardNo);
     }
 
     @Ignore

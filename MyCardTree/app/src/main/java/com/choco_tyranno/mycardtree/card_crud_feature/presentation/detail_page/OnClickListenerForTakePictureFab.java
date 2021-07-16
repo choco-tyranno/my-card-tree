@@ -26,7 +26,7 @@ public class OnClickListenerForTakePictureFab implements View.OnClickListener {
     public void onClick(View v) {
         DetailCardActivity detailCardActivity = (DetailCardActivity) v.getContext();
         ActivityDetailFrameBinding binding = detailCardActivity.getBinding();
-        DetailPage pageState = binding.getPageState();
+        DetailPage pageState = binding.getDetailPage();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(detailCardActivity.getPackageManager()) != null) {
             File photoFile = null;

@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -61,7 +62,10 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel.setCardGestureDetector(cardGestureDetector);
         viewModel.connectGestureUtilsToOnCardTouchListener();
 
-        viewModel.loadData(() ->waitCardImageLoading(new Handler(getMainLooper())));
+        viewModel.loadData(() -> {
+            waitDefaultCardImageLoading(getMainHandler());
+            loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
+        });
 //        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener((view) -> {
 //            ContainerRecyclerView containerRecyclerView = binding.mainScreen.mainBody.containerRecyclerview;
@@ -70,23 +74,55 @@ public class MainCardActivity extends AppCompatActivity {
 //            ConstraintLayout backLayout = cardViewHolder.getBinding().cardBackLayout.backCardConstraintLayout;
 //            ConstraintLayout frontLayout = cardViewHolder.getBinding().cardFrontLayout.frontCardConstraintLayout;
 //            viewModel.printTargetCardState(0, 0);
-            viewModel.printTargetCardDto(0, 0);
+//            viewModel.printTargetCardDto(0, 0);
 //            viewModel.printContainers();
 //            viewModel.printAllData();
         });
     }
 
-    public void waitCardImageLoading(Handler handler){
-        handler.postDelayed(()->{
-            if (viewModel.hasDefaultCardImage()){
-                showContainerCardUi();
-            }else {
-                waitCardImageLoading(handler);
-            }
-        },1000);
+
+
+    public void loadPictureCardImages(CardDTO[] allCardArr, Handler handler) {
+        for (CardDTO theCardDto : allCardArr){
+            if (TextUtils.equals(theCardDto.getImagePath(), ""))
+                continue;
+            handler.postDelayed(() -> {
+                final int cardNo = theCardDto.getCardNo();
+                try {
+                    int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
+                    int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
+                    Glide.with(MainCardActivity.this).asBitmap()
+                            .load(theCardDto.getImagePath()).addListener(new RequestListener<Bitmap>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            Logger.hotfixMessage("onResourceReady - setPictureCardImage");
+                            viewModel.setPictureCardImage(resource, cardNo);
+                            return false;
+                        }
+                    }).submit(width, height);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, 1000);
+        }
     }
 
-    public void showContainerCardUi(){
+    public void waitDefaultCardImageLoading(Handler handler) {
+        handler.postDelayed(() -> {
+            if (viewModel.hasDefaultCardImage()) {
+                showContainerCardUi();
+            } else {
+                waitDefaultCardImageLoading(handler);
+            }
+        }, 1000);
+    }
+
+    public void showContainerCardUi() {
         runOnUiThread(() -> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter())
                 .notifyDataSetChanged());
     }
@@ -105,12 +141,11 @@ public class MainCardActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Logger.hotfixMessage("onResourceReady");
+                        Logger.hotfixMessage("onResourceReady - setDefaultCardImage");
                         viewModel.setDefaultCardImage(resource);
                         return false;
                     }
                 }).submit(width, height);
-                Logger.hotfixMessage("out");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,9 +211,13 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode== ImageToFullScreenClickListener.REQ_MANAGE_DETAIL){
+        if (requestCode == ImageToFullScreenClickListener.REQ_MANAGE_DETAIL) {
             CardDTO updatedCardDto = (CardDTO) data.getSerializableExtra("post_card");
-            viewModel.applyCardFromDetailActivity(updatedCardDto);
+            boolean imageChanged = viewModel.applyCardFromDetailActivity(updatedCardDto);
+            if (imageChanged){
+                CardDTO[] cardDTOArr = {updatedCardDto};
+                loadPictureCardImages(cardDTOArr, mMainHandler);
+            }
         }
     }
 }

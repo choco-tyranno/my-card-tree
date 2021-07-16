@@ -20,7 +20,7 @@ public class OnClickListenerForSaveBtn implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         ActivityDetailFrameBinding binding = ((DetailCardActivity) v.getContext()).getBinding();
-        DetailPage pageState = binding.getPageState();
+        DetailPage pageState = binding.getDetailPage();
         compareAndSave(binding);
         pageState.switchMode();
     }

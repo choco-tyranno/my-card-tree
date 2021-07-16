@@ -11,6 +11,6 @@ public class OnClickListenerForUtilContainerFab implements View.OnClickListener 
     public void onClick(View v) {
         Logger.hotfixMessage("util");
        ActivityDetailFrameBinding binding = ((DetailCardActivity)v.getContext()).getBinding();
-       binding.getPageState().toggleUtilContainerState();
+       binding.getDetailPage().toggleUtilContainerState();
     }
 }

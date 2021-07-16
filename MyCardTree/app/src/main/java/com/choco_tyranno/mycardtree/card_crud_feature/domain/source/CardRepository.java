@@ -15,11 +15,8 @@ import java.util.function.Consumer;
 
 public class CardRepository {
     private static CardRepository instance;
-    private final String DEBUG_TAG = "!!!:";
     private final CardDAO mCardDAO;
     private List<CardEntity> _originData;
-    private static final int REQ_SUCCESS = 100;
-    private static final int REQ_FAIL = -100;
 
     public CardRepository(Application application) {
         instance = this;
@@ -35,25 +32,6 @@ public class CardRepository {
     public boolean isDataPrepared(){
         return _originData != null;
     }
-
-//    public void readData(OnDataLoadListener callback) {
-//        execute(()->{
-//            int loopCount = 0;
-//            while (!MyCardTreeDataBase.isAssetInserted()) {
-//                try {
-//                    Thread.sleep(500);
-//                    loopCount++;
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (loopCount > 30)
-//                    break;
-//            }
-//            _originData = mCardDAO.findAllCards();
-//            mCardDAO.findLastContainerNo();
-//            callback.onLoadData();
-//        });
-//    }
 
     public void readData(Consumer<Integer> callback) {
         execute(() -> {
@@ -81,6 +59,7 @@ public class CardRepository {
     public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
         execute(() -> {
             synchronized (this) {
+                _originData.add(cardEntity);
                 CardEntity foundData = mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList);
                 dropEvent.accept(foundData);
             }
@@ -90,6 +69,7 @@ public class CardRepository {
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
         execute(() -> {
             synchronized (this) {
+                _originData.add(cardEntity);
                 CardEntity foundData = mCardDAO.insertTransaction(cardEntity);
                 dropEvent.accept(foundData);
             }
@@ -103,6 +83,7 @@ public class CardRepository {
     public void delete(List<CardEntity> deleteCardEntities, Consumer<Integer> deleteEvent) {
         execute(() -> {
             synchronized (this) {
+                _originData.removeAll(deleteCardEntities);
                 int deleteCount = mCardDAO.delete(deleteCardEntities).blockingGet();
                 deleteEvent.accept(deleteCount);
             }
@@ -112,6 +93,7 @@ public class CardRepository {
     public void deleteAndUpdate(List<CardEntity> deleteCardEntities, List<CardEntity> updateCardEntities, Consumer<Integer> deleteEvent) {
         execute(() -> {
             synchronized (this) {
+                _originData.removeAll(deleteCardEntities);
                 int deleteCount = mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
                 deleteEvent.accept(deleteCount);
             }
@@ -130,4 +112,5 @@ public class CardRepository {
     private void execute(Runnable action) {
         MyCardTreeDataBase.databaseWriteExecutor.execute(action);
     }
+
 }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.source.CardRepository;
 
@@ -22,11 +23,26 @@ public class DetailPageViewModel extends AndroidViewModel {
     private View.OnClickListener onClickListenerForOpenGalleryFab;
     private View.OnClickListener onClickListenerForLoadContactInfoFab;
     private DetailPage detailPage;
+    private Bitmap defaultCardImage;
 
+    public void setDefaultCardImage(Bitmap resource){
+        Logger.hotfixMessage("setDefaultCardImage");
+        defaultCardImage = resource;
+    }
 
-    @BindingAdapter("cardImage")
-    public static void setCardImage(ImageView view, Bitmap resource){
-        view.setImageBitmap(resource);
+    public Bitmap getDefaultCardImage(){
+        return defaultCardImage;
+    }
+
+    @BindingAdapter(value = {"cardImage", "defaultCardImage"}, requireAll = true)
+    public static void setCardImage(ImageView view, Bitmap pictureCardImage, Bitmap defaultCardImage) {
+        Logger.hotfixMessage("@BindingAdapter - setCardImage");
+        Logger.hotfixMessage("pictureCardImage null? :"+pictureCardImage==null? "null" : "nonNull");
+        Logger.hotfixMessage("defaultCardImage null? :"+defaultCardImage==null? "null" : "nonNull");
+        if (pictureCardImage != null)
+            view.setImageBitmap(pictureCardImage);
+        else
+            view.setImageBitmap(defaultCardImage);
     }
 
     public DetailPageViewModel(@NonNull Application application) {
@@ -63,12 +79,15 @@ public class DetailPageViewModel extends AndroidViewModel {
     public View.OnClickListener getOnClickListenerForUtilContainerFab() {
         return onClickListenerForUtilContainerFab;
     }
+
     public View.OnClickListener getOnClickListenerForTakePictureFab() {
         return onClickListenerForTakePictureFab;
     }
+
     public View.OnClickListener getOnClickListenerForOpenGalleryFab() {
         return onClickListenerForOpenGalleryFab;
     }
+
     public View.OnClickListener getOnClickListenerForLoadContactInfoFab() {
         return onClickListenerForLoadContactInfoFab;
     }

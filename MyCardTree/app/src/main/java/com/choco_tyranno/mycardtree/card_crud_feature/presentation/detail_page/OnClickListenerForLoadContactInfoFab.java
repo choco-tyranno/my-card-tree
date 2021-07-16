@@ -6,6 +6,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardAct
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 public class OnClickListenerForLoadContactInfoFab implements View.OnClickListener {
+    public static final int REQUEST_LOAD_CONTACT_INFO = 30;
     @Override
     public void onClick(View v) {
 

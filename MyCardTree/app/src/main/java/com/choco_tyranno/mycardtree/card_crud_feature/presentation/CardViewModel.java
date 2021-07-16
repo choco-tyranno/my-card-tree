@@ -99,18 +99,32 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
 
-    public void applyCardFromDetailActivity(CardDTO updatedCardDto) {
-        CardDTO foundCardDto = getCardDTO(updatedCardDto.getContainerNo(), updatedCardDto.getSeqNo());
-        if (!TextUtils.equals(foundCardDto.getTitle(), updatedCardDto.getTitle()))
-            foundCardDto.setTitle(updatedCardDto.getTitle());
-        if (!TextUtils.equals(foundCardDto.getSubtitle(), updatedCardDto.getSubtitle()))
-            foundCardDto.setSubtitle(updatedCardDto.getSubtitle());
-        if (!TextUtils.equals(foundCardDto.getContactNumber(), updatedCardDto.getContactNumber()))
-            foundCardDto.setContactNumber(updatedCardDto.getContactNumber());
-        if (!TextUtils.equals(foundCardDto.getFreeNote(), updatedCardDto.getFreeNote()))
-            foundCardDto.setFreeNote(updatedCardDto.getFreeNote());
-        if (!TextUtils.equals(foundCardDto.getImagePath(), updatedCardDto.getImagePath()))
-            foundCardDto.setImagePath(updatedCardDto.getImagePath());
+    public void setPictureCardImage(Bitmap resource, int cardNo) {
+        ObservableBitmap theImageHolder = cardImageMap.get(cardNo);
+        if (theImageHolder != null)
+            theImageHolder.setCardThumbnail(resource);
+    }
+
+    public CardDTO[] getPictureCardArr() {
+        return mCardRepository.getData().stream().map(cardEntity -> cardEntity.toDTO()).filter(cardDTO -> !TextUtils.equals(cardDTO.getImagePath(), "")).collect(Collectors.toList()).toArray(new CardDTO[0]);
+    }
+
+    public boolean applyCardFromDetailActivity(CardDTO updatedCardDto) {
+        boolean result = false;
+        CardDTO mainCardDto = getCardDTO(updatedCardDto.getContainerNo(), updatedCardDto.getSeqNo());
+        if (!TextUtils.equals(mainCardDto.getTitle(), updatedCardDto.getTitle()))
+            mainCardDto.setTitle(updatedCardDto.getTitle());
+        if (!TextUtils.equals(mainCardDto.getSubtitle(), updatedCardDto.getSubtitle()))
+            mainCardDto.setSubtitle(updatedCardDto.getSubtitle());
+        if (!TextUtils.equals(mainCardDto.getContactNumber(), updatedCardDto.getContactNumber()))
+            mainCardDto.setContactNumber(updatedCardDto.getContactNumber());
+        if (!TextUtils.equals(mainCardDto.getFreeNote(), updatedCardDto.getFreeNote()))
+            mainCardDto.setFreeNote(updatedCardDto.getFreeNote());
+        if (!TextUtils.equals(mainCardDto.getImagePath(), updatedCardDto.getImagePath())) {
+            mainCardDto.setImagePath(updatedCardDto.getImagePath());
+            result = true;
+        }
+        return result;
     }
 
     public void addCardImageValue(CardDTO cardDTO) {
@@ -127,10 +141,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     @BindingAdapter(value = {"cardThumbnail", "defaultCardThumbnail"})
     public static void loadCardThumbnail(ImageView view, Bitmap cardThumbnail, Bitmap defaultCardThumbnail) {
-        if (cardThumbnail == null)
-            view.setImageBitmap(defaultCardThumbnail);
-        else
+        Logger.hotfixMessage("loadCardThumbnail");
+        if (cardThumbnail != null)
             view.setImageBitmap(cardThumbnail);
+        else
+            view.setImageBitmap(defaultCardThumbnail);
 
 //    @BindingAdapter(value = {"viewModel","cardNo"}, requireAll = true)
 //    public static void loadCardImage(ImageView view, CardViewModel viewModel,int cardNo){
@@ -1511,14 +1526,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void loadData(OnDataLoadListener callback) {
         Logger.message("vm#loadData");
-        if (!mCardRepository.isDataPrepared()){
+        if (!mCardRepository.isDataPrepared()) {
             mCardRepository.readData((lastContainerNo) -> {
                 initData(lastContainerNo);
                 callback.onLoadData();
             });
-        }else {
+        } else {
             if (!mCardRepository.getData().isEmpty())
-                initData(mCardRepository.getData().size()-1);
+                initData(mCardRepository.getData().size() - 1);
             callback.onLoadData();
         }
     }
@@ -1779,6 +1794,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     //sync with allData
     public ObservableBitmap getCardImage(int containerPosition, int cardPosition) {
+        Logger.hotfixMessage("getCardImage : " + containerPosition + "/" + cardPosition);
         int cardNo = getCardDTO(containerPosition, cardPosition).getCardNo();
         return cardImageMap.get(cardNo);
     }

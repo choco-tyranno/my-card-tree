@@ -16,7 +16,7 @@
             name="card"
             type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
         <variable
-            name="pageState"
+            name="detailPage"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPage" />
     </data>
 
@@ -56,7 +56,8 @@
                             android:contentDescription="content_description_media"
                             android:scaleType="centerCrop"
                             android:transitionName="shared_element_img"
-                            app:cardImage="@{pageState.cardImage}" />
+                            app:cardImage="@{detailPage.cardImage}"
+                            app:defaultCardImage="@{viewModel.defaultCardImage}"/>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -64,7 +65,7 @@
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/tv_frame"
-                                android:visibility="@{pageState.pageMode==pageState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                                android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
@@ -145,7 +146,7 @@
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/et_frame"
-                                android:visibility="@{pageState.pageMode==pageState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                                android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
@@ -235,7 +236,7 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/util_container_fab"
                 onClickListener="@{viewModel.onClickListenerForUtilContainerFab}"
-                android:visibility="@{pageState.pageMode==pageState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -250,7 +251,7 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/take_picture_fab"
                 onClickListener="@{viewModel.onClickListenerForTakePictureFab}"
-                android:visibility="@{pageState.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
@@ -265,7 +266,7 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/open_gallery_fab"
                 onClickListener="@{viewModel.onClickListenerForOpenGalleryFab}"
-                android:visibility="@{pageState.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -279,7 +280,7 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/load_contact_info_fab"
                 onClickListener="@{viewModel.onClickListenerForLoadContactInfoFab}"
-                android:visibility="@{pageState.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
