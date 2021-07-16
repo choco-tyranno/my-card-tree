@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -23,6 +25,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPage;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPageViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForLoadContactInfoFab;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForOpenGalleryFab;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForTakePictureFab;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
@@ -34,6 +37,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 
@@ -74,11 +78,15 @@ public class DetailCardActivity extends AppCompatActivity {
 
         if (requestCode == OnClickListenerForOpenGalleryFab.REQUEST_OPEN_GALLERY && resultCode == RESULT_OK) {
             OutputStream outputStream = null;
+            if (data == null) {
+                SingleToastManager.show(SingleToaster.makeTextShort(this, "사진 불러오기 실패."));
+                return;
+            }
             try {
                 InputStream in = getContentResolver().openInputStream(data.getData());
                 Bitmap img = BitmapFactory.decodeStream(in);
                 in.close();
-                File photoFile = null;
+                File photoFile;
                 photoFile = createImageFile(this, detailPage);
                 outputStream = new FileOutputStream(photoFile.getAbsolutePath());
                 img.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
@@ -86,7 +94,8 @@ public class DetailCardActivity extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 try {
-                    outputStream.close();
+                    if (outputStream != null)
+                        outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -96,10 +105,29 @@ public class DetailCardActivity extends AppCompatActivity {
             loadImage();
             SingleToastManager.show(SingleToaster.makeTextShort(this, "사진이 변경되었습니다."));
         }
+
+        if (requestCode == OnClickListenerForLoadContactInfoFab.REQUEST_LOAD_CONTACT_INFO && resultCode == RESULT_OK) {
+            if (data == null) {
+                SingleToastManager.show(SingleToaster.makeTextShort(this, "연락처 불러오기 실패."));
+                return;
+            }
+            Cursor cursor = getContentResolver().query(data.getData(),
+                    new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER},
+                    null, null, null);
+            cursor.moveToFirst();
+            String retrievedName = cursor.getString(0);
+            String retrievedPhone = cursor.getString(1);
+            ownerCardDTO.setTitle(retrievedName);
+            ownerCardDTO.setContactNumber(retrievedPhone);
+            cursor.close();
+            viewModel.update(ownerCardDTO);
+            SingleToastManager.show(SingleToaster.makeTextShort(this, "연락처를 불러왔습니다."));
+        }
     }
 
     private File createImageFile(Context context, DetailPage pageState) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(DIRECTORY_PICTURES);
         File image = File.createTempFile(
