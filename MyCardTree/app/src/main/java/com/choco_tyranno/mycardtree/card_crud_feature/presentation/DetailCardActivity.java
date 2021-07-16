@@ -127,7 +127,7 @@ public class DetailCardActivity extends AppCompatActivity {
     }
 
     private File createImageFile(Context context, DetailPage pageState) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(DIRECTORY_PICTURES);
         File image = File.createTempFile(
