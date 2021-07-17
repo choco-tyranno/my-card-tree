@@ -31,5 +31,6 @@ public class OnClickListenerForLoadContactInfoFab implements View.OnClickListene
                 .setNegativeButton("취소", (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
+        detailCardActivity.getDetailFab().fabAnim(detailCardActivity.getBinding());
     }
 }

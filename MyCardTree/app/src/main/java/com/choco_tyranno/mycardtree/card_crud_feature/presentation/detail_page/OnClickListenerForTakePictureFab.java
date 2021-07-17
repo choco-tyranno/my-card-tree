@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 
@@ -47,10 +48,11 @@ public class OnClickListenerForTakePictureFab implements View.OnClickListener {
         } else {
             Toast.makeText(detailCardActivity, "사진촬영을 할 수 없습니다. 관리자에게 문의바랍니다.", Toast.LENGTH_SHORT).show();
         }
+        detailCardActivity.getDetailFab().fabAnim(binding);
     }
 
     private File createImageFile(Context context, DetailPage pageState) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(DIRECTORY_PICTURES);
         File image = File.createTempFile(

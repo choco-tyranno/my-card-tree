@@ -53,6 +53,7 @@ public class DetailPage extends BaseObservable {
         notifyPropertyChanged(BR.utilContainerOpened);
     }
 
+
     @Bindable
     public int getPageMode() {
         return mode;

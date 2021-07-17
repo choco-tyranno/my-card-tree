@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailFab;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPage;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPageViewModel;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForLoadContactInfoFab;
@@ -46,6 +47,7 @@ public class DetailCardActivity extends AppCompatActivity {
     private DetailPageViewModel viewModel;
     private DetailPage detailPage;
     private CardDTO ownerCardDTO;
+    private DetailFab detailFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class DetailCardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ownerCardDTO = (CardDTO) intent.getSerializableExtra("post_card");
         detailPage = new DetailPage();
+        detailFab = new DetailFab(this);
         viewModel.setDetailPage(detailPage);
         viewModel.initListeners();
         loadDefaultCardImage();
@@ -207,15 +210,17 @@ public class DetailCardActivity extends AppCompatActivity {
         return ownerCardDTO;
     }
 
+    public DetailFab getDetailFab() {
+        return detailFab;
+    }
 
     @Override
     public void onBackPressed() {
-        if (detailPage.isEditMode()) {
-            binding.utilContainerFab.setVisibility(View.GONE);
-            binding.takePictureFab.setVisibility(View.GONE);
-            binding.openGalleryFab.setVisibility(View.GONE);
-            binding.loadContactInfoFab.setVisibility(View.GONE);
-        }
+        binding.utilContainerFab.setVisibility(View.GONE);
+        binding.takePictureFab.setVisibility(View.GONE);
+        binding.openGalleryFab.setVisibility(View.GONE);
+        binding.loadContactInfoFab.setVisibility(View.GONE);
+        
         Intent intent = new Intent();
         intent.putExtra("post_card", getCardDto());
         setResult(Activity.RESULT_OK, intent);
