@@ -11,12 +11,10 @@ import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl;
 
 public class ContactCardViewHolder extends CardViewHolder {
     private final ItemCardFrameBinding mBinding;
-    private final CardViewModel viewModel;
 
     public ContactCardViewHolder(@NonNull ItemCardFrameBinding binding, CardViewModel viewModel) {
         super(binding.getRoot());
         this.mBinding = binding;
-        this.viewModel = viewModel;
         mBinding.setViewModel(viewModel);
         mBinding.setCardRootReference((ItemCardFrameBindingImpl) mBinding);
     }

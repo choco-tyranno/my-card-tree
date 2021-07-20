@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
         android:layout_height="795dp"
         android:layout_gravity="end"
@@ -10,17 +18,66 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/card_search_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
             android:layout_width="300dp"
             android:layout_height="66dp"
             android:background="@color/colorPrimary"
             android:iconifiedByDefault="true"
-            android:queryHint="Search cardEntity here." />
+            android:queryHint="Search card title or contact number here." />
 
-        <ListView
-            android:id="@+id/card_search_result_list_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/card_search_result_recyclerview"
+            tools:listitem="@layout/item_searching_result"
+            tools:itemCount="6"
+            app:layout_constraintTop_toBottomOf="@id/card_search_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            recyclerViewAdapter="@{viewModel.searchingResultRecyclerViewAdapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             android:layout_width="300dp"
-            android:layout_height="700dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/card_search_view" />
 
-    </RelativeLayout>
-</merge>
+        <ImageButton
+            android:id="@+id/prev_page_btn"
+            android:contentDescription="@string/prev_page_btn_desc"
+            android:alpha="0.3"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintRight_toLeftOf="@id/page_navigation_recyclerview"
+            app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+            android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/page_navigation_recyclerview"
+            recyclerViewAdapter="@{viewModel.pageNavigationRecyclerViewAdapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            tools:listitem="@layout/item_page_navigation"
+            tools:itemCount="3"
+            android:paddingVertical="5dp"
+            android:layout_width="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/next_page_btn"
+            android:contentDescription="@string/next_page_btn_desc"
+            android:alpha="0.3"
+            android:layout_marginStart="10dp"
+            app:layout_constraintLeft_toRightOf="@id/page_navigation_recyclerview"
+            app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

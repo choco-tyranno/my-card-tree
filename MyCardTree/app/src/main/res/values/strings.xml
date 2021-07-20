@@ -21,8 +21,11 @@
     <string name="take_picture_fab_desc">floating button. click to spread util buttons.</string>
     <string name="open_gallery_fab_desc">floating button. click to spread util buttons.</string>
     <string name="load_contact_info_fab_desc">floating button. click to spread util buttons.</string>
+    <string name="send_card_image_btn_desc">paper plain shape button. click to find target card. </string>
     <string name="detail_modify_btn_text">수정</string>
     <string name="detail_back_btn_text">되돌아가기</string>
     <string name="detail_save_btn_text">저장</string>
     <string name="detail_cancel_btn_text">취소</string>
+    <string name="prev_page_btn_desc">page button. click to move previous page.</string>
+    <string name="next_page_btn_desc">page button. click to move previous page.</string>
 </resources>

@@ -21,10 +21,10 @@
             bind:viewModel="@{viewModel}"
             layout="@layout/activity_main_screen" />
 
-
-        <include layout="@layout/activity_main_leftdrawer" />
-
-        <include layout="@layout/activity_main_rightdrawer" />
+        <include
+            android:id="@+id/right_drawer"
+            bind:viewModel="@{viewModel}"
+            layout="@layout/activity_main_rightdrawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

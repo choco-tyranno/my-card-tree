@@ -184,6 +184,18 @@ public class CardEntity{
         this.mImagePath = imagePath;
     }
 
+    public void copy(CardEntity sourceCardEntity) {
+        setSeqNo(sourceCardEntity.getSeqNo());
+        setContainerNo(sourceCardEntity.getContainerNo());
+        setRootNo(sourceCardEntity.getRootNo());
+        setType(sourceCardEntity.getType());
+        setTitle(sourceCardEntity.getTitle());
+        setSubtitle(sourceCardEntity.getSubtitle());
+        setContactNumber(sourceCardEntity.getContactNumber());
+        setFreeNote(sourceCardEntity.getFreeNote());
+        setImagePath(sourceCardEntity.getImagePath());
+    }
+
     //
 
     public static class Builder {

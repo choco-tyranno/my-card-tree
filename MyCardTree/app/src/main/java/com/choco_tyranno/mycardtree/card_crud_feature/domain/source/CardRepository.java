@@ -12,6 +12,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardS
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CardRepository {
     private static CardRepository instance;
@@ -29,7 +30,7 @@ public class CardRepository {
         return instance;
     }
 
-    public boolean isDataPrepared(){
+    public boolean isDataPrepared() {
         return _originData != null;
     }
 
@@ -60,6 +61,11 @@ public class CardRepository {
         execute(() -> {
             synchronized (this) {
                 _originData.add(cardEntity);
+                for (CardEntity testCard : cardEntityList) {
+                    _originData.stream()
+                            .filter(cardForFilter -> cardForFilter.getCardNo() == testCard.getCardNo())
+                            .forEach(cardForCopy -> cardForCopy.copy(testCard));
+                }
                 CardEntity foundData = mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList);
                 dropEvent.accept(foundData);
             }
@@ -77,7 +83,11 @@ public class CardRepository {
     }
 
     public void update(CardEntity cardEntity) {
-        execute(() -> mCardDAO.update(cardEntity));
+        execute(() -> {
+            final int index = _originData.indexOf(cardEntity);
+            _originData.get(index).copy(cardEntity);
+            mCardDAO.update(cardEntity);
+        });
     }
 
     public void delete(List<CardEntity> deleteCardEntities, Consumer<Integer> deleteEvent) {
@@ -94,6 +104,11 @@ public class CardRepository {
         execute(() -> {
             synchronized (this) {
                 _originData.removeAll(deleteCardEntities);
+                for (CardEntity testCard : updateCardEntities) {
+                    _originData.stream()
+                            .filter(cardForFilter -> cardForFilter.getCardNo() == testCard.getCardNo())
+                            .forEach(cardForCopy -> cardForCopy.copy(testCard));
+                }
                 int deleteCount = mCardDAO.deleteAndUpdateTransaction(deleteCardEntities, updateCardEntities);
                 deleteEvent.accept(deleteCount);
             }
@@ -103,6 +118,11 @@ public class CardRepository {
     public void update(List<CardEntity> cardEntitiesToUpdate, Runnable finalAction) {
         execute(() -> {
             synchronized (this) {
+                for (CardEntity testCard : cardEntitiesToUpdate) {
+                    _originData.stream()
+                            .filter(cardForFilter -> cardForFilter.getCardNo() == testCard.getCardNo())
+                            .forEach(cardForCopy -> cardForCopy.copy(testCard));
+                }
                 mCardDAO.update(cardEntitiesToUpdate);
                 finalAction.run();
             }
