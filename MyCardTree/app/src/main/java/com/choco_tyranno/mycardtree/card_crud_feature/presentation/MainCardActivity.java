@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
@@ -54,7 +55,7 @@ public class MainCardActivity extends AppCompatActivity {
         mainBinding();
         binding.setViewModel(viewModel);
         setContainerRv();
-
+        setSearchingResultRv();
         // worker thread's job available.
         CardGestureListener cardGestureListener = new CardGestureListener();
         GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
@@ -80,6 +81,10 @@ public class MainCardActivity extends AppCompatActivity {
         });
     }
 
+    private void setSearchingResultRv() {
+        binding.rightDrawer.cardSearchResultRecyclerview
+                .addItemDecoration(new DividerItemDecoration(MainCardActivity.this, DividerItemDecoration.VERTICAL));
+    }
 
 
     public void loadPictureCardImages(CardDTO[] allCardArr, Handler handler) {
@@ -212,6 +217,8 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ImageToFullScreenClickListener.REQ_MANAGE_DETAIL) {
+            if (data==null)
+                return;
             CardDTO updatedCardDto = (CardDTO) data.getSerializableExtra("post_card");
             boolean imageChanged = viewModel.applyCardFromDetailActivity(updatedCardDto);
             if (imageChanged){

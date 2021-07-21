@@ -9,12 +9,10 @@ import android.widget.ImageView;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
-import com.google.android.material.card.MaterialCardView;
 
 public class ImageToFullScreenClickListener implements OnClickListener {
 

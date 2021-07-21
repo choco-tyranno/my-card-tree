@@ -60,13 +60,13 @@ public class CardRepository {
     public void insertAndUpdates(CardEntity cardEntity, List<CardEntity> cardEntityList, Consumer<CardEntity> dropEvent) {
         execute(() -> {
             synchronized (this) {
-                _originData.add(cardEntity);
                 for (CardEntity testCard : cardEntityList) {
                     _originData.stream()
                             .filter(cardForFilter -> cardForFilter.getCardNo() == testCard.getCardNo())
                             .forEach(cardForCopy -> cardForCopy.copy(testCard));
                 }
                 CardEntity foundData = mCardDAO.insertAndUpdateTransaction(cardEntity, cardEntityList);
+                _originData.add(foundData);
                 dropEvent.accept(foundData);
             }
         });
@@ -75,8 +75,9 @@ public class CardRepository {
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
         execute(() -> {
             synchronized (this) {
-                _originData.add(cardEntity);
+                Logger.hotfixMessage("");
                 CardEntity foundData = mCardDAO.insertTransaction(cardEntity);
+                _originData.add(foundData);
                 dropEvent.accept(foundData);
             }
         });

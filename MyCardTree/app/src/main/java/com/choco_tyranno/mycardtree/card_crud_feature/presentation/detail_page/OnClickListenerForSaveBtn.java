@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 public class OnClickListenerForSaveBtn implements View.OnClickListener {

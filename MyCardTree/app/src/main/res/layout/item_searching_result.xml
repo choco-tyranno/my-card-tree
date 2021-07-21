@@ -44,6 +44,7 @@
             android:fontFamily="@font/overlock_regular"
             android:singleLine="true"
             android:text="@{card.contactNumber}"
+            android:hint="@string/search_result_contact_number_tv_hint"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
             app:layout_constraintVertical_bias="0.8"

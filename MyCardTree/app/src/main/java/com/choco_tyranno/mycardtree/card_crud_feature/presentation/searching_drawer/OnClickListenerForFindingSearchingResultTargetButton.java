@@ -5,7 +5,6 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SearchingResultAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;
 import com.choco_tyranno.mycardtree.databinding.ItemSearchingResultBinding;

@@ -1,16 +1,13 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
+package com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
-import com.choco_tyranno.mycardtree.databinding.ActivityMainRightdrawerBinding;
-import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 import com.choco_tyranno.mycardtree.databinding.ItemSearchingResultBinding;
 
 public class SearchingResultAdapter extends RecyclerView.Adapter<SearchingResultAdapter.SearchingResultViewHolder> {

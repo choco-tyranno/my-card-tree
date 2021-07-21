@@ -2,7 +2,6 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 
 public class OnClickListenerForSpreadingImage implements View.OnClickListener{
     @Override

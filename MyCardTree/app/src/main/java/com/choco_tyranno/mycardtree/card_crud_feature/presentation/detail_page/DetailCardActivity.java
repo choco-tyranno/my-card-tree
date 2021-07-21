@@ -1,4 +1,4 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
+package com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +21,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
-import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailFab;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPage;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.DetailPageViewModel;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForLoadContactInfoFab;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForOpenGalleryFab;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForTakePictureFab;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 import java.io.File;

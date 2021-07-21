@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 public class OnClickListenerForBackBtn implements View.OnClickListener {

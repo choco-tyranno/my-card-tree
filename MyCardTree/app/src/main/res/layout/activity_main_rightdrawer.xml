@@ -30,6 +30,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/card_search_result_recyclerview"
+            android:layout_marginTop="10dp"
             tools:listitem="@layout/item_searching_result"
             tools:itemCount="6"
             app:layout_constraintTop_toBottomOf="@id/card_search_view"
@@ -44,11 +45,14 @@
 
         <ImageButton
             android:id="@+id/prev_page_btn"
+            onClickListener="@{viewModel.onClickListenerForMovingPageBundleBtn}"
             android:contentDescription="@string/prev_page_btn_desc"
             android:alpha="0.3"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintRight_toLeftOf="@id/page_navigation_recyclerview"
-            app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
@@ -59,9 +63,10 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
             tools:listitem="@layout/item_page_navigation"
-            tools:itemCount="3"
+            tools:itemCount="5"
             android:paddingVertical="5dp"
             android:layout_width="wrap_content"
+            android:maxWidth="400dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
@@ -69,11 +74,14 @@
 
         <ImageButton
             android:id="@+id/next_page_btn"
+            onClickListener="@{viewModel.onClickListenerForMovingPageBundleBtn}"
             android:contentDescription="@string/next_page_btn_desc"
             android:alpha="0.3"
-            android:layout_marginStart="10dp"
-            app:layout_constraintLeft_toRightOf="@id/page_navigation_recyclerview"
-            app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
             android:layout_width="50dp"
             android:layout_height="50dp"/>

@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Database(entities = {CardEntity.class}, version = 1, exportSchema = false)
 public abstract class MyCardTreeDataBase extends RoomDatabase {
     public abstract CardDAO cardDAO();
+
     private static volatile MyCardTreeDataBase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
@@ -49,17 +50,40 @@ public abstract class MyCardTreeDataBase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 CardDAO cardDAO = INSTANCE.cardDAO();
-                CardEntity welcomeCardEntity = new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(0).title("초코").contactNumber("010-3899-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity2 = new CardEntity.Builder().seqNo(1).containerNo(0).rootNo(0).title("1ee").contactNumber("010-3523-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity3 = new CardEntity.Builder().seqNo(0).containerNo(1).rootNo(1).title("찹소").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity4 = new CardEntity.Builder().seqNo(1).containerNo(1).rootNo(1).title("멍멍").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
-                CardEntity welcomeCardEntity5 = new CardEntity.Builder().seqNo(0).containerNo(2).rootNo(3).title("삼삼").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+                /*
+                 * create rootContainerItem.
+                 * create nextItem for each rootCard.
+                 * */
                 List<CardEntity> prepopulateData = new ArrayList<>();
-                prepopulateData.add(welcomeCardEntity);
-                prepopulateData.add(welcomeCardEntity2);
-                prepopulateData.add(welcomeCardEntity3);
-                prepopulateData.add(welcomeCardEntity4);
-                prepopulateData.add(welcomeCardEntity5);
+                int registeredCardNo = 0;
+                for (int i = 0; i < 10; i++) {
+                    registeredCardNo++;
+                    prepopulateData.add(
+                            new CardEntity.Builder().seqNo(i).containerNo(0).rootNo(0).title("test item["+i+"]")
+                                    .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
+                    );
+                }
+                final int lastRegisteredCardNo = registeredCardNo;
+                for (int j = 1; j <lastRegisteredCardNo+1; j++){
+                    for (int i = 0; i < 10; i++) {
+                        prepopulateData.add(
+                                new CardEntity.Builder().seqNo(i).containerNo(1).rootNo(j).title("test item[1_"+i+"]")
+                                        .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
+                        );
+                    }
+                }
+
+//                CardEntity welcomeCardEntity = new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(0).title("초코").contactNumber("010-3899-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+//                CardEntity welcomeCardEntity2 = new CardEntity.Builder().seqNo(1).containerNo(0).rootNo(0).title("1ee").contactNumber("010-3523-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+//                CardEntity welcomeCardEntity3 = new CardEntity.Builder().seqNo(0).containerNo(1).rootNo(1).title("찹소").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+//                CardEntity welcomeCardEntity4 = new CardEntity.Builder().seqNo(1).containerNo(1).rootNo(1).title("멍멍").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+//                CardEntity welcomeCardEntity5 = new CardEntity.Builder().seqNo(0).containerNo(2).rootNo(3).title("삼삼").contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build();
+//                List<CardEntity> prepopulateData = new ArrayList<>();
+//                prepopulateData.add(welcomeCardEntity);
+//                prepopulateData.add(welcomeCardEntity2);
+//                prepopulateData.add(welcomeCardEntity3);
+//                prepopulateData.add(welcomeCardEntity4);
+//                prepopulateData.add(welcomeCardEntity5);
                 cardDAO.insert(prepopulateData);
                 MyCardTreeDataBase.setAssetInsertState(true);
             });

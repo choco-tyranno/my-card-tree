@@ -1,9 +1,10 @@
-package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
+package com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
 
 public class OnQueryTextListenerForSearchingCard implements SearchView.OnQueryTextListener {
     private CardViewModel viewModel;
@@ -19,10 +20,11 @@ public class OnQueryTextListenerForSearchingCard implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextChange(String queryText) {
-//        viewModel.setSearchingQueryText(queryText);
         viewModel.searchCards(queryText);
         viewModel.resetFocusPageNo();
-        viewModel.searchingResultAdapter.notifyDataSetChanged();
+
+        viewModel.getPageNavigationRecyclerViewAdapter().notifyDataSetChanged();
+        viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
         return false;
     }
 }

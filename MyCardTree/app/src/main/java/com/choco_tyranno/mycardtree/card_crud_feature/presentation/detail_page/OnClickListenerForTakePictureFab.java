@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 import java.io.File;

@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.graphics.pdf.PdfRenderer;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -31,11 +27,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardEntity;
@@ -56,16 +47,17 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.OnClickListenerForLoadContactInfoFab;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForPageBtn;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.PageNavigationAdapter;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.SearchingResultAdapter;
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import org.w3c.dom.Text;
-
-import java.sql.SQLException;
-import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,12 +68,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import kotlin.jvm.Throws;
 
 
 public class CardViewModel extends AndroidViewModel implements UiThreadAccessible {
@@ -109,19 +98,92 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private CardGestureListener cardGestureListener;
 
-    SearchingResultAdapter searchingResultAdapter;
-    PageNavigationAdapter pageNavigationAdapter;
+    private SearchingResultAdapter searchingResultAdapter;
+    private PageNavigationAdapter pageNavigationAdapter;
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
+    private View.OnClickListener onClickListenerForPageBtn;
+    private View.OnClickListener onClickListenerForMovingPageBundleBtn;
 
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
-    private final int SEARCHING_RESULT_MAX_COUNT = 6;
+    public static final int SEARCHING_RESULT_MAX_COUNT = 6;
+    public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
     private final int NO_FOCUS_PAGE = 0;
+
+    private int countAllPage() {
+        final int allItemCount = searchingResultCardList.size();
+        if (allItemCount == 0)
+            return 0;
+        int allPageCount = Math.floorDiv(allItemCount, SEARCHING_RESULT_MAX_COUNT);
+        boolean hasRemainder = Math.floorMod(allItemCount, SEARCHING_RESULT_MAX_COUNT) > 0;
+        if (hasRemainder)
+            allPageCount += 1;
+        return allItemCount;
+    }
+
+    public int countBaseMaxPageBundle() {
+        final int focusPageNo = getFocusPageNo();
+        int baseMaxPageBundleCount = Math.floorDiv(focusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT);
+        final boolean noRemainderPage = Math.floorMod(focusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
+        if (noRemainderPage) {
+            baseMaxPageBundleCount--;
+        }
+        return baseMaxPageBundleCount;
+    }
+
+    public boolean hasPrevPageBundle() {
+        final int baseMaxPageBundleCount = countBaseMaxPageBundle();
+        return baseMaxPageBundleCount > 0;
+    }
+
+    public boolean hasNextPageBundle() {
+        final int allPageCount = countAllPage();
+        final int baseMaxPageBundleCount = countBaseMaxPageBundle();
+        int basePageCount = baseMaxPageBundleCount * VISIBLE_PAGE_ITEM_MAX_COUNT;
+        final int nextPagesCount = allPageCount - basePageCount;
+        return nextPagesCount > VISIBLE_PAGE_ITEM_MAX_COUNT;
+    }
+
+
+    public View.OnClickListener getOnClickListenerForMovingPageBundleBtn() {
+        return this.onClickListenerForMovingPageBundleBtn;
+    }
+
+    public View.OnClickListener getOnClickListenerForPageBtn() {
+        return this.onClickListenerForPageBtn;
+    }
+
+    public void setFocusPageNo(int pageNo) {
+        focusPageNo.set(pageNo);
+    }
 
     public int getFocusPageNo() {
         return focusPageNo.get();
     }
 
+    public int getPageNavigationCount() {
+        final int allItemCount = searchingResultCardList.size();
+        if (allItemCount == 0)
+            return 0;
+        int allPageCount = Math.floorDiv(allItemCount, SEARCHING_RESULT_MAX_COUNT);
+        boolean hasRemainder = Math.floorMod(allItemCount, SEARCHING_RESULT_MAX_COUNT) > 0;
+        if (hasRemainder)
+            allPageCount++;
+        final int focusPageNo = getFocusPageNo();
+        int baseMaxPageSetCount = Math.floorDiv(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT);
+        final boolean noRemainderPage = Math.floorMod(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
+        if (noRemainderPage) {
+            baseMaxPageSetCount--;
+        }
+        int basePageCount = baseMaxPageSetCount * CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT;
+        final int nextPagesCount = allPageCount - basePageCount;
+        return Math.min(nextPagesCount, VISIBLE_PAGE_ITEM_MAX_COUNT);
+    }
+
+    /*
+     * item with start 1.
+     * no item : 0.
+     * */
     public void resetFocusPageNo() {
         focusPageNo.set(NO_FOCUS_PAGE);
         if (searchingResultCardList.size() > 0)
@@ -133,11 +195,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             throw new RuntimeException(" (bind) => vm#getSearchingResultCard - pageNo < 1");
         final int allItemCount = searchingResultCardList.size();
         final int baseItemCount = (pageNo - 1) * SEARCHING_RESULT_MAX_COUNT;
-        final int startItemIndex = baseItemCount;
         final int nextItemCount = allItemCount - baseItemCount;
         final int itemCount = Math.min(nextItemCount, SEARCHING_RESULT_MAX_COUNT);
-        List<CardDTO> subList = searchingResultCardList.subList(startItemIndex, baseItemCount + itemCount);
-        if (!(subList.size() > itemPosition)){
+        List<CardDTO> subList = searchingResultCardList.subList(baseItemCount, baseItemCount + itemCount);
+        if (!(subList.size() > itemPosition)) {
             Logger.hotfixMessage("exception - vm#getSearchingResultCard");
             return null;
         }
@@ -170,22 +231,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public int getSearchingResultItemCount() {
         final int allItemCount = searchingResultCardList.size();
-        if (allItemCount==0)
+        if (allItemCount == 0)
             return 0;
         final int baseItemCount = (focusPageNo.get() - 1) * SEARCHING_RESULT_MAX_COUNT;
         final int nextItemCount = allItemCount - baseItemCount;
         return Math.min(nextItemCount, SEARCHING_RESULT_MAX_COUNT);
-    }
-
-    public void test() {
-//        String precessedText = inputtedText.toLowerCase(Locale.getDefault());
-//        representResources.clear();
-//        for (CardVO cardVo : searchResources) {
-//            if (cardVo.getTitle().toLowerCase(Locale.getDefault()).contains(precessedText)) {
-//                representResources.add(cardVo);
-//            }
-//        }
-//        notifyDataSetChanged();
     }
 
     public SearchingResultAdapter getSearchingResultRecyclerViewAdapter() {
@@ -200,10 +250,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public static void setRecyclerViewAdapter(RecyclerView view, RecyclerView.Adapter adapter) {
         view.setAdapter(adapter);
     }
-
-//    public void setSearchingQueryText(String searchingQueryText) {
-//        this.searchingQueryText.setValue(searchingQueryText);
-//    }
 
     public void setPictureCardImage(Bitmap resource, int cardNo) {
         ObservableBitmap theImageHolder = cardImageMap.get(cardNo);
@@ -424,6 +470,16 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initImageToFullScreenClickListener();
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
+        initOnClickListenerForPageBtn();
+        initOnClickListenerForMovingPageBundleBtn();
+    }
+
+    private void initOnClickListenerForMovingPageBundleBtn() {
+        this.onClickListenerForMovingPageBundleBtn = new OnClickListenerForMovingPageBundleBtn();
+    }
+
+    private void initOnClickListenerForPageBtn() {
+        this.onClickListenerForPageBtn = new OnClickListenerForPageBtn();
     }
 
     private void initOnClickListenerForFindingSearchingResultTargetBtn() {

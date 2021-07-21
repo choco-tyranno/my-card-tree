@@ -1,14 +1,10 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
-
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.DetailCardActivity;
-import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 
 public class OnClickListenerForLoadContactInfoFab implements View.OnClickListener {
     public static final int REQUEST_LOAD_CONTACT_INFO = 30;
