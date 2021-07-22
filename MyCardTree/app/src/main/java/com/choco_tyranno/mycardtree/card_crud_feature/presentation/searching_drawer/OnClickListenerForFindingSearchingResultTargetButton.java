@@ -5,6 +5,9 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
+import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToastManager;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.SingleToaster;
 import com.choco_tyranno.mycardtree.databinding.ItemSearchingResultBinding;
@@ -12,6 +15,13 @@ import com.choco_tyranno.mycardtree.databinding.ItemSearchingResultBinding;
 public class OnClickListenerForFindingSearchingResultTargetButton implements View.OnClickListener {
     @Override
     public void onClick(View v) {
+        MainCardActivity mainCardActivity = (MainCardActivity) v.getContext();
+        FindingCardBtn findingCardBtn = mainCardActivity.getFindCardBtn();
+        CardViewModel viewModel = mainCardActivity.getCardViewModel();
+        if (findingCardBtn.isSendingFindCardReq()){
+            return;
+        }
+        findingCardBtn.animate(v);
         View parentView = (View) v.getParent();
         RecyclerView resultRecyclerView = (RecyclerView) parentView.getParent();
         int targetPosition = resultRecyclerView.getChildAdapterPosition(parentView);
@@ -20,8 +30,7 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
             return;
         }
         ItemSearchingResultBinding binding = searchingResultViewHolder.getBinding();
-        SingleToastManager.show(SingleToaster.makeTextShort(v.getContext(),"bubbling success / "+binding.getCard().getTitle()));
+        CardDTO cardDTO = binding.getCard();
+        viewModel.requestFindingOutCard(cardDTO);
     }
-
-
 }

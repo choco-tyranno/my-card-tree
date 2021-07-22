@@ -106,6 +106,33 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
     private final int NO_FOCUS_PAGE = 0;
 
+    private boolean sendingFindCardReq = false;
+
+    /*
+     *
+     *
+     * 1. findCardContainers => containerPosition, cardPosition
+     * 2. find start container to be changed FocusCardNo. => make Runnable with delayed.
+     * 3. change each focusSeqNo
+     * 4.run scrollToPosition actions.
+     * -container scroll / card scroll.
+     * 5. At last find card scroll with Toast "카드를 찾았습니다.".
+     *
+     * */
+    public void requestFindingOutCard(CardDTO card) {
+        final int targetContainerNo = card.getContainerNo();
+        final int targetCardSeqNo = card.getSeqNo();
+
+    }
+
+    public boolean isSendingFindCardReq(){
+        return sendingFindCardReq;
+    }
+
+    public void setSendingFlag(boolean flag){
+        sendingFindCardReq = flag;
+    }
+
     private int countAllPage() {
         final int allItemCount = searchingResultCardList.size();
         if (allItemCount == 0)

@@ -33,6 +33,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.Image
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.FindingCardBtn;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
 import java.util.Objects;
@@ -44,6 +45,7 @@ public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
     private ActivityMainFrameBinding binding;
     private Handler mMainHandler;
+    private FindingCardBtn findingCardBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class MainCardActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         setContainerRv();
         setSearchingResultRv();
+
+        findingCardBtn = new FindingCardBtn(this);
         // worker thread's job available.
         CardGestureListener cardGestureListener = new CardGestureListener();
         GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
@@ -67,7 +71,6 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
-//        observeCardData();
         binding.mainScreen.appNameFab.setOnClickListener((view) -> {
 //            ContainerRecyclerView containerRecyclerView = binding.mainScreen.mainBody.containerRecyclerview;
 //            CardContainerViewHolder containerViewHolder = (CardContainerViewHolder)containerRecyclerView.findViewHolderForAdapterPosition(1);
@@ -79,6 +82,10 @@ public class MainCardActivity extends AppCompatActivity {
 //            viewModel.printContainers();
 //            viewModel.printAllData();
         });
+    }
+
+    public FindingCardBtn getFindCardBtn(){
+        return findingCardBtn;
     }
 
     private void setSearchingResultRv() {
@@ -172,21 +179,6 @@ public class MainCardActivity extends AppCompatActivity {
     public ActivityMainFrameBinding getMainBinding() {
         return binding;
     }
-
-//    private void observeCardData() {
-//        viewModel.loadData(() -> Optional.ofNullable(viewModel.getAllLiveData()).ifPresent((liveData -> runOnUiThread(() ->
-//                        liveData.observe(this, (cards) -> {
-//                            Toast.makeText(this, "AllLiveData/Observer#onChanged", Toast.LENGTH_SHORT).show();
-//                            Logger.message("allLiveData - The Data changed");
-//                            boolean hasAdapter = Optional.ofNullable((ContainerAdapter) binding.mainScreen.mainBody.containerRecyclerview.getAdapter()).isPresent();
-//                            if (hasAdapter) {
-////                                binding.mainScreen.mainBody.containerRecyclerview.getAdapter().notifyDataSetChanged();
-//                            } else
-//                                throw new RuntimeException("MainActivity#observeCardData/binding.mainScreen.mainBody.containerRecyclerview has no adapter.");
-//                        })
-//                ))
-//        ));
-//    }
 
     @Override
     protected void onStop() {
