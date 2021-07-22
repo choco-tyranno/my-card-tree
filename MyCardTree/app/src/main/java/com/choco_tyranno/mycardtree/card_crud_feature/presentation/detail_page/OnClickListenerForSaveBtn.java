@@ -26,7 +26,6 @@ public class OnClickListenerForSaveBtn implements View.OnClickListener {
 
     private void compareAndSave(ActivityDetailFrameBinding binding) {
         CardDTO cardDTO = binding.getCard();
-        Logger.hotfixMessage(""+cardDTO.toString());
         AppCompatEditText titleEt = binding.detailTitleEt;
         AppCompatEditText subtitleEt = binding.detailSubtitleEt;
         AppCompatEditText contactNumberEt = binding.detailContactNumberEt;

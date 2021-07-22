@@ -27,7 +27,6 @@ public class DetailPageViewModel extends AndroidViewModel {
     private Bitmap defaultCardImage;
 
     public void setDefaultCardImage(Bitmap resource){
-        Logger.hotfixMessage("setDefaultCardImage");
         defaultCardImage = resource;
     }
 

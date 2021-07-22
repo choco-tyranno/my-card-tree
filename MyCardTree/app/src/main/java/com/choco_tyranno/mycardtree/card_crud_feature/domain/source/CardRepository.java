@@ -75,7 +75,6 @@ public class CardRepository {
     public void insert(CardEntity cardEntity, Consumer<CardEntity> dropEvent) {
         execute(() -> {
             synchronized (this) {
-                Logger.hotfixMessage("");
                 CardEntity foundData = mCardDAO.insertTransaction(cardEntity);
                 _originData.add(foundData);
                 dropEvent.accept(foundData);

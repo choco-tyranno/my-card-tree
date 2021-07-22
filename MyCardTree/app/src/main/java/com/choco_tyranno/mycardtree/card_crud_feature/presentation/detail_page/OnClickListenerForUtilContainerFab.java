@@ -8,10 +8,9 @@ import com.choco_tyranno.mycardtree.databinding.ActivityDetailFrameBinding;
 public class OnClickListenerForUtilContainerFab implements View.OnClickListener {
     @Override
     public void onClick(View v) {
-        Logger.hotfixMessage("util");
         DetailCardActivity detailCardActivity = (DetailCardActivity) v.getContext();
         ActivityDetailFrameBinding binding = detailCardActivity.getBinding();
-        detailCardActivity.getDetailFab().fabAnim(binding);
+        detailCardActivity.getDetailFab().animateFab(binding);
     }
 
 }

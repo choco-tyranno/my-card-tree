@@ -51,7 +51,6 @@ public class PageNavigationAdapter extends RecyclerView.Adapter<PageNavigationAd
         }
 
         public void bind(int position, int focusPageNo) {
-            Logger.hotfixMessage("position:"+position);
             final int maxPageSetCount = Math.floorDiv(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT);
             final boolean noRemainderPage = Math.floorMod(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
             int basePageCount = maxPageSetCount * CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT;

@@ -13,7 +13,6 @@ public class OnClickListenerForPageBtn implements View.OnClickListener {
         CardViewModel viewModel = ((MainCardActivity)v.getContext()).getCardViewModel();
         MaterialButton view = (MaterialButton) v;
         final int pageNo = Integer.parseInt(view.getText().toString());
-        Logger.hotfixMessage("pageNo:"+pageNo);
         viewModel.setFocusPageNo(pageNo);
         viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
         viewModel.getPageNavigationRecyclerViewAdapter().notifyDataSetChanged();

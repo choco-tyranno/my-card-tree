@@ -105,7 +105,6 @@ public class MainCardActivity extends AppCompatActivity {
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            Logger.hotfixMessage("onResourceReady - setPictureCardImage");
                             viewModel.setPictureCardImage(resource, cardNo);
                             return false;
                         }
@@ -146,7 +145,6 @@ public class MainCardActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Logger.hotfixMessage("onResourceReady - setDefaultCardImage");
                         viewModel.setDefaultCardImage(resource);
                         return false;
                     }

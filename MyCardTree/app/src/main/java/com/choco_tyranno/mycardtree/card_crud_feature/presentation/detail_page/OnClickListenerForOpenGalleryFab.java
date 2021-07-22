@@ -13,6 +13,6 @@ public class OnClickListenerForOpenGalleryFab implements View.OnClickListener {
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setAction(Intent.ACTION_PICK);
         detailCardActivity.startActivityForResult(intent, REQUEST_OPEN_GALLERY);
-        detailCardActivity.getDetailFab().fabAnim(detailCardActivity.getBinding());
+        detailCardActivity.getDetailFab().animateFab(detailCardActivity.getBinding());
     }
 }

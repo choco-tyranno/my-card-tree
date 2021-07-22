@@ -47,7 +47,7 @@ public class OnClickListenerForTakePictureFab implements View.OnClickListener {
         } else {
             Toast.makeText(detailCardActivity, "사진촬영을 할 수 없습니다. 관리자에게 문의바랍니다.", Toast.LENGTH_SHORT).show();
         }
-        detailCardActivity.getDetailFab().fabAnim(binding);
+        detailCardActivity.getDetailFab().animateFab(binding);
     }
 
     private File createImageFile(Context context, DetailPage pageState) throws IOException {

@@ -19,7 +19,7 @@ public class DetailFab {
         subFabClose = AnimationUtils.loadAnimation(context, R.anim.detail_page_subfab_close);
     }
 
-    public void fabAnim(ActivityDetailFrameBinding binding) {
+    public void animateFab(ActivityDetailFrameBinding binding) {
         FloatingActionButton utilContainerFab = binding.utilContainerFab;
         FloatingActionButton takePictureFab = binding.takePictureFab;
         FloatingActionButton openGalleryFab = binding.openGalleryFab;

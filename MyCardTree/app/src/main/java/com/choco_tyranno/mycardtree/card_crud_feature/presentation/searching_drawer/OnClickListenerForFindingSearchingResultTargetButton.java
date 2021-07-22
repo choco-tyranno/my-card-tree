@@ -17,11 +17,10 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
         int targetPosition = resultRecyclerView.getChildAdapterPosition(parentView);
         SearchingResultAdapter.SearchingResultViewHolder searchingResultViewHolder =(SearchingResultAdapter.SearchingResultViewHolder) resultRecyclerView.findViewHolderForAdapterPosition(targetPosition);
         if (searchingResultViewHolder==null){
-            Logger.hotfixMessage("searchingResultViewHolder==null");
             return;
         }
         ItemSearchingResultBinding binding = searchingResultViewHolder.getBinding();
-        SingleToastManager.show(SingleToaster.makeTextShort(v.getContext(),"bubbling success"));
+        SingleToastManager.show(SingleToaster.makeTextShort(v.getContext(),"bubbling success / "+binding.getCard().getTitle()));
     }
 
 

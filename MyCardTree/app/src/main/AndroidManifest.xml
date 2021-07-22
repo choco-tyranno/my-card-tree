@@ -29,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".card_crud_feature.presentation.detail_page.DetailCardActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -31,7 +31,6 @@ public class OnClickListenerForMovingPageBundleBtn implements View.OnClickListen
         if (!viewModel.hasNextPageBundle())
             return;
         int nextPageNo = viewModel.countBaseMaxPageBundle() * CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT + CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT+1;
-        Logger.hotfixMessage("nextPageNo :"+nextPageNo);
         viewModel.setFocusPageNo(nextPageNo);
         viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
         viewModel.getPageNavigationRecyclerViewAdapter().notifyDataSetChanged();

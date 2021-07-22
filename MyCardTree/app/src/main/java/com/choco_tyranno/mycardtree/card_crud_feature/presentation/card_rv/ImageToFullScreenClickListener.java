@@ -15,10 +15,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page.D
 import com.choco_tyranno.mycardtree.databinding.ItemCardFrameBinding;
 
 public class ImageToFullScreenClickListener implements OnClickListener {
-
     public static final int REQ_MANAGE_DETAIL = 1;
-
-    public ImageToFullScreenClickListener(){}
 
     @Override
     public void onClick(View view) {
