@@ -7,6 +7,7 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,9 +38,12 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.FindingCardBtn;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainCardActivity extends AppCompatActivity {
@@ -84,7 +89,7 @@ public class MainCardActivity extends AppCompatActivity {
         });
     }
 
-    public FindingCardBtn getFindCardBtn(){
+    public FindingCardBtn getFindCardBtn() {
         return findingCardBtn;
     }
 
@@ -95,7 +100,7 @@ public class MainCardActivity extends AppCompatActivity {
 
 
     public void loadPictureCardImages(CardDTO[] allCardArr, Handler handler) {
-        for (CardDTO theCardDto : allCardArr){
+        for (CardDTO theCardDto : allCardArr) {
             if (TextUtils.equals(theCardDto.getImagePath(), ""))
                 continue;
             handler.postDelayed(() -> {
@@ -207,14 +212,52 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ImageToFullScreenClickListener.REQ_MANAGE_DETAIL) {
-            if (data==null)
+            if (data == null)
                 return;
             CardDTO updatedCardDto = (CardDTO) data.getSerializableExtra("post_card");
             boolean imageChanged = viewModel.applyCardFromDetailActivity(updatedCardDto);
-            if (imageChanged){
+            if (imageChanged) {
                 CardDTO[] cardDTOArr = {updatedCardDto};
                 loadPictureCardImages(cardDTOArr, mMainHandler);
             }
         }
+    }
+
+    public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard) {
+        final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
+        final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
+
+        String seqText = "";
+        for (int a : scrollTargetCardSeqArr){
+            seqText = seqText.concat("/"+a);
+        }
+
+        RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
+        Queue<Runnable> scrollAction = new LinkedList<>();
+        int s = 0;
+        for (int i = startContainerPosition; i < startContainerPosition + scrollTargetCardSeqArr.length; i++) {
+            final int s1 = s;
+            final int i1 = i;
+            scrollAction.offer(()->{
+                containerRecyclerview.smoothScrollToPosition(i1);
+                Runnable delayedAction = ()->{
+                    CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
+                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
+                    cardRecyclerview.smoothScrollToPosition(scrollTargetCardSeqArr[s1]);
+                };
+                mMainHandler.postDelayed(delayedAction, 900);
+            });
+            s++;
+        }
+        scrollActionDelayed(scrollAction);
+    }
+
+    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue){
+        mMainHandler.postDelayed(()->{
+            if (scrollActionQueue.isEmpty())
+                return;
+            scrollActionQueue.poll().run();
+            scrollActionDelayed(scrollActionQueue);
+        },900);
     }
 }

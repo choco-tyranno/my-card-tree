@@ -108,6 +108,63 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean sendingFindCardReq = false;
 
+
+    private Pair<Integer, Integer[]> filterUselessScrollUtilData(List<Integer> goalCardSeqList) {
+        ArrayList<Integer> goalCardSeqArrayList = new ArrayList<>(goalCardSeqList);
+        final int presentDataSize = mPresentData.size();
+        final int goalCardSeqListSize = goalCardSeqArrayList.size();
+        int startFindingContainerPosition = -1;
+        for (int i = 0; i < presentDataSize; i++) {
+            if (!(i < goalCardSeqListSize))
+                break;
+            if (getContainer(i).getFocusCardPosition()==goalCardSeqArrayList.get(i)){
+                goalCardSeqArrayList.remove(i);
+                continue;
+            }
+            startFindingContainerPosition = i;
+            break;
+        }
+        return Pair.create(startFindingContainerPosition, goalCardSeqArrayList.toArray(new Integer[0]));
+    }
+
+    public Pair<Integer, Integer[]> findScrollUtilDataForFindingOutCard(CardDTO cardDTO) {
+        final int goalContainerSize = cardDTO.getContainerNo() + 1;
+        final Integer[] goalCardSeqArr = new Integer[goalContainerSize];
+        goalCardSeqArr[cardDTO.getContainerNo()] = cardDTO.getSeqNo();
+        int testRootNo = cardDTO.getRootNo();
+        int testContainerNo = cardDTO.getContainerNo() - 1;
+        if (testContainerNo == -1) {
+            return filterUselessScrollUtilData(Arrays.asList(goalCardSeqArr));
+        }
+
+        for (int i = testContainerNo; i > -1; i--) {
+            HashMap<Integer, List<CardDTO>> theContainerDataMap = mAllData.get(i);
+            for (int key : theContainerDataMap.keySet()) {
+                boolean targetFound = false;
+                List<CardDTO> testCardDtoList = theContainerDataMap.get(key);
+                for (CardDTO testCard : testCardDtoList) {
+                    if (testCard.getCardNo() == testRootNo) {
+                        goalCardSeqArr[i] = testCard.getSeqNo();
+                        testRootNo = testCard.getRootNo();
+                        targetFound = true;
+                        break;
+                    }
+                }
+                if (targetFound)
+                    break;
+            }
+        }
+        return filterUselessScrollUtilData(Arrays.asList(goalCardSeqArr));
+    }
+
+    private void findGoalCardSeqForScrollUtilData(CardDTO cardDTO, int[] goalCardSeqArr) {
+        final int containerNo = cardDTO.getContainerNo();
+        final int seqNo = cardDTO.getSeqNo();
+        goalCardSeqArr[containerNo] = seqNo;
+
+    }
+
+
     /*
      *
      *
@@ -125,11 +182,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     }
 
-    public boolean isSendingFindCardReq(){
+    public boolean isSendingFindCardReq() {
         return sendingFindCardReq;
     }
 
-    public void setSendingFlag(boolean flag){
+    public void setSendingFlag(boolean flag) {
         sendingFindCardReq = flag;
     }
 
@@ -593,10 +650,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         dataToUpdate.addAll(nextCards);
 
         movingRootCard.setSeqNo(Container.DEFAULT_CARD_POSITION);
-        final int adjContainerAmount = targetContainerPosition-movingRootCard.getContainerNo();
+        final int adjContainerAmount = targetContainerPosition - movingRootCard.getContainerNo();
 
-        for (CardDTO movingCard : movingCards){
-            movingCard.setContainerNo(movingCard.getContainerNo()+adjContainerAmount);
+        for (CardDTO movingCard : movingCards) {
+            movingCard.setContainerNo(movingCard.getContainerNo() + adjContainerAmount);
         }
 
         if (targetContainerPosition == 0) {

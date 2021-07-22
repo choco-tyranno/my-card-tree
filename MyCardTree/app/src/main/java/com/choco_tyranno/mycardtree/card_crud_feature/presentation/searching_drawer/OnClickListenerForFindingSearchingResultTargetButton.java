@@ -1,5 +1,6 @@
 package com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer;
 
+import android.util.Pair;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
         }
         ItemSearchingResultBinding binding = searchingResultViewHolder.getBinding();
         CardDTO cardDTO = binding.getCard();
-        viewModel.requestFindingOutCard(cardDTO);
+        Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard = viewModel.findScrollUtilDataForFindingOutCard(cardDTO);
+        mainCardActivity.scrollToFindingTargetCard(scrollUtilDataForFindingOutCard);
     }
 }
