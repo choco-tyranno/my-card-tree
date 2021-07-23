@@ -45,6 +45,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.OnClickListenerForPageBtn;
@@ -91,9 +92,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private CardTouchListener cardTouchListener;
     private GestureDetectorCompat cardGestureDetector;
-
     private CardGestureListener cardGestureListener;
-
     private SearchingResultAdapter searchingResultAdapter;
     private PageNavigationAdapter pageNavigationAdapter;
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
@@ -107,6 +106,21 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int NO_FOCUS_PAGE = 0;
 
     private boolean sendingFindCardReq = false;
+
+    private RecyclerView.OnScrollListener containerScrollListener;
+
+    private void initOnScrollListenerForContainerRecyclerView(){
+        this.containerScrollListener = new ContainerScrollListener(this);
+    }
+
+    public RecyclerView.OnScrollListener getContainerScrollListener(){
+        return containerScrollListener;
+    }
+
+    @BindingAdapter("containerScrollListener")
+    public static void setContainerScrollListener(RecyclerView view, RecyclerView.OnScrollListener listener){
+        view.addOnScrollListener(listener);
+    }
 
 
     private Pair<Integer, Integer[]> filterUselessScrollUtilData(Integer[] allGoalCardSeqArr) {
@@ -516,6 +530,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnClickListenerForPageBtn();
         initOnClickListenerForMovingPageBundleBtn();
+        initOnScrollListenerForContainerRecyclerView();
     }
 
     private void initOnClickListenerForMovingPageBundleBtn() {

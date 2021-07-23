@@ -6,6 +6,10 @@
 
     <data>
         <variable
+            name="containerScrolledFlag"
+            type="androidx.databinding.ObservableBoolean" />
+
+        <variable
             name="viewModel"
             type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
     </data>
@@ -20,6 +24,7 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/main_appbar"
+            app:expanded="@{!containerScrolledFlag}"
             android:layout_width="410dp"
             android:layout_height="70dp"
             android:clipChildren="false"
@@ -28,6 +33,7 @@
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/main_collapsingtoolbar"
+                android:fitsSystemWindows="true"
                 android:layout_width="410dp"
                 android:layout_height="70dp"
                 android:clipChildren="false"

@@ -35,6 +35,7 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.Image
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerScrollListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.FindingCardBtn;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
@@ -43,6 +44,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,6 +64,7 @@ public class MainCardActivity extends AppCompatActivity {
         loadDefaultCardImage();
         mainBinding();
         binding.setViewModel(viewModel);
+        binding.mainScreen.setContainerScrolledFlag(((ContainerScrollListener) viewModel.getContainerScrollListener()).getScrolledFlag());
         setContainerRv();
         setSearchingResultRv();
 
@@ -77,16 +80,10 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
+        final AtomicBoolean aaa = new AtomicBoolean(false);
         binding.mainScreen.appNameFab.setOnClickListener((view) -> {
-//            ContainerRecyclerView containerRecyclerView = binding.mainScreen.mainBody.containerRecyclerview;
-//            CardContainerViewHolder containerViewHolder = (CardContainerViewHolder)containerRecyclerView.findViewHolderForAdapterPosition(1);
-//            ContactCardViewHolder cardViewHolder = (ContactCardViewHolder)containerViewHolder.getBinding().cardRecyclerview.findViewHolderForAdapterPosition(0);
-//            ConstraintLayout backLayout = cardViewHolder.getBinding().cardBackLayout.backCardConstraintLayout;
-//            ConstraintLayout frontLayout = cardViewHolder.getBinding().cardFrontLayout.frontCardConstraintLayout;
-//            viewModel.printTargetCardState(0, 0);
-//            viewModel.printTargetCardDto(0, 0);
-//            viewModel.printContainers();
-//            viewModel.printAllData();
+            binding.mainScreen.mainAppbar.setExpanded(aaa.get());
+            aaa.set(!aaa.get());
         });
     }
 
@@ -229,8 +226,8 @@ public class MainCardActivity extends AppCompatActivity {
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
 
         String seqText = "";
-        for (int a : scrollTargetCardSeqArr){
-            seqText = seqText.concat("/"+a);
+        for (int a : scrollTargetCardSeqArr) {
+            seqText = seqText.concat("/" + a);
         }
 
         RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
@@ -239,9 +236,9 @@ public class MainCardActivity extends AppCompatActivity {
         for (int i = startContainerPosition; i < startContainerPosition + scrollTargetCardSeqArr.length; i++) {
             final int s1 = s;
             final int i1 = i;
-            scrollActionQueue.offer(()->{
+            scrollActionQueue.offer(() -> {
                 containerRecyclerview.smoothScrollToPosition(i1);
-                Runnable delayedAction = ()->{
+                Runnable delayedAction = () -> {
                     CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
                     RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
                     cardRecyclerview.smoothScrollToPosition(scrollTargetCardSeqArr[s1]);
@@ -250,21 +247,20 @@ public class MainCardActivity extends AppCompatActivity {
             });
             s++;
         }
-        if (scrollActionQueue.isEmpty()){
-            mMainHandler.postDelayed(()->{
-                containerRecyclerview.smoothScrollToPosition(startContainerPosition);
-            },900);
+        if (scrollActionQueue.isEmpty()) {
+            mMainHandler.postDelayed(() ->
+                    containerRecyclerview.smoothScrollToPosition(startContainerPosition), 900);
             return;
         }
         scrollActionDelayed(scrollActionQueue);
     }
 
-    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue){
-        mMainHandler.postDelayed(()->{
+    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue) {
+        mMainHandler.postDelayed(() -> {
             if (scrollActionQueue.isEmpty())
                 return;
             scrollActionQueue.poll().run();
             scrollActionDelayed(scrollActionQueue);
-        },900);
+        }, 900);
     }
 }

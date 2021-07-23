@@ -21,8 +21,9 @@
 
     <com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView
         android:id="@+id/container_recyclerview"
+        containerScrollListener="@{viewModel.containerScrollListener}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clipChildren="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintLeft_toLeftOf="parent"

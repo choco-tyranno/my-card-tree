@@ -200,7 +200,6 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
-
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 
