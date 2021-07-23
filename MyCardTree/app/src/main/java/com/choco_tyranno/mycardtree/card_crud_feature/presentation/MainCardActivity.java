@@ -54,6 +54,7 @@ public class MainCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
             mMainHandler = new Handler(getMainLooper());
@@ -233,12 +234,12 @@ public class MainCardActivity extends AppCompatActivity {
         }
 
         RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
-        Queue<Runnable> scrollAction = new LinkedList<>();
+        Queue<Runnable> scrollActionQueue = new LinkedList<>();
         int s = 0;
         for (int i = startContainerPosition; i < startContainerPosition + scrollTargetCardSeqArr.length; i++) {
             final int s1 = s;
             final int i1 = i;
-            scrollAction.offer(()->{
+            scrollActionQueue.offer(()->{
                 containerRecyclerview.smoothScrollToPosition(i1);
                 Runnable delayedAction = ()->{
                     CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
@@ -249,7 +250,13 @@ public class MainCardActivity extends AppCompatActivity {
             });
             s++;
         }
-        scrollActionDelayed(scrollAction);
+        if (scrollActionQueue.isEmpty()){
+            mMainHandler.postDelayed(()->{
+                containerRecyclerview.smoothScrollToPosition(startContainerPosition);
+            },900);
+            return;
+        }
+        scrollActionDelayed(scrollActionQueue);
     }
 
     private void scrollActionDelayed(Queue<Runnable> scrollActionQueue){

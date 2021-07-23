@@ -109,22 +109,21 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private boolean sendingFindCardReq = false;
 
 
-    private Pair<Integer, Integer[]> filterUselessScrollUtilData(List<Integer> goalCardSeqList) {
-        ArrayList<Integer> goalCardSeqArrayList = new ArrayList<>(goalCardSeqList);
+    private Pair<Integer, Integer[]> filterUselessScrollUtilData(Integer[] allGoalCardSeqArr) {
         final int presentDataSize = mPresentData.size();
-        final int goalCardSeqListSize = goalCardSeqArrayList.size();
-        int startFindingContainerPosition = -1;
+        final int allGoalCardSeqArrLength = allGoalCardSeqArr.length;
+        int startFindingContainerPosition = 0;
         for (int i = 0; i < presentDataSize; i++) {
-            if (!(i < goalCardSeqListSize))
+            if (!(i < allGoalCardSeqArrLength))
                 break;
-            if (getContainer(i).getFocusCardPosition()==goalCardSeqArrayList.get(i)){
-                goalCardSeqArrayList.remove(i);
+            if (getContainer(i).getFocusCardPosition() == allGoalCardSeqArr[i]) {
+                allGoalCardSeqArr[i] = null;
                 continue;
             }
             startFindingContainerPosition = i;
             break;
         }
-        return Pair.create(startFindingContainerPosition, goalCardSeqArrayList.toArray(new Integer[0]));
+        return Pair.create(startFindingContainerPosition, Arrays.stream(allGoalCardSeqArr).filter(Objects::nonNull).toArray(Integer[]::new));
     }
 
     public Pair<Integer, Integer[]> findScrollUtilDataForFindingOutCard(CardDTO cardDTO) {
@@ -133,9 +132,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         goalCardSeqArr[cardDTO.getContainerNo()] = cardDTO.getSeqNo();
         int testRootNo = cardDTO.getRootNo();
         int testContainerNo = cardDTO.getContainerNo() - 1;
-        if (testContainerNo == -1) {
-            return filterUselessScrollUtilData(Arrays.asList(goalCardSeqArr));
-        }
 
         for (int i = testContainerNo; i > -1; i--) {
             HashMap<Integer, List<CardDTO>> theContainerDataMap = mAllData.get(i);
@@ -154,14 +150,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     break;
             }
         }
-        return filterUselessScrollUtilData(Arrays.asList(goalCardSeqArr));
-    }
-
-    private void findGoalCardSeqForScrollUtilData(CardDTO cardDTO, int[] goalCardSeqArr) {
-        final int containerNo = cardDTO.getContainerNo();
-        final int seqNo = cardDTO.getSeqNo();
-        goalCardSeqArr[containerNo] = seqNo;
-
+        return filterUselessScrollUtilData(goalCardSeqArr);
     }
 
 
@@ -942,7 +931,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
             @Override
             public void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition) {
-                Logger.message("[container :" + containerPosition + "] onPrev cardPos:" + cardPosition);
                 mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
                 presentChildren(view, containerPosition, cardPosition);
             }

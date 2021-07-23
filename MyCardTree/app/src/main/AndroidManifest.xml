@@ -22,7 +22,8 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".card_crud_feature.presentation.UiTestActivity"/>
-        <activity android:name=".card_crud_feature.presentation.MainCardActivity">
+        <activity android:name=".card_crud_feature.presentation.MainCardActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

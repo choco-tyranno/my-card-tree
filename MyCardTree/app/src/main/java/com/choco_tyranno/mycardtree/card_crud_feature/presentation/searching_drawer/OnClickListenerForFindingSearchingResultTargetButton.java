@@ -32,7 +32,9 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
         }
         ItemSearchingResultBinding binding = searchingResultViewHolder.getBinding();
         CardDTO cardDTO = binding.getCard();
-        Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard = viewModel.findScrollUtilDataForFindingOutCard(cardDTO);
+        Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard =  viewModel.findScrollUtilDataForFindingOutCard(cardDTO);
+        if (scrollUtilDataForFindingOutCard.second.length==0)
+            scrollUtilDataForFindingOutCard = Pair.create(cardDTO.getContainerNo(), scrollUtilDataForFindingOutCard.second);
         mainCardActivity.scrollToFindingTargetCard(scrollUtilDataForFindingOutCard);
     }
 }
