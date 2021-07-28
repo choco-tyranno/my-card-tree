@@ -4,10 +4,10 @@
     <data>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+            type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -5,16 +5,16 @@
 
     <data>
         <import type="java.util.List"/>
-        <import type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO"/>
+        <import type="com.choco_tyranno.team_tree.domain.card_data.CardDto"/>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
         <variable
             name="container_no"
             type="Integer"/>
         <variable
             name="container"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.Container" />
+            type="com.choco_tyranno.team_tree.presentation.container_rv.Container" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
 
         <!--Child RecyclerView-->
 
-        <com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardRecyclerView
+        <com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView
             android:id="@+id/card_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="@dimen/container_height"

@@ -8,18 +8,18 @@
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState" />
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+            type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />
         <variable
             name="cardImage"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap" />
     </data>
 
 
@@ -32,7 +32,7 @@
             android:id="@+id/backCard_cardView"
             android:alpha="@{cardState.back.cardBackAlpha}"
             android:visibility="@{cardState.back.cardBackVisibility}"
-            app:onTouchListener="@{viewModel.onTouchListener}"
+            android:onTouchListener="@{viewModel.onTouchListenerForCard}"
             android:layout_width="320dp"
             android:layout_height="140dp"
             app:layout_constraintRight_toRightOf="parent"
@@ -86,7 +86,7 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imageView_to_fullscreen"
-                app:onClickListener="@{viewModel.onImageViewToFullscreenClickListener}"
+                android:onClickListener="@{viewModel.onImageViewToFullscreenClickListener}"
                 android:layout_gravity="bottom"
                 android:src="@drawable/ic_baseline_fullscreen_24"
                 android:layout_width="wrap_content"

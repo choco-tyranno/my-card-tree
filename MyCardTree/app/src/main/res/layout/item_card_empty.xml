@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

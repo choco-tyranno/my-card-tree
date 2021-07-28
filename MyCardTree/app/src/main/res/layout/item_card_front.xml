@@ -9,23 +9,23 @@
 
         <variable
             name="cardRootReference"
-            type="com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl" />
+            type="com.choco_tyranno.team_tree.databinding.ItemCardFrameBindingImpl" />
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+            type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState" />
 
         <variable
             name="frontState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState.Front" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState.Front" />
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +38,7 @@
             android:id="@+id/frontCard_cardView"
             android:alpha="@{cardState.front.cardFrontAlpha}"
             android:visibility="@{cardState.front.cardFrontVisibility}"
-            app:onCardTouchListener="@{viewModel.onTouchListener}"
+            app:onCardTouchListener="@{viewModel.onTouchListenerForCard}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

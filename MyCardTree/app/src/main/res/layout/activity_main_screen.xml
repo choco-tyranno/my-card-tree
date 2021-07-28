@@ -7,12 +7,8 @@
     <data>
 
         <variable
-            name="containerScrolledFlag"
-            type="androidx.databinding.ObservableBoolean" />
-
-        <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,7 +75,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/prev_arrow_desc"
-                onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
+                android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
                 android:paddingTop="10dp"
                 android:paddingBottom="30dp"
                 android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
@@ -129,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:contentDescription="@string/next_arrow_desc"
-                onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
+                android:onDragListener="@{viewModel.onDragListenerForVerticalArrow}"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
                 android:src="@drawable/ic_baseline_keyboard_arrow_down_24"

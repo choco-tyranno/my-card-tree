@@ -9,23 +9,23 @@
 
         <variable
             name="cardRootReference"
-            type="com.choco_tyranno.mycardtree.databinding.ItemCardFrameBindingImpl" />
+            type="com.choco_tyranno.team_tree.databinding.ItemCardFrameBindingImpl" />
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardState" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState" />
 
         <variable
             name="card"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO" />
+            type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />
 
         <variable
             name="cardImage"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ObservableBitmap" />
+            type="com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap" />
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
     <FrameLayout
