@@ -846,20 +846,26 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private void initVerticalArrowOnDragListener() {
         this.onDragListenerForVerticalArrow = (view, event) -> {
             final int action = event.getAction();
+            Logger.hotfixMessage("###start : ");
             if (action == DragEvent.ACTION_DRAG_STARTED) {
                 final String dragType = ((String) ((Pair) event.getLocalState()).first);
                 final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
+                Logger.hotfixMessage("moveDragEvent req true : "+moveDragEvent);
                 if (moveDragEvent)
                     return true;
             }
 
-            ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent()).findViewById(R.id.main_body);
+            ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.main_body);
+            Logger.hotfixMessage("containerRecyclerView nonNull? req true : "+containerRecyclerView!=null? "true" : "false");
             ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
+            Logger.hotfixMessage("containerLayoutManager nonNull? req true : "+containerLayoutManager!=null? "true" : "false");
             if (containerLayoutManager == null)
                 return false;
             ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
             View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
+            Logger.hotfixMessage("prevContainerArrow nonNull? req true : "+prevContainerArrow!=null? "true" : "false");
             View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
+            Logger.hotfixMessage("nextContainerArrow nonNull? req true : "+nextContainerArrow!=null? "true" : "false");
 
             if (action == DragEvent.ACTION_DRAG_LOCATION) {
                 if (containerLayoutManager.hasScrollAction())
@@ -1828,6 +1834,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     @BindingAdapter("onDragListener")
     public static void setOnDragListener(View view, View.OnDragListener listener) {
+        Logger.hotfixMessage("setOnDragListener");
         view.setOnDragListener(listener);
     }
 
@@ -1836,6 +1843,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public View.OnDragListener getOnDragListenerForVerticalArrow() {
+        Logger.hotfixMessage("getOnDragListenerForVerticalArrow");
         return onDragListenerForVerticalArrow;
     }
 

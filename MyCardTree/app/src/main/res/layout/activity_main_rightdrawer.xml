@@ -13,7 +13,6 @@
         android:layout_width="300dp"
         android:layout_height="795dp"
         android:layout_gravity="end"
-        android:layout_marginTop="5dp"
         android:background="#fff">
 
         <androidx.appcompat.widget.SearchView
@@ -24,9 +23,8 @@
             onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
             android:layout_width="300dp"
             android:layout_height="66dp"
-            android:background="@color/colorPrimary"
-            android:iconifiedByDefault="true"
-            android:queryHint="Search card title or contact number here." />
+            android:background="@color/colorPrimaryDark"
+            android:iconifiedByDefault="true"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/card_search_result_recyclerview"

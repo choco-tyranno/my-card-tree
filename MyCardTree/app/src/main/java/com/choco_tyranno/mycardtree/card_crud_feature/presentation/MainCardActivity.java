@@ -2,7 +2,7 @@ package com.choco_tyranno.mycardtree.card_crud_feature.presentation;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -11,18 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Pair;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.mycardtree.R;
@@ -30,29 +28,24 @@ import com.choco_tyranno.mycardtree.card_crud_feature.Logger;
 import com.choco_tyranno.mycardtree.card_crud_feature.domain.card_data.CardDTO;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.CardViewShadowProvider;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv.ImageToFullScreenClickListener;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.container_rv.ContainerScrollListener;
-import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.FindingCardBtn;
+import com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer.CardFinder;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
     private ActivityMainFrameBinding binding;
     private Handler mMainHandler;
-    private FindingCardBtn findingCardBtn;
+    private CardFinder cardFinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +61,15 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         setSearchingResultRv();
 
-        findingCardBtn = new FindingCardBtn(this);
+        cardFinder = new CardFinder(this);
+
+        ImageView searchBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
+        ImageView searchCloseBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        SearchView.SearchAutoComplete searchAutoComplete = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchBtn.setColorFilter(R.color.colorPrimary);
+        searchCloseBtn.setColorFilter(R.color.colorPrimary);
+        searchAutoComplete.setTextColor(getResources().getColor(R.color.colorPrimary, getTheme()));
+
         // worker thread's job available.
         CardGestureListener cardGestureListener = new CardGestureListener();
         GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
@@ -80,15 +81,10 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
-        final AtomicBoolean aaa = new AtomicBoolean(false);
-        binding.mainScreen.appNameFab.setOnClickListener((view) -> {
-            binding.mainScreen.mainAppbar.setExpanded(aaa.get());
-            aaa.set(!aaa.get());
-        });
     }
 
-    public FindingCardBtn getFindCardBtn() {
-        return findingCardBtn;
+    public CardFinder getFindCardBtn() {
+        return cardFinder;
     }
 
     private void setSearchingResultRv() {

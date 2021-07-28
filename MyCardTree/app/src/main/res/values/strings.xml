@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name">My Card Tree</string>
-    <string name="app_name_title">My Card Tree</string>
+    <string name="app_name">Team Tree</string>
     <string name="description_image_1">this is cardEntity back image</string>
     <string name="message_for_left_drawer">To be continue</string>
     <string name="order_card_fab_content_description">Draggable content for add cardEntity</string>
     <string name="empty_container_text">카드를 추가해주세요.</string>
-    <string name="search_result_contact_number_tv_hint">전화번호 없음.</string>
+    <string name="addNewCardUtil_fab_text">NEW</string>
+    <string name="search_result_contact_number_tv_hint">전화번호 없음</string>
     <string name="btn_save_name">저장</string>
     <string name="btn_cancel_name">취소</string>
     <string name="container_title">%1$s, %2$s</string>
     <string name="text_card_delete">제거</string>
-    <string name="card_title_hint">닉네임을 입력하세요.</string>
-    <string name="card_contact_number_hint">연락처를 입력하세요.</string>
+    <string name="card_title_hint">홍길동</string>
+    <string name="card_contact_number_hint">010–1987–6543</string>
     <string name="card_shadow_text">CARD</string>
     <string name="card_remove_btn_text">X</string>
     <string name="empty_container_layer_title">add next : </string>

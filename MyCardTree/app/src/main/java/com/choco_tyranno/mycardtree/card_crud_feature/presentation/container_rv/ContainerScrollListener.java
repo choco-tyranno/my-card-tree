@@ -20,21 +20,19 @@ public class ContainerScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        Logger.hotfixMessage("newState"+newState);
         if (newState == RecyclerView.SCROLL_STATE_IDLE&&scrolled.get()){
-            synchronized (scrolled){
-                ((MainCardActivity)recyclerView.getContext()).getMainHandler().postDelayed(()-> scrolled.set(false),700);
-            }
+//            synchronized (scrolled){
+//                ((MainCardActivity)recyclerView.getContext()).getMainHandler().postDelayed(()-> scrolled.set(false),700);
+//            }
         }
     }
 
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-        Logger.hotfixMessage("dy:"+dy);
         super.onScrolled(recyclerView, dx, dy);
-        if (scrolled.get())
-            return;
-        scrolled.set(true);
+//        if (scrolled.get())
+//            return;
+//        scrolled.set(true);
     }
 
     public ObservableBoolean getScrolledFlag(){

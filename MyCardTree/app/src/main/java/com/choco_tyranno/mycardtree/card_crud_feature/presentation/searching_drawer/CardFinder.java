@@ -15,11 +15,11 @@ import com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel
 import com.choco_tyranno.mycardtree.card_crud_feature.presentation.MainCardActivity;
 import com.choco_tyranno.mycardtree.databinding.ActivityMainFrameBinding;
 
-public class FindingCardBtn {
+public class CardFinder {
     private boolean sendingFindCardReq = false;
     Animation flyingToRightAnimation;
 
-    public FindingCardBtn(Context context) {
+    public CardFinder(Context context) {
         flyingToRightAnimation = AnimationUtils.loadAnimation(context, R.anim.search_page_sending_card);
         flyingToRightAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
