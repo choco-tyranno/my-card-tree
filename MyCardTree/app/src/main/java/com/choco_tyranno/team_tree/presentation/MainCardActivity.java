@@ -232,7 +232,7 @@ public class MainCardActivity extends AppCompatActivity {
         }
     }
 
-    public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard) {
+    public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
 
@@ -265,15 +265,17 @@ public class MainCardActivity extends AppCompatActivity {
                     containerRecyclerview.smoothScrollToPosition(startContainerPosition), 900);
             return;
         }
-        scrollActionDelayed(scrollActionQueue);
+        scrollActionDelayed(scrollActionQueue, finishAction);
     }
 
-    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue) {
+    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue, Runnable finishAction) {
         mMainHandler.postDelayed(() -> {
-            if (scrollActionQueue.isEmpty())
+            if (scrollActionQueue.isEmpty()){
+                finishAction.run();
                 return;
+            }
             Optional.ofNullable(scrollActionQueue.poll()).ifPresent(Runnable::run);
-            scrollActionDelayed(scrollActionQueue);
+            scrollActionDelayed(scrollActionQueue, finishAction);
         }, 900);
     }
 }

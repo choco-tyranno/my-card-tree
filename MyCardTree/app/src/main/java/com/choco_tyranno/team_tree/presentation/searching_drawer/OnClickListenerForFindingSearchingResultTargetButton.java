@@ -32,6 +32,6 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
         Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard =  viewModel.findScrollUtilDataForFindingOutCard(cardDTO);
         if (scrollUtilDataForFindingOutCard.second.length==0)
             scrollUtilDataForFindingOutCard = Pair.create(cardDTO.getContainerNo(), scrollUtilDataForFindingOutCard.second);
-        mainCardActivity.scrollToFindingTargetCard(scrollUtilDataForFindingOutCard);
+        mainCardActivity.scrollToFindingTargetCard(scrollUtilDataForFindingOutCard, ()->cardFinder.setSendingFindCardReq(false));
     }
 }

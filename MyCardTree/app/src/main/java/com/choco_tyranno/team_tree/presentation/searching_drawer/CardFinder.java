@@ -1,8 +1,14 @@
 package com.choco_tyranno.team_tree.presentation.searching_drawer;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -14,10 +20,13 @@ import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 
+import java.util.Optional;
+
 
 public class CardFinder {
     private boolean sendingFindCardReq = false;
     Animation flyingToRightAnimation;
+    Runnable finishAction;
 
     public CardFinder(Context context) {
         flyingToRightAnimation = AnimationUtils.loadAnimation(context, R.anim.search_page_sending_card);
@@ -36,7 +45,10 @@ public class CardFinder {
                 SearchView searchView = binding.rightDrawer.cardSearchView;
                 searchView.setQuery("",false);
                 searchView.setIconified(true);
-                sendingFindCardReq = false;
+                //
+//                sendingFindCardReq = false;
+                Optional.ofNullable(finishAction).ifPresent(Runnable::run);
+                finishAction = null;
             }
 
             @Override
@@ -45,8 +57,20 @@ public class CardFinder {
         });
     }
 
-    public void animate(View view){
-        view.startAnimation(flyingToRightAnimation);
+    public void animate(View selectingAssistView){
+        ViewGroup parentView = (ViewGroup) selectingAssistView.getParent();
+        View selectingView = parentView.findViewById(R.id.search_item_selecting_btn);
+        //back to origin visibility / color needed.
+        selectingView.getBackground().setColorFilter(new BlendModeColorFilter(selectingView.getResources().getColor(R.color.colorSubPrimary_a
+                , selectingView.getContext().getTheme()), BlendMode.SRC_ATOP));
+        View planeImageView = parentView.findViewById(R.id.send_card_image_btn);
+        finishAction = ()->{
+            selectingView.getBackground().setColorFilter(new BlendModeColorFilter(selectingView.getResources().getColor(R.color.colorAccent_c
+                    , selectingView.getContext().getTheme()), BlendMode.SRC_ATOP));
+            planeImageView.setVisibility(View.INVISIBLE);
+        };
+        planeImageView.setVisibility(View.VISIBLE);
+        planeImageView.startAnimation(flyingToRightAnimation);
     }
 
     public boolean isSendingFindCardReq(){

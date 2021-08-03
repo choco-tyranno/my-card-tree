@@ -33,4 +33,6 @@
     <string name="next_page_btn_desc">page button. click to move previous page.</string>
     <string name="call_btn_desc">call button. click to move calling screen.</string>
     <string name="message_btn_desc">message button. click to move messaging screen.</string>
+    <string name="flower_icon_desc">flower image view. this view appeared when target item chosen.</string>
+    <string name="search_item_selecting_btn_desc">dot button. click to fire finding card.</string>
 </resources>

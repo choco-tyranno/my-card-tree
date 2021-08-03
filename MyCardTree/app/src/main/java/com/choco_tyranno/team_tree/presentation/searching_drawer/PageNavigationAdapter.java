@@ -57,12 +57,14 @@ public class PageNavigationAdapter extends RecyclerView.Adapter<PageNavigationAd
             final int pageNumber = basePageCount + position + 1;
             mBinding.pageBtn.setText(String.valueOf(pageNumber));
             if (focusPageNo == pageNumber) {
-                mBinding.pageBtn.setBackgroundColor(mBinding.pageBtn.getResources().getColor(R.color.colorPrimaryDark
+                mBinding.pageBtn.setBackgroundColor(mBinding.pageBtn.getResources().getColor(R.color.colorAccent_c
                         , mBinding.pageBtn.getContext().getApplicationContext().getTheme()));
+                mBinding.pageBtn.setAlpha(1.0f);
                 return;
             }
-            mBinding.pageBtn.setBackgroundColor(mBinding.pageBtn.getResources().getColor(R.color.colorPrimary
+            mBinding.pageBtn.setBackgroundColor(mBinding.pageBtn.getResources().getColor(R.color.colorAccent_c
                     , mBinding.pageBtn.getContext().getApplicationContext().getTheme()));
+            mBinding.pageBtn.setAlpha(0.2f);
 
         }
     }
