@@ -31,4 +31,6 @@
     <string name="detail_cancel_btn_text">취소</string>
     <string name="prev_page_btn_desc">page button. click to move previous page.</string>
     <string name="next_page_btn_desc">page button. click to move previous page.</string>
+    <string name="call_btn_desc">call button. click to move calling screen.</string>
+    <string name="message_btn_desc">message button. click to move messaging screen.</string>
 </resources>

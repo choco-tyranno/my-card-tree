@@ -175,18 +175,20 @@
             <ImageButton
                 android:id="@+id/frontCard_callBtn"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:onClickListener="@{viewModel.onClickListenerForCallBtn}"
+                android:contentDescription="@string/call_btn_desc"
                 android:layout_width="90dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom|start"
                 android:layout_marginStart="10dp"
-                android:contentDescription="dd"
                 android:src="@drawable/ic_call_01"
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
                 app:cornerRadius="20dp" />
 
             <ImageButton
                 android:id="@+id/frontCard_messageBtn"
-                android:contentDescription="dd"
+                app:onClickListener="@{viewModel.onClickListenerForMessageBtn}"
+                android:contentDescription="@string/message_btn_desc"
                 android:src="@drawable/ic_message_01"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="90dp"

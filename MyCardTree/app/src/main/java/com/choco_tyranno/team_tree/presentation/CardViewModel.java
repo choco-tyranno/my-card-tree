@@ -41,6 +41,8 @@ import com.choco_tyranno.team_tree.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.team_tree.presentation.card_rv.ImageToFullScreenClickListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap;
+import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForCallBtn;
+import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForMessageBtn;
 import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
@@ -85,6 +87,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForVerticalArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
     private View.OnClickListener onClickListenerForImageViewToFullScreen;
+    private View.OnClickListener onClickListenerForCallBtn;
+    private View.OnClickListener onClickListenerForMessageBtn;
     private SearchView.OnQueryTextListener onQueryTextListenerForSearchingCard;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
     private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
@@ -106,6 +110,13 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean sendingFindCardReq = false;
 
+
+    public View.OnClickListener getOnClickListenerForCallBtn(){
+        return this.onClickListenerForCallBtn;
+    }
+    public View.OnClickListener getOnClickListenerForMessageBtn(){
+        return this.onClickListenerForMessageBtn;
+    }
 //    private RecyclerView.OnScrollListener containerScrollListener;
 
 //    private void initOnScrollListenerForContainerRecyclerView(){
@@ -458,6 +469,16 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnClickListenerForPageBtn();
         initOnClickListenerForMovingPageBundleBtn();
+        initOnClickListenerForCallBtn();
+        initOnClickListenerForMessageBtn();
+    }
+
+    private void initOnClickListenerForMessageBtn() {
+        this.onClickListenerForMessageBtn = new OnClickListenerForMessageBtn();
+    }
+
+    private void initOnClickListenerForCallBtn() {
+        this.onClickListenerForCallBtn = new OnClickListenerForCallBtn();
     }
 
     private void initOnClickListenerForMovingPageBundleBtn() {
