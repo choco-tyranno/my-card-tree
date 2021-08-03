@@ -13,7 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_constraint"
-        android:background="#4da8da"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".card_crud_feature.presentation.MainCardActivity">
@@ -35,7 +35,7 @@
 
             <View
                 android:id="@+id/top_app_bar_assist"
-                android:background="#12232e"
+                android:background="@drawable/default_card_image_01"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -48,7 +48,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:background="@color/colorPrimaryDark"
                 android:fontFamily="@font/humanletter"
                 android:text="@string/app_name"
                 android:textColor="@color/colorPrimary"
@@ -94,7 +93,8 @@
 
             <View
                 android:id="@+id/bottom_app_bar_assist"
-                android:background="#eefbfb"
+                android:background="@color/colorPrimaryDark"
+                android:alpha="0.1"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -8,6 +8,8 @@
     <string name="search_result_contact_number_tv_hint">전화번호 없음</string>
     <string name="btn_save_name">저장</string>
     <string name="btn_cancel_name">취소</string>
+    <string name="btn_call_text">전화</string>
+    <string name="btn_message_text">문자</string>
     <string name="container_title">%1$s, %2$s</string>
     <string name="text_card_delete">제거</string>
     <string name="card_title_hint">홍길동</string>
