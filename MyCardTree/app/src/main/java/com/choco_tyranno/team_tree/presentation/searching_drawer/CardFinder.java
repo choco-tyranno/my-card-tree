@@ -53,4 +53,8 @@ public class CardFinder {
         return sendingFindCardReq;
     }
 
+    public void setSendingFindCardReq(boolean flag){
+        this.sendingFindCardReq = flag;
+    }
+
 }

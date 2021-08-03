@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -65,8 +67,8 @@ public class MainCardActivity extends AppCompatActivity {
         ImageView searchBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
         ImageView searchCloseBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         SearchView.SearchAutoComplete searchAutoComplete = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchBtn.setColorFilter(R.color.colorPrimary);
-        searchCloseBtn.setColorFilter(R.color.colorPrimary);
+        searchBtn.setColorFilter(R.color.colorPrimary_a);
+        searchCloseBtn.setColorFilter(R.color.colorPrimary_a);
         searchAutoComplete.setTextColor(getResources().getColor(R.color.colorPrimary, getTheme()));
 
         // worker thread's job available.
@@ -80,6 +82,20 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout mainDL = binding.mainDrawerLayout;
+        if (mainDL.isDrawerOpen(GravityCompat.END)){
+            mainDL.closeDrawer(GravityCompat.END);
+            SearchView searchView = binding.rightDrawer.cardSearchView;
+            searchView.setQuery("",false);
+            searchView.setIconified(true);
+            cardFinder.setSendingFindCardReq(false);
+            return;
+        }
+        super.onBackPressed();
     }
 
     public CardFinder getFindCardBtn() {

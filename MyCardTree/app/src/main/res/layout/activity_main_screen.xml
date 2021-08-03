@@ -111,7 +111,7 @@
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginBottom="20dp"
-                android:backgroundTint="#203647"
+                android:backgroundTint="@color/colorAccent_b"
                 android:contentDescription="@string/order_card_fab_content_description"
                 android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
                 app:layout_constraintBottom_toBottomOf="parent"

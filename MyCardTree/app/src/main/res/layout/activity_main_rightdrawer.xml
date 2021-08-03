@@ -22,8 +22,8 @@
             app:layout_constraintRight_toRightOf="parent"
             onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
             android:layout_width="300dp"
-            android:layout_height="66dp"
-            android:background="@color/colorPrimaryDark"
+            android:layout_height="70dp"
+            android:background="@color/colorAccent_c"
             android:iconifiedByDefault="true"/>
 
         <androidx.recyclerview.widget.RecyclerView
