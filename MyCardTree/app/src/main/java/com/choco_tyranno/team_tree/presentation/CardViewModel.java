@@ -132,7 +132,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 //        view.addOnScrollListener(listener);
 //    }
 
-
     private Pair<Integer, Integer[]> filterUselessScrollUtilData(Integer[] allGoalCardSeqArr) {
         final int presentDataSize = mPresentData.size();
         final int allGoalCardSeqArrLength = allGoalCardSeqArr.length;
@@ -794,11 +793,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private void initVerticalArrowOnDragListener() {
         this.onDragListenerForVerticalArrow = (view, event) -> {
             final int action = event.getAction();
-            Logger.hotfixMessage("###start : ");
             if (action == DragEvent.ACTION_DRAG_STARTED) {
                 final String dragType = ((String) ((Pair) event.getLocalState()).first);
                 final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
-                Logger.hotfixMessage("moveDragEvent req true : "+moveDragEvent);
                 if (moveDragEvent)
                     return true;
             }
@@ -1775,7 +1772,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     @BindingAdapter("onDragListener")
     public static void setOnDragListener(View view, View.OnDragListener listener) {
-        Logger.hotfixMessage("setOnDragListener");
         view.setOnDragListener(listener);
     }
 
@@ -1784,7 +1780,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public View.OnDragListener getOnDragListenerForVerticalArrow() {
-        Logger.hotfixMessage("getOnDragListenerForVerticalArrow");
         return onDragListenerForVerticalArrow;
     }
 

@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemSearchingResultBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
@@ -14,7 +15,7 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
     @Override
     public void onClick(View v) {
         MainCardActivity mainCardActivity = (MainCardActivity) v.getContext();
-        CardFinder cardFinder = mainCardActivity.getFindCardBtn();
+        CardFinder cardFinder = mainCardActivity.getCardFinder();
         CardViewModel viewModel = mainCardActivity.getCardViewModel();
         if (cardFinder.isSendingFindCardReq()){
             return;

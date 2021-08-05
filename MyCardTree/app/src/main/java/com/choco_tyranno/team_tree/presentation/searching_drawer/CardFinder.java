@@ -16,15 +16,17 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class CardFinder {
-    private boolean sendingFindCardReq = false;
+    private boolean sendingFindCardReq;
     Animation flyingToRightAnimation;
     Runnable finishAction;
 
@@ -45,10 +47,9 @@ public class CardFinder {
                 SearchView searchView = binding.rightDrawer.cardSearchView;
                 searchView.setQuery("",false);
                 searchView.setIconified(true);
-                //
-//                sendingFindCardReq = false;
                 Optional.ofNullable(finishAction).ifPresent(Runnable::run);
                 finishAction = null;
+                sendingFindCardReq = false;
             }
 
             @Override

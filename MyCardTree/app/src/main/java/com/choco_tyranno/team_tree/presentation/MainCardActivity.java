@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
 
@@ -98,8 +99,8 @@ public class MainCardActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public CardFinder getFindCardBtn() {
-        return cardFinder;
+    public CardFinder getCardFinder() {
+        return this.cardFinder;
     }
 
     private void setSearchingResultRv() {
@@ -236,11 +237,6 @@ public class MainCardActivity extends AppCompatActivity {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
 
-        String seqText = "";
-        for (int a : scrollTargetCardSeqArr) {
-            seqText = seqText.concat("/" + a);
-        }
-
         RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
         Queue<Runnable> scrollActionQueue = new LinkedList<>();
         int s = 0;
@@ -263,6 +259,7 @@ public class MainCardActivity extends AppCompatActivity {
         if (scrollActionQueue.isEmpty()) {
             mMainHandler.postDelayed(() ->
                     containerRecyclerview.smoothScrollToPosition(startContainerPosition), 900);
+            finishAction.run();
             return;
         }
         scrollActionDelayed(scrollActionQueue, finishAction);
