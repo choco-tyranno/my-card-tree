@@ -61,7 +61,7 @@ public class ContainerRecyclerView extends RecyclerView {
         public static final int DIRECTION_TOP_ARROW = 1;
         public static final int DIRECTION_BOTTOM_ARROW = 2;
         private AtomicBoolean layoutArrows;
-        private AtomicBoolean containerRollback;
+        private AtomicBoolean containerRollbacked;
         private AtomicBoolean movingDragExited;
 
         private int scrollOccupyingContainerPosition;
@@ -92,22 +92,19 @@ public class ContainerRecyclerView extends RecyclerView {
             return null;
         }
 
-        public boolean isContainerRollback() {
-            if (containerRollback == null)
-                throw new RuntimeException("ContainerRecyclerView.ItemScrollingControlLayoutManager - #isContainerRollback() AtomicBoolean.class containerRollback is null");
-            return containerRollback.get();
+        public boolean isContainerRollbacked() {
+            return containerRollbacked.get();
         }
 
-        public void setContainerRollback(boolean rollback) {
-            this.containerRollback.set(rollback);
+        public void setContainerRollbacked(boolean rollback) {
+            this.containerRollbacked.set(rollback);
         }
 
         public void onDragEnd(@Nullable Runnable rollbackAction) {
             if (rollbackAction != null) {
-                setContainerRollback(true);
                 rollbackAction.run();
                 Objects.requireNonNull(mainHandler()).postDelayed(() ->
-                        setContainerRollback(false), 260);
+                        setContainerRollbacked(false), 800);
             }
         }
 
@@ -206,8 +203,6 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         public boolean isMovingDragExited() {
-            if (movingDragExited == null)
-                throw new RuntimeException("#isMovingDragExited() - AtomicBoolean.Class movingDragExited is null");
             return movingDragExited.get();
         }
 
@@ -246,7 +241,7 @@ public class ContainerRecyclerView extends RecyclerView {
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {
             this.mContainerRecyclerView = containerRecyclerView;
             initArrows();
-            this.containerRollback = new AtomicBoolean(false);
+            this.containerRollbacked = new AtomicBoolean(false);
             this.movingDragExited = new AtomicBoolean(false);
         }
 

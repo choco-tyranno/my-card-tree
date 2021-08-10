@@ -107,8 +107,6 @@ public class CardRecyclerView extends RecyclerView {
         }
 
         public boolean isLayoutArrows() {
-            if (layoutArrows == null)
-                throw new RuntimeException("#isLayoutArrows() - AtomicBoolean.Class layoutArrows is null");
             return layoutArrows.get();
         }
 

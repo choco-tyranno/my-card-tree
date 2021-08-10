@@ -48,6 +48,8 @@ import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerScrollListener;
+import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForContainerRecyclerView;
+import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForVerticalArrow;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForPageBtn;
@@ -84,6 +86,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private View.OnLongClickListener onLongListenerForCreateCardUtilFab;
     private View.OnDragListener onDragListenerForCardRecyclerView;
+    private View.OnDragListener onDragListenerForContainerRecyclerView;
     private View.OnDragListener onDragListenerForVerticalArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
     private View.OnClickListener onClickListenerForImageViewToFullScreen;
@@ -110,6 +113,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean sendingFindCardReq = false;
 
+    public View.OnDragListener getOnDragListenerForContainerRecyclerView(){
+        return this.onDragListenerForContainerRecyclerView;
+    }
 
     public View.OnClickListener getOnClickListenerForCallBtn(){
         return this.onClickListenerForCallBtn;
@@ -117,20 +123,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public View.OnClickListener getOnClickListenerForMessageBtn(){
         return this.onClickListenerForMessageBtn;
     }
-//    private RecyclerView.OnScrollListener containerScrollListener;
-
-//    private void initOnScrollListenerForContainerRecyclerView(){
-//        this.containerScrollListener = new ContainerScrollListener(this);
-//    }
-
-//    public RecyclerView.OnScrollListener getContainerScrollListener(){
-//        return containerScrollListener;
-//    }
-
-//    @BindingAdapter("containerScrollListener")
-//    public static void setContainerScrollListener(RecyclerView view, RecyclerView.OnScrollListener listener){
-//        view.addOnScrollListener(listener);
-//    }
 
     private Pair<Integer, Integer[]> filterUselessScrollUtilData(Integer[] allGoalCardSeqArr) {
         final int presentDataSize = mPresentData.size();
@@ -470,6 +462,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnClickListenerForMovingPageBundleBtn();
         initOnClickListenerForCallBtn();
         initOnClickListenerForMessageBtn();
+        initOnDragListenerForContainerRecyclerView();
+    }
+
+    private void initOnDragListenerForContainerRecyclerView() {
+        this.onDragListenerForContainerRecyclerView = new OnDragListenerForContainerRecyclerView();
     }
 
     private void initOnClickListenerForMessageBtn() {
@@ -773,7 +770,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private void initCardRecyclerViewDragListener() {
-        Logger.message("vm#initCardRecyclerViewDragListener");
         onDragListenerForCardRecyclerView = (view, event) -> {
             if (!(view instanceof CardRecyclerView))
                 return false;
@@ -790,90 +786,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         };
     }
 
+    //TODO : refactoring this.
     private void initVerticalArrowOnDragListener() {
-        this.onDragListenerForVerticalArrow = (view, event) -> {
-            final int action = event.getAction();
-            if (action == DragEvent.ACTION_DRAG_STARTED) {
-                final String dragType = ((String) ((Pair) event.getLocalState()).first);
-                final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
-                if (moveDragEvent)
-                    return true;
-            }
-
-            ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.main_body);
-            ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
-            if (containerLayoutManager == null)
-                return false;
-            ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-            View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
-            View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
-
-            if (action == DragEvent.ACTION_DRAG_LOCATION) {
-                if (containerLayoutManager.hasScrollAction())
-                    return false;
-
-                String verticalArrowId = view.getResources().getResourceEntryName(view.getId());
-
-                if (TextUtils.equals(verticalArrowId, "prev_container_arrow")) {
-                    final int firstCompletelyVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
-                    if (firstCompletelyVisibleContainerPosition < 0)
-                        return false;
-                    if (firstCompletelyVisibleContainerPosition != 0) {
-                        containerLayoutManager.setContainerScrollAction(() -> {
-                            containerRecyclerView.smoothScrollToPosition(firstCompletelyVisibleContainerPosition - 1);
-                            if (firstCompletelyVisibleContainerPosition - 1 == 0) {
-                                view.setVisibility(View.INVISIBLE);
-                            }
-                            nextContainerArrow.setVisibility(View.VISIBLE);
-                        });
-                        containerLayoutManager.scrollDelayed(100);
-                        return true;
-                    } else
-                        return false;
-                }
-
-                if (TextUtils.equals(verticalArrowId, "next_container_arrow")) {
-                    final int lastCompletelyVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
-                    if (lastCompletelyVisibleContainerPosition < 0)
-                        return false;
-                    final int containerCount = containerLayoutManager.getItemCount();
-                    if (lastCompletelyVisibleContainerPosition != containerCount - 1) {
-                        containerLayoutManager.setContainerScrollAction(() -> {
-                            containerRecyclerView.smoothScrollToPosition(lastCompletelyVisibleContainerPosition + 1);
-                            if (lastCompletelyVisibleContainerPosition + 1 == containerCount - 1) {
-                                view.setVisibility(View.INVISIBLE);
-                            }
-                            prevContainerArrow.setVisibility(View.VISIBLE);
-                        });
-                        containerLayoutManager.scrollDelayed(100);
-                        return true;
-                    } else
-                        return false;
-                }
-
-                return false;
-            }
-
-            if (action == DragEvent.ACTION_DRAG_ENTERED) {
-                return true;
-            }
-
-            if (action == DragEvent.ACTION_DRAG_ENDED) {
-                if (containerLayoutManager.hasScrollAction()) {
-                    containerLayoutManager.setExitAction(() -> {
-                        prevContainerArrow.setVisibility(View.INVISIBLE);
-                        nextContainerArrow.setVisibility(View.INVISIBLE);
-                    });
-                    return true;
-                }
-                prevContainerArrow.setVisibility(View.INVISIBLE);
-                nextContainerArrow.setVisibility(View.INVISIBLE);
-                return true;
-            }
-            return false;
-        };
+        this.onDragListenerForVerticalArrow = new OnDragListenerForVerticalArrow();
     }
-
 
     private void initOnScrollStateChangeListener() {
         mOnScrollStateChangeListener = (savedScrollState, containerPosition) -> {
@@ -1176,25 +1092,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean handleMoveServiceForEmptySpace(TextView targetView, DragEvent event) {
         ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) targetView.getParent().getParent();
-        ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                if (containerLayoutManager == null)
-                    return false;
-                containerLayoutManager.onDragStart();
-                return true;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                break;
-            case DragEvent.ACTION_DRAG_ENDED:
-                if (containerLayoutManager == null)
-                    return false;
-                if (!event.getResult()) {
-                    if (!containerLayoutManager.isContainerRollback()) {
-                        containerLayoutManager.onDragEnd(
-                                createRollbackAction((Pair) ((Pair) event.getLocalState()).second, containerRecyclerView)
-                        );
-                    }
-                }
                 return true;
             case DragEvent.ACTION_DROP:
                 onMovingCardDroppedInEmptySpace(containerRecyclerView, event);
@@ -1203,7 +1102,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return false;
     }
 
-    private Runnable createRollbackAction(Pair<CardDto, Pair<List<CardDto>, List<CardDto>>> rollbackData, ContainerRecyclerView containerRecyclerView) {
+    public Runnable createRollbackAction(Pair<CardDto, Pair<List<CardDto>, List<CardDto>>> rollbackData, ContainerRecyclerView containerRecyclerView) {
         return () -> {
             Pair<List<CardDto>, List<CardDto>> modifiedData = rollbackData.second;
             CardDto movingCard = rollbackData.first;
@@ -1296,16 +1195,16 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (containerPosition > mPresentData.size() - 1)
                     return false;
-                final int cardCount_entered = getPresentData().get(containerPosition).size();
-                Container container_entered = mPresentContainerList.get(containerPosition);
-                final int focusedCardPosition_entered = container_entered.getFocusCardPosition();
+                final int cardCount = getPresentData().get(containerPosition).size();
+                Container container = mPresentContainerList.get(containerPosition);
+                final int focusedCardPosition = container.getFocusCardPosition();
 
                 boolean leftCardArrowNeeded = false;
                 boolean rightCardArrowNeeded = false;
-                if (focusedCardPosition_entered != 0) {
+                if (focusedCardPosition != 0) {
                     leftCardArrowNeeded = true;
                 }
-                if (focusedCardPosition_entered < cardCount_entered - 1) {
+                if (focusedCardPosition < cardCount - 1) {
                     rightCardArrowNeeded = true;
                 }
                 if (leftCardArrowNeeded && rightCardArrowNeeded)
@@ -1316,7 +1215,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     layoutManager.showCardArrowsDelayed(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_LEFT_ARROW);
                 if (!leftCardArrowNeeded && !rightCardArrowNeeded)
                     layoutManager.showCardArrowsDelayed(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
-//                }
+
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
                 if (!layoutManager.isMovingDragExited()) {
@@ -1730,7 +1629,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     // +1: For empty card space.
     public int presentContainerCount() {
-        Logger.message("vm#presentContainerCount");
         final int EMPTY_CARD_SPACE_COUNT = 1;
         return mPresentData.size() + EMPTY_CARD_SPACE_COUNT;
     }
@@ -1780,6 +1678,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public View.OnDragListener getOnDragListenerForVerticalArrow() {
+        Logger.hotfixMessage("getOnDragListenerForVerticalArrow");
         return onDragListenerForVerticalArrow;
     }
 
