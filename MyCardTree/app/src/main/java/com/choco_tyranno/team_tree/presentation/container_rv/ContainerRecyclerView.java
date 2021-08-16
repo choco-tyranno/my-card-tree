@@ -66,23 +66,12 @@ public class ContainerRecyclerView extends RecyclerView {
 
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
-        private Runnable movedCardsRollbackAction;
-        private HashMap<Integer, Runnable> dragMoveEndActionMap;
-        private static final int VERTICAL_ARROW_REMOVE_ACTION = 1;
-        private static final int CARD_ROLLBACK_ACTION = 2;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
+//        private Runnable movedCardsRollbackAction;
+//        private HashMap<Integer, Runnable> dragMoveEndActionMap;
+//        private static final int VERTICAL_ARROW_REMOVE_ACTION = 1;
+//        private static final int CARD_ROLLBACK_ACTION = 2;
 
-
-        public void clearListener(int startPosition) {
-            int itemCount = getItemCount();
-            for (int i = startPosition; i < itemCount; i++) {
-                CardRecyclerView cardRecyclerView = findCardRecyclerView(i);
-                if (cardRecyclerView == null) {
-                    continue;
-                }
-                cardRecyclerView.clearOnScrollListeners();
-            }
-        }
 
         private CardRecyclerView findCardRecyclerView(int position) {
             ViewHolder viewHolder = mContainerRecyclerView.findViewHolderForAdapterPosition(position);
@@ -100,7 +89,7 @@ public class ContainerRecyclerView extends RecyclerView {
             this.containerRollbacked.set(rollback);
         }
 
-        public void onDragEnd(@Nullable Runnable rollbackAction) {
+        public void onDragEndWithDropFail(@Nullable Runnable rollbackAction) {
             if (rollbackAction != null) {
                 rollbackAction.run();
                 Objects.requireNonNull(mainHandler()).postDelayed(() ->
@@ -146,23 +135,23 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         private void showTopArrow() {
-            if (topArrow.getVisibility() == INVISIBLE)
-                topArrow.setVisibility(VISIBLE);
+            if (topArrow.getAlpha() == 0f)
+                topArrow.setAlpha(1f);
         }
 
         private void hideTopArrow() {
-            if (topArrow.getVisibility() == VISIBLE)
-                topArrow.setVisibility(INVISIBLE);
+            if (topArrow.getAlpha() == 1f)
+                topArrow.setAlpha(0f);
         }
 
         private void showBottomArrow() {
-            if (bottomArrow.getVisibility() == INVISIBLE)
-                bottomArrow.setVisibility(VISIBLE);
+            if (bottomArrow.getAlpha() == 0f)
+                bottomArrow.setAlpha(1f);
         }
 
         private void hideBottomArrow() {
-            if (bottomArrow.getVisibility() == VISIBLE)
-                bottomArrow.setVisibility(INVISIBLE);
+            if (bottomArrow.getAlpha() == 1f)
+                bottomArrow.setAlpha(0f);
         }
 
         private void showCardArrows(int direction) {
@@ -212,30 +201,11 @@ public class ContainerRecyclerView extends RecyclerView {
 
         /*end*/
 
-        public ItemScrollingControlLayoutManager(Context context) {
-            super(context);
-            scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
-            this.scrollLockedQueue = new LinkedList<>();
-        }
 
         public ItemScrollingControlLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
-            this.dragMoveEndActionMap = new HashMap<>();
-        }
-
-        public ItemScrollingControlLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-            super(context, attrs, defStyleAttr, defStyleRes);
-            scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
-            this.scrollLockedQueue = new LinkedList<>();
-        }
-
-        public int getCardRecyclerViewPosition(@NonNull CardRecyclerView childCardRecyclerView) {
-            if (mContainerRecyclerView == null)
-                throw new RuntimeException("ItemScrollingControlLayoutManager#getCardRecyclerViewPosition - mContainerRecyclerView is null");
-            final int pos = mContainerRecyclerView.getChildAdapterPosition((View) childCardRecyclerView.getParent());
-            return 0;
         }
 
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {

@@ -25,16 +25,16 @@ public class OnDragListenerForContainerRecyclerView implements View.OnDragListen
                 final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
                 final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
                 if (firstVisibleContainerPosition != 0)
-                    prevContainerArrow.setVisibility(View.VISIBLE);
+                    prevContainerArrow.setAlpha(1f);
                 if (lastVisibleContainerPosition + 1 != containerCount)
-                    nextContainerArrow.setVisibility(View.VISIBLE);
+                    nextContainerArrow.setAlpha(1f);
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:
                 Logger.hotfixMessage("Container/ACTION_DRAG_ENDED / result :" + event.getResult());
                 if (!event.getResult()) {
                     if (!containerLayoutManager.isContainerRollbacked()) {
                         containerLayoutManager.setContainerRollbacked(true);
-                        containerLayoutManager.onDragEnd(
+                        containerLayoutManager.onDragEndWithDropFail(
                                 ((MainCardActivity) v.getContext()).getCardViewModel()
                                         .createRollbackAction((Pair) ((Pair) event.getLocalState()).second, (ContainerRecyclerView) v)
                         );

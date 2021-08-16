@@ -188,23 +188,9 @@ public class CardRecyclerView extends RecyclerView {
             return scrollable;
         }
 
-        public ScrollControllableLayoutManager(Context context) {
-            super(context);
-            this.scrollable = true;
-        }
-
         public ScrollControllableLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
             this.scrollable = true;
-        }
-
-        public ScrollControllableLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-            super(context, attrs, defStyleAttr, defStyleRes);
-            this.scrollable = true;
-        }
-
-        public boolean isScrollable() {
-            return scrollable;
         }
 
         public void setScrollable(boolean sign) {

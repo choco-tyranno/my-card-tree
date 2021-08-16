@@ -32,7 +32,6 @@ public class OnDragListenerForVerticalArrow implements View.OnDragListener {
         CardViewModel viewModel = ((MainCardActivity)view.getContext()).getCardViewModel();
 
         if (action == DragEvent.ACTION_DRAG_LOCATION) {
-            Logger.hotfixMessage("Location");
             if (containerLayoutManager.hasScrollAction()){
                 Logger.hotfixMessage("Location Exception point detected. : containerLayoutManager.hasScrollAction()");
                 return false;
@@ -64,7 +63,6 @@ public class OnDragListenerForVerticalArrow implements View.OnDragListener {
                     return false;
                 final int containerCount = viewModel.presentContainerCount();
                 if (lastCompletelyVisibleContainerPosition != containerCount - 1) {
-                    synchronized (containerLayoutManager){
                         containerLayoutManager.setContainerScrollAction(() -> {
                             containerRecyclerView.smoothScrollToPosition(lastCompletelyVisibleContainerPosition + 1);
                             if (lastCompletelyVisibleContainerPosition + 1 + 1 == containerCount) {
@@ -73,7 +71,6 @@ public class OnDragListenerForVerticalArrow implements View.OnDragListener {
                             prevContainerArrow.setVisibility(View.VISIBLE);
                         });
                         containerLayoutManager.scrollDelayed(100);
-                    }
                     return true;
                 } else
                     return false;
