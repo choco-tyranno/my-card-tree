@@ -1,11 +1,8 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -15,13 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.R;
+import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
 
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CardRecyclerView extends RecyclerView {
     public static final int DEFAULT_CARD_POSITION = 0;
+    private OnScrollListenerForHorizontalArrow onScrollListenerForHorizontalArrow;
+    private boolean onDragMove = false;
+    private HashMap<Integer, Runnable> scrolledActionMap = new HashMap<>();
+    private final static int ACTION_CHANGING_FOCUS = 1;
+    private final static int ACTION_SHOW_HORIZONTAL_ARROW = 2;
 
     public CardRecyclerView(@NonNull Context context) {
         super(context);
@@ -58,10 +65,73 @@ public class CardRecyclerView extends RecyclerView {
         return (CardAdapter) super.getAdapter();
     }
 
+    public ContainerRecyclerView getContainerRecyclerView() {
+        return (ContainerRecyclerView) this.getParent().getParent();
+    }
+
     @Nullable
     @Override
     public ScrollControllableLayoutManager getLayoutManager() {
         return (ScrollControllableLayoutManager) super.getLayoutManager();
+    }
+
+    public void attachOnScrollListenerForHorizontalArrow() {
+        onScrollListenerForHorizontalArrow = new OnScrollListenerForHorizontalArrow();
+        addOnScrollListener(onScrollListenerForHorizontalArrow);
+    }
+
+    public void detachOnScrollListenerForHorizontalArrow() {
+        if (onScrollListenerForHorizontalArrow != null)
+            removeOnScrollListener(onScrollListenerForHorizontalArrow);
+        onScrollListenerForHorizontalArrow = null;
+    }
+
+    public boolean isOnDragMove() {
+        return onDragMove;
+    }
+
+    public void setOnDragMove(boolean onDragMove) {
+        this.onDragMove = onDragMove;
+    }
+
+    public void postChangingFocusAction(Runnable focusChangeAction) {
+        synchronized (scrolledActionMap) {
+            scrolledActionMap.put(ACTION_CHANGING_FOCUS, focusChangeAction);
+        }
+        if (isAllScrolledActionCollected()) {
+            executeScrolledAction();
+        }
+    }
+
+    private void postShowingArrowAction(Runnable showingArrowAction) {
+        synchronized (scrolledActionMap) {
+            scrolledActionMap.put(ACTION_SHOW_HORIZONTAL_ARROW, showingArrowAction);
+        }
+        if (isAllScrolledActionCollected()) {
+            executeScrolledAction();
+        }
+    }
+
+    private boolean isAllScrolledActionCollected() {
+        boolean allScrolledActionCollected = false;
+        synchronized (scrolledActionMap) {
+            allScrolledActionCollected = scrolledActionMap.size() == 2;
+        }
+        return allScrolledActionCollected;
+    }
+
+    private void executeScrolledAction() {
+        Runnable changingFocusAction = null;
+        Runnable showingHorizontalArrowAction = null;
+        if (scrolledActionMap.containsKey(ACTION_CHANGING_FOCUS)) {
+            changingFocusAction = scrolledActionMap.get(ACTION_CHANGING_FOCUS);
+        }
+        if (scrolledActionMap.containsKey(ACTION_SHOW_HORIZONTAL_ARROW)) {
+            showingHorizontalArrowAction = scrolledActionMap.get(ACTION_SHOW_HORIZONTAL_ARROW);
+        }
+        scrolledActionMap.clear();
+        Optional.ofNullable(changingFocusAction).ifPresent(Runnable::run);
+        Optional.ofNullable(showingHorizontalArrowAction).ifPresent(Runnable::run);
     }
 
     /**
@@ -78,7 +148,7 @@ public class CardRecyclerView extends RecyclerView {
         public static final int DIRECTION_TWO_WAY_ARROW = 0;
         public static final int DIRECTION_LEFT_ARROW = 1;
         public static final int DIRECTION_RIGHT_ARROW = 2;
-        private AtomicBoolean layoutArrows;
+        private AtomicBoolean deployingArrow;
         private AtomicBoolean movingDragExited;
         private AtomicBoolean movingDragEnded;
 
@@ -106,10 +176,13 @@ public class CardRecyclerView extends RecyclerView {
             mRecyclerView.smoothScrollToPosition(toPosition);
         }
 
-        public boolean isLayoutArrows() {
-            return layoutArrows.get();
+        public boolean isDeployingArrow() {
+            return deployingArrow.get();
         }
 
+        public void setDeployingArrow(boolean deployingArrow) {
+            this.deployingArrow.set(deployingArrow);
+        }
 
         private void initArrows() {
             if (mRecyclerView == null)
@@ -117,7 +190,7 @@ public class CardRecyclerView extends RecyclerView {
             ViewGroup viewGroup = ((ViewGroup) mRecyclerView.getParent());
             this.leftArrow = viewGroup.findViewById(R.id.prev_card_arrow);
             this.rightArrow = viewGroup.findViewById(R.id.next_card_arrow);
-            layoutArrows = new AtomicBoolean(false);
+            deployingArrow = new AtomicBoolean(false);
         }
 
         private void showLeftArrow() {
@@ -140,7 +213,7 @@ public class CardRecyclerView extends RecyclerView {
                 rightArrow.setVisibility(INVISIBLE);
         }
 
-        private void showCardArrows(int direction) {
+        public void showCardArrows(int direction) {
             switch (direction) {
                 case DIRECTION_TWO_WAY_ARROW:
                     showLeftArrow();
@@ -163,18 +236,9 @@ public class CardRecyclerView extends RecyclerView {
         }
 
         public void showCardArrowsDelayed(int direction) {
-            final int duration = 260;
-            layoutArrows.set(true);
-            mainHandler().postDelayed(() -> {
-                if ((!isMovingDragExited() && !isMovingDragEnded()) || direction == DIRECTION_NO_ARROW) {
-                    showCardArrows(direction);
-                    if (isMovingDragExited())
-                        setMovingDragExited(false);
-                    if (isMovingDragEnded())
-                        setMovingDragEnded(false);
-                }
-                layoutArrows.set(false);
-            }, duration);
+            final int delay = 260;
+            mainHandler().postDelayed(() ->
+                    showCardArrows(direction), delay);
         }
 
         private Handler mainHandler() {
@@ -210,7 +274,7 @@ public class CardRecyclerView extends RecyclerView {
             CardAdapter cardAdapter = mRecyclerView.getAdapter();
             int position = NO_POSITION;
             if (cardAdapter != null) {
-                position = cardAdapter.getPosition();
+                position = cardAdapter.getContainerPosition();
             }
             if (position == NO_POSITION)
                 return;
@@ -249,5 +313,53 @@ public class CardRecyclerView extends RecyclerView {
             this.movingDragExited = new AtomicBoolean(false);
         }
 
+    }
+
+    public static class OnScrollListenerForHorizontalArrow extends OnScrollListener {
+        int registeredCardPosition;
+
+        public OnScrollListenerForHorizontalArrow() {
+            registeredCardPosition = -1;
+        }
+
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                CardViewModel viewModel = ((MainCardActivity) recyclerView.getContext()).getCardViewModel();
+                CardRecyclerView cardRecyclerView = (CardRecyclerView) recyclerView;
+                cardRecyclerView.postShowingArrowAction(() -> {
+                    CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
+                    ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = cardRecyclerView.getContainerRecyclerView().getLayoutManager();
+                    boolean rightArrowNeeded = true;
+                    boolean leftArrowNeeded = true;
+                    final int onFocusCardPosition;
+                    final int containerPosition = cardRecyclerView.getAdapter().getContainerPosition();
+                    final Container container = viewModel.getContainer(containerPosition);
+                    onFocusCardPosition = container.getFocusCardPosition();
+                    if (onFocusCardPosition == registeredCardPosition) {
+                        if (cardRecyclerViewLayoutManager.isDeployingArrow())
+                            cardRecyclerViewLayoutManager.setDeployingArrow(false);
+                        return;
+                    }
+                    final int cardItemCount = viewModel.getPresentData().get(containerPosition).size();
+                    if (onFocusCardPosition == 0)
+                        leftArrowNeeded = false;
+                    if (onFocusCardPosition + 1 == cardItemCount)
+                        rightArrowNeeded = false;
+                    if (leftArrowNeeded && rightArrowNeeded)
+                        cardRecyclerViewLayoutManager.showCardArrows(ScrollControllableLayoutManager.DIRECTION_TWO_WAY_ARROW);
+                    if (leftArrowNeeded && !rightArrowNeeded)
+                        cardRecyclerViewLayoutManager.showCardArrows(ScrollControllableLayoutManager.DIRECTION_LEFT_ARROW);
+                    if (!leftArrowNeeded && rightArrowNeeded)
+                        cardRecyclerViewLayoutManager.showCardArrows(ScrollControllableLayoutManager.DIRECTION_RIGHT_ARROW);
+                    if (!leftArrowNeeded && !rightArrowNeeded)
+                        cardRecyclerViewLayoutManager.showCardArrows(ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
+                    containerRecyclerViewLayoutManager.refreshArrows();
+                    registeredCardPosition = onFocusCardPosition;
+                    cardRecyclerViewLayoutManager.setDeployingArrow(false);
+                });
+            }
+        }
     }
 }

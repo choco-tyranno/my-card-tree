@@ -45,6 +45,7 @@ public class OnDragListenerForTopArrow implements View.OnDragListener {
                 if (firstCompletelyVisibleContainerPosition - 1 == 0) {
                     view.setAlpha(0f);
                 }
+                Logger.hotfixMessage("LOCATION / containerLayoutManager.scrollDelayed(100)");
                 nextContainerArrow.setAlpha(1f);
             });
             containerLayoutManager.scrollDelayed(100);
@@ -52,15 +53,10 @@ public class OnDragListenerForTopArrow implements View.OnDragListener {
         }
 
         if (action == DragEvent.ACTION_DRAG_ENDED) {
-            if (containerLayoutManager.hasScrollAction()) {
-                containerLayoutManager.setExitAction(() -> {
-                    prevContainerArrow.setAlpha(0f);
-                    nextContainerArrow.setAlpha(0f);
-                });
-                return true;
-            }
-            prevContainerArrow.setAlpha(0f);
-            nextContainerArrow.setAlpha(0f);
+            ((MainCardActivity)view.getContext()).getMainHandler().postDelayed(()->{
+                view.setAlpha(0f);
+                Logger.hotfixMessage("ACTION_DRAG_ENDED");
+            }, 400);
             return true;
         }
         return false;

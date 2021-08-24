@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.choco_tyranno.team_tree.Logger;
+import com.choco_tyranno.team_tree.presentation.CardViewModel;
+import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -189,6 +191,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
     public interface OnFocusChangedListener {
         void onNextFocused(RecyclerView view, int containerPosition, int cardPosition);
+
         void onPreviousFocused(RecyclerView view, int containerPosition, int cardPosition);
     }
 

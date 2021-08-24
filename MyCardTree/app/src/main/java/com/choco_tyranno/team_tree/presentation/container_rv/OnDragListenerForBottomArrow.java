@@ -14,7 +14,6 @@ import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 public class OnDragListenerForBottomArrow implements View.OnDragListener {
     @Override
     public boolean onDrag(View view, DragEvent event) {
-
         final int action = event.getAction();
         if (action == DragEvent.ACTION_DRAG_STARTED) {
             Logger.hotfixMessage("Bottom start");
@@ -48,6 +47,7 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
                     if (lastCompletelyVisibleContainerPosition + 1 + 1 == containerCount) {
                         view.setAlpha(0f);
                     }
+                    Logger.hotfixMessage("LOCATION / containerLayoutManager.scrollDelayed(100)");
                     prevContainerArrow.setAlpha(1f);
                 });
                 containerLayoutManager.scrollDelayed(100);
@@ -57,15 +57,10 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
         }
 
         if (action == DragEvent.ACTION_DRAG_ENDED) {
-            if (containerLayoutManager.hasScrollAction()) {
-                containerLayoutManager.setExitAction(() -> {
-                    prevContainerArrow.setAlpha(0f);
-                    nextContainerArrow.setAlpha(0f);
-                });
-                return true;
-            }
-            prevContainerArrow.setAlpha(0f);
-            nextContainerArrow.setAlpha(0f);
+            ((MainCardActivity)view.getContext()).getMainHandler().postDelayed(()->{
+                view.setAlpha(0f);
+                Logger.hotfixMessage("ACTION_DRAG_ENDED");
+            }, 400);
             return true;
         }
         return false;

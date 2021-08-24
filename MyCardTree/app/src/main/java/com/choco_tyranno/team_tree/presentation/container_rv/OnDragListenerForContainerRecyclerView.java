@@ -1,5 +1,6 @@
 package com.choco_tyranno.team_tree.presentation.container_rv;
 
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -17,17 +18,21 @@ public class OnDragListenerForContainerRecyclerView implements View.OnDragListen
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 Logger.hotfixMessage("Container/ACTION_DRAG_STARTED");
+                final String dragType = ((String) ((Pair) event.getLocalState()).first);
+                final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
+                if (!moveDragEvent)
+                    return false;
                 containerLayoutManager.onDragStart();
-                ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-                View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
-                View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
-                final int containerCount = ((MainCardActivity) v.getContext()).getCardViewModel().presentContainerCount();
-                final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
-                final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
-                if (firstVisibleContainerPosition != 0)
-                    prevContainerArrow.setAlpha(1f);
-                if (lastVisibleContainerPosition + 1 != containerCount)
-                    nextContainerArrow.setAlpha(1f);
+//                ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
+//                View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
+//                View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
+//                final int containerCount = ((MainCardActivity) v.getContext()).getCardViewModel().presentContainerCount();
+//                final int firstVisibleContainerPosition = containerLayoutManager.findFirstCompletelyVisibleItemPosition();
+//                final int lastVisibleContainerPosition = containerLayoutManager.findLastCompletelyVisibleItemPosition();
+//                if (firstVisibleContainerPosition != 0)
+//                    prevContainerArrow.setAlpha(1f);
+//                if (lastVisibleContainerPosition + 1 != containerCount)
+//                    nextContainerArrow.setAlpha(1f);
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:
                 Logger.hotfixMessage("Container/ACTION_DRAG_ENDED / result :" + event.getResult());

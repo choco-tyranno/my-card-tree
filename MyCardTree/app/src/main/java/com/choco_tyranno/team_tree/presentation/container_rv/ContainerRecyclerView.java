@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView;
@@ -97,32 +98,34 @@ public class ContainerRecyclerView extends RecyclerView {
             }
         }
 
+        public void refreshArrows() {
+            final int firstVisibleContainerPosition = findFirstCompletelyVisibleItemPosition();
+            final int lastVisibleContainerPosition = findLastCompletelyVisibleItemPosition();
+            final int itemCount = getItemCount();
+            boolean topContainerArrowNeeded = false;
+            boolean bottomContainerArrowNeeded = false;
+            if (firstVisibleContainerPosition != 0) {
+                topContainerArrowNeeded = true;
+            }
+            if (lastVisibleContainerPosition < itemCount - 1) {
+                bottomContainerArrowNeeded = true;
+            }
+            if (topContainerArrowNeeded && bottomContainerArrowNeeded) {
+                showCardArrows(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_TWO_WAY_ARROW);
+            }
+            if (topContainerArrowNeeded && !bottomContainerArrowNeeded) {
+                showCardArrows(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_TOP_ARROW);
+            }
+            if (!topContainerArrowNeeded && bottomContainerArrowNeeded) {
+                showCardArrows(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_BOTTOM_ARROW);
+            }
+            if (!topContainerArrowNeeded && !bottomContainerArrowNeeded) {
+                showCardArrows(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_NO_ARROW);
+            }
+        }
+
         public void onDragStart() {
-            mainHandler().postDelayed(()->{
-                final int firstVisibleContainerPosition = findFirstCompletelyVisibleItemPosition();
-                final int lastVisibleContainerPosition = findLastCompletelyVisibleItemPosition();
-                final int itemCount = getItemCount();
-                boolean topContainerArrowNeeded = false;
-                boolean bottomContainerArrowNeeded = false;
-                if (firstVisibleContainerPosition != 0) {
-                    topContainerArrowNeeded = true;
-                }
-                if (lastVisibleContainerPosition < itemCount - 1) {
-                    bottomContainerArrowNeeded = true;
-                }
-                if (topContainerArrowNeeded && bottomContainerArrowNeeded) {
-                    showCardArrowsDelayed(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_TWO_WAY_ARROW);
-                }
-                if (topContainerArrowNeeded && !bottomContainerArrowNeeded) {
-                    showCardArrowsDelayed(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_TOP_ARROW);
-                }
-                if (!topContainerArrowNeeded && bottomContainerArrowNeeded) {
-                    showCardArrowsDelayed(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_BOTTOM_ARROW);
-                }
-                if (!topContainerArrowNeeded && !bottomContainerArrowNeeded) {
-                    showCardArrowsDelayed(ContainerRecyclerView.ItemScrollingControlLayoutManager.DIRECTION_NO_ARROW);
-                }
-            },260);
+            mainHandler().postDelayed(() -> refreshArrows(), 260);
         }
 
         private void initArrows() {
@@ -135,6 +138,7 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         private void showTopArrow() {
+            Logger.hotfixMessage("showTopArrow()");
             if (topArrow.getAlpha() == 0f)
                 topArrow.setAlpha(1f);
         }
@@ -145,6 +149,7 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         private void showBottomArrow() {
+            Logger.hotfixMessage("showBottomArrow()");
             if (bottomArrow.getAlpha() == 0f)
                 bottomArrow.setAlpha(1f);
         }

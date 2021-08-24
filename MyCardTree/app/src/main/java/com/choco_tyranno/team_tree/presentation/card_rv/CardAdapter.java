@@ -62,7 +62,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
         this.mContainerPosition = containerPosition;
     }
 
-    public int getPosition(){
+    public int getContainerPosition(){
         return mContainerPosition;
     }
 }
