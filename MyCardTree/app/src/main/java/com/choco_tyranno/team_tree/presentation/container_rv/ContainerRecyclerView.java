@@ -82,19 +82,9 @@ public class ContainerRecyclerView extends RecyclerView {
             return null;
         }
 
-        public boolean isContainerRollbacked() {
-            return containerRollbacked.get();
-        }
-
-        public void setContainerRollbacked(boolean rollback) {
-            this.containerRollbacked.set(rollback);
-        }
-
         public void onDragEndWithDropFail(@Nullable Runnable rollbackAction) {
             if (rollbackAction != null) {
                 rollbackAction.run();
-                Objects.requireNonNull(mainHandler()).postDelayed(() ->
-                        setContainerRollbacked(false), 800);
             }
         }
 

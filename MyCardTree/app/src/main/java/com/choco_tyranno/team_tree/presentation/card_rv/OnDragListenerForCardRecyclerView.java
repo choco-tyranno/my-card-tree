@@ -16,7 +16,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
@@ -41,11 +40,15 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        String dragType = (String) ((Pair) event.getLocalState()).first;
+        String dragType = "";
+        if (event.getLocalState() instanceof Pair)
+            dragType = (String) ((Pair) event.getLocalState()).first;
+        if (event.getLocalState() instanceof DragMoveDataContainer)
+            dragType = ((DragMoveDataContainer) event.getLocalState()).getDragType();
         if (TextUtils.equals(dragType, "CREATE")) {
             return handleCreateService((CardRecyclerView) v, event);
         }
-        if (TextUtils.equals(dragType, "MOVE")) {
+        if (TextUtils.equals(dragType, DragMoveDataContainer.DRAG_TYPE)) {
             return handleMoveService((CardRecyclerView) v, event);
         }
         return false;
@@ -188,7 +191,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             case DragEvent.ACTION_DRAG_ENDED:
                 return handleMoveServiceDragEndedEvent(cardRecyclerView);
             case DragEvent.ACTION_DROP:
-                return handleMoveServiceDropEvent(cardRecyclerView, (Pair<String, Pair<CardDto, Pair<List<CardDto>, List<CardDto>>>>) event.getLocalState());
+                return handleMoveServiceDropEvent(cardRecyclerView, (DragMoveDataContainer) event.getLocalState());
         }
         return false;
     }
@@ -196,21 +199,18 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     private boolean handleMoveServiceDragStarted(CardRecyclerView cardRecyclerView, DragEvent event) {
         cardRecyclerView.attachOnScrollListenerForHorizontalArrow();
         cardRecyclerView.setOnDragMove(true);
-        Pair<String, Pair<CardDto, Pair<List<CardDto>, List<CardDto>>>> movedData =(Pair<String, Pair<CardDto, Pair<List<CardDto>, List<CardDto>>>>)event.getLocalState();
-        Pair<CardDto, Pair<List<CardDto>, List<CardDto>>> movedDataDep2= movedData.second;
-        CardDto movedRootCard = movedDataDep2.first;
+        DragMoveDataContainer dragMoveDataContainer = (DragMoveDataContainer) event.getLocalState();
+        CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         final int movedRootCardContainerPosition = movedRootCard.getContainerNo();
         final int targetContainerPosition = cardRecyclerView.getAdapter().getContainerPosition();
         final int targetContainerItemCount = cardRecyclerView.getAdapter().getItemCount();
-        return !(movedRootCardContainerPosition==targetContainerPosition&&targetContainerItemCount==1);
+        return !(movedRootCardContainerPosition == targetContainerPosition && targetContainerItemCount == 1);
     }
 
-    private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, Pair<String, Pair<CardDto, Pair<List<CardDto>, List<CardDto>>>> movedDataPair) {
-        Pair<CardDto, Pair<List<CardDto>, List<CardDto>>> movedDataPairDep2 = movedDataPair.second;
-        CardDto movedRootCard = movedDataPairDep2.first;
-        Pair<List<CardDto>, List<CardDto>> movingCardsAndNextCards = movedDataPairDep2.second;
-        List<CardDto> movedCardList = movingCardsAndNextCards.first;
-        List<CardDto> pastLocationNextCardList = movingCardsAndNextCards.second;
+    private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
+        CardDto movedRootCard = dragMoveDataContainer.getRootCard();
+        List<CardDto> movedCardList = dragMoveDataContainer.getMovingCardList();
+        List<CardDto> pastLocationNextCardList = dragMoveDataContainer.getPastLocationNextCardList();
         ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = containerRecyclerView.getLayoutManager();
         CardViewModel viewModel = ((MainCardActivity) cardRecyclerView.getContext()).getCardViewModel();
@@ -261,9 +261,9 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return true;
     }
 
-    private Runnable makeDropEventUiUpdateActionRunnable(List<CardDto> movedCardList, CardDto movedRootCard, CardRecyclerView cardRecyclerView, CardViewModel viewModel){
-        return  () -> {
-            Handler uiHandler = ((MainCardActivity)cardRecyclerView.getContext()).getMainHandler();
+    private Runnable makeDropEventUiUpdateActionRunnable(List<CardDto> movedCardList, CardDto movedRootCard, CardRecyclerView cardRecyclerView, CardViewModel viewModel) {
+        return () -> {
+            Handler uiHandler = ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler();
             //add movingCards into AllData
             viewModel.addToAllData(movedCardList.toArray(new CardDto[0]));
             //update UI
@@ -273,11 +273,11 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             //setFocusCardPosition to target container. && {later} smoothScrollToPosition(movingRootCard.getSeqNo) && presentChildren().
             viewModel.addSinglePresentCardDto(movedRootCard);
             Queue<Pair<Integer, Runnable>> delayActionQueue = new LinkedList<>();
-            Runnable itemInsertedAction = ()->cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
-            Runnable smoothScrollToPositionAction = ()->cardRecyclerView.smoothScrollToPosition(movedRootCard.getSeqNo());
-            Runnable presentChildrenAction = ()-> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
-            delayActionQueue.offer(Pair.create(ACTION_SCROLL_TO_POSITION,smoothScrollToPositionAction));
-            delayActionQueue.offer(Pair.create(ACTION_PRESENT_CHILDREN,presentChildrenAction));
+            Runnable itemInsertedAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
+            Runnable smoothScrollToPositionAction = () -> cardRecyclerView.smoothScrollToPosition(movedRootCard.getSeqNo());
+            Runnable presentChildrenAction = () -> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
+            delayActionQueue.offer(Pair.create(ACTION_SCROLL_TO_POSITION, smoothScrollToPositionAction));
+            delayActionQueue.offer(Pair.create(ACTION_PRESENT_CHILDREN, presentChildrenAction));
             uiHandler.post(itemInsertedAction);
             enqueueDelayedActions(delayActionQueue, uiHandler);
 //            viewModel.runOnUiThread(() -> {
@@ -292,15 +292,15 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         };
     }
 
-    private void enqueueDelayedActions(Queue<Pair<Integer,Runnable>> actionsQueue, Handler uiHandler){
+    private void enqueueDelayedActions(Queue<Pair<Integer, Runnable>> actionsQueue, Handler uiHandler) {
         if (actionsQueue.isEmpty())
             return;
-        Optional.ofNullable(actionsQueue.poll()).ifPresent(pair->{
-            if (pair.first==ACTION_SCROLL_TO_POSITION){
-                uiHandler.postDelayed(pair.second,2000+30);
+        Optional.ofNullable(actionsQueue.poll()).ifPresent(pair -> {
+            if (pair.first == ACTION_SCROLL_TO_POSITION) {
+                uiHandler.postDelayed(pair.second, 2000 + 30);
             }
-            if (pair.first==ACTION_PRESENT_CHILDREN){
-                uiHandler.postDelayed(pair.second,250+100+30);
+            if (pair.first == ACTION_PRESENT_CHILDREN) {
+                uiHandler.postDelayed(pair.second, 250 + 100 + 30);
             }
         });
     }
@@ -319,7 +319,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         final CardViewModel viewModel = ((MainCardActivity) cardRecyclerView.getContext()).getCardViewModel();
         if (containerPosition + 1 > viewModel.presentContainerCount())
             return false;
-        if (viewModel.getPresentData().size()<containerPosition+1)
+        if (viewModel.getPresentData().size() < containerPosition + 1)
             return false;
         final int cardCount = viewModel.getPresentData().get(containerPosition).size();
         Container container = viewModel.getContainer(containerPosition);
@@ -344,59 +344,50 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     }
 
     private boolean handleMoveServiceDragLocationEvent(CardRecyclerView cardRecyclerView, float xCoordinate) {
-        Logger.hotfixMessage("LocationEvent In!");
-        Handler uiHandler = ((MainCardActivity)cardRecyclerView.getContext()).getMainHandler();
+        Handler uiHandler = ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler();
         final CardAdapter cardAdapter = cardRecyclerView.getAdapter();
-        if (cardAdapter == null){
+        if (cardAdapter == null) {
             return false;
         }
         final int containerPosition = cardAdapter.getContainerPosition();
         final boolean noCardItem = containerPosition == -1;
-        if (noCardItem){
+        if (noCardItem) {
             return false;
         }
         final CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
-        if (cardRecyclerViewLayoutManager == null){
+        if (cardRecyclerViewLayoutManager == null) {
             return false;
         }
-
-
-
-
+        if (cardRecyclerViewLayoutManager.isDeployingArrow()) {
+            return false;
+        }
         final ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
         final ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = containerRecyclerView.getLayoutManager();
-        if (containerRecyclerViewLayoutManager == null){
+        if (containerRecyclerViewLayoutManager == null) {
             return false;
         }
         final CardViewModel viewModel = ((MainCardActivity) cardRecyclerView.getContext()).getCardViewModel();
-        if (viewModel.getPresentData().size()<containerPosition+1)
+        if (viewModel.getPresentData().size() < containerPosition + 1)
             return false;
         final int cardItemCount = viewModel.getPresentData().get(containerPosition).size();
         final Container container = viewModel.getContainer(containerPosition);
         final int onFocusCardPosition = container.getFocusCardPosition();
-
-        if (cardRecyclerViewLayoutManager.isDeployingArrow()) {
-            Logger.hotfixMessage("<onFocusCardPosition : "+onFocusCardPosition+" !>cardRecyclerViewLayoutManager.isDeployingArrow()");
-            return false;
-        }
-
         final int screenWidth = DisplayUtil.getScreenWidth(cardRecyclerView.getContext());
         final int MOVE_BOUNDARY_WIDTH = 200;
         final boolean onLeftBoundary = xCoordinate < MOVE_BOUNDARY_WIDTH;
         final boolean hasPrevPosition = onFocusCardPosition != 0;
         final boolean onRightBoundary = xCoordinate > screenWidth - MOVE_BOUNDARY_WIDTH;
-        final boolean hasNextPosition = onFocusCardPosition +1 != cardItemCount;
-        Logger.hotfixMessage("Entry line -onLeftBoundary:"+onLeftBoundary+"/ hasPrevPosition : "+hasPrevPosition);
+        final boolean hasNextPosition = onFocusCardPosition + 1 != cardItemCount;
         if (onLeftBoundary && hasPrevPosition) {
             cardRecyclerViewLayoutManager.setDeployingArrow(true);
             final int prevCardPosition = onFocusCardPosition - 1;
-            uiHandler.postDelayed(()->cardRecyclerView.smoothScrollToPosition(prevCardPosition),300);
+            uiHandler.postDelayed(() -> cardRecyclerView.smoothScrollToPosition(prevCardPosition), 300);
             return true;
         }
         if (onRightBoundary && hasNextPosition) {
             cardRecyclerViewLayoutManager.setDeployingArrow(true);
             final int nextCardPosition = onFocusCardPosition + 1;
-            uiHandler.postDelayed(()->cardRecyclerView.smoothScrollToPosition(nextCardPosition),300);
+            uiHandler.postDelayed(() -> cardRecyclerView.smoothScrollToPosition(nextCardPosition), 300);
         }
         return true;
     }
@@ -404,10 +395,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     private boolean handleMoveServiceDragExitedEvent(CardRecyclerView cardRecyclerView) {
         CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
         cardRecyclerViewLayoutManager.showCardArrows(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
-//        if (!layoutManager.isMovingDragExited()) {
-//            layoutManager.setMovingDragExited(true);
-//            layoutManager.showCardArrowsDelayed(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
-//        }
         return true;
     }
 

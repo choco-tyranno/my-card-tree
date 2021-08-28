@@ -10,19 +10,18 @@ import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
 
 public class OnDragListenerForBottomArrow implements View.OnDragListener {
     @Override
     public boolean onDrag(View view, DragEvent event) {
         final int action = event.getAction();
         if (action == DragEvent.ACTION_DRAG_STARTED) {
-            Logger.hotfixMessage("Bottom start");
-            final String dragType = ((String) ((Pair) event.getLocalState()).first);
-            final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
+            final String dragType = ((DragMoveDataContainer) event.getLocalState()).getDragType();
+            final boolean moveDragEvent = TextUtils.equals(dragType, DragMoveDataContainer.DRAG_TYPE);
             if (moveDragEvent)
                 return true;
         }
-
         ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.main_body);
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         if (containerLayoutManager == null)
@@ -47,7 +46,6 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
                     if (lastCompletelyVisibleContainerPosition + 1 + 1 == containerCount) {
                         view.setAlpha(0f);
                     }
-                    Logger.hotfixMessage("LOCATION / containerLayoutManager.scrollDelayed(100)");
                     prevContainerArrow.setAlpha(1f);
                 });
                 containerLayoutManager.scrollDelayed(100);
@@ -59,7 +57,6 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
         if (action == DragEvent.ACTION_DRAG_ENDED) {
             ((MainCardActivity)view.getContext()).getMainHandler().postDelayed(()->{
                 view.setAlpha(0f);
-                Logger.hotfixMessage("ACTION_DRAG_ENDED");
             }, 400);
             return true;
         }

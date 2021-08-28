@@ -10,28 +10,26 @@ import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
 
 public class OnDragListenerForTopArrow implements View.OnDragListener {
     @Override
     public boolean onDrag(View view, DragEvent event) {
         final int action = event.getAction();
         if (action == DragEvent.ACTION_DRAG_STARTED) {
-            Logger.hotfixMessage("Top start");
-            final String dragType = ((String) ((Pair) event.getLocalState()).first);
-            final boolean moveDragEvent = TextUtils.equals(dragType, "MOVE");
+            if (!(event.getLocalState() instanceof DragMoveDataContainer))
+                return false;
+            final String dragType = ((DragMoveDataContainer)event.getLocalState()).getDragType();
+            final boolean moveDragEvent = TextUtils.equals(dragType, DragMoveDataContainer.DRAG_TYPE);
             if (moveDragEvent)
                 return true;
         }
-
         ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.main_body);
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         if (containerLayoutManager == null)
             return false;
         ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-        View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
         View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
-        CardViewModel viewModel = ((MainCardActivity) view.getContext()).getCardViewModel();
-
         if (action == DragEvent.ACTION_DRAG_LOCATION) {
             if (containerLayoutManager.hasScrollAction()) {
                 return false;
@@ -45,7 +43,6 @@ public class OnDragListenerForTopArrow implements View.OnDragListener {
                 if (firstCompletelyVisibleContainerPosition - 1 == 0) {
                     view.setAlpha(0f);
                 }
-                Logger.hotfixMessage("LOCATION / containerLayoutManager.scrollDelayed(100)");
                 nextContainerArrow.setAlpha(1f);
             });
             containerLayoutManager.scrollDelayed(100);
@@ -55,7 +52,6 @@ public class OnDragListenerForTopArrow implements View.OnDragListener {
         if (action == DragEvent.ACTION_DRAG_ENDED) {
             ((MainCardActivity)view.getContext()).getMainHandler().postDelayed(()->{
                 view.setAlpha(0f);
-                Logger.hotfixMessage("ACTION_DRAG_ENDED");
             }, 400);
             return true;
         }

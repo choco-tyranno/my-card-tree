@@ -2,19 +2,15 @@ package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.content.ClipData;
 import android.content.Context;
-import android.util.Log;
+import android.os.Parcelable;
 import android.util.Pair;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import androidx.databinding.BaseObservable;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
@@ -30,7 +26,6 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CardGestureListener extends GestureDetector.SimpleOnGestureListener {
     private View view;
@@ -40,10 +35,11 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         super.onLongPress(e);
         SingleToastManager.show(SingleToaster.makeTextShort(view.getContext(), "long pressed"));
         CardDto cardDto = getCardDto();
-        Pair<List<CardDto>, List<CardDto>> savedOriginData = prepareDragStart(view);
+        DragMoveDataContainer dragMoveDataContainer = prepareStartingDragMove(view);
         view.startDragAndDrop(ClipData.newPlainText("", "")
                 , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDto), cardDto)
-                , Pair.create("MOVE", Pair.create(cardDto, savedOriginData)), 0);
+                , dragMoveDataContainer, 0);
+//        Pair<String , Pair<CardDto,Pair<Pair<List<CardDto>, List<CardDto>>, List<Pair<Integer, Parcelable>>>>> t;
     }
 
     /*
@@ -52,20 +48,26 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
      * next data - seq reduced. for rollback.
      * return : Pair<> (first : moving-data, second : next data),
      * */
-    private Pair<List<CardDto>, List<CardDto>> prepareDragStart(View view) {
+    private DragMoveDataContainer prepareStartingDragMove(View view) {
         CardRecyclerView cardRecyclerView = getCardRecyclerView(view);
         CardViewModel viewModel = getCardViewModel(view);
-        List<CardDto> savedMovingData = new ArrayList<>();
-        List<CardDto> savedNextData = new ArrayList<>();
+        List<CardDto> movingCardList = new ArrayList<>();
+        List<CardDto> currentNextCardList = new ArrayList<>();
+        List<Pair<Integer, Parcelable>> currentOnFocusPositionAndScrollStatePairList = new ArrayList<>();
         CardDto cardDto = getCardDto();
-        Pair<List<CardDto>, List<CardDto>> preparedData = Pair.create(savedMovingData, savedNextData);
-        viewModel.findChildrenCards(cardDto, savedMovingData);
-        savedMovingData.add(cardDto);
-        viewModel.findNextCards(cardDto.getContainerNo(), cardDto.getSeqNo(), savedNextData);
-        viewModel.removeFromAllList(savedMovingData.toArray(new CardDto[0]));
+        viewModel.findCurrentOnFocusCardPositionsAndScrollStates(cardDto.getContainerNo(), currentOnFocusPositionAndScrollStatePairList);
+        DragMoveDataContainer dragMoveDataContainer = new DragMoveDataContainer();
+        dragMoveDataContainer.setRootCard(getCardDto());
+        dragMoveDataContainer.setMovingCardList(movingCardList);
+        dragMoveDataContainer.setPastLocationNextCardList(currentNextCardList);
+        dragMoveDataContainer.setPastOnFocusPositionAndScrollStatePairList(currentOnFocusPositionAndScrollStatePairList);
+        viewModel.findChildrenCards(cardDto, movingCardList);
+        movingCardList.add(cardDto);
+        viewModel.findNextCards(cardDto.getContainerNo(), cardDto.getSeqNo(), currentNextCardList);
+        viewModel.removeFromAllList(movingCardList.toArray(new CardDto[0]));
         final boolean hasLeftItemInTargetContainer = viewModel.removeSinglePresentCardDto(cardDto);
-        if (!savedNextData.isEmpty()) {
-            viewModel.reduceListSeq(savedNextData);
+        if (!currentNextCardList.isEmpty()) {
+            viewModel.reduceListSeq(currentNextCardList);
         }
         if (hasLeftItemInTargetContainer) {
             if (cardRecyclerView.getAdapter() == null)
@@ -84,17 +86,17 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
             ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();
             if (containerAdapter == null)
-                return preparedData;
+                return dragMoveDataContainer;
             LinearLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
             if (containerLayoutManager == null)
-                return preparedData;
+                return dragMoveDataContainer;
             int cardContainerCount = containerLayoutManager.getItemCount() - 1;
             int removeCount = cardContainerCount - (cardDto.getContainerNo() + 1) + 1;
             viewModel.clearContainerPositionPresentData(cardDto.getContainerNo());
             viewModel.clearContainerAtPosition(cardDto.getContainerNo());
             containerAdapter.notifyItemRangeRemoved(cardDto.getContainerNo(), removeCount);
         }
-        return preparedData;
+        return dragMoveDataContainer;
     }
 
 
@@ -110,18 +112,18 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
 
     /* end long pressed methods*/
 
-    private ItemCardFrameBinding getItemCardFrameBinding(){
+    private ItemCardFrameBinding getItemCardFrameBinding() {
         FrameLayout frameLayout = (FrameLayout) view.getParent().getParent();
         CardRecyclerView cardRecyclerView = (CardRecyclerView) frameLayout.getParent();
         ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(frameLayout);
         return cardViewHolder.getBinding();
     }
 
-    private CardDto getCardDto(){
+    private CardDto getCardDto() {
         return getItemCardFrameBinding().getCard();
     }
 
-    private CardState getCardState(){
+    private CardState getCardState() {
         return getItemCardFrameBinding().getCardState();
     }
 
