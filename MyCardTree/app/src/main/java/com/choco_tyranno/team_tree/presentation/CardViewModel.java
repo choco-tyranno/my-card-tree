@@ -39,6 +39,7 @@ import com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardState;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardTouchListener;
+import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
 import com.choco_tyranno.team_tree.presentation.card_rv.ImageToFullScreenClickListener;
@@ -47,6 +48,7 @@ import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForCallBt
 import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForMessageBtn;
 import com.choco_tyranno.team_tree.presentation.card_rv.OnDragListenerForCardRecyclerView;
 import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder;
+import com.choco_tyranno.team_tree.presentation.container_rv.CloneCardShadow;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
@@ -539,10 +541,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private void initCreateCardUtilFabOnLongClickListener() {
-        this.onLongListenerForCreateCardUtilFab
-                = (view) -> view.startDragAndDrop(
+        this.onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(
                 ClipData.newPlainText("", "")
-                , new CardShadow(view)
+                , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), null))
                 , Pair.create("CREATE", "")
                 , 0);
     }
@@ -756,15 +757,15 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     /*
      * @param flagCardPosition is exclude position.
      * */
-    public void findNextCards(int containerPosition, int lastExceptCardPosition, List<CardDto> foundItemCollector) {
+    public void findNextCards(int containerPosition, int startCardPosition, List<CardDto> foundItemCollector) {
         if (mPresentData.size() < containerPosition + 1)
             return;
         List<Pair<CardDto, CardState>> targetContainerCards = mPresentData.get(containerPosition);
         if (targetContainerCards.isEmpty())
             return;
-        if (targetContainerCards.size() > lastExceptCardPosition + 1) {
-            List<Pair<CardDto, CardState>> filteredSubList = targetContainerCards.subList(lastExceptCardPosition + 1, targetContainerCards.size());
-            pairListToCardDtoList(filteredSubList);
+        if (targetContainerCards.size() > startCardPosition) {
+            List<Pair<CardDto, CardState>> filteredSubList = targetContainerCards.subList(startCardPosition, targetContainerCards.size());
+//            pairListToCardDtoList(filteredSubList);
             foundItemCollector.addAll(pairListToCardDtoList(filteredSubList));
         }
     }

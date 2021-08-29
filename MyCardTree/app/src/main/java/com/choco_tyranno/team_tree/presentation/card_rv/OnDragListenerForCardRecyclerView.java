@@ -207,6 +207,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return !(movedRootCardContainerPosition == targetContainerPosition && targetContainerItemCount == 1);
     }
 
+//    TODO : this
     private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
         CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         List<CardDto> movedCardList = dragMoveDataContainer.getMovingCardList();
@@ -241,7 +242,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             return false;
         final int onFocusCardPosition = container.getFocusCardPosition();
         List<CardDto> currentNextCards = new ArrayList<>();
-        viewModel.findNextCards(targetContainerPosition, targetContainerPosition - 1, currentNextCards);
+        viewModel.findNextCards(targetContainerPosition, onFocusCardPosition, currentNextCards);
         viewModel.increaseListSeq(currentNextCards);
         int rootCardNo = container.getRootNo();
         if (rootCardNo == Container.NO_ROOT_NO)
@@ -273,12 +274,12 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             //setFocusCardPosition to target container. && {later} smoothScrollToPosition(movingRootCard.getSeqNo) && presentChildren().
             viewModel.addSinglePresentCardDto(movedRootCard);
             Queue<Pair<Integer, Runnable>> delayActionQueue = new LinkedList<>();
-            Runnable itemInsertedAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
-            Runnable smoothScrollToPositionAction = () -> cardRecyclerView.smoothScrollToPosition(movedRootCard.getSeqNo());
+            Runnable itemInsertAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
+            Runnable smoothScrollToPositionAction = () -> cardRecyclerView.scrollToPosition(movedRootCard.getSeqNo());
             Runnable presentChildrenAction = () -> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
             delayActionQueue.offer(Pair.create(ACTION_SCROLL_TO_POSITION, smoothScrollToPositionAction));
             delayActionQueue.offer(Pair.create(ACTION_PRESENT_CHILDREN, presentChildrenAction));
-            uiHandler.post(itemInsertedAction);
+            uiHandler.post(itemInsertAction);
             enqueueDelayedActions(delayActionQueue, uiHandler);
 //            viewModel.runOnUiThread(() -> {
 //                cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
@@ -297,7 +298,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             return;
         Optional.ofNullable(actionsQueue.poll()).ifPresent(pair -> {
             if (pair.first == ACTION_SCROLL_TO_POSITION) {
-                uiHandler.postDelayed(pair.second, 2000 + 30);
+                uiHandler.postDelayed(pair.second, 800 + 30);
             }
             if (pair.first == ACTION_PRESENT_CHILDREN) {
                 uiHandler.postDelayed(pair.second, 250 + 100 + 30);

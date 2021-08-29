@@ -27,17 +27,17 @@ public class CardViewShadowProvider {
         if (holder == null) {
             holder = new LazyHolder();
         }
-
         if (!Optional.ofNullable(holder.get().cloneCardViewInstance).isPresent()) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             holder.get().cloneCardViewInstance = layoutInflater.inflate(R.layout.item_card_front_clone, null, false);
             holder.get().cloneCardViewInstance.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             holder.get().cloneCardViewInstance.layout(0, 0, (int) context.getResources().getDimension(R.dimen.cloneCard_width), (int) context.getResources().getDimension(R.dimen.cloneCard_height));
         }
-
         View cardShadowView = holder.get().cloneCardViewInstance;
-        ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_titleTextView)).setText(cardDto.getTitle());
-        ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_contactNumberTextView)).setText(cardDto.getContactNumber());
+        if (cardDto != null) {
+            ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_titleTextView)).setText(cardDto.getTitle());
+            ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_contactNumberTextView)).setText(cardDto.getContactNumber());
+        }
         return holder.get().cloneCardViewInstance;
     }
 

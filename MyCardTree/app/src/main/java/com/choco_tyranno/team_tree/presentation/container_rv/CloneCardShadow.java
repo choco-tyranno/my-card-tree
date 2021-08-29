@@ -32,11 +32,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CloneCardShadow extends View.DragShadowBuilder {
-    private CardDto cardDto;
-
-    public CloneCardShadow(View view, CardDto cardDto) {
+    public CloneCardShadow(View view) {
         super(view);
-        this.cardDto = cardDto;
     }
 
     @Override
@@ -49,25 +46,5 @@ public class CloneCardShadow extends View.DragShadowBuilder {
     @Override
     public void onDrawShadow(Canvas canvas) {
         super.onDrawShadow(canvas);
-    }
-
-    private Handler findMainHandler(){
-        return ((MainCardActivity)getView().getContext()).getMainHandler();
-    }
-
-    private CardRecyclerView findTargetCardRecyclerView() {
-        ContainerRecyclerView containerRecyclerView = ((MainCardActivity) getView().getContext()).getMainBinding().mainScreen.mainBody.containerRecyclerview;
-        RecyclerView.ViewHolder viewHolder = containerRecyclerView.findViewHolderForAdapterPosition(cardDto.getContainerNo());
-        if (viewHolder==null)
-            return null;
-        if (!(viewHolder instanceof CardContainerViewHolder)){
-            return null;
-        }
-        CardContainerViewHolder containerViewHolder =(CardContainerViewHolder) viewHolder;
-        return containerViewHolder.getBinding().cardRecyclerview;
-    }
-
-    private CardViewModel findCardViewModel(){
-        return ((MainCardActivity) getView().getContext()).getCardViewModel();
     }
 }

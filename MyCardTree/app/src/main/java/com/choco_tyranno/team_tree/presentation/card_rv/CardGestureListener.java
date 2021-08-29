@@ -33,11 +33,10 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
     @Override
     public void onLongPress(MotionEvent e) {
         super.onLongPress(e);
-        SingleToastManager.show(SingleToaster.makeTextShort(view.getContext(), "long pressed"));
         CardDto cardDto = getCardDto();
         DragMoveDataContainer dragMoveDataContainer = prepareStartingDragMove(view);
         view.startDragAndDrop(ClipData.newPlainText("", "")
-                , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDto), cardDto)
+                , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDto))
                 , dragMoveDataContainer, 0);
 //        Pair<String , Pair<CardDto,Pair<Pair<List<CardDto>, List<CardDto>>, List<Pair<Integer, Parcelable>>>>> t;
     }
