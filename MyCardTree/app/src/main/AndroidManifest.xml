@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/team_tree_ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".presentation.UiTestActivity"/>
         <activity android:name=".presentation.MainCardActivity"
             android:theme="@style/SplashTheme">

@@ -88,10 +88,10 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         DrawerLayout mainDL = binding.mainDrawerLayout;
-        if (mainDL.isDrawerOpen(GravityCompat.END)){
+        if (mainDL.isDrawerOpen(GravityCompat.END)) {
             mainDL.closeDrawer(GravityCompat.END);
             SearchView searchView = binding.rightDrawer.cardSearchView;
-            searchView.setQuery("",false);
+            searchView.setQuery("", false);
             searchView.setIconified(true);
             cardFinder.setSendingFindCardReq(false);
             return;
@@ -265,10 +265,11 @@ public class MainCardActivity extends AppCompatActivity {
         scrollActionDelayed(scrollActionQueue, finishAction);
     }
 
-    private void scrollActionDelayed(Queue<Runnable> scrollActionQueue, Runnable finishAction) {
+    public void scrollActionDelayed(Queue<Runnable> scrollActionQueue, Runnable finishAction) {
         mMainHandler.postDelayed(() -> {
-            if (scrollActionQueue.isEmpty()){
-                finishAction.run();
+            if (scrollActionQueue.isEmpty()) {
+                if (finishAction != null)
+                    finishAction.run();
                 return;
             }
             Optional.ofNullable(scrollActionQueue.poll()).ifPresent(Runnable::run);

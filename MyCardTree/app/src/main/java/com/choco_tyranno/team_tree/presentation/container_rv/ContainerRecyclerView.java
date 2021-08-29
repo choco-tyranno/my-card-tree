@@ -21,6 +21,7 @@ import com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -115,7 +116,7 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         public void onDragStart() {
-            mainHandler().postDelayed(() -> refreshArrows(), 260);
+            Optional.ofNullable(mainHandler()).ifPresent(handler -> handler.postDelayed(this::refreshArrows, 260));
         }
 
         private void initArrows() {
@@ -128,7 +129,6 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         private void showTopArrow() {
-            Logger.hotfixMessage("showTopArrow()");
             if (topArrow.getAlpha() == 0f)
                 topArrow.setAlpha(1f);
         }
@@ -139,7 +139,6 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         private void showBottomArrow() {
-            Logger.hotfixMessage("showBottomArrow()");
             if (bottomArrow.getAlpha() == 0f)
                 bottomArrow.setAlpha(1f);
         }

@@ -65,9 +65,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -114,11 +117,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private boolean sendingFindCardReq = false;
 
-
-    public void findCurrentOnFocusCardPositionsAndScrollStates(int containerNo, List<Pair<Integer, Parcelable>> currentSavedScrollStateList) {
+    public void findCurrentOnFocusCardPositions(int containerNo, List<Integer> currentSavedOnFocusCardPositionList) {
         for (int i = 0; i < containerNo; i++) {
             Container container = getContainer(i);
-            currentSavedScrollStateList.add(Pair.create(container.getFocusCardPosition(), container.getSavedScrollState()));
+            currentSavedOnFocusCardPositionList.add(container.getFocusCardPosition());
         }
     }
 
@@ -1074,9 +1076,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
             String dragType = "";
             if (event.getLocalState() instanceof Pair)
-                dragType = (String)((Pair) event.getLocalState()).first;
+                dragType = (String) ((Pair) event.getLocalState()).first;
             if (event.getLocalState() instanceof DragMoveDataContainer)
-                dragType = ((DragMoveDataContainer)event.getLocalState()).getDragType();
+                dragType = ((DragMoveDataContainer) event.getLocalState()).getDragType();
             if (TextUtils.equals(dragType, "CREATE")) {
                 return handleCreateServiceForEmptySpace(view, event);
             }
@@ -1136,41 +1138,78 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public Runnable createRollbackAction(DragMoveDataContainer dragMoveDataContainer, ContainerRecyclerView containerRecyclerView) {
         return () -> {
-//            Pair<CardDto, Pair<List<CardDto>, List<CardDto>>>
             CardDto rootCard = dragMoveDataContainer.getRootCard();
             List<CardDto> movingCardList = dragMoveDataContainer.getMovingCardList();
             List<CardDto> nextCardList = dragMoveDataContainer.getPastLocationNextCardList();
-            addToAllData(movingCardList.toArray(new CardDto[0]));
-            final boolean noPresentContainerForMovingCard = mPresentData.size() < rootCard.getContainerNo() + 1;
-            addSinglePresentCardDto(rootCard);
-            if (noPresentContainerForMovingCard) {
-                addContainer(rootCard.getContainerNo(), rootCard.getRootNo());
-                ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();
-                if (containerAdapter == null)
-                    return;
-                containerAdapter.notifyItemInserted(rootCard.getContainerNo());
-                if (hasChildInAllData(rootCard)) {
-                    throwToMainHandlerWithDelay(() -> {
-                        CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, rootCard.getContainerNo());
-                        if (targetCardRecyclerView != null)
-                            presentChildren(targetCardRecyclerView, rootCard.getContainerNo(), rootCard.getSeqNo());
-                    }, 260, containerRecyclerView.getContext());
+            List<Integer> pastOnFocusPositionList = dragMoveDataContainer.getPastOnFocusPositionList();
+            final int rootCardContainerPosition = rootCard.getContainerNo();
+            Runnable afterAboveContainersRollbackAction = () -> {
+                addToAllData(movingCardList.toArray(new CardDto[0]));
+                final boolean noPresentContainerForMovingCard = mPresentData.size() < rootCard.getContainerNo() + 1;
+                addSinglePresentCardDto(rootCard);
+                if (noPresentContainerForMovingCard) {
+                    addContainer(rootCard.getContainerNo(), rootCard.getRootNo());
+                    ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();
+                    if (containerAdapter == null)
+                        return;
+                    containerAdapter.notifyItemInserted(rootCard.getContainerNo());
+                    if (hasChildInAllData(rootCard)) {
+                        throwToMainHandlerWithDelay(() -> {
+                            CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, rootCard.getContainerNo());
+                            if (targetCardRecyclerView != null)
+                                presentChildren(targetCardRecyclerView, rootCard.getContainerNo(), rootCard.getSeqNo());
+                        }, 260, containerRecyclerView.getContext());
+                    }
+                } else {
+                    increaseListSeq(nextCardList);
+                    CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, rootCard.getContainerNo());
+                    if (targetCardRecyclerView == null)
+                        return;
+                    CardAdapter cardAdapter = targetCardRecyclerView.getAdapter();
+                    if (cardAdapter == null)
+                        return;
+                    cardAdapter.notifyItemInserted(rootCard.getSeqNo());
+                    targetCardRecyclerView.smoothScrollToPosition(rootCard.getSeqNo());
+                    presentChildren(targetCardRecyclerView, rootCard.getContainerNo(), rootCard.getSeqNo());
                 }
-            } else {
-                increaseListSeq(nextCardList);
-                CardRecyclerView targetCardRecyclerView = findCardRecyclerViewFromContainerRecyclerView(containerRecyclerView, rootCard.getContainerNo());
-                if (targetCardRecyclerView == null)
-                    return;
-                CardAdapter cardAdapter = targetCardRecyclerView.getAdapter();
-                if (cardAdapter == null)
-                    return;
-                cardAdapter.notifyItemInserted(rootCard.getSeqNo());
-                targetCardRecyclerView.smoothScrollToPosition(rootCard.getSeqNo());
-                presentChildren(targetCardRecyclerView, rootCard.getContainerNo(), rootCard.getSeqNo());
-            }
+            };
+            rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition(containerRecyclerView, pastOnFocusPositionList, rootCardContainerPosition, afterAboveContainersRollbackAction);
             SingleToastManager.show(SingleToaster.makeTextShort(containerRecyclerView.getContext(), "이동 취소되었습니다."));
         };
     }
+
+    /*
+     * exclude rootCardContainerPosition*/
+    private void rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition(ContainerRecyclerView containerRecyclerView
+            , List<Integer> pastOnFocusPositionList, int rootCardContainerPosition, Runnable finishAction) {
+        int startRollbackContainerPosition = -1;
+        for (int i = 0; i < rootCardContainerPosition; i++) {
+            if (getContainer(i).getFocusCardPosition() != pastOnFocusPositionList.get(i)) {
+                startRollbackContainerPosition = i;
+                break;
+            }
+        }
+        Queue<Runnable> rollbackActionQueue = new LinkedList<>();
+        for (int i = startRollbackContainerPosition; i < rootCardContainerPosition; i++) {
+            if (startRollbackContainerPosition == -1)
+                break;
+            final int fi = i;
+            rollbackActionQueue.offer(() -> {
+                containerRecyclerView.smoothScrollToPosition(fi);
+                Runnable scrollCardToTargetPositionAction = () -> {
+                    CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerView.findViewHolderForAdapterPosition(fi);
+                    if (containerViewHolder == null)
+                        throw new RuntimeException("CardViewModel#rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition#containerViewHolder is null");
+                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
+                    cardRecyclerview.smoothScrollToPosition(pastOnFocusPositionList.get(fi));
+                };
+                throwToMainHandlerWithDelay(scrollCardToTargetPositionAction, 900, containerRecyclerView.getContext());
+            });
+        }
+        rollbackActionQueue.offer(() -> containerRecyclerView.smoothScrollToPosition(rootCardContainerPosition));
+        ((MainCardActivity) containerRecyclerView.getContext()).scrollActionDelayed(rollbackActionQueue, finishAction);
+    }
+
 
     public synchronized List<List<Pair<CardDto, CardState>>> getPresentData() {
         return mPresentData;
@@ -1209,12 +1248,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                     if (leftCardArrowNeeded) {
                         layoutManager.showCardArrowsDelayed(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_TWO_WAY_ARROW);
                         synchronized (this) {
-                            containerRecyclerViewLayoutManager.refreshArrows();
+                            Optional.ofNullable(containerRecyclerViewLayoutManager).ifPresent(ContainerRecyclerView.ItemScrollingControlLayoutManager::refreshArrows);
                         }
                     } else {
                         layoutManager.showCardArrowsDelayed(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_RIGHT_ARROW);
                         synchronized (this) {
-                            containerRecyclerViewLayoutManager.refreshArrows();
+                            Optional.ofNullable(containerRecyclerViewLayoutManager).ifPresent(ContainerRecyclerView.ItemScrollingControlLayoutManager::refreshArrows);
                         }
                         return true;
                     }

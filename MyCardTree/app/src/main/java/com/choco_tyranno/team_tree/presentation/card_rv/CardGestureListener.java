@@ -53,14 +53,14 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         CardViewModel viewModel = getCardViewModel(view);
         List<CardDto> movingCardList = new ArrayList<>();
         List<CardDto> currentNextCardList = new ArrayList<>();
-        List<Pair<Integer, Parcelable>> currentOnFocusPositionAndScrollStatePairList = new ArrayList<>();
+        List<Integer> currentOnFocusPositionList = new ArrayList<>();
         CardDto cardDto = getCardDto();
-        viewModel.findCurrentOnFocusCardPositionsAndScrollStates(cardDto.getContainerNo(), currentOnFocusPositionAndScrollStatePairList);
+        viewModel.findCurrentOnFocusCardPositions(cardDto.getContainerNo(), currentOnFocusPositionList);
         DragMoveDataContainer dragMoveDataContainer = new DragMoveDataContainer();
         dragMoveDataContainer.setRootCard(getCardDto());
         dragMoveDataContainer.setMovingCardList(movingCardList);
         dragMoveDataContainer.setPastLocationNextCardList(currentNextCardList);
-        dragMoveDataContainer.setPastOnFocusPositionAndScrollStatePairList(currentOnFocusPositionAndScrollStatePairList);
+        dragMoveDataContainer.setPastOnFocusPositionList(currentOnFocusPositionList);
         viewModel.findChildrenCards(cardDto, movingCardList);
         movingCardList.add(cardDto);
         viewModel.findNextCards(cardDto.getContainerNo(), cardDto.getSeqNo(), currentNextCardList);

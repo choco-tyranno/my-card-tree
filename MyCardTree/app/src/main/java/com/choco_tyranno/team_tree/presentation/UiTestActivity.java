@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UiTestActivity extends AppCompatActivity {
 
@@ -34,18 +36,12 @@ public class UiTestActivity extends AppCompatActivity {
         AtomicBoolean flag = new AtomicBoolean(true);
         RecyclerView rv = findViewById(R.id.test_rv);
         MaterialButton fireBtn = findViewById(R.id.fire_btn);
-        AtomicBoolean switchFlag = new AtomicBoolean(false);
+        final AtomicReference<Parcelable> savedScrollState = new AtomicReference<>();
         fireBtn.setOnClickListener(
                 view -> {
-                    rv.smoothScrollToPosition(0);
-                    rv.smoothScrollToPosition(9);
-//                    if (switchFlag.get()) {
-//                        rv.smoothScrollToPosition(0);
-//                        switchFlag.set(false);
-//                    } else {
-//                        rv.smoothScrollToPosition(9);
-//                        switchFlag.set(true);
-//                    }
+                    if (savedScrollState.get() == null)
+                        savedScrollState.set(rv.getLayoutManager().onSaveInstanceState());
+                    rv.getLayoutManager().onRestoreInstanceState(savedScrollState.get());
                 });
 
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false) {

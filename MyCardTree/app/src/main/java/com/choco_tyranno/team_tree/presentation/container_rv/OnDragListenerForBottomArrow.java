@@ -17,6 +17,8 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
     public boolean onDrag(View view, DragEvent event) {
         final int action = event.getAction();
         if (action == DragEvent.ACTION_DRAG_STARTED) {
+            if (!(event.getLocalState() instanceof DragMoveDataContainer))
+                return false;
             final String dragType = ((DragMoveDataContainer) event.getLocalState()).getDragType();
             final boolean moveDragEvent = TextUtils.equals(dragType, DragMoveDataContainer.DRAG_TYPE);
             if (moveDragEvent)
@@ -55,9 +57,7 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
         }
 
         if (action == DragEvent.ACTION_DRAG_ENDED) {
-            ((MainCardActivity)view.getContext()).getMainHandler().postDelayed(()->{
-                view.setAlpha(0f);
-            }, 400);
+            ((MainCardActivity) view.getContext()).getMainHandler().postDelayed(() ->view.setAlpha(0f), 400);
             return true;
         }
         return false;

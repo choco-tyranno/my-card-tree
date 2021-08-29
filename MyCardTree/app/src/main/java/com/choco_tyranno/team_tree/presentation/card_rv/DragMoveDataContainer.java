@@ -12,7 +12,7 @@ public class DragMoveDataContainer {
     private CardDto rootCard;
     private List<CardDto> movingCardList;
     private List<CardDto> pastLocationNextCardList;
-    private List<Pair<Integer, Parcelable>> pastOnFocusPositionAndScrollStatePairList;
+    private List<Integer> pastOnFocusPositionList;
 
     public DragMoveDataContainer(){
     }
@@ -31,8 +31,8 @@ public class DragMoveDataContainer {
 
     }
 
-    public void setPastOnFocusPositionAndScrollStatePairList(List<Pair<Integer, Parcelable>> onFocusPositionAndScrollStatePairList) {
-        this.pastOnFocusPositionAndScrollStatePairList = onFocusPositionAndScrollStatePairList;
+    public void setPastOnFocusPositionList(List<Integer> onFocusPositionList) {
+        this.pastOnFocusPositionList = onFocusPositionList;
     }
 
     public String getDragType(){
@@ -51,7 +51,7 @@ public class DragMoveDataContainer {
         return pastLocationNextCardList;
     }
 
-    public List<Pair<Integer, Parcelable>> getPastOnFocusPositionAndScrollStatePairList() {
-        return pastOnFocusPositionAndScrollStatePairList;
+    public List<Integer> getPastOnFocusPositionList() {
+        return pastOnFocusPositionList;
     }
 }
