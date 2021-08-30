@@ -62,26 +62,11 @@ public class ContainerRecyclerView extends RecyclerView {
         public static final int DIRECTION_TWO_WAY_ARROW = 0;
         public static final int DIRECTION_TOP_ARROW = 1;
         public static final int DIRECTION_BOTTOM_ARROW = 2;
-        private AtomicBoolean layoutArrows;
-        private AtomicBoolean containerRollbacked;
-        private AtomicBoolean movingDragExited;
 
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
-//        private Runnable movedCardsRollbackAction;
-//        private HashMap<Integer, Runnable> dragMoveEndActionMap;
-//        private static final int VERTICAL_ARROW_REMOVE_ACTION = 1;
-//        private static final int CARD_ROLLBACK_ACTION = 2;
 
-
-        private CardRecyclerView findCardRecyclerView(int position) {
-            ViewHolder viewHolder = mContainerRecyclerView.findViewHolderForAdapterPosition(position);
-            if (viewHolder instanceof CardContainerViewHolder) {
-                return ((CardContainerViewHolder) viewHolder).getBinding().cardRecyclerview;
-            }
-            return null;
-        }
 
         public void onDragEndWithDropFail(@Nullable Runnable rollbackAction) {
             if (rollbackAction != null) {
@@ -125,7 +110,6 @@ public class ContainerRecyclerView extends RecyclerView {
             ViewGroup viewGroup = ((ViewGroup) mContainerRecyclerView.getParent());
             this.topArrow = viewGroup.findViewById(R.id.prev_container_arrow);
             this.bottomArrow = viewGroup.findViewById(R.id.next_container_arrow);
-            layoutArrows = new AtomicBoolean(false);
         }
 
         private void showTopArrow() {
@@ -170,29 +154,6 @@ public class ContainerRecyclerView extends RecyclerView {
 
         }
 
-        public void showCardArrowsDelayed(int direction) {
-            final int duration = 260;
-            layoutArrows.set(true);
-            Objects.requireNonNull(mainHandler()).postDelayed(() -> {
-                if (!isMovingDragExited() || direction == DIRECTION_NO_ARROW) {
-                    showCardArrows(direction);
-                }
-                layoutArrows.set(false);
-            }, duration);
-        }
-
-        public void setMovingDragExited(boolean exited) {
-            movingDragExited.set(exited);
-        }
-
-        public boolean isMovingDragExited() {
-            return movingDragExited.get();
-        }
-
-        public void smoothScrollToPosition(int toPosition) {
-            mContainerRecyclerView.smoothScrollToPosition(toPosition);
-        }
-
         /*end*/
 
 
@@ -205,8 +166,6 @@ public class ContainerRecyclerView extends RecyclerView {
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {
             this.mContainerRecyclerView = containerRecyclerView;
             initArrows();
-            this.containerRollbacked = new AtomicBoolean(false);
-            this.movingDragExited = new AtomicBoolean(false);
         }
 
         /*
@@ -247,9 +206,6 @@ public class ContainerRecyclerView extends RecyclerView {
             this.containerScrollAction = null;
         }
 
-        public void setExitAction(Runnable exitAction) {
-            this.exitAction = exitAction;
-        }
 
         public void clearContainerExitAction() {
             this.exitAction = null;

@@ -207,7 +207,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return !(movedRootCardContainerPosition == targetContainerPosition && targetContainerItemCount == 1);
     }
 
-//    TODO : this
     private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
         CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         List<CardDto> movedCardList = dragMoveDataContainer.getMovingCardList();
@@ -242,7 +241,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             return false;
         final int onFocusCardPosition = container.getFocusCardPosition();
         List<CardDto> currentNextCards = new ArrayList<>();
-        viewModel.findNextCards(targetContainerPosition, onFocusCardPosition, currentNextCards);
+        viewModel.findNextCards(targetContainerPosition, onFocusCardPosition - 1, currentNextCards);
         viewModel.increaseListSeq(currentNextCards);
         int rootCardNo = container.getRootNo();
         if (rootCardNo == Container.NO_ROOT_NO)

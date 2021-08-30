@@ -757,15 +757,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     /*
      * @param flagCardPosition is exclude position.
      * */
-    public void findNextCards(int containerPosition, int startCardPosition, List<CardDto> foundItemCollector) {
+    public void findNextCards(int containerPosition, int flagCardPosition, List<CardDto> foundItemCollector) {
         if (mPresentData.size() < containerPosition + 1)
             return;
         List<Pair<CardDto, CardState>> targetContainerCards = mPresentData.get(containerPosition);
         if (targetContainerCards.isEmpty())
             return;
-        if (targetContainerCards.size() > startCardPosition) {
-            List<Pair<CardDto, CardState>> filteredSubList = targetContainerCards.subList(startCardPosition, targetContainerCards.size());
-//            pairListToCardDtoList(filteredSubList);
+        if (targetContainerCards.size() > flagCardPosition + 1) {
+            List<Pair<CardDto, CardState>> filteredSubList = targetContainerCards.subList(flagCardPosition+1, targetContainerCards.size());
             foundItemCollector.addAll(pairListToCardDtoList(filteredSubList));
         }
     }
@@ -1179,6 +1178,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         };
     }
 
+//    TODO : this
     /*
      * exclude rootCardContainerPosition*/
     private void rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition(ContainerRecyclerView containerRecyclerView
@@ -1195,17 +1195,30 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             if (startRollbackContainerPosition == -1)
                 break;
             final int fi = i;
+//            replaced code :
             rollbackActionQueue.offer(() -> {
                 containerRecyclerView.smoothScrollToPosition(fi);
-                Runnable scrollCardToTargetPositionAction = () -> {
-                    CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerView.findViewHolderForAdapterPosition(fi);
-                    if (containerViewHolder == null)
-                        throw new RuntimeException("CardViewModel#rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition#containerViewHolder is null");
-                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
-                    cardRecyclerview.smoothScrollToPosition(pastOnFocusPositionList.get(fi));
-                };
-                throwToMainHandlerWithDelay(scrollCardToTargetPositionAction, 900, containerRecyclerView.getContext());
+                CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerView.findViewHolderForAdapterPosition(fi);
+                if (containerViewHolder == null)
+                    throw new RuntimeException("CardViewModel#rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition#containerViewHolder is null");
+                RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
+                cardRecyclerview.smoothScrollToPosition(pastOnFocusPositionList.get(fi));
             });
+//            Legacy code :
+//            rollbackActionQueue.offer(() -> {
+//                containerRecyclerView.smoothScrollToPosition(fi);
+//                Runnable scrollCardToTargetPositionAction = () -> {
+//                    Logger.hotfixMessage("RUN  / fi : "+fi);
+//<Exception>                    ClassCastException : below line
+//                    CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerView.findViewHolderForAdapterPosition(fi);
+//                    Logger.hotfixMessage("RUN  / passed no class case exception touched.");
+//                    if (containerViewHolder == null)
+//                        throw new RuntimeException("CardViewModel#rollbackMovedCardRecyclerViewScrollStatesAboveRootCardContainerPosition#containerViewHolder is null");
+//                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
+//                    cardRecyclerview.smoothScrollToPosition(pastOnFocusPositionList.get(fi));
+//                };
+//                throwToMainHandlerWithDelay(scrollCardToTargetPositionAction, 1300, containerRecyclerView.getContext());
+//            });
         }
         rollbackActionQueue.offer(() -> containerRecyclerView.smoothScrollToPosition(rootCardContainerPosition));
         ((MainCardActivity) containerRecyclerView.getContext()).scrollActionDelayed(rollbackActionQueue, finishAction);

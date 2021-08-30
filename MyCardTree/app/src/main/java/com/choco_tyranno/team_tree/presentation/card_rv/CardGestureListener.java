@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
@@ -38,7 +39,6 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         view.startDragAndDrop(ClipData.newPlainText("", "")
                 , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), cardDto))
                 , dragMoveDataContainer, 0);
-//        Pair<String , Pair<CardDto,Pair<Pair<List<CardDto>, List<CardDto>>, List<Pair<Integer, Parcelable>>>>> t;
     }
 
     /*
@@ -54,9 +54,10 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         List<CardDto> currentNextCardList = new ArrayList<>();
         List<Integer> currentOnFocusPositionList = new ArrayList<>();
         CardDto cardDto = getCardDto();
+        Logger.hotfixMessage("cardDto seq : "+cardDto.getSeqNo());
         viewModel.findCurrentOnFocusCardPositions(cardDto.getContainerNo(), currentOnFocusPositionList);
         DragMoveDataContainer dragMoveDataContainer = new DragMoveDataContainer();
-        dragMoveDataContainer.setRootCard(getCardDto());
+        dragMoveDataContainer.setRootCard(cardDto);
         dragMoveDataContainer.setMovingCardList(movingCardList);
         dragMoveDataContainer.setPastLocationNextCardList(currentNextCardList);
         dragMoveDataContainer.setPastOnFocusPositionList(currentOnFocusPositionList);
@@ -67,20 +68,22 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         final boolean hasLeftItemInTargetContainer = viewModel.removeSinglePresentCardDto(cardDto);
         if (!currentNextCardList.isEmpty()) {
             viewModel.reduceListSeq(currentNextCardList);
+            Logger.hotfixMessage("(After reducing currentNextCardList seq)cardDto seq : "+cardDto.getSeqNo());
         }
         if (hasLeftItemInTargetContainer) {
             if (cardRecyclerView.getAdapter() == null)
                 throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
+            SingleToastManager.show(SingleToaster.makeTextShort(cardRecyclerView.getContext(),"t:"+cardDto.getTitle()+"seq:"+cardDto.getSeqNo()));
             cardRecyclerView.getAdapter().notifyItemRemoved(cardDto.getSeqNo());
-            ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
-                final int newFocusPosition = viewModel.findNearestItemPosition(cardDto.getContainerNo(), cardDto.getSeqNo());
-                Container container = viewModel.getContainer(cardDto.getContainerNo());
-                if (container != null) {
-                    container.setFocusCardPosition(newFocusPosition);
-                    cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-                    viewModel.presentChildren(cardRecyclerView, cardDto.getContainerNo(), newFocusPosition);
-                }
-            }, 150);
+//            ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
+//                final int newFocusPosition = viewModel.findNearestItemPosition(cardDto.getContainerNo(), cardDto.getSeqNo());
+//                Container container = viewModel.getContainer(cardDto.getContainerNo());
+//                if (container != null) {
+//                    container.setFocusCardPosition(newFocusPosition);
+//                    cardRecyclerView.smoothScrollToPosition(newFocusPosition);
+//                    viewModel.presentChildren(cardRecyclerView, cardDto.getContainerNo(), newFocusPosition);
+//                }
+//            }, 150);
         } else {
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
             ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();

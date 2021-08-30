@@ -233,10 +233,10 @@ public class MainCardActivity extends AppCompatActivity {
         }
     }
 
+//    TODO : this
     public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
-
         RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
         Queue<Runnable> scrollActionQueue = new LinkedList<>();
         int s = 0;
@@ -246,6 +246,7 @@ public class MainCardActivity extends AppCompatActivity {
             scrollActionQueue.offer(() -> {
                 containerRecyclerview.smoothScrollToPosition(i1);
                 Runnable delayedAction = () -> {
+//<Exception>                    ClassCastException : below line.
                     CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
                     if (containerViewHolder == null)
                         throw new RuntimeException("MainCardActivity#scrollToFindingTargetCard - containerViewHolder == null");
