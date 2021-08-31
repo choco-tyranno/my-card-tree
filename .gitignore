@@ -84,8 +84,13 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+<<<<<<< HEAD
 #Experiment
 MyCardTree/
 
 #appKey
 appKey/
+=======
+#Experiment files
+MyCardTree/
+>>>>>>> a71d5f337542370c60853cc2f5801775a0c56b56
