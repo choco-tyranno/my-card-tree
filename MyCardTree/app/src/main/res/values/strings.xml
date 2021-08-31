@@ -13,7 +13,7 @@
     <string name="container_title">%1$s, %2$s</string>
     <string name="text_card_delete">제거</string>
     <string name="card_title_hint">홍길동</string>
-    <string name="card_contact_number_hint">010–1987–6543</string>
+    <string name="card_contact_number_hint">010–1234–5678</string>
     <string name="card_shadow_text">CARD</string>
     <string name="card_remove_btn_text">X</string>
     <string name="empty_container_layer_title">add next : </string>
@@ -25,6 +25,14 @@
     <string name="open_gallery_fab_desc">floating button. click to spread util buttons.</string>
     <string name="load_contact_info_fab_desc">floating button. click to spread util buttons.</string>
     <string name="send_card_image_btn_desc">paper plain shape button. click to find target card. </string>
+    <string name="detail_titleTv_text">-이름</string>
+    <string name="detail_subtitleTv_text">-서브타이틀</string>
+    <string name="detail_contactNumberTv_text">-연락처</string>
+    <string name="detail_memoTv_text">-메모</string>
+    <string name="detail_titleEt_text">이름</string>
+    <string name="detail_subtitleEt_text">서브타이틀</string>
+    <string name="detail_contactNumberEt_text">연락처</string>
+    <string name="detail_memoEt_text">메모</string>
     <string name="detail_modify_btn_text">수정</string>
     <string name="detail_back_btn_text">되돌아가기</string>
     <string name="detail_save_btn_text">저장</string>

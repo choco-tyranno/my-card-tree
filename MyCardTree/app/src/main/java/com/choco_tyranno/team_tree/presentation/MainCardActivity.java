@@ -233,7 +233,6 @@ public class MainCardActivity extends AppCompatActivity {
         }
     }
 
-//    TODO : this
     public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
+import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView;
 
@@ -26,6 +28,7 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ContainerRecyclerView extends RecyclerView {
+    private boolean onDragMove = false;
 
     public ContainerRecyclerView(@NonNull Context context) {
         super(context);
@@ -50,6 +53,14 @@ public class ContainerRecyclerView extends RecyclerView {
         return (ItemScrollingControlLayoutManager) super.getLayoutManager();
     }
 
+    public void setOnDragMove(boolean onDragMove){
+        this.onDragMove = onDragMove;
+    }
+
+    public boolean isOnDragMove() {
+        return onDragMove;
+    }
+
     //Nested recyclerView listener's events handled singly by ItemScrollingControlLayoutManager.
     public static class ItemScrollingControlLayoutManager extends LinearLayoutManager {
         private ContainerRecyclerView mContainerRecyclerView;
@@ -66,7 +77,56 @@ public class ContainerRecyclerView extends RecyclerView {
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
+        private Queue<Pair<Integer, Integer>> rollbackMoveActionFlagQueue;
+        private Runnable rollbackMoveFinishAction;
+        private AtomicBoolean onRollbackMoveFinishAction = new AtomicBoolean(false);
 
+        public AtomicBoolean isOnRollbackMoveFinishAction(){
+            return onRollbackMoveFinishAction;
+        }
+
+        public void setOnRollbackMoveFinishAction(boolean onRollbackMoveFinishAction) {
+            this.onRollbackMoveFinishAction.set(onRollbackMoveFinishAction);
+        }
+
+        public void setRollbackMoveFinishAction(Runnable rollbackMoveFinishAction) {
+            this.rollbackMoveFinishAction = rollbackMoveFinishAction;
+        }
+
+        public void setRollbackMoveActionFlagQueue(Queue<Pair<Integer, Integer>> rollbackMoveActionFlagQueue) {
+            this.rollbackMoveActionFlagQueue = rollbackMoveActionFlagQueue;
+        }
+
+        public void executeNextRollbackMoveAction() {
+            Logger.hotfixMessage("executeNextRollbackMoveAction()");
+            if (rollbackMoveActionFlagQueue.isEmpty()) {
+                Logger.hotfixMessage("rollbackMoveActionFlagQueue.isEmpty()");
+                if (rollbackMoveFinishAction != null) {
+                    Logger.hotfixMessage("<run::finish action> rollbackMoveFinishAction != null");
+                    rollbackMoveFinishAction.run();
+                    rollbackMoveFinishAction = null;
+                }
+                return;
+            }
+            Pair<Integer, Integer> rollbackMoveActionFlagPair = rollbackMoveActionFlagQueue.poll();
+            if (rollbackMoveActionFlagPair == null)
+                return;
+            final int targetContainerPosition = rollbackMoveActionFlagPair.first;
+            final int targetCardPosition = rollbackMoveActionFlagPair.second;
+            mContainerRecyclerView.smoothScrollToPosition(targetContainerPosition);
+            CardViewModel viewModel = ((MainCardActivity)mContainerRecyclerView.getContext()).getCardViewModel();
+            if (targetCardPosition==viewModel.getContainer(targetContainerPosition).getFocusCardPosition())
+                executeNextRollbackMoveAction();
+            CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) mContainerRecyclerView.findViewHolderForAdapterPosition(targetContainerPosition);
+            if (containerViewHolder == null)
+                return;
+            CardRecyclerView targetCardRecyclerView = containerViewHolder.getBinding().cardRecyclerview;
+            targetCardRecyclerView.smoothScrollToPosition(targetCardPosition);
+        }
+
+        public boolean isRollbackMoveActionRequired() {
+            return !rollbackMoveActionFlagQueue.isEmpty() || rollbackMoveFinishAction != null;
+        }
 
         public void onDragEndWithDropFail(@Nullable Runnable rollbackAction) {
             if (rollbackAction != null) {
@@ -156,11 +216,11 @@ public class ContainerRecyclerView extends RecyclerView {
 
         /*end*/
 
-
         public ItemScrollingControlLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
+            this.rollbackMoveActionFlagQueue = new LinkedList<>();
         }
 
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {

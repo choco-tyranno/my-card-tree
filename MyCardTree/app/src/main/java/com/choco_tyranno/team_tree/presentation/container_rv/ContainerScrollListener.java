@@ -2,28 +2,23 @@ package com.choco_tyranno.team_tree.presentation.container_rv;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 
 
 public class ContainerScrollListener extends RecyclerView.OnScrollListener {
-    private final ObservableBoolean scrolled;
-    CardViewModel cardViewModel;
+//    private final ObservableBoolean scrolled;
 
-    public ContainerScrollListener(CardViewModel viewModel) {
-        this.cardViewModel = viewModel;
-        scrolled = new ObservableBoolean(false);
+    public ContainerScrollListener() {
+//        scrolled = new ObservableBoolean(false);
     }
 
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-//        if (newState == RecyclerView.SCROLL_STATE_IDLE&&scrolled.get()){
-//            synchronized (scrolled){
-//                ((MainCardActivity)recyclerView.getContext()).getMainHandler().postDelayed(()-> scrolled.set(false),700);
-//            }
-//        }
     }
 
     @Override
@@ -34,7 +29,7 @@ public class ContainerScrollListener extends RecyclerView.OnScrollListener {
 //        scrolled.set(true);
     }
 
-    public ObservableBoolean getScrolledFlag(){
-        return this.scrolled;
-    }
+//    public ObservableBoolean getScrolledFlag(){
+//        return this.scrolled;
+//    }
 }

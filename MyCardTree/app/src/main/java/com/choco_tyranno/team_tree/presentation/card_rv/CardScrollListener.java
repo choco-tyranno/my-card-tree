@@ -1,7 +1,9 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -94,13 +97,19 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             Optional.ofNullable(finalEvent).ifPresent(Runnable::run);
             onStateChangeListener.onStateIdle(layoutManager.onSaveInstanceState(), containerPosition);
             finalEvent = null;
+            Handler uiHandler = ((MainCardActivity) recyclerView.getContext()).getMainHandler();
+            ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = ((CardRecyclerView) recyclerView).getContainerRecyclerView().getLayoutManager();
+            if (containerRecyclerViewLayoutManager == null)
+                return;
+            if (containerRecyclerViewLayoutManager.isRollbackMoveActionRequired()) {
+                uiHandler.postDelayed(containerRecyclerViewLayoutManager::executeNextRollbackMoveAction, 2100);
+            }
         }
     }
 
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
         if (layoutManager == null) {
             Logger.message("cardScrollLsn#onScrolled : lm null");
             return;
@@ -117,13 +126,10 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
         if (firstVisibleItemPosition == -1) {
             return;
         }
-
         if (registeredPosition == -1) {
             registeredPosition = firstVisibleItemPosition;
         }
-
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-
         if (firstVisibleItemPosition == lastVisibleItemPosition) {
             handelSingleItemVisible(recyclerView, firstVisibleItemPosition);
             return;

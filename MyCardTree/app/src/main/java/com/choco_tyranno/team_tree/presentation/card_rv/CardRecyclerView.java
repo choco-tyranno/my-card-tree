@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CardRecyclerView extends RecyclerView {
     public static final int DEFAULT_CARD_POSITION = 0;
     private OnScrollListenerForHorizontalArrow onScrollListenerForHorizontalArrow;
-    private boolean onDragMove = false;
-    private HashMap<Integer, Runnable> scrolledActionMap = new HashMap<>();
+//    private boolean onDragMove = false;
+    private final HashMap<Integer, Runnable> scrolledActionMap = new HashMap<>();
     private final static int ACTION_CHANGING_FOCUS = 1;
     private final static int ACTION_SHOW_HORIZONTAL_ARROW = 2;
 
@@ -86,13 +86,13 @@ public class CardRecyclerView extends RecyclerView {
         onScrollListenerForHorizontalArrow = null;
     }
 
-    public boolean isOnDragMove() {
-        return onDragMove;
-    }
+//    public boolean isOnDragMove() {
+//        return onDragMove;
+//    }
 
-    public void setOnDragMove(boolean onDragMove) {
-        this.onDragMove = onDragMove;
-    }
+//    public void setOnDragMove(boolean onDragMove) {
+//        this.onDragMove = onDragMove;
+//    }
 
     public void postChangingFocusAction(Runnable focusChangeAction) {
         synchronized (scrolledActionMap) {
@@ -113,7 +113,7 @@ public class CardRecyclerView extends RecyclerView {
     }
 
     private boolean isAllScrolledActionCollected() {
-        boolean allScrolledActionCollected = false;
+        boolean allScrolledActionCollected;
         synchronized (scrolledActionMap) {
             allScrolledActionCollected = scrolledActionMap.size() == 2;
         }
@@ -330,10 +330,16 @@ public class CardRecyclerView extends RecyclerView {
                 CardRecyclerView cardRecyclerView = (CardRecyclerView) recyclerView;
                 cardRecyclerView.postShowingArrowAction(() -> {
                     CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
+                    if (cardRecyclerViewLayoutManager==null)
+                        return;
                     ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = cardRecyclerView.getContainerRecyclerView().getLayoutManager();
+                    if (containerRecyclerViewLayoutManager==null)
+                        return;
                     boolean rightArrowNeeded = true;
                     boolean leftArrowNeeded = true;
                     final int onFocusCardPosition;
+                    if (cardRecyclerView.getAdapter()==null)
+                        return;
                     final int containerPosition = cardRecyclerView.getAdapter().getContainerPosition();
                     final Container container = viewModel.getContainer(containerPosition);
                     onFocusCardPosition = container.getFocusCardPosition();

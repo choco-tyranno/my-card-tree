@@ -16,6 +16,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
@@ -198,10 +199,12 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
 
     private boolean handleMoveServiceDragStarted(CardRecyclerView cardRecyclerView, DragEvent event) {
         cardRecyclerView.attachOnScrollListenerForHorizontalArrow();
-        cardRecyclerView.setOnDragMove(true);
+        cardRecyclerView.getContainerRecyclerView().setOnDragMove(true);
         DragMoveDataContainer dragMoveDataContainer = (DragMoveDataContainer) event.getLocalState();
         CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         final int movedRootCardContainerPosition = movedRootCard.getContainerNo();
+        if (cardRecyclerView.getAdapter()==null)
+            return false;
         final int targetContainerPosition = cardRecyclerView.getAdapter().getContainerPosition();
         final int targetContainerItemCount = cardRecyclerView.getAdapter().getItemCount();
         return !(movedRootCardContainerPosition == targetContainerPosition && targetContainerItemCount == 1);
@@ -215,8 +218,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = containerRecyclerView.getLayoutManager();
         CardViewModel viewModel = ((MainCardActivity) cardRecyclerView.getContext()).getCardViewModel();
         // S
-        if (containerRecyclerView == null)
-            return false;
         if (containerRecyclerViewLayoutManager == null)
             return false;
         // E
@@ -273,6 +274,8 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             //setFocusCardPosition to target container. && {later} smoothScrollToPosition(movingRootCard.getSeqNo) && presentChildren().
             viewModel.addSinglePresentCardDto(movedRootCard);
             Queue<Pair<Integer, Runnable>> delayActionQueue = new LinkedList<>();
+            if (cardRecyclerView.getAdapter()==null)
+                return;
             Runnable itemInsertAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
             Runnable smoothScrollToPositionAction = () -> cardRecyclerView.scrollToPosition(movedRootCard.getSeqNo());
             Runnable presentChildrenAction = () -> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
@@ -394,13 +397,17 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
 
     private boolean handleMoveServiceDragExitedEvent(CardRecyclerView cardRecyclerView) {
         CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
+        if (cardRecyclerViewLayoutManager==null)
+            return false;
         cardRecyclerViewLayoutManager.showCardArrows(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
         return true;
     }
 
     private boolean handleMoveServiceDragEndedEvent(CardRecyclerView cardRecyclerView) {
         cardRecyclerView.detachOnScrollListenerForHorizontalArrow();
-        cardRecyclerView.setOnDragMove(false);
+        cardRecyclerView.getContainerRecyclerView().setOnDragMove(false);
+        if (cardRecyclerView.getLayoutManager()==null)
+            return false;
         cardRecyclerView.getLayoutManager().showCardArrows(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
         return true;
     }

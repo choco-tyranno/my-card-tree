@@ -73,7 +73,7 @@
                                 <TextView
                                     android:id="@+id/detail_title_tv"
                                     android:text="@{card.title}"
-                                    android:hint="-이름"
+                                    android:hint="@string/detail_titleTv_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
@@ -86,33 +86,33 @@
                                 <TextView
                                     android:id="@+id/detail_subtitle_tv"
                                     android:text="@{card.subtitle}"
-                                    android:hint="-서브타이틀"
+                                    android:hint="@string/detail_subtitleTv_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="20dp"
                                     android:singleLine="true"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textColor="#000"
                                     app:layout_constraintLeft_toLeftOf="@+id/detail_title_tv"
                                     app:layout_constraintTop_toBottomOf="@+id/detail_title_tv" />
 
                                 <TextView
                                     android:id="@+id/detail_contact_number_tv"
                                     android:text="@{card.contactNumber}"
-                                    android:hint="-연락처"
+                                    android:hint="@string/detail_contactNumberTv_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="20dp"
                                     android:singleLine="true"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textColor="#000"
                                     app:layout_constraintLeft_toLeftOf="@+id/detail_subtitle_tv"
                                     app:layout_constraintTop_toBottomOf="@+id/detail_subtitle_tv" />
 
                                 <TextView
                                     android:id="@+id/detail_free_note_tv"
                                     android:text="@{card.freeNote}"
-                                    android:hint="-메모"
+                                    android:hint="@string/detail_memoTv_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="20dp"
@@ -158,7 +158,7 @@
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/detail_title_et"
                                     android:text="@{card.title}"
-                                    android:hint="이름"
+                                    android:hint="@string/detail_titleEt_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
@@ -171,36 +171,36 @@
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/detail_subtitle_et"
                                     android:text="@{card.subtitle}"
-                                    android:hint="서브타이틀"
+                                    android:hint="@string/detail_subtitleEt_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textColor="#000"
                                     app:layout_constraintLeft_toLeftOf="@+id/detail_title_et"
                                     app:layout_constraintTop_toBottomOf="@+id/detail_title_et" />
 
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/detail_contact_number_et"
                                     android:text="@{card.contactNumber}"
-                                    android:hint="연락처"
+                                    android:hint="@string/detail_contactNumberEt_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:inputType="phone"
                                     android:singleLine="true"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textColor="#000"
                                     app:layout_constraintLeft_toLeftOf="@+id/detail_subtitle_et"
                                     app:layout_constraintTop_toBottomOf="@+id/detail_subtitle_et" />
 
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/detail_free_note_et"
                                     android:text="@{card.freeNote}"
-                                    android:hint="메모"
+                                    android:hint="@string/detail_memoEt_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:textColor="#000"
                                     android:textSize="20sp"
                                     app:layout_constraintLeft_toLeftOf="@+id/detail_contact_number_et"
                                     app:layout_constraintTop_toBottomOf="@+id/detail_contact_number_et" />

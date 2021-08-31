@@ -1,10 +1,13 @@
 package com.choco_tyranno.team_tree.presentation.detail_page;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
+
+import com.choco_tyranno.team_tree.R;
 
 public class OnClickListenerForLoadContactInfoFab implements View.OnClickListener {
     public static final int REQUEST_LOAD_CONTACT_INFO = 30;
@@ -27,6 +30,8 @@ public class OnClickListenerForLoadContactInfoFab implements View.OnClickListene
                 .setNegativeButton("취소", (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(v.getResources().getColor(R.color.defaultTextColor, v.getContext().getTheme()));
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(v.getResources().getColor(R.color.defaultTextColor, v.getContext().getTheme()));
         detailCardActivity.getDetailFab().animateFab(detailCardActivity.getBinding());
     }
 }
