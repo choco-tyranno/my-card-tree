@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="3dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_btn"
+            onClickListener="@{viewModel.onClickListenerForPageBtn}"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:backgroundTint="@color/colorPrimary"
+            tools:text="99" />
+    </FrameLayout>
+
+</layout>

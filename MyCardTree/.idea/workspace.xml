@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+    <option name="SCOPE_TYPE" value="4" />
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e42d4411-6f01-4712-954c-aef8ff924afd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/choco_tyranno/team_tree/DbTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/choco_tyranno/team_tree/ExampleInstrumentedTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/choco_tyranno/team_tree/TestUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/Logger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/WorkerThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/domain/card_data/CardDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/domain/card_data/CardDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/domain/card_data/CardEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/domain/source/CardRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/domain/source/TeamTreeDataBase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/CardShadow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/CardViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/DisplayUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/MainCardActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/NullPassUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/ObservableString.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/OnDataLoadListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/ScrollItemManageable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/SingleToastManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/SingleToaster.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/UiTestActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/UiThreadAccessible.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardGestureListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardRecyclerView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardScrollListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardTouchListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardViewHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardViewShadowProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/ContactCardViewHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/DragMoveDataContainer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/ImageToFullScreenClickListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/NotifyUtilForRecyclerViewAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/ObservableBitmap.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/OnClickListenerForCallBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/OnClickListenerForMessageBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/OnDragListenerForCardRecyclerView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/CardContainerViewHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/CloneCardShadow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/Container.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerRecyclerView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerScrollListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerViewHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/EmptyCardSpaceViewHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/OnDragListenerForBottomArrow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/OnDragListenerForContainerRecyclerView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/OnDragListenerForTopArrow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/DetailCardActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/DetailFab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/DetailPage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/DetailPageViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForBackBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForLoadContactInfoFab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForModeSwitchBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForOpenGalleryFab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForSaveBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForSpreadingImage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForTakePictureFab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/detail_page/OnClickListenerForUtilContainerFab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/CardFinder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/OnClickListenerForFindingSearchingResultTargetButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/OnClickListenerForMovingPageBundleBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/OnClickListenerForPageBtn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/OnQueryTextListenerForSearchingCard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/PageNavigationAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/team_tree/presentation/searching_drawer/SearchingResultAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/card_left_slowout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/card_minimize.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/card_regularize.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/card_right_slowout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/card_shaking.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/detail_page_subfab_close.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/detail_page_subfab_open.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/front_to_back_card_flip.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/layout_animation_trembling.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/rotate_backward_add_fab.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/rotate_forward_add_fab.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/anim/search_page_sending_card.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/back_animator.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/card_flip_left_in.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/card_flip_left_out.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/card_flip_right_in.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/card_flip_right_out.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/animator/front_animator.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-anydpi/ic_call_01.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-anydpi/ic_message_01.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_call_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_message_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_call_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_message_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_add_black_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_add_white_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_camera_white_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_collections_white_24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_contact_phone_white_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_face_black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_face_black_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_send_white_18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/baseline_send_white_36.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/card_back_img01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/default_card_image_01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/default_card_image_error.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/default_card_image_loading.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/delete_black_24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/empty_card_image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/main_toolbar_image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/member_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/purple_flower.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/round_group_add_black_18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/round_group_add_black_36.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/round_group_add_black_48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v24/test_card_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_call_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_message_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/ic_call_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/ic_message_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/card_shadow.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_fullscreen_24.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_24.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_24.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_keyboard_arrow_up_24.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/main_emptycarddottedoutline.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_item.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/splash_screen_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/team_tree_ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/test_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/test_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/human_letter_regular.TTF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/humanletter.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/indieflower.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/indieflower_regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/overlock.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/overlock_regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/roboto.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/roboto_regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/rubik.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/rubik_regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/ubuntu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/font/ubuntu_regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_detail_frame.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_body.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_emptycontainer.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_frame.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_leftdrawer.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_rightdrawer.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_screen.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main_topappbar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_ui_test.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_card_back.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_card_empty.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_card_frame.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_card_front.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_card_front_clone.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_cardcontainer.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_page_navigation.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_searching_result.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_test_card.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/team_tree_ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/team_tree_ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/team_tree_ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/team_tree_ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/team_tree_ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/team_tree_ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/team_tree_ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/team_tree_ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/team_tree_ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/team_tree_ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/team_tree_ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/team_tree_ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/integers.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/team_tree_ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/file_paths.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/searchable.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/team_tree_ic_launcher-playstore.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/choco_tyranno/team_tree/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/choco_tyranno/team_tree/ViewModelMethodTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="valueResourceFile" />
+        <option value="AnnotationType" />
+        <option value="layoutResourceFile" />
+        <option value="Interface" />
+        <option value="resourceFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1psnko6T3pAv69iPbIURFNNc9wk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="R3CN80MDFYJ" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-07-15T08:59:27.502Z" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="adb_path" value="C:\Users\syk84\AppData\Local\Android\Sdk\platform-tools\adb.exe" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.2.0/13e8ff89631c2e101eb6bddd12c2fb4bbd74b15d/appcompat-1.2.0-sources.jar!/androidx/appcompat/widget/AppCompatButton.java_SELECTED" value="AppCompatButton" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/androidx/cardview/widget/CardView.java_SELECTED" value="CardView" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.drawerlayout/drawerlayout/1.0.0/9ecd4ecb7da215ba4c5c3e00bf8d290dad6f2bc5/drawerlayout-1.0.0-sources.jar!/androidx/drawerlayout/widget/DrawerLayout.java_SELECTED" value="DrawerLayout" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED" value="RecyclerView" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/appbar/AppBarLayout.java_SELECTED" value="AppBarLayout" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/button/MaterialButton.java_SELECTED" value="MaterialButton" />
+    <property name="android-custom-viewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/card/MaterialCardView.java_SELECTED" value="MaterialCardView" />
+    <property name="android-custom-viewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_SELECTED" value="View" />
+    <property name="android-custom-viewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/view/ViewGroup.java_SELECTED" value="ViewGroup" />
+    <property name="android-custom-viewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/widget/Button.java_SELECTED" value="Button" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CardRecyclerView.java_SELECTED" value="CardRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/ContainerRecyclerView.java_SELECTED" value="ContainerRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CustomLinearLayoutManager.java_SELECTED" value="ContainerRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardFrame.java_SELECTED" value="CardFrameLayout" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardRecyclerView.java_SELECTED" value="CardRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardView.java_SELECTED" value="CardView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/container_rv/ContainerRecyclerView.java_SELECTED" value="ContainerRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardRecyclerView.java_SELECTED" value="CardRecyclerView" />
+    <property name="android-custom-viewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerRecyclerView.java_SELECTED" value="ContainerRecyclerView" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable-v24" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TeamTree" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.2.0/13e8ff89631c2e101eb6bddd12c2fb4bbd74b15d/appcompat-1.2.0-sources.jar!/androidx/appcompat/widget/AppCompatButton.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/androidx/cardview/widget/CardView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.drawerlayout/drawerlayout/1.0.0/9ecd4ecb7da215ba4c5c3e00bf8d290dad6f2bc5/drawerlayout-1.0.0-sources.jar!/androidx/drawerlayout/widget/DrawerLayout.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/appbar/AppBarLayout.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/button/MaterialButton.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.2.1/37d55d5141066b3d118d24232fa7025b65eb3a74/material-1.2.1-sources.jar!/com/google/android/material/card/MaterialCardView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/view/ViewGroup.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/syk84/AppData/Local/Android/Sdk/sources/android-30/android/widget/Button.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CardRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/ContainerRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CustomLinearLayoutManager.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardFrame.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/card_rv/CardView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/container_rv/ContainerRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/team_tree/presentation/card_rv/CardRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/_choco_tyranno/workspace/my-card-tree/MyCardTree/app/src/main/java/com/choco_tyranno/team_tree/presentation/container_rv/ContainerRecyclerView.java_selected" value="Custom views" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="PsdUISettings">
+    <option name="MODULE_TAB" value="Default Config" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.choco_tyranno.team_tree.presentation.container_rv" />
+      <recent name="com.choco_tyranno.team_tree.presentation" />
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation.searching_drawer" />
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\layout" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\layout\list_page" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\layout\item_box" />
+    </key>
+    <key name="android.template.-557418312">
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation.detail_page" />
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation.card_rv" />
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation" />
+    </key>
+    <key name="android.template.-119312874">
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\drawable-v24" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\java\com\choco_tyranno\team_tree" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\font" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\drawable" />
+      <recent name="C:\_choco_tyranno\workspace\my-card-tree\MyCardTree\app\src\main\res\xml" />
+    </key>
+    <key name="android.template.222908816">
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation" />
+      <recent name="com.choco_tyranno.mycardtree.card_crud_feature.presentation.main_page" />
+      <recent name="com.choco_tyranno.mycardtree.card-crud-feature.presentation" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android App.app">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="Team_Tree.app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="writeCardAndReadCa...()" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests" temporary="true" nameIsGenerated="true">
+      <module name="My_Card_Tree.app" />
+      <option name="TESTING_TYPE" value="3" />
+      <option name="METHOD_NAME" value="writeCardAndReadCardList" />
+      <option name="CLASS_NAME" value="com.choco_tyranno.team_tree.DbTest" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="INCLUDE_GRADLE_EXTRA_OPTIONS" value="true" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Android Instrumented Tests.writeCardAndReadCa...()" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e42d4411-6f01-4712-954c-aef8ff924afd" name="Default Changelist" comment="" />
+      <created>1615980810503</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615980810503</updated>
+    </task>
+    <task id="LOCAL-00050" summary="save: save before refactoring CardViewModel.mAllData data structure.">
+      <created>1624875093615</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1624875093616</updated>
+    </task>
+    <task id="LOCAL-00051" summary="fix: present children when new card dropped into crowds.">
+      <created>1624880506102</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1624880506103</updated>
+    </task>
+    <task id="LOCAL-00052" summary="refactor: change data structure of CardViewModel.mAllData.">
+      <created>1624970981741</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1624970981742</updated>
+    </task>
+    <task id="LOCAL-00053" summary="fix: apply to CardViewModel.mAllData values by create card into empty space or remove card.">
+      <created>1625046658190</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1625046658191</updated>
+    </task>
+    <task id="LOCAL-00054" summary="save: 210630">
+      <created>1625057496857</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1625057496857</updated>
+    </task>
+    <task id="LOCAL-00055" summary="save: 210701">
+      <created>1625135412068</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1625135412069</updated>
+    </task>
+    <task id="LOCAL-00056" summary="save: add card dragging start action.">
+      <created>1625150329948</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1625150329948</updated>
+    </task>
+    <task id="LOCAL-00057" summary="save: 210702">
+      <created>1625230389500</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1625230389500</updated>
+    </task>
+    <task id="LOCAL-00058" summary="feat: rollback cards when card move event drop fail.">
+      <created>1625310508711</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1625310508712</updated>
+    </task>
+    <task id="LOCAL-00059" summary="fix: solve detaching card &amp; rollback issue.">
+      <created>1625472981129</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1625472981129</updated>
+    </task>
+    <task id="LOCAL-00060" summary="save: 210705">
+      <created>1625476832660</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1625476832660</updated>
+    </task>
+    <task id="LOCAL-00061" summary="save: 210706 morning.">
+      <created>1625533317799</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1625533317800</updated>
+    </task>
+    <task id="LOCAL-00062" summary="feat: move cards with drag.">
+      <created>1625613091830</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1625613091831</updated>
+    </task>
+    <task id="LOCAL-00063" summary="feat: flip card with double tap.">
+      <created>1625748869410</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1625748869410</updated>
+    </task>
+    <task id="LOCAL-00064" summary="save:210713">
+      <created>1626174266812</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1626174266812</updated>
+    </task>
+    <task id="LOCAL-00065" summary="save:210714 morning">
+      <created>1626223355450</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1626223355452</updated>
+    </task>
+    <task id="LOCAL-00066" summary="save:210714 lunch">
+      <created>1626254096417</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1626254096418</updated>
+    </task>
+    <task id="LOCAL-00067" summary="save:210714 night">
+      <created>1626266423544</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1626266423545</updated>
+    </task>
+    <task id="LOCAL-00068" summary="save:210714 night 21:52">
+      <created>1626267160847</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1626267160847</updated>
+    </task>
+    <task id="LOCAL-00069" summary="save:210714 midnight">
+      <created>1626275659167</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1626275659168</updated>
+    </task>
+    <task id="LOCAL-00070" summary="feat: add card detail util.">
+      <created>1626417581322</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1626417581322</updated>
+    </task>
+    <task id="LOCAL-00071" summary="feat: add contact info loading func.">
+      <created>1626477065655</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1626477065655</updated>
+    </task>
+    <task id="LOCAL-00072" summary="feat: add contact info loading func.">
+      <created>1626477234943</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1626477234943</updated>
+    </task>
+    <task id="LOCAL-00073" summary="feat: add spreading image func in DetailCardActivity.">
+      <created>1626478798589</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1626478798589</updated>
+    </task>
+    <task id="LOCAL-00074" summary="feat: add DetailCardActivity fab show and hide animation.">
+      <created>1626482918706</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1626482918706</updated>
+    </task>
+    <task id="LOCAL-00075" summary="save:210720 night.">
+      <created>1626784015844</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1626784015844</updated>
+    </task>
+    <task id="LOCAL-00076" summary="feat: add searching card with pagination.">
+      <created>1626871980972</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1626871980973</updated>
+    </task>
+    <task id="LOCAL-00077" summary="fix: modify card move code.">
+      <created>1626917762154</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1626917762155</updated>
+    </task>
+    <task id="LOCAL-00078" summary="save:210722 afternoon.">
+      <created>1626942380288</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1626942380289</updated>
+    </task>
+    <task id="LOCAL-00079" summary="feat: add scroll for finding card in search page.">
+      <created>1626955059735</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1626955059736</updated>
+    </task>
+    <task id="LOCAL-00080" summary="fix: add handling finding out card function.">
+      <created>1627032915500</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1627032915501</updated>
+    </task>
+    <task id="LOCAL-00081" summary="feat: add expanding/collapse top app bar function when container scroll start/end.">
+      <created>1627043084580</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1627043084580</updated>
+    </task>
+    <task id="LOCAL-00082" summary="save: 210728 morning">
+      <created>1627442006972</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1627442006972</updated>
+    </task>
+    <task id="LOCAL-00083" summary="fix: save stable databinding state.">
+      <created>1627486688267</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1627486688268</updated>
+    </task>
+    <task id="LOCAL-00084" summary="feat: add splash screen design.">
+      <created>1627663478728</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1627663478729</updated>
+    </task>
+    <task id="LOCAL-00085" summary="save:210803 morning">
+      <created>1627958027638</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1627958027638</updated>
+    </task>
+    <task id="LOCAL-00086" summary="feat: add send message func.">
+      <created>1627978010037</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1627978010038</updated>
+    </task>
+    <task id="LOCAL-00087" summary="feat: add call func.">
+      <created>1627978410901</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1627978410901</updated>
+    </task>
+    <task id="LOCAL-00088" summary="feat: add closing drawer func when back pressed with drawer opened.">
+      <created>1627984418453</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1627984418454</updated>
+    </task>
+    <task id="LOCAL-00089" summary="save: 210803 night">
+      <created>1627994738192</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1627994738193</updated>
+    </task>
+    <task id="LOCAL-00090" summary="save: 210805 afternoon.">
+      <created>1628150046744</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1628150046744</updated>
+    </task>
+    <task id="LOCAL-00091" summary="save: 210810 night">
+      <created>1628599160150</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1628599160150</updated>
+    </task>
+    <task id="LOCAL-00092" summary="save : 210816 night">
+      <created>1629118078001</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1629118078001</updated>
+    </task>
+    <task id="LOCAL-00093" summary="save : 210824 night">
+      <created>1629810447898</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1629810447899</updated>
+    </task>
+    <task id="LOCAL-00094" summary="refactor: encapsulate drag move util data codes.">
+      <created>1630149403294</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1630149403295</updated>
+    </task>
+    <task id="LOCAL-00095" summary="fix : change rollback with drag move related codes.">
+      <created>1630235155606</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1630235155607</updated>
+    </task>
+    <task id="LOCAL-00096" summary="save : 210829 night">
+      <created>1630237851977</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1630237851977</updated>
+    </task>
+    <task id="LOCAL-00097" summary="save : 210830 morning.">
+      <created>1630283968152</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1630283968168</updated>
+    </task>
+    <task id="LOCAL-00098" summary="save : 210831 lunch.">
+      <created>1630398728537</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1630398728537</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix: modify card move code." />
+    <MESSAGE value="save:210722 afternoon." />
+    <MESSAGE value="feat: add scroll for finding card in search page." />
+    <MESSAGE value="fix: add handling finding out card function." />
+    <MESSAGE value="feat: add expanding top app bar function when container scroll end." />
+    <MESSAGE value="feat: add expanding/collapse top app bar function when container scroll end." />
+    <MESSAGE value="feat: add expanding/collapse top app bar function when container scroll start/end." />
+    <MESSAGE value="save: 210728 morning" />
+    <MESSAGE value="refactor: change package name to team tree." />
+    <MESSAGE value="fix: save stable databinding state." />
+    <MESSAGE value="feat: add splash screen design." />
+    <MESSAGE value="save:210803 morning" />
+    <MESSAGE value="feat: add send message func." />
+    <MESSAGE value="feat: add call func." />
+    <MESSAGE value="feat: add closing drawer func when back pressed with drawer opened." />
+    <MESSAGE value="save: 210803 night" />
+    <MESSAGE value="save: 210805 afternoon." />
+    <MESSAGE value="save: 210810 night" />
+    <MESSAGE value="save : 210816 night" />
+    <MESSAGE value="save : 210824 night" />
+    <MESSAGE value="refactor: encapsulate drag move util data codes." />
+    <MESSAGE value="fix : change rollback with drag move related codes." />
+    <MESSAGE value="save : 210829 night" />
+    <MESSAGE value="save : 210830 morning." />
+    <MESSAGE value="save : 210831 lunch." />
+    <option name="LAST_COMMIT_MESSAGE" value="save : 210831 lunch." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="586" y="198" key="#Inspections" timestamp="1624412153236">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1624412153236" />
+    <state x="552" y="178" width="816" height="778" key="#Intentions" timestamp="1624412084157">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="178" width="816" height="778" key="#Intentions/0.0.1920.1040@0.0.1920.1040" timestamp="1624412084157" />
+    <state x="477" y="266" key="#PSD" timestamp="1627472378355">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="477" y="266" key="#PSD/0.0.1920.1040@0.0.1920.1040" timestamp="1627472378355" />
+    <state x="666" y="309" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1622559613693">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="666" y="309" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1622559613693" />
+    <state x="1362" y="259" width="390" height="738" key="#com.intellij.ide.util.MemberChooser" timestamp="1630234921257">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1362" y="259" width="390" height="738" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1630234921257" />
+    <state x="402" y="436" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1627462756687">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="402" y="436" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627462756687" />
+    <state x="644" y="360" width="1179" height="332" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1626849353616">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="644" y="360" width="1179" height="332" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1626849353616" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1630146536969">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1630146536969" />
+    <state x="690" y="266" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1627989556803">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="266" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627989556803" />
+    <state x="445" y="358" key="AndroidCreateResourceFileDialog" timestamp="1627990170027">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="445" y="358" key="AndroidCreateResourceFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627990170027" />
+    <state x="1012" y="111" width="871" height="791" key="CommitChangelistDialog2" timestamp="1630398726793">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1012" y="111" width="871" height="791" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1630398726793" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1630399707380">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1630399707380" />
+    <state width="1877" height="441" key="GridCell.Tab.0.bottom" timestamp="1630397442506">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="441" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1630397442506" />
+    <state width="1877" height="441" key="GridCell.Tab.0.center" timestamp="1630397442506">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="441" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1630397442506" />
+    <state width="1877" height="441" key="GridCell.Tab.0.left" timestamp="1630397442505">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="441" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1630397442505" />
+    <state width="1877" height="441" key="GridCell.Tab.0.right" timestamp="1630397442506">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="441" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1630397442506" />
+    <state width="1877" height="605" key="GridCell.Tab.1.bottom" timestamp="1623147648897">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="605" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1623147648897" />
+    <state width="1877" height="605" key="GridCell.Tab.1.center" timestamp="1623147648896">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="605" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1623147648896" />
+    <state width="1877" height="605" key="GridCell.Tab.1.left" timestamp="1623147648896">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="605" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1623147648896" />
+    <state width="1877" height="605" key="GridCell.Tab.1.right" timestamp="1623147648897">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="605" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1623147648897" />
+    <state x="644" y="138" key="RollbackChangesDialog" timestamp="1627483027242">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="644" y="138" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627483027242" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1627462114153">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1627462114153" />
+    <state x="552" y="249" key="Vcs.Push.Dialog.v2" timestamp="1627486720307">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="249" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627486720307" />
+    <state x="754" y="297" key="chooseDestDirectoryDialog" timestamp="1627989525822">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="754" y="297" key="chooseDestDirectoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627989525822" />
+    <state x="468" y="118" width="1094" height="804" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1630314811387">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="468" y="118" width="1094" height="804" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1630314811387" />
+    <state x="290" y="0" width="1646" height="1021" key="dock-window-1" timestamp="1626416222579">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="290" y="0" width="1646" height="1021" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1626416222579" />
+    <state x="669" y="236" width="901" height="628" key="find.popup" timestamp="1630397732777">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="669" y="236" width="901" height="628" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1630397732777" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1630229806105">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1630229806105" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1628589920348">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1628589920348" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CardViewModel.java</url>
+          <line>681</line>
+          <properties class="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" method="onMovingCardDroppedInContainer">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="105" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CardViewModel.java</url>
+          <line>371</line>
+          <properties class="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" method="getDefaultCardThumbnail">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/choco_tyranno/mycardtree/card_crud_feature/presentation/CardViewModel.java</url>
+          <line>845</line>
+          <properties class="com.choco_tyranno.mycardtree.card_crud_feature.presentation.CardViewModel" method="initVerticalArrowOnDragListener">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/build/generated/ap_generated_sources/debug/out/com/choco_tyranno/mycardtree/databinding/ActivityMainRightdrawerBindingImpl.java</url>
+          <line>103</line>
+          <option name="timeStamp" value="103" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cloneFrontCard_cardView"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="12dp"
+    android:layout_width="@dimen/cloneCard_width"
+    android:layout_height="@dimen/cloneCard_height"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/cloneFrontCard_titleTextView"
+        android:layout_width="140dp"
+        android:layout_height="18dp"
+        android:layout_gravity="top"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/overlock_regular"
+        android:hint="@string/card_title_hint"
+        android:paddingStart="@dimen/cloneCardFront_titleTextView_paddingStart"
+        android:paddingEnd="@dimen/cloneCardFront_titleTextView_paddingEnd"
+        android:singleLine="true"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/cloneFrontCard_contactNumberTextView"
+        android:layout_width="140dp"
+        android:layout_height="18dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/overlock_regular"
+        android:hint="@string/card_contact_number_hint"
+        android:paddingStart="@dimen/cloneCardFront_titleTextView_paddingStart"
+        android:paddingEnd="@dimen/cloneCardFront_titleTextView_paddingEnd"
+        android:singleLine="true"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"/>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/cloneFrontCard_switch"
+        android:layout_width="30dp"
+        android:layout_height="10dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:elevation="12dp"/>
+</com.google.android.material.card.MaterialCardView>
