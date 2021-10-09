@@ -1,4 +1,4 @@
-# Team Tree - Android Repository
+#  <img src="https://github.githubassets.com/images/icons/emoji/octocat.png" width="50"> **Team Tree** - Android Repository
 
 ![team_tree_intro_image](https://user-images.githubusercontent.com/80248474/136358672-d473dade-1483-4800-b663-c97e11aff541.png)
 
@@ -28,11 +28,11 @@
 - ERD
 <img src = "https://user-images.githubusercontent.com/80248474/136549484-06179bfd-c9b5-4041-bb7c-e2016146d1d4.png" width = "100%">
 - Skill spec detail
-  -App
-- Rules
-  - Commit convention
-  - Code convention
-  -Branch rule: [Git flow](https://guides.github.com/introduction/flow/)
+    - App
+    - Rules
+    - Commit convention
+    - Code convention
+    -Branch rule: [Git flow](https://guides.github.com/introduction/flow/)
 
 </details>
 
