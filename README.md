@@ -4,15 +4,15 @@
 
 ## Team Tree
 
-> <h3> 인물 정보를 <Card>로 정리하고 관계있는 Card끼리 연결시켜 관리하자! </h3>
->
-> 이름과 연락처, 사진, 메모, 별명을 한 장의 카드에 저장하고,<br> 수직관계 연동으로 관계 구조를 관리하세요!
-
 - Contents:
 
   <img src = "https://user-images.githubusercontent.com/80248474/133612972-6ddd5b59-1319-4e0c-b0be-29a77becd90d.png" width = "100%">
 
-  TODO : explain content here.
+  <h3> 인물 정보를 <Card>로 정리하고 관계있는 Card끼리 연결시켜 관리하자! </h3>
+
+  > 이름과 연락처, 사진, 메모, 별명을 한 장의 카드에 저장하고,<br> 수직관계 연동으로 관계 구조를 관리하세요!
+
+  
 
 - Keyword:
 
