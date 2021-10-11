@@ -16,7 +16,7 @@
 
 - Keyword:
 
-  1. Android architecture Component[Lifecycle, ViewModel]
+  1. Android architecture Components[Lifecycle, ViewModel]
   2. Reactive UI connection wiht DataBinding.
   3. Room persistence library.
   4. MVVM with Repository pattern.
@@ -65,6 +65,12 @@
 
 ## Tech stack
 
-## Architecture
+## App architecture
+
+ With 'Room' & Lifecycle aware 'ViewModel':
+
+<img src="https://developer.android.com/codelabs/android-room-with-a-view/img/8e4b761713e3a76b.png">
+
+
 
 ## Trouble shooting
