@@ -16,7 +16,10 @@
 
 - Keyword:
 
-  TODO: keyword here.
+  1. Android architecture Component[Lifecycle, ViewModel]
+  2. Reactive UI connection wiht DataBinding.
+  3. Room persistence library.
+  4. MVVM with Repository pattern.
 
 ## Doc 
 
