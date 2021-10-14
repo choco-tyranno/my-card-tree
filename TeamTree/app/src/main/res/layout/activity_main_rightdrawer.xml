@@ -17,14 +17,36 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/card_search_view"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:background="@color/colorAccent_c"
-            android:iconifiedByDefault="true"/>
+            android:iconifiedByDefault="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting_button_backcolor_view"
+            app:layout_constraintTop_toTopOf="parent" >
+
+        </androidx.appcompat.widget.SearchView>
+
+        <View
+            android:id="@+id/setting_button_backcolor_view"
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:background="@color/colorAccent_c"
+            app:layout_constraintStart_toEndOf="@id/card_search_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/card_search_view"/>
+
+        <Button
+            android:id="@+id/setting_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_settings_40"
+            app:layout_constraintEnd_toEndOf="@id/setting_button_backcolor_view"
+            app:layout_constraintStart_toStartOf="@id/setting_button_backcolor_view"
+            app:layout_constraintTop_toTopOf="@id/card_search_view"
+            app:layout_constraintBottom_toBottomOf="@id/card_search_view"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/card_search_result_recyclerview"
