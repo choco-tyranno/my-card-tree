@@ -99,6 +99,7 @@ public class MainCardActivity extends AppCompatActivity {
         Optional.of(viewModel.isSettingsOn()).flatMap(settingsOn ->
                 Optional.ofNullable(settingsOn.getValue())).ifPresent(value -> {
             if (value) {
+                setTheme(R.style.AppTheme);
                 viewModel.toggleSettingsOn();
             } else {
                 super.onBackPressed();
