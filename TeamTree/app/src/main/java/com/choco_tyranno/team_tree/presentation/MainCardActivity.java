@@ -96,7 +96,14 @@ public class MainCardActivity extends AppCompatActivity {
             cardFinder.setSendingFindCardReq(false);
             return;
         }
-        super.onBackPressed();
+        Optional.of(viewModel.isSettingsOn()).flatMap(settingsOn ->
+                Optional.ofNullable(settingsOn.getValue())).ifPresent(value -> {
+            if (value) {
+                viewModel.toggleSettingsOn();
+            } else {
+                super.onBackPressed();
+            }
+        });
     }
 
     public CardFinder getCardFinder() {
