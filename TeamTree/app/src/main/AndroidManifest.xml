@@ -8,6 +8,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"
@@ -22,6 +23,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".presentation.settings.SettingActivity"
+            android:theme="@style/SettingsTheme"
             android:exported="true" />
         <activity android:name=".presentation.UiTestActivity" />
         <activity
