@@ -40,6 +40,7 @@
 
         <Button
             android:id="@+id/setting_button"
+            android:onClickListener="@{viewModel.onClickListenerForSettingButton}"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_baseline_settings_40"

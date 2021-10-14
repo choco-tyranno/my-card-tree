@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.DragEvent;
@@ -64,7 +63,7 @@ import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListener
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.PageNavigationAdapter;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.SearchingResultAdapter;
-import com.choco_tyranno.team_tree.presentation.settings.SettingActivity;
+import com.choco_tyranno.team_tree.presentation.settings.SettingsActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
@@ -75,7 +74,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -508,7 +506,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnClickListenerForSettingButton() {
         this.onClickListenerForSettingButton = view -> {
-            Intent intentStartSettingActivity = new Intent(view.getContext(), SettingActivity.class);
+            Intent intentStartSettingActivity = new Intent(view.getContext(), SettingsActivity.class);
             view.getContext().startActivity(intentStartSettingActivity);
         };
     }
