@@ -22,14 +22,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableInt;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
+import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
@@ -74,6 +78,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -86,6 +91,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private HashMap<Integer, ObservableBitmap> cardImageMap;
     private List<Container> mPresentContainerList;
     private List<List<Pair<CardDto, CardState>>> mPresentData;
+
+    private MutableLiveData<Boolean> settingsOn;
 
     private List<CardDto> searchingResultCardList;
     private ObservableInt focusPageNo;
@@ -479,6 +486,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         this.searchingResultAdapter = new SearchingResultAdapter(this);
         this.pageNavigationAdapter = new PageNavigationAdapter(this);
         focusPageNo = new ObservableInt(NO_FOCUS_PAGE);
+        this.settingsOn = new MutableLiveData<>(false);
         initListeners();
     }
 
@@ -506,8 +514,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnClickListenerForSettingButton() {
         this.onClickListenerForSettingButton = view -> {
-            Intent intentStartSettingActivity = new Intent(view.getContext(), SettingsActivity.class);
-            view.getContext().startActivity(intentStartSettingActivity);
+            ActivityMainFrameBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
+            DrawerLayout mainDL = binding.mainDrawerLayout;
+            mainDL.closeDrawer(GravityCompat.END);
+            toggleSettingsOn();
         };
     }
 
@@ -868,6 +878,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 presentChildren(view, containerPosition, cardPosition);
             }
         };
+    }
+
+    public void toggleSettingsOn() {
+        Optional.of(settingsOn).ifPresent(settingsOn -> Optional.ofNullable(settingsOn.getValue()).ifPresent(value -> settingsOn.setValue(!value)));
+    }
+
+    public MutableLiveData<Boolean> isSettingsOn() {
+        return this.settingsOn;
     }
 
     public CardScrollListener.OnScrollStateChangeListener getOnScrollStateChangeListener() {

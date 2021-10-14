@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent_c"
     tools:context=".presentation.settings.SettingsFragment">
 
     <TextView
+        android:text="SETTINGS FRAGMENT"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
