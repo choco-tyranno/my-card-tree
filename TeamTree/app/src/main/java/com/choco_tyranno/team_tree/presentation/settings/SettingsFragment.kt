@@ -10,6 +10,5 @@ import com.choco_tyranno.team_tree.R
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.context.setTheme(R.style.SettingsTheme)
     }
 }

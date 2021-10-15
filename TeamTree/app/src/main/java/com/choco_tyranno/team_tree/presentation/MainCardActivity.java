@@ -72,7 +72,6 @@ public class MainCardActivity extends AppCompatActivity {
         searchCloseBtn.setColorFilter(R.color.colorPrimary_a);
         searchAutoComplete.setTextColor(getResources().getColor(R.color.colorPrimary, getTheme()));
 
-        // worker thread's job available.
         CardGestureListener cardGestureListener = new CardGestureListener();
         GestureDetectorCompat cardGestureDetector = new GestureDetectorCompat(MainCardActivity.this, cardGestureListener);
         viewModel.setCardGestureListener(cardGestureListener);
