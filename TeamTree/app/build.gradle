@@ -2,6 +2,8 @@ plugins{
     id 'com.android.application'
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -40,9 +42,17 @@ android {
         targetCompatibility = 1.8
     }
 
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     buildFeatures{
         dataBinding = true
     }
+}
+
+kapt {
+    correctErrorTypes true
 }
 
 dependencies {
@@ -71,6 +81,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
     // Room - Test helper
     testImplementation "androidx.room:room-testing:$room_version"
 
@@ -81,12 +92,6 @@ dependencies {
     def lifecycle_version = "2.2.0"
     def arch_version = "2.1.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    // Lifecycles only (without ViewModel or LiveData)
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     // Saved state module for ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     // Annotation processor
@@ -98,12 +103,29 @@ dependencies {
     // optional - Test helpers for LiveData
     testImplementation "androidx.arch.core:core-testing:$arch_version"
 
+    //Licensing
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
+
+    //DI - Hilt
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+
+    // ==========================Kotlin==========================
+    implementation 'androidx.core:core-ktx:1.6.0'
+
     //Navigation
     def nav_version = "2.3.5"
-    // Kotlin
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //Licensing
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    //Lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-rc01")
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
 }

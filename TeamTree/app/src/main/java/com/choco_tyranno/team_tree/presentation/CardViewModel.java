@@ -67,7 +67,6 @@ import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListener
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.PageNavigationAdapter;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.SearchingResultAdapter;
-import com.choco_tyranno.team_tree.presentation.settings.SettingsActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
