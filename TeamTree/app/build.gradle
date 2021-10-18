@@ -38,12 +38,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = 11
+        targetCompatibility = 11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
 
     buildFeatures{
@@ -56,6 +56,9 @@ kapt {
 }
 
 dependencies {
+    //Kotlin
+    implementation 'androidx.core:core-ktx:1.6.0'
+
     //File
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -82,50 +85,29 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // Room - Test helper
-    testImplementation "androidx.room:room-testing:$room_version"
-
     // Futures(in androidx.concurrent)
     implementation "androidx.concurrent:concurrent-futures:1.1.0"
 
     // Lifecycle
-    def lifecycle_version = "2.3.1"
-    def arch_version = "2.1.0"
+    def lifecycle_version = "2.4.0-rc01"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    // Saved state module for ViewModel
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-    // Annotation processor
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    // optional - helpers for implementing LifecycleOwner in a Service
-    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
-    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
-    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-    // optional - Test helpers for LiveData
-    testImplementation "androidx.arch.core:core-testing:$arch_version"
 
     //Licensing
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
-
 
     //DI - Hilt
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-android-compiler:2.38.1")
 
-    // ==========================Kotlin==========================
-    implementation 'androidx.core:core-ktx:1.6.0'
-
     //Navigation
     def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    //Lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-rc01")
-    // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    // Lifecycles only (without ViewModel or LiveData)
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
 }
