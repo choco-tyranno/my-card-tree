@@ -1,6 +1,6 @@
 plugins{
     id 'com.android.application'
-    id 'com.google.android.gms.oss-licenses-plugin'
+//    id 'com.google.android.gms.oss-licenses-plugin'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
@@ -38,8 +38,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 11
-        targetCompatibility = 11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
@@ -77,13 +77,15 @@ dependencies {
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    kapt 'com.github.bumptech.glide:compiler:4.10.0'
 
     // Room
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     // Futures(in androidx.concurrent)
     implementation "androidx.concurrent:concurrent-futures:1.1.0"
