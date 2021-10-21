@@ -38,6 +38,7 @@ import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerScrollListener;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
+import com.choco_tyranno.team_tree.presentation.settings.SettingsViewModel;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -126,7 +127,7 @@ public class MainCardActivity extends AppCompatActivity {
                     int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
                     int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
                     Glide.with(MainCardActivity.this).asBitmap()
-                            .load(theCardDto.getImagePath()).addListener(new RequestListener<Bitmap>() {
+                            .load(theCardDto.getImagePath()).addListener(new RequestListener<>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
@@ -166,7 +167,7 @@ public class MainCardActivity extends AppCompatActivity {
                 int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
                 int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
                 Glide.with(MainCardActivity.this).asBitmap()
-                        .load(R.drawable.default_card_image_01).addListener(new RequestListener<Bitmap>() {
+                        .load(R.drawable.default_card_image_01).addListener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         return false;
