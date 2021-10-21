@@ -47,7 +47,7 @@
             app:cardElevation="12dp">
 
             <ImageView
-                android:id="@+id/backCard_imageView"
+                android:id="@+id/back_card_image"
                 android:visibility="@{cardState.back.cardBackVisibility}"
                 app:cardThumbnail="@{cardImage.thumbnail}"
                 app:defaultCardThumbnail="@{viewModel.defaultCardThumbnail}"
