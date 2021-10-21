@@ -11,7 +11,7 @@ buildscript {
         // in the individual module build.gradle files
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
-//        classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
+        classpath 'com.google.android.gms:oss-licenses-plugin:0.10.4'
     }
 }
 
