@@ -24,12 +24,12 @@ public class ImageToFullScreenClickListener implements OnClickListener {
         com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(frameLayout);
         ItemCardFrameBinding binding = cardViewHolder.getBinding();
         CardDto cardDTO = binding.getCard();
-        ImageView cardImageView = binding.cardBackLayout.backCardImageView;
+        ImageView cardImageView = binding.cardBackLayout.backCardImage;
         com.choco_tyranno.team_tree.presentation.MainCardActivity mainCardActivity =((MainCardActivity)view.getContext());
         Intent intent = new Intent(mainCardActivity, DetailCardActivity.class);
         intent.putExtra("post_card", cardDTO);
         Pair<View, String> pairImg = Pair.create(cardImageView, cardImageView.getTransitionName());
-        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mainCardActivity, pairImg);
+        @SuppressWarnings("unchecked") ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mainCardActivity, pairImg);
         mainCardActivity.startActivityForResult(intent, REQ_MANAGE_DETAIL, activityOptionsCompat.toBundle());
     }
 }
