@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".presentation.UiTestActivity" />
+
         <activity
             android:exported="true"
             android:name=".presentation.MainCardActivity"
@@ -32,8 +33,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".presentation.detail_page.DetailCardActivity" />
+
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/LicensesTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
