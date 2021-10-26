@@ -11,6 +11,7 @@
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
+
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
