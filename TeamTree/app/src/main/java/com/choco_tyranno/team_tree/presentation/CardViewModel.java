@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -517,6 +518,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             DrawerLayout mainDL = binding.mainDrawerLayout;
             mainDL.closeDrawer(GravityCompat.END);
             toggleSettingsOn();
+            ActionBar appBar = ((MainCardActivity)view.getContext()).getSupportActionBar();
+            Objects.requireNonNull(appBar).setTitle("설정");
+            appBar.show();
         };
     }
 
