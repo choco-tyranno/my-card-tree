@@ -60,6 +60,8 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
+        setSupportActionBar(binding.mainScreen.appBar);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         binding.setViewModel(viewModel);
         setContainerRv();
         setSearchingResultRv();
