@@ -1,6 +1,8 @@
 package com.choco_tyranno.team_tree.presentation;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
@@ -19,6 +21,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -50,6 +53,7 @@ public class MainCardActivity extends AppCompatActivity {
     private ActivityMainFrameBinding binding;
     private Handler mMainHandler;
     private CardFinder cardFinder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,13 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        viewModel.toggleSettingsOn();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout mainDL = binding.mainDrawerLayout;
         if (mainDL.isDrawerOpen(GravityCompat.END)) {
@@ -101,7 +112,7 @@ public class MainCardActivity extends AppCompatActivity {
         Optional.of(viewModel.isSettingsOn()).flatMap(settingsOn ->
                 Optional.ofNullable(settingsOn.getValue())).ifPresent(value -> {
             if (value) {
-                setTheme(R.style.AppTheme);
+                Objects.requireNonNull(getSupportActionBar()).hide();
                 viewModel.toggleSettingsOn();
             } else {
                 super.onBackPressed();
