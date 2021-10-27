@@ -520,6 +520,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             toggleSettingsOn();
             ActionBar appBar = ((MainCardActivity)view.getContext()).getSupportActionBar();
             Objects.requireNonNull(appBar).setTitle("설정");
+            appBar.setDisplayHomeAsUpEnabled(true);
             appBar.show();
         };
     }
