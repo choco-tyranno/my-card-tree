@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!-- member_icon image : Copyright (c) freepik  http://www.freepik.com  -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     >
 
@@ -28,16 +29,21 @@
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cardContainer_frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/container_height"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false">
 
         <include
             android:id="@+id/cardBackLayout"
             layout="@layout/item_card_back"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintTop_toTopOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:visibility="@{cardState.back.cardBackVisibility}"
             bind:card="@{card}"
             bind:cardImage="@{cardImage}"
@@ -47,6 +53,11 @@
         <include
             android:id="@+id/cardFrontLayout"
             layout="@layout/item_card_front"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintTop_toTopOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:visibility="@{cardState.front.cardFrontVisibility}"
             bind:CardRootReference="@{cardRootReference}"
             bind:card="@{card}"
@@ -54,5 +65,5 @@
             bind:frontState="@{cardState.front}"
             bind:viewModel="@{viewModel}" />
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
