@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,7 +78,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         if (!(firstVisibleItemViewHolder instanceof ContactCardViewHolder))
             return false;
         ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) firstVisibleItemViewHolder;
-        FrameLayout firstVisibleItemCardFrameLayout = cardViewHolder.getBinding().cardContainerFrameLayout;
+        ConstraintLayout firstVisibleItemCardFrameLayout = cardViewHolder.getBinding().cardContainerFrameLayout;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
                 animateCard(firstVisibleItemCardFrameLayout, false, CARD_LOCATION_LEFT);
@@ -93,7 +94,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return false;
     }
 
-    private void createCard(CardRecyclerView cardRecyclerView, FrameLayout firstVisibleItemCardFrameLayout) {
+    private void createCard(CardRecyclerView cardRecyclerView, ConstraintLayout firstVisibleItemCardFrameLayout) {
         if (cardRecyclerView == null || firstVisibleItemCardFrameLayout == null) {
             return;
         }
@@ -122,8 +123,8 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             return false;
         ContactCardViewHolder firstVisibleItemViewHolder = (ContactCardViewHolder) firstItemViewHolder;
         ContactCardViewHolder lastVisibleItemViewHolder = (ContactCardViewHolder) lastItemViewHolder;
-        FrameLayout firstVisibleView = firstVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
-        FrameLayout lastVisibleView = lastVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
+        ConstraintLayout firstVisibleView = firstVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
+        ConstraintLayout lastVisibleView = lastVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
                 animateCard(firstVisibleView, false, CARD_LOCATION_LEFT);
@@ -142,7 +143,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return false;
     }
 
-    private void animateCard(FrameLayout view, boolean reverse, int toLocation) {
+    private void animateCard(ConstraintLayout view, boolean reverse, int toLocation) {
         int screenWidth = ((Activity) view.getContext()).getWindowManager().getCurrentWindowMetrics().getBounds().right;
         int fromXCoordinate = -1;
         int toXCoordinate = -1;

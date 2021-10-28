@@ -28,4 +28,5 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         super.onViewCreated(view, savedInstanceState)
         binding.settingsViewmodel = settingsViewModel
     }
+
 }
