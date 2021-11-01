@@ -78,27 +78,27 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         if (!(firstVisibleItemViewHolder instanceof ContactCardViewHolder))
             return false;
         ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) firstVisibleItemViewHolder;
-        ConstraintLayout firstVisibleItemCardFrameLayout = cardViewHolder.getBinding().cardContainerFrameLayout;
+        ConstraintLayout firstVisibleItemCardFrame = cardViewHolder.getBinding().cardFrame;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
-                animateCard(firstVisibleItemCardFrameLayout, false, CARD_LOCATION_LEFT);
+                animateCard(firstVisibleItemCardFrame, false, CARD_LOCATION_LEFT);
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
-                animateCard(firstVisibleItemCardFrameLayout, true, CARD_LOCATION_LEFT);
+                animateCard(firstVisibleItemCardFrame, true, CARD_LOCATION_LEFT);
                 return true;
             case DragEvent.ACTION_DROP:
-                animateCard(firstVisibleItemCardFrameLayout, true, CARD_LOCATION_LEFT);
-                createCard(view, firstVisibleItemCardFrameLayout);
+                animateCard(firstVisibleItemCardFrame, true, CARD_LOCATION_LEFT);
+                createCard(view, firstVisibleItemCardFrame);
                 return true;
         }
         return false;
     }
 
-    private void createCard(CardRecyclerView cardRecyclerView, ConstraintLayout firstVisibleItemCardFrameLayout) {
-        if (cardRecyclerView == null || firstVisibleItemCardFrameLayout == null) {
+    private void createCard(CardRecyclerView cardRecyclerView, ConstraintLayout firstVisibleItemCardFrame) {
+        if (cardRecyclerView == null || firstVisibleItemCardFrame == null) {
             return;
         }
-        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(firstVisibleItemCardFrameLayout)).getBinding();
+        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(firstVisibleItemCardFrame)).getBinding();
         CardDto firstVisibleItemCardDto = cardFrameBinding.getCard();
         CardState firstVisibleItemCardState = cardFrameBinding.getCardState();
         int firstVisibleItemCardSeqNo = firstVisibleItemCardDto.getSeqNo();
@@ -123,8 +123,8 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             return false;
         ContactCardViewHolder firstVisibleItemViewHolder = (ContactCardViewHolder) firstItemViewHolder;
         ContactCardViewHolder lastVisibleItemViewHolder = (ContactCardViewHolder) lastItemViewHolder;
-        ConstraintLayout firstVisibleView = firstVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
-        ConstraintLayout lastVisibleView = lastVisibleItemViewHolder.getBinding().cardContainerFrameLayout;
+        ConstraintLayout firstVisibleView = firstVisibleItemViewHolder.getBinding().cardFrame;
+        ConstraintLayout lastVisibleView = lastVisibleItemViewHolder.getBinding().cardFrame;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_ENTERED:
                 animateCard(firstVisibleView, false, CARD_LOCATION_LEFT);
