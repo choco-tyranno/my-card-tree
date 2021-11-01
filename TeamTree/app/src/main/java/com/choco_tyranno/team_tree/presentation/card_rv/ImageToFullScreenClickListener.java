@@ -6,6 +6,7 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 
@@ -19,9 +20,9 @@ public class ImageToFullScreenClickListener implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        FrameLayout frameLayout = (FrameLayout) view.getParent().getParent().getParent();
-        com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView cardRecyclerView = (CardRecyclerView) frameLayout.getParent();
-        com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(frameLayout);
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent().getParent();
+        com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView cardRecyclerView = (CardRecyclerView) cardFrame.getParent();
+        com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
         ItemCardFrameBinding binding = cardViewHolder.getBinding();
         CardDto cardDTO = binding.getCard();
         ImageView cardImageView = binding.cardBackLayout.backCardImage;
