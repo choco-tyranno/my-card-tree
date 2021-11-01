@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.choco_tyranno.team_tree.Logger;
@@ -103,8 +104,8 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
 
 
     private CardRecyclerView getCardRecyclerView(View view) {
-        FrameLayout frameLayout = (FrameLayout) view.getParent().getParent();
-        return (CardRecyclerView) frameLayout.getParent();
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent();
+        return (CardRecyclerView) cardFrame.getParent();
     }
 
     private CardViewModel getCardViewModel(View view) {
@@ -115,9 +116,9 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
     /* end long pressed methods*/
 
     private ItemCardFrameBinding getItemCardFrameBinding() {
-        FrameLayout frameLayout = (FrameLayout) view.getParent().getParent();
-        CardRecyclerView cardRecyclerView = (CardRecyclerView) frameLayout.getParent();
-        ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(frameLayout);
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent();
+        CardRecyclerView cardRecyclerView = (CardRecyclerView) cardFrame.getParent();
+        ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
         return cardViewHolder.getBinding();
     }
 
