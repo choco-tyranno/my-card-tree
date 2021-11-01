@@ -30,7 +30,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cardContainer_frameLayout"
+        android:id="@+id/card_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
@@ -42,8 +42,10 @@
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
+            bind:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
             android:visibility="@{cardState.back.cardBackVisibility}"
             bind:card="@{card}"
             bind:cardImage="@{cardImage}"
@@ -53,11 +55,13 @@
         <include
             android:id="@+id/cardFrontLayout"
             layout="@layout/item_card_front"
+            android:layout_marginHorizontal="20dp"
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
+            bind:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:visibility="@{cardState.front.cardFrontVisibility}"
             bind:CardRootReference="@{cardRootReference}"
             bind:card="@{card}"
