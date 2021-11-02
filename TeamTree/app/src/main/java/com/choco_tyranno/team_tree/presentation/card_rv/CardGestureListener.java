@@ -104,7 +104,7 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
 
 
     private CardRecyclerView getCardRecyclerView(View view) {
-        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent();
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent();
         return (CardRecyclerView) cardFrame.getParent();
     }
 
@@ -116,7 +116,7 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
     /* end long pressed methods*/
 
     private ItemCardFrameBinding getItemCardFrameBinding() {
-        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent();
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent();
         CardRecyclerView cardRecyclerView = (CardRecyclerView) cardFrame.getParent();
         ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
         return cardViewHolder.getBinding();
