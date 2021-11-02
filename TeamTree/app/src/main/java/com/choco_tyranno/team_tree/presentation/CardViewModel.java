@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -48,7 +47,7 @@ import com.choco_tyranno.team_tree.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
-import com.choco_tyranno.team_tree.presentation.card_rv.ImageToFullScreenClickListener;
+import com.choco_tyranno.team_tree.presentation.card_rv.SpreadingOutDetailOnClickListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap;
 import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForCallBtn;
 import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForMessageBtn;
@@ -566,7 +565,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private void initSpreadingOutDetailOnClickListener() {
-        spreadingOutDetailOnClickListener = new ImageToFullScreenClickListener();
+        spreadingOutDetailOnClickListener = new SpreadingOutDetailOnClickListener();
     }
 
     private void initCardTouchListener() {

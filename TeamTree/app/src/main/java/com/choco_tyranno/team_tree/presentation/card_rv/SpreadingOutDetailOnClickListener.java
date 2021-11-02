@@ -15,7 +15,7 @@ import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.detail_page.DetailCardActivity;
 
-public class ImageToFullScreenClickListener implements OnClickListener {
+public class SpreadingOutDetailOnClickListener implements OnClickListener {
     public static final int REQ_MANAGE_DETAIL = 1;
 
     @Override

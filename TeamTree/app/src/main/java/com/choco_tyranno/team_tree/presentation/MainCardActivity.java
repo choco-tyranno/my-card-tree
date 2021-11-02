@@ -2,7 +2,6 @@ package com.choco_tyranno.team_tree.presentation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
@@ -15,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -35,13 +32,11 @@ import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider;
-import com.choco_tyranno.team_tree.presentation.card_rv.ImageToFullScreenClickListener;
+import com.choco_tyranno.team_tree.presentation.card_rv.SpreadingOutDetailOnClickListener;
 import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
-import com.choco_tyranno.team_tree.presentation.container_rv.ContainerScrollListener;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
-import com.choco_tyranno.team_tree.presentation.settings.SettingsViewModel;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -242,7 +237,7 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ImageToFullScreenClickListener.REQ_MANAGE_DETAIL) {
+        if (requestCode == SpreadingOutDetailOnClickListener.REQ_MANAGE_DETAIL) {
             if (data == null)
                 return;
             CardDto updatedCardDto = (CardDto) data.getSerializableExtra("post_card");
