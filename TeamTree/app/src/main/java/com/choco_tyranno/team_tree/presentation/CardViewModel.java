@@ -103,7 +103,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForTopArrow;
     private View.OnDragListener onDragListenerForBottomArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
-    private View.OnClickListener onClickListenerForImageViewToFullScreen;
+    private View.OnClickListener spreadingOutDetailOnClickListener;
     private View.OnClickListener onClickListenerForCallBtn;
     private View.OnClickListener onClickListenerForMessageBtn;
     private View.OnClickListener onClickListenerForSettingButton;
@@ -461,8 +461,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         view.setOnClickListener(clickListener);
     }
 
-    public View.OnClickListener getOnImageViewToFullscreenClickListener() {
-        return onClickListenerForImageViewToFullScreen;
+    public View.OnClickListener getSpreadingOutDetailOnClickListener() {
+        return spreadingOutDetailOnClickListener;
     }
 
     /*
@@ -499,7 +499,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnScrollStateChangeListener();
         initScrollListenerForContainerRecyclerView();
         initCardTouchListener();
-        initImageToFullScreenClickListener();
+        initSpreadingOutDetailOnClickListener();
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnClickListenerForPageBtn();
@@ -565,8 +565,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         this.onQueryTextListenerForSearchingCard = new OnQueryTextListenerForSearchingCard(this);
     }
 
-    private void initImageToFullScreenClickListener() {
-        onClickListenerForImageViewToFullScreen = new ImageToFullScreenClickListener();
+    private void initSpreadingOutDetailOnClickListener() {
+        spreadingOutDetailOnClickListener = new ImageToFullScreenClickListener();
     }
 
     private void initCardTouchListener() {
