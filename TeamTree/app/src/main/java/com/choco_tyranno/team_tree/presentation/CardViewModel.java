@@ -1033,9 +1033,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private int findContainerPositionByRemoveBtn(View view) {
-        ConstraintLayout containerLayout = (ConstraintLayout) view.getParent().getParent().getParent().getParent().getParent();
-        RecyclerView containerRecyclerView = (RecyclerView) containerLayout.getParent();
-        return containerRecyclerView.getChildAdapterPosition(containerLayout);
+        ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent();
+        RecyclerView cardRecyclerView = (RecyclerView) cardFrame.getParent();
+        ConstraintLayout containerFrame = (ConstraintLayout) cardRecyclerView.getParent();
+        RecyclerView containerRecyclerView = (RecyclerView) containerFrame.getParent();
+        return containerRecyclerView.getChildAdapterPosition(containerFrame);
     }
 
     public void findChildrenCards(CardDto rootCard, List<CardDto> foundChildrenCollector) {
