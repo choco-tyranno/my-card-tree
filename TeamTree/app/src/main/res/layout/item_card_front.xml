@@ -28,21 +28,11 @@
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frontCard_constraintLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        >
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/frontCard_cardView"
             android:alpha="@{cardState.front.cardFrontAlpha}"
             android:visibility="@{cardState.front.cardFrontVisibility}"
             app:onCardTouchListener="@{viewModel.onTouchListenerForCard}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="#fff"
@@ -199,30 +189,4 @@
                 app:cornerRadius="20dp" />
 
         </com.google.android.material.card.MaterialCardView>
-
-        <FrameLayout
-            android:id="@+id/frontCard_remove_frame"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="270dp"
-            android:layout_marginBottom="90dp"
-            android:elevation="24dp"
-            app:layout_constraintBottom_toBottomOf="@id/frontCard_cardView"
-            app:layout_constraintStart_toStartOf="@id/frontCard_cardView">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/frontCard_remove_btn"
-                android:layout_gravity="end|top"
-                android:layout_width="50dp"
-                android:layout_height="60dp"
-                android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"
-                android:text="@string/card_remove_btn_text"
-                android:textColor="@color/colorSecondary"
-                android:textSize="30sp"
-                android:visibility="@{cardState.removeBtnVisibility}"
-                app:backgroundTint="@color/colorPrimary"
-                app:cornerRadius="25dp"
-                app:elevation="24dp" />
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
