@@ -22,12 +22,6 @@
             type="com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap" />
     </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backCard_constraintLayout"
-        android:layout_width="320dp"
-        android:layout_height="200dp">
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/backCard_cardView"
             android:alpha="@{cardState.back.cardBackAlpha}"
@@ -68,30 +62,4 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <FrameLayout
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="270dp"
-            android:layout_marginBottom="90dp"
-            app:layout_constraintBottom_toBottomOf="@id/backCard_cardView"
-            app:layout_constraintLeft_toLeftOf="@id/backCard_cardView"
-            android:elevation="24dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/backCard_remove_btn"
-                android:layout_gravity="end|top"
-                android:layout_width="50dp"
-                android:layout_height="60dp"
-                android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"
-                android:text="@string/card_remove_btn_text"
-                android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
-                android:visibility="@{cardState.removeBtnVisibility}"
-                app:backgroundTint="@color/colorPrimaryDark"
-                app:cornerRadius="25dp"
-                app:elevation="24dp" />
-
-        </FrameLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
