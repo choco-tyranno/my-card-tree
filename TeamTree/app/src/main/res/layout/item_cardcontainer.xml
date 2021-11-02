@@ -21,7 +21,7 @@
         android:id="@+id/container_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/containerLayout_paddingBottom"
+        android:layout_marginBottom="@dimen/containerLayout_paddingBottom"
         android:clipChildren="false"
         android:clipToPadding="false">
 
@@ -43,11 +43,10 @@
 
         <com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView
             android:id="@+id/card_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/container_height"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:layout_marginTop="@dimen/cardRecyclerview_marginTop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/parent_item_title"
