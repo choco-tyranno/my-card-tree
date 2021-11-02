@@ -59,8 +59,8 @@
 
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imageView_to_fullscreen"
-                android:onClickListener="@{viewModel.onImageViewToFullscreenClickListener}"
+                android:id="@+id/spreadingOutDetail"
+                android:onClickListener="@{viewModel.spreadingOutDetailOnClickListener}"
                 android:layout_gravity="top|end"
                 android:src="@drawable/ic_baseline_fullscreen_24"
                 android:layout_width="wrap_content"
