@@ -1916,10 +1916,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private RecyclerView getContainerRecyclerViewFromRemoveButton(View view) {
-        return (RecyclerView) view.getParent().getParent().getParent().getParent().getParent().getParent();
+        RecyclerView cardRecyclerView = getCardRecyclerViewFromRemoveButton(view);
+        ConstraintLayout containerFrame = (ConstraintLayout) cardRecyclerView.getParent();
+        return (RecyclerView) containerFrame.getParent();
     }
 
     private RecyclerView getCardRecyclerViewFromRemoveButton(View view) {
-        return (RecyclerView) view.getParent().getParent().getParent().getParent();
+        FrameLayout removeBtnFrame = (FrameLayout) view.getParent();
+        ConstraintLayout cardFrame = (ConstraintLayout) removeBtnFrame.getParent();
+        return (RecyclerView) cardFrame.getParent();
     }
 }
