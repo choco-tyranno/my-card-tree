@@ -141,8 +141,8 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:background="@drawable/margin_removed_round_button"
                 android:id="@+id/remove_btn"
-                android:autoSizeTextType="uniform"
                 android:includeFontPadding="false"
+                android:autoSizeTextType="uniform"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:layout_width="match_parent"
