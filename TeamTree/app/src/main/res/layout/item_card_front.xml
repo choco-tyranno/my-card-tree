@@ -28,165 +28,174 @@
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/frontCard_cardView"
-            android:alpha="@{cardState.front.cardFrontAlpha}"
-            android:visibility="@{cardState.front.cardFrontVisibility}"
-            app:onCardTouchListener="@{viewModel.onTouchListenerForCard}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#fff"
-            android:clickable="true"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:focusable="true"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="12dp">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/frontCard_cardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="@{cardState.front.cardFrontAlpha}"
+        android:background="#fff"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:focusable="true"
+        android:visibility="@{cardState.front.cardFrontVisibility}"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="12dp"
+        app:onCardTouchListener="@{viewModel.onTouchListenerForCard}"
+        tools:layout_height="200dp"
+        tools:layout_width="400dp">
 
-            <!-- edit mode start-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/frontCardLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/frontCard_titleEditText"
-                android:layout_width="230dp"
-                android:layout_height="27dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="21dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/humanletter"
-                android:hint="@string/card_title_hint"
-                android:inputType="text"
-                android:paddingStart="@dimen/cardFront_titleEditText_paddingStart"
-                android:paddingEnd="@dimen/cardFront_titleEditText_paddingEnd"
-                android:singleLine="true"
-                android:text="@{card.title}"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp"
-                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/frontCard_contactNumberEditText"
-                android:layout_width="230dp"
-                android:layout_height="27dp"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="21dp"
-                android:layout_marginBottom="49dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/humanletter"
-                android:hint="@string/card_contact_number_hint"
-                android:inputType="phone"
-                android:onTextChanged="@{()->cardState.front.onContactNumberEditTextChanged(cardRootReference)}"
-                android:paddingStart="@dimen/cardFront_contactNumberEditText_paddingStart"
-                android:paddingEnd="@dimen/cardFront_contactNumberEditText_paddingEnd"
-                android:singleLine="true"
-                android:text="@{card.contactNumber}"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp"
-                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
+        <!-- edit mode start-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/frontCard_editTool_saveBtn"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|start"
-                android:layout_marginStart="10dp"
-                android:fontFamily="@font/humanletter"
-                android:onClick="@{(saveButton)->frontState.onSaveButtonClicked(cardRootReference, card, viewModel)}"
-                android:text="@string/btn_save_name"
-                android:textColor="@color/colorAccent"
-                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/frontCard_titleEditText"
+            android:layout_width="230dp"
+            android:layout_height="27dp"
+            android:layout_gravity="top"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="21dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/humanletter"
+            android:hint="@string/card_title_hint"
+            android:inputType="text"
+            android:paddingStart="@dimen/cardFront_titleEditText_paddingStart"
+            android:paddingEnd="@dimen/cardFront_titleEditText_paddingEnd"
+            android:singleLine="true"
+            android:text="@{card.title}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/frontCard_editTool_cancelBtn"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="@font/humanletter"
-                android:onClick="@{(cancelButton)->frontState.onCancelButtonClicked(cardRootReference, card)}"
-                android:text="@string/btn_cancel_name"
-                android:textColor="@color/colorAccent"
-                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/frontCard_contactNumberEditText"
+            android:layout_width="230dp"
+            android:layout_height="27dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="21dp"
+            android:layout_marginBottom="49dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/humanletter"
+            android:hint="@string/card_contact_number_hint"
+            android:inputType="phone"
+            android:onTextChanged="@{()->cardState.front.onContactNumberEditTextChanged(cardRootReference)}"
+            android:paddingStart="@dimen/cardFront_contactNumberEditText_paddingStart"
+            android:paddingEnd="@dimen/cardFront_contactNumberEditText_paddingEnd"
+            android:singleLine="true"
+            android:text="@{card.contactNumber}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/frontCard_editTool_saveBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/humanletter"
+            android:onClick="@{(saveButton)->frontState.onSaveButtonClicked(cardRootReference, card, viewModel)}"
+            android:text="@string/btn_save_name"
+            android:textColor="@color/colorAccent"
+            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+            app:cornerRadius="20dp" />
 
-            <!-- read mode start-->
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/frontCard_titleTextView"
-                android:layout_width="230dp"
-                android:layout_height="27dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/humanletter"
-                android:hint="@string/card_title_hint"
-                android:paddingStart="@dimen/cardFront_titleTextView_paddingStart"
-                android:paddingEnd="@dimen/cardFront_titleTextView_paddingEnd"
-                android:singleLine="true"
-                android:text="@{card.title}"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp"
-                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                tools:text="김땡땡" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/frontCard_contactNumberTextView"
-                android:layout_width="230dp"
-                android:layout_height="27dp"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="50dp"
-                android:fontFamily="@font/humanletter"
-                android:hint="@string/card_contact_number_hint"
-                android:paddingStart="@dimen/cardFront_contactNumberTextView_paddingStart"
-                android:paddingEnd="@dimen/cardFront_contactNumberTextView_paddingEnd"
-                android:singleLine="true"
-                android:text="@{card.contactNumber}"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp"
-                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                tools:text="010-3355-5252" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/frontCard_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:elevation="12dp"
-                android:onCheckedChanged="@{(view, isOn)->cardState.front.onSwitchChanged(card, isOn)}" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/frontCard_editTool_cancelBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/humanletter"
+            android:onClick="@{(cancelButton)->frontState.onCancelButtonClicked(cardRootReference, card)}"
+            android:text="@string/btn_cancel_name"
+            android:textColor="@color/colorAccent"
+            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+            app:cornerRadius="20dp" />
 
 
-            <ImageButton
-                android:id="@+id/frontCard_callBtn"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                app:onClickListener="@{viewModel.onClickListenerForCallBtn}"
-                android:contentDescription="@string/call_btn_desc"
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|start"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_call_01"
-                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp" />
+        <!-- read mode start-->
 
-            <ImageButton
-                android:id="@+id/frontCard_messageBtn"
-                app:onClickListener="@{viewModel.onClickListenerForMessageBtn}"
-                android:contentDescription="@string/message_btn_desc"
-                android:src="@drawable/ic_message_01"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="90dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="10dp"
-                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/frontCard_titleTextView"
+            android:layout_width="230dp"
+            android:layout_height="27dp"
+            android:layout_gravity="top"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/humanletter"
+            android:hint="@string/card_title_hint"
+            android:paddingStart="@dimen/cardFront_titleTextView_paddingStart"
+            android:paddingEnd="@dimen/cardFront_titleTextView_paddingEnd"
+            android:singleLine="true"
+            android:text="@{card.title}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+            tools:text="김땡땡" />
 
-        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/frontCard_contactNumberTextView"
+            android:layout_width="230dp"
+            android:layout_height="27dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="50dp"
+            android:fontFamily="@font/humanletter"
+            android:hint="@string/card_contact_number_hint"
+            android:paddingStart="@dimen/cardFront_contactNumberTextView_paddingStart"
+            android:paddingEnd="@dimen/cardFront_contactNumberTextView_paddingEnd"
+            android:singleLine="true"
+            android:text="@{card.contactNumber}"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+            tools:text="010-3355-5252" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/frontCard_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:elevation="12dp"
+            android:onCheckedChanged="@{(view, isOn)->cardState.front.onSwitchChanged(card, isOn)}" />
+
+
+        <ImageButton
+            android:id="@+id/frontCard_callBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/call_btn_desc"
+            android:src="@drawable/ic_call_01"
+            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+            app:cornerRadius="20dp"
+            app:onClickListener="@{viewModel.onClickListenerForCallBtn}" />
+
+        <ImageButton
+            android:id="@+id/frontCard_messageBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/message_btn_desc"
+            android:src="@drawable/ic_message_01"
+            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+            app:cornerRadius="20dp"
+            app:onClickListener="@{viewModel.onClickListenerForMessageBtn}" />
+
+    </com.google.android.material.card.MaterialCardView>
 </layout>
