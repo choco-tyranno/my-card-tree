@@ -46,26 +46,26 @@
         tools:layout_width="400dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frontCardLayoutManager"
+            android:id="@+id/cardContentsLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleGuidelineStart"
+                android:id="@+id/titleStartLine"
                 app:layout_constraintGuide_percent="0.1"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleGuidelineTop"
+                android:id="@+id/titleTopLine"
                 app:layout_constraintGuide_percent="0.25"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleGuidelineBottom"
+                android:id="@+id/titleBottomLine"
                 app:layout_constraintGuide_percent="0.4"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
@@ -84,10 +84,10 @@
                 android:text="@{card.title}"
                 android:textColor="@color/colorAccent"
                 android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:layout_constraintTop_toTopOf="@id/titleGuidelineTop"
-                app:layout_constraintBottom_toBottomOf="@id/titleGuidelineBottom"
-                app:layout_constraintStart_toStartOf="@id/titleGuidelineStart"
-                app:layout_constraintEnd_toEndOf="@id/switchGuidelineStart"
+                app:layout_constraintTop_toTopOf="@id/titleTopLine"
+                app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
+                app:layout_constraintStart_toStartOf="@id/titleStartLine"
+                app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 android:layout_marginEnd="10dp"
                 tools:text="EditText" />
 
@@ -103,19 +103,45 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="24sp"
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:layout_constraintTop_toTopOf="@id/titleGuidelineTop"
-                app:layout_constraintBottom_toBottomOf="@id/titleGuidelineBottom"
-                app:layout_constraintStart_toStartOf="@id/titleGuidelineStart"
-                app:layout_constraintEnd_toEndOf="@id/switchGuidelineStart"
+                app:layout_constraintTop_toTopOf="@id/titleTopLine"
+                app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
+                app:layout_constraintStart_toStartOf="@id/titleStartLine"
+                app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 android:layout_marginEnd="10dp"
                 tools:text="김땡땡" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/switchGuidelineStart"
+                android:id="@+id/switchStartLine"
                 app:layout_constraintGuide_percent="0.85"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/switchTopLine"
+                app:layout_constraintGuide_percent="0.1"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/switchBottomLine"
+                app:layout_constraintGuide_percent="0.25"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/modeSwitch"
+                app:layout_constraintTop_toTopOf="@id/switchTopLine"
+                app:layout_constraintBottom_toBottomOf="@id/switchBottomLine"
+                app:layout_constraintStart_toStartOf="@id/switchStartLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="12dp"
+                android:onCheckedChanged="@{(view, isOn)->cardState.front.onSwitchChanged(card, isOn)}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,15 +216,6 @@
             android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
             tools:text="010-3355-5252" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/frontCard_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:elevation="12dp"
-            android:onCheckedChanged="@{(view, isOn)->cardState.front.onSwitchChanged(card, isOn)}" />
 
 
         <ImageButton
