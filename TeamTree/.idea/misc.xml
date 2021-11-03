@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/drawable/margin_removed_round_button.xml" value="0.35989583333333336" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/activity_main_body.xml" value="0.16197916666666667" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/activity_main_emptycontainer.xml" value="0.34375" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/activity_main_frame.xml" value="0.278125" />
@@ -12,7 +13,7 @@
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/fragment_settings.xml" value="0.2646755921730175" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_back.xml" value="0.22" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_empty.xml" value="0.34375" />
-        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_frame.xml" value="0.340129749768304" />
+        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_frame.xml" value="1.0805785123966942" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_front.xml" value="0.34375" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_front_clone.xml" value="0.34375" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_cardcontainer.xml" value="0.34375" />
