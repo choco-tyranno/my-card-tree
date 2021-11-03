@@ -51,37 +51,75 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleGuidelineBaseline"
+                android:id="@+id/titleGuidelineStart"
+                app:layout_constraintGuide_percent="0.1"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleGuidelineStart"
+                android:id="@+id/titleGuidelineTop"
+                app:layout_constraintGuide_percent="0.25"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/titleGuidelineBottom"
+                app:layout_constraintGuide_percent="0.4"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/titleEditText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:autoSizeTextType="uniform"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/humanletter"
+                android:hint="@string/card_title_hint"
+                android:inputType="text"
+                android:singleLine="true"
+                android:text="@{card.title}"
+                android:textColor="@color/colorAccent"
+                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintTop_toTopOf="@id/titleGuidelineTop"
+                app:layout_constraintBottom_toBottomOf="@id/titleGuidelineBottom"
+                app:layout_constraintStart_toStartOf="@id/titleGuidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/switchGuidelineStart"
+                android:layout_marginEnd="10dp"
+                tools:text="EditText" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/frontCard_titleTextView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="@font/humanletter"
+                android:hint="@string/card_title_hint"
+                android:singleLine="true"
+                android:text="@{card.title}"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintTop_toTopOf="@id/titleGuidelineTop"
+                app:layout_constraintBottom_toBottomOf="@id/titleGuidelineBottom"
+                app:layout_constraintStart_toStartOf="@id/titleGuidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/switchGuidelineStart"
+                android:layout_marginEnd="10dp"
+                tools:text="김땡땡" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/switchGuidelineStart"
+                app:layout_constraintGuide_percent="0.85"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- edit mode start-->
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/frontCard_titleEditText"
-            android:layout_width="230dp"
-            android:layout_height="27dp"
-            android:layout_gravity="top"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/humanletter"
-            android:hint="@string/card_title_hint"
-            android:inputType="text"
-            android:paddingStart="@dimen/cardFront_titleEditText_paddingStart"
-            android:paddingEnd="@dimen/cardFront_titleEditText_paddingEnd"
-            android:singleLine="true"
-            android:text="@{card.title}"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/frontCard_contactNumberEditText"
@@ -133,24 +171,6 @@
 
 
         <!-- read mode start-->
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/frontCard_titleTextView"
-            android:layout_width="230dp"
-            android:layout_height="27dp"
-            android:layout_gravity="top"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/humanletter"
-            android:hint="@string/card_title_hint"
-            android:paddingStart="@dimen/cardFront_titleTextView_paddingStart"
-            android:paddingEnd="@dimen/cardFront_titleTextView_paddingEnd"
-            android:singleLine="true"
-            android:text="@{card.title}"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-            tools:text="김땡땡" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/frontCard_contactNumberTextView"
