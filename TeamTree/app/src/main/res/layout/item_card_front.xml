@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/titleEditText"
+                android:id="@+id/titleEditor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autoSizeTextType="uniform"
@@ -92,7 +92,7 @@
                 tools:text="EditText" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/frontCard_titleTextView"
+                android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autoSizeTextType="uniform"

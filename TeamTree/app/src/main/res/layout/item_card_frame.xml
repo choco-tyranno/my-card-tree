@@ -143,8 +143,6 @@
                 android:id="@+id/remove_btn"
                 android:includeFontPadding="false"
                 android:autoSizeTextType="uniform"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:onClick="@{(view)->viewModel.onRemoveBtnClicked(view, card)}"
