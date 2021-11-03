@@ -51,7 +51,7 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/titleStartLine"
+                android:id="@+id/textContentsStartLine"
                 app:layout_constraintGuide_percent="0.1"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                 android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/titleTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
-                app:layout_constraintStart_toStartOf="@id/titleStartLine"
+                app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 android:layout_marginEnd="10dp"
                 tools:text="EditText" />
@@ -105,7 +105,7 @@
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/titleTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
-                app:layout_constraintStart_toStartOf="@id/titleStartLine"
+                app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 android:layout_marginEnd="10dp"
                 tools:text="김땡땡" />
@@ -143,29 +143,61 @@
                 android:elevation="12dp"
                 android:onCheckedChanged="@{(view, isOn)->cardState.front.onSwitchChanged(card, isOn)}" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/contactNumberTopLine"
+                app:layout_constraintGuide_percent="0.5"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/contactNumberBottomLine"
+                app:layout_constraintGuide_percent="0.65"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/contactNumber"
+                app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
+                app:layout_constraintEnd_toEndOf="@id/switchStartLine"
+                app:layout_constraintTop_toTopOf="@id/contactNumberTopLine"
+                app:layout_constraintBottom_toBottomOf="@id/contactNumberBottomLine"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="@font/humanletter"
+                android:hint="@string/card_contact_number_hint"
+                android:singleLine="true"
+                android:text="@{card.contactNumber}"
+                android:textColor="@color/colorAccent"
+                android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                tools:text="010-3355-5252" />
+
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/contactNumberEditor"
+                app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
+                app:layout_constraintEnd_toEndOf="@id/switchStartLine"
+                app:layout_constraintTop_toTopOf="@id/contactNumberTopLine"
+                app:layout_constraintBottom_toBottomOf="@id/contactNumberBottomLine"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:autoSizeTextType="uniform"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/humanletter"
+                android:hint="@string/card_contact_number_hint"
+                android:inputType="phone"
+                android:onTextChanged="@{()->cardState.front.onContactNumberEditTextChanged(cardRootReference)}"
+                android:singleLine="true"
+                android:text="@{card.contactNumber}"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- edit mode start-->
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/frontCard_contactNumberEditText"
-            android:layout_width="230dp"
-            android:layout_height="27dp"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="21dp"
-            android:layout_marginBottom="49dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/humanletter"
-            android:hint="@string/card_contact_number_hint"
-            android:inputType="phone"
-            android:onTextChanged="@{()->cardState.front.onContactNumberEditTextChanged(cardRootReference)}"
-            android:paddingStart="@dimen/cardFront_contactNumberEditText_paddingStart"
-            android:paddingEnd="@dimen/cardFront_contactNumberEditText_paddingEnd"
-            android:singleLine="true"
-            android:text="@{card.contactNumber}"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/frontCard_editTool_saveBtn"
@@ -197,26 +229,6 @@
 
 
         <!-- read mode start-->
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/frontCard_contactNumberTextView"
-            android:layout_width="230dp"
-            android:layout_height="27dp"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="50dp"
-            android:fontFamily="@font/humanletter"
-            android:hint="@string/card_contact_number_hint"
-            android:paddingStart="@dimen/cardFront_contactNumberTextView_paddingStart"
-            android:paddingEnd="@dimen/cardFront_contactNumberTextView_paddingEnd"
-            android:singleLine="true"
-            android:text="@{card.contactNumber}"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-            tools:text="010-3355-5252" />
-
-
 
         <ImageButton
             android:id="@+id/frontCard_callBtn"
