@@ -122,12 +122,12 @@ public class CardState extends BaseObservable{
 
         public void onContactNumberEditTextChanged(ItemCardFrameBindingImpl cardFrameBinding){
             AtomicReference<String> editTextValue = new AtomicReference<>();
-            Optional.ofNullable(cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.getText()).ifPresent((text)->editTextValue.set(text.toString()));
+            Optional.ofNullable(cardFrameBinding.cardFrontLayout.contactNumberEditor.getText()).ifPresent((text)->editTextValue.set(text.toString()));
             String formatNumber = PhoneNumberUtils.formatNumber(editTextValue.get(), Locale.getDefault().getCountry());
             if(editTextValue.get().equals(formatNumber))
                 return;
-            cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.setText(formatNumber);
-            cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText.setSelection(formatNumber.length());
+            cardFrameBinding.cardFrontLayout.contactNumberEditor.setText(formatNumber);
+            cardFrameBinding.cardFrontLayout.contactNumberEditor.setSelection(formatNumber.length());
         }
 
         public void onSwitchChanged(CardDto dto, boolean isOn) {
@@ -141,9 +141,9 @@ public class CardState extends BaseObservable{
             SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
                     +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle()));
 
-            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
-            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
-            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.modeSwitch;
+            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.titleEditor;
+            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.contactNumberEditor;
 
             AtomicReference<String> textOfTitleEditText = new AtomicReference<>("");
             Optional.ofNullable(titleEditText.getText()).ifPresent(text->
@@ -179,9 +179,9 @@ public class CardState extends BaseObservable{
         }
 
         public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDto cardDTO) {
-            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.frontCardSwitch;
-            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.frontCardTitleEditText;
-            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.frontCardContactNumberEditText;
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.modeSwitch;
+            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.titleEditor;
+            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.contactNumberEditor;
             titleEditText.setText(cardDTO.getTitle());
             contactNumberEditText.setText(cardDTO.getContactNumber());
             switchView.setChecked(false);
