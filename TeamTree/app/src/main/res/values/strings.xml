@@ -44,6 +44,8 @@
     <string name="flower_icon_desc">flower image view. this view appeared when target item chosen.</string>
     <string name="search_item_selecting_btn_desc">dot button. click to fire finding card.</string>
 
+    <string name="card_switch_ratio">0.15</string>
+
 <!--    Settings Fragment-->
     <string name="settings_fragment_top_app_bar_title">설정</string>
     <string name="settings_fragment_oss_license_title">오픈소스 라이선스</string>
