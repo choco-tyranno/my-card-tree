@@ -1,6 +1,7 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
+import com.choco_tyranno.team_tree.presentation.DisplayUtil;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 
 /**
