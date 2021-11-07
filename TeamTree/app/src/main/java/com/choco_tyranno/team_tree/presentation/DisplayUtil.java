@@ -15,8 +15,12 @@ public class DisplayUtil {
         return (int) ((float) pixel / divideResult);
     }
 
+    public static float getDensity(Resources resources){
+        return resources.getDisplayMetrics().density;
+    }
+
     public static int getDpi(Resources resources) {
-        float scale = resources.getDisplayMetrics().density;
+        float scale = getDensity(resources);
         return (int)(scale * 160);
     }
 
