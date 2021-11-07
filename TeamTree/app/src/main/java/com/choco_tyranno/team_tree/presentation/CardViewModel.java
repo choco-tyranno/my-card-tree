@@ -415,6 +415,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public Bitmap getDefaultCardThumbnail() {
+
         return Objects.requireNonNull(cardImageMap.get(CardDto.NO_ROOT_CARD)).getThumbnail();
     }
 
@@ -1310,7 +1311,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         int containerPosition = cardAdapter.getContainerPosition();
         if (containerPosition == -1)
             return false;
-        final int screenWidth = DisplayUtil.getScreenWidth(targetView.getContext());
+        final int screenWidth = DisplayUtil.getScreenWidthAsPixel(targetView.getContext());
         final int MOVE_BOUNDARY_WIDTH = 200;
         CardRecyclerView.ScrollControllableLayoutManager layoutManager = targetView.getLayoutManager();
         if (layoutManager == null)

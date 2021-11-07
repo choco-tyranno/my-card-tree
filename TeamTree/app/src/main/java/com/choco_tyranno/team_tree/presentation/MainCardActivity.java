@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -64,7 +65,6 @@ public class MainCardActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         setContainerRv();
         setSearchingResultRv();
-
         cardFinder = new CardFinder(this);
 
         ImageView searchBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);

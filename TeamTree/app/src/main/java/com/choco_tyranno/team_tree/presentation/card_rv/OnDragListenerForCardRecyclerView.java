@@ -376,7 +376,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         final int cardItemCount = viewModel.getPresentData().get(containerPosition).size();
         final Container container = viewModel.getContainer(containerPosition);
         final int onFocusCardPosition = container.getFocusCardPosition();
-        final int screenWidth = DisplayUtil.getScreenWidth(cardRecyclerView.getContext());
+        final int screenWidth = DisplayUtil.getScreenWidthAsPixel(cardRecyclerView.getContext());
         final int MOVE_BOUNDARY_WIDTH = 200;
         final boolean onLeftBoundary = xCoordinate < MOVE_BOUNDARY_WIDTH;
         final boolean hasPrevPosition = onFocusCardPosition != 0;
