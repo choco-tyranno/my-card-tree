@@ -18,7 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 
 import java.util.Optional;
@@ -41,10 +41,10 @@ public class CardFinder {
             @Override
             public void onAnimationEnd(Animation animation) {
                 MainCardActivity mainCardActivity = (MainCardActivity) context;
-                ActivityMainFrameBinding binding = mainCardActivity.getMainBinding();
-                DrawerLayout MainDL = binding.mainDrawerLayout;
+                ActivityMainBinding binding = mainCardActivity.getMainBinding();
+                DrawerLayout MainDL = binding.drawerLayoutMainSearchDrawer;
                 MainDL.closeDrawer(GravityCompat.END);
-                SearchView searchView = binding.rightDrawer.cardSearchView;
+                SearchView searchView = binding.layoutMainrightdrawer.cardSearchView;
                 searchView.setQuery("",false);
                 searchView.setIconified(true);
                 Optional.ofNullable(finishAction).ifPresent(Runnable::run);

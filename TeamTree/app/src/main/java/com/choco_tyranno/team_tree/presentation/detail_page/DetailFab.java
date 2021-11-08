@@ -6,7 +6,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityDetailFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DetailFab {
@@ -19,7 +19,7 @@ public class DetailFab {
         subFabClose = AnimationUtils.loadAnimation(context, R.anim.detail_page_subfab_close);
     }
 
-    public void animateFab(ActivityDetailFrameBinding binding) {
+    public void animateFab(ActivityDetailBinding binding) {
         FloatingActionButton utilContainerFab = binding.utilContainerFab;
         FloatingActionButton takePictureFab = binding.takePictureFab;
         FloatingActionButton openGalleryFab = binding.openGalleryFab;

@@ -86,14 +86,6 @@ public class CardRecyclerView extends RecyclerView {
         onScrollListenerForHorizontalArrow = null;
     }
 
-//    public boolean isOnDragMove() {
-//        return onDragMove;
-//    }
-
-//    public void setOnDragMove(boolean onDragMove) {
-//        this.onDragMove = onDragMove;
-//    }
-
     public void postChangingFocusAction(Runnable focusChangeAction) {
         synchronized (scrolledActionMap) {
             scrolledActionMap.put(ACTION_CHANGING_FOCUS, focusChangeAction);

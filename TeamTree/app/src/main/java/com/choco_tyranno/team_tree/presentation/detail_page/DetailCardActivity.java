@@ -21,7 +21,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityDetailFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.SingleToastManager;
 import com.choco_tyranno.team_tree.presentation.SingleToaster;
@@ -38,7 +38,7 @@ import java.util.Locale;
 import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class DetailCardActivity extends AppCompatActivity {
-    private ActivityDetailFrameBinding binding;
+    private ActivityDetailBinding binding;
     private DetailPageViewModel viewModel;
     private DetailPage detailPage;
     private CardDto ownerCardDto;
@@ -187,12 +187,12 @@ public class DetailCardActivity extends AppCompatActivity {
     }
 
     private void mainBinding() {
-        binding = ActivityDetailFrameBinding.inflate(getLayoutInflater());
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
     }
 
-    public ActivityDetailFrameBinding getBinding() {
+    public ActivityDetailBinding getBinding() {
         return binding;
     }
 

@@ -5,27 +5,26 @@
     tools:context=".card_crud_feature.presentation.MainCardActivity">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
-
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/main_drawer_layout"
+        android:id="@+id/drawerLayout_main_searchDrawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/main_screen"
+            android:id="@+id/layout_mainbody"
             bind:viewModel="@{viewModel}"
-            layout="@layout/activity_main_screen" />
+            layout="@layout/layout_mainbody" />
 
         <include
-            android:id="@+id/right_drawer"
+            android:id="@+id/layout_mainrightdrawer"
             bind:viewModel="@{viewModel}"
-            layout="@layout/activity_main_rightdrawer" />
+            layout="@layout/layout_mainrightdrawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

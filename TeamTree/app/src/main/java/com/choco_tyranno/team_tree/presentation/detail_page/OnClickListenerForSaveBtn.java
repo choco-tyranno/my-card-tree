@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
-import com.choco_tyranno.team_tree.databinding.ActivityDetailFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 
 public class OnClickListenerForSaveBtn implements View.OnClickListener {
@@ -17,13 +17,13 @@ public class OnClickListenerForSaveBtn implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        ActivityDetailFrameBinding binding = ((DetailCardActivity) v.getContext()).getBinding();
+        ActivityDetailBinding binding = ((DetailCardActivity) v.getContext()).getBinding();
         DetailPage pageState = binding.getDetailPage();
         compareAndSave(binding);
         pageState.switchMode();
     }
 
-    private void compareAndSave(ActivityDetailFrameBinding binding) {
+    private void compareAndSave(ActivityDetailBinding binding) {
         CardDto cardDto = binding.getCard();
         AppCompatEditText titleEt = binding.detailTitleEt;
         AppCompatEditText subtitleEt = binding.detailSubtitleEt;

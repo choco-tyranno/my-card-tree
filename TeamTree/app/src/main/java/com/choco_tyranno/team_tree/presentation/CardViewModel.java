@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
@@ -514,8 +514,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnClickListenerForSettingButton() {
         this.onClickListenerForSettingButton = view -> {
-            ActivityMainFrameBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
-            DrawerLayout mainDL = binding.mainDrawerLayout;
+            ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
+            DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
             mainDL.closeDrawer(GravityCompat.END);
             toggleSettingsOn();
             ActionBar appBar = ((MainCardActivity)view.getContext()).getSupportActionBar();
@@ -1456,7 +1456,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private SwitchMaterial findRemoveBtnByContainerRecyclerView(RecyclerView containerRecyclerView) {
-        return ((ViewGroup) containerRecyclerView.getParent()).findViewById(R.id.main_mode_switch);
+        return ((ViewGroup) containerRecyclerView.getParent()).findViewById(R.id.switchMaterial_main_removeSwitch);
     }
 
     //{@param direction} :

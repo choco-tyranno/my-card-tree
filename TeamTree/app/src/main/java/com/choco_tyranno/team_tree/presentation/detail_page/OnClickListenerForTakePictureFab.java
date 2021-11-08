@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.core.content.FileProvider;
 
 
-import com.choco_tyranno.team_tree.databinding.ActivityDetailFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class OnClickListenerForTakePictureFab implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         DetailCardActivity detailCardActivity = (DetailCardActivity) v.getContext();
-        ActivityDetailFrameBinding binding = detailCardActivity.getBinding();
+        ActivityDetailBinding binding = detailCardActivity.getBinding();
         DetailPage pageState = binding.getDetailPage();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(detailCardActivity.getPackageManager()) != null) {

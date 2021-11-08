@@ -31,7 +31,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/card_frame"
+        android:id="@+id/constraintLayout_main_cardFramePositioningManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"

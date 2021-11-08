@@ -32,7 +32,7 @@ public class ContactCardViewHolder extends CardViewHolder {
         mBinding.setCardImage(cardImage);
         mBinding.executePendingBindings();
         float switchRatio = Float.parseFloat(mBinding.getRoot().getContext().getResources().getString(R.string.card_switch_ratio));
-        int cardFramePx = mBinding.cardFrame.getWidth();
+        int cardFramePx = mBinding.constraintLayoutMainCardFramePositioningManager.getWidth();
         int switchPx = mBinding.cardFrontLayout.modeSwitch.getWidth();
         if (cardFramePx != 0) {
             float multipleValue = switchRatio*cardFramePx/switchPx;

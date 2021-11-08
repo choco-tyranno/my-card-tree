@@ -36,6 +36,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         return new CardRecyclerView.ScrollControllableLayoutManager(mBinding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
     }
 
+    @Override
     public void bind(int containerPosition) {
         Logger.message("contVH#bind");
         CardRecyclerView rv = mBinding.cardRecyclerview;

@@ -24,13 +24,13 @@ public class OnDragListenerForBottomArrow implements View.OnDragListener {
             if (moveDragEvent)
                 return true;
         }
-        ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.main_body);
+        ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent()).findViewById(R.id.containerRecyclerView_main_containers);
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         if (containerLayoutManager == null)
             return false;
         ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-        View prevContainerArrow = viewGroup.findViewById(R.id.prev_container_arrow);
-        View nextContainerArrow = viewGroup.findViewById(R.id.next_container_arrow);
+        View prevContainerArrow = viewGroup.findViewById(R.id.imageView_main_topArrow);
+        View nextContainerArrow = viewGroup.findViewById(R.id.imageView_main_bottomArrow);
         CardViewModel viewModel = ((MainCardActivity) view.getContext()).getCardViewModel();
 
         if (action == DragEvent.ACTION_DRAG_LOCATION) {

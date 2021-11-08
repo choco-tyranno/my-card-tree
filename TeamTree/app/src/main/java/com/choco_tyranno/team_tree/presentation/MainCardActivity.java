@@ -29,7 +29,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityMainFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardGestureListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider;
@@ -46,7 +46,7 @@ import java.util.Queue;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
-    private ActivityMainFrameBinding binding;
+    private ActivityMainBinding binding;
     private Handler mMainHandler;
     private CardFinder cardFinder;
 
@@ -60,16 +60,16 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
-        setSupportActionBar(binding.mainScreen.appBar);
+        setSupportActionBar(binding.layoutMainbody.toolbarMainAppBar);
         Objects.requireNonNull(getSupportActionBar()).hide();
         binding.setViewModel(viewModel);
         setContainerRv();
         setSearchingResultRv();
         cardFinder = new CardFinder(this);
 
-        ImageView searchBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
-        ImageView searchCloseBtn = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        SearchView.SearchAutoComplete searchAutoComplete = binding.rightDrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        ImageView searchBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
+        ImageView searchCloseBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        SearchView.SearchAutoComplete searchAutoComplete = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchBtn.setColorFilter(R.color.colorPrimary_a);
         searchCloseBtn.setColorFilter(R.color.colorPrimary_a);
         searchAutoComplete.setTextColor(getResources().getColor(R.color.colorPrimary, getTheme()));
@@ -95,10 +95,10 @@ public class MainCardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout mainDL = binding.mainDrawerLayout;
+        DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
         if (mainDL.isDrawerOpen(GravityCompat.END)) {
             mainDL.closeDrawer(GravityCompat.END);
-            SearchView searchView = binding.rightDrawer.cardSearchView;
+            SearchView searchView = binding.layoutMainrightdrawer.cardSearchView;
             searchView.setQuery("", false);
             searchView.setIconified(true);
             cardFinder.setSendingFindCardReq(false);
@@ -120,7 +120,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void setSearchingResultRv() {
-        binding.rightDrawer.cardSearchResultRecyclerview
+        binding.layoutMainrightdrawer.cardSearchResultRecyclerview
                 .addItemDecoration(new DividerItemDecoration(MainCardActivity.this, DividerItemDecoration.VERTICAL));
     }
 
@@ -165,7 +165,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     public void showContainerCardUi() {
-        runOnUiThread(() -> Objects.requireNonNull(binding.mainScreen.mainBody.containerRecyclerview.getAdapter())
+        runOnUiThread(() -> Objects.requireNonNull(binding.layoutMainbody.containerRecyclerViewMainContainers.getAdapter())
                 .notifyDataSetChanged());
     }
 
@@ -195,19 +195,19 @@ public class MainCardActivity extends AppCompatActivity {
 
 
     private void mainBinding() {
-        binding = ActivityMainFrameBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
     }
 
     private void setContainerRv() {
-        ContainerRecyclerView rv = binding.mainScreen.mainBody.containerRecyclerview;
+        ContainerRecyclerView rv = binding.layoutMainbody.containerRecyclerViewMainContainers;
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new ContainerRecyclerView.ItemScrollingControlLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
     }
 
-    public ActivityMainFrameBinding getMainBinding() {
+    public ActivityMainBinding getMainBinding() {
         return binding;
     }
 
@@ -252,7 +252,7 @@ public class MainCardActivity extends AppCompatActivity {
     public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
-        RecyclerView containerRecyclerview = binding.mainScreen.mainBody.containerRecyclerview;
+        RecyclerView containerRecyclerview = binding.layoutMainbody.containerRecyclerViewMainContainers;
         Queue<Runnable> scrollActionQueue = new LinkedList<>();
         int s = 0;
         for (int i = startContainerPosition; i < startContainerPosition + scrollTargetCardSeqArr.length; i++) {
