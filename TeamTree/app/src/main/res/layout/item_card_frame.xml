@@ -68,7 +68,7 @@
 
         <include
             android:id="@+id/cardBackLayout"
-            layout="@layout/item_card_back"
+            layout="@layout/layout_cardback"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="@{cardState.back.cardBackVisibility}"
