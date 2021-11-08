@@ -84,7 +84,7 @@
 
         <include
             android:id="@+id/cardFrontLayout"
-            layout="@layout/item_card_front"
+            layout="@layout/layout_cardfront"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="@{cardState.front.cardFrontVisibility}"
