@@ -11,38 +11,139 @@
         android:id="@+id/constraintLayout_emptyContainer_viewPositionManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/containerLayout_paddingBottom"
         android:clipChildren="false"
         android:clipToPadding="false">
 
-        <!--Title-->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_labelStartLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_labelEndLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_contentsBoundary"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_labelTopLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_labelBottomLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <TextView
-            android:id="@+id/parent_item_title"
-            android:layout_width="110dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:padding="12sp"
+            android:id="@+id/textView_emptyContainer_label"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:text="@string/empty_container_layer_title"
             android:textColor="#000"
-            android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@id/guideline_emptyContainer_labelTopLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_emptyContainer_labelBottomLine"
+            app:layout_constraintStart_toStartOf="@id/guideline_emptyContainer_labelStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_emptyContainer_labelEndLine"
             />
 
-        <!--Child RecyclerView-->
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceTopLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceBottomLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceStartLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceEndLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/textView_emptyContainer_cardSpace"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="2:1"
+            android:background="@drawable/main_emptycarddottedoutline"
+            app:layout_constraintStart_toStartOf="@id/guideline_emptyContainer_cardSpaceStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_emptyContainer_cardSpaceEndLine"
+            app:layout_constraintTop_toBottomOf="@id/guideline_emptyContainer_contentsBoundary"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_emptyContainer_cardSpaceBottomLine"
+            app:onDragListener="@{viewModel.onDragListenerForEmptyCardSpace}" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceTextStartLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceTextEndLine"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceTextTopLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.55"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_emptyContainer_cardSpaceTextBottomLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.65"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/emptyCardSpaceView"
-            android:layout_width="@dimen/card_width"
-            android:layout_height="@dimen/card_height"
-            android:layout_marginTop="@dimen/cardRecyclerview_marginTop"
-            android:background="@drawable/main_emptycarddottedoutline"
+            android:id="@+id/textView_emptyContainer_cardSpaceText"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/empty_container_text"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parent_item_title"
-            app:onDragListener="@{viewModel.onDragListenerForEmptyCardSpace}" />
+            android:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@id/guideline_emptyContainer_cardSpaceTextTopLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_emptyContainer_cardSpaceTextBottomLine"
+            app:layout_constraintStart_toStartOf="@id/guideline_emptyContainer_cardSpaceTextStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_emptyContainer_cardSpaceTextEndLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

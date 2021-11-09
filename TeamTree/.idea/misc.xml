@@ -18,14 +18,16 @@
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/activity_ui_test.xml" value="0.23072916666666668" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/fragment_settings.xml" value="0.2646755921730175" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_back.xml" value="0.22" />
-        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_empty.xml" value="0.34375" />
+        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_empty.xml" value="0.33" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_frame.xml" value="0.3967861557478368" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_front.xml" value="0.25" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_card_front_clone.xml" value="0.34375" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_cardcontainer.xml" value="0.34375" />
+        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_cardframe.xml" value="0.17889492753623187" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_page_navigation.xml" value="0.23072916666666668" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_searching_result.xml" value="0.23072916666666668" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/item_test_card.xml" value="0.23072916666666668" />
+        <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/layout_cardfront.xml" value="0.2346014492753623" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/layout_mainBody.xml" value="0.2805391743892165" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/layout_mainbody.xml" value="0.25" />
         <entry key="..\:/_choco_tyranno/workspace/team-tree/TeamTree/app/src/main/res/layout/layout_mainrightdrawer.xml" value="0.31197916666666664" />
