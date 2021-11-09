@@ -20,39 +20,55 @@
         android:background="#fff"
         tools:context=".card_crud_feature.presentation.MainCardActivity">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mainBody_topAppBarBottomLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <androidx.appcompat.widget.Toolbar
             android:visibility="invisible"
-
             android:id="@+id/toolbar_main_appBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/design_default_color_primary"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
             bind:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mainBody_bottomAppBarTopLine"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.92"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
             android:id="@+id/containerRecyclerView_main_containers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
-            android:layout_marginBottom="45dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:clipChildren="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_topAppBarBottomLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_bottomAppBarTopLine"
             app:onDragListener="@{viewModel.onDragListenerForContainerRecyclerView}"
             app:onScrollListener="@{viewModel.onScrollListenerForContainerRecyclerView}" />
 
         <View
-            android:id="@+id/view_main_topAppBarBackground"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/view_mainBody_topAppBarBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/default_card_image_01"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -68,9 +84,9 @@
             android:layout_height="wrap_content"
             android:elevation="15dp"
             android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
-            app:layout_constraintBottom_toBottomOf="@id/view_main_topAppBarBackground"
+            app:layout_constraintBottom_toBottomOf="@id/view_mainBody_topAppBarBackground"
             app:layout_constraintEnd_toEndOf="@id/guideline_main_removeSwitchEndLine"
-            app:layout_constraintTop_toTopOf="@id/view_main_topAppBarBackground" />
+            app:layout_constraintTop_toTopOf="@id/view_mainBody_topAppBarBackground" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_main_verticalArrowStartLine"
@@ -94,8 +110,8 @@
             app:layout_constraintGuide_percent="0.2"/>
 
         <ImageView
-            tools:alpha="1"
             android:id="@+id/imageView_main_topArrow"
+            tools:alpha="1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:alpha="0"
@@ -104,7 +120,7 @@
             android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
             app:layout_constraintStart_toStartOf="@id/guideline_main_verticalArrowStartLine"
             app:layout_constraintEnd_toEndOf="@id/guideline_main_verticalArrowEndLine"
-            app:layout_constraintTop_toBottomOf="@id/view_main_topAppBarBackground"
+            app:layout_constraintTop_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
             app:layout_constraintBottom_toBottomOf="@id/guideline_main_topArrowBottomLine"
             app:onDragListener="@{viewModel.onDragListenerForTopArrow}" />
 
@@ -134,10 +150,11 @@
             android:id="@+id/view_main_bottomBarBackground"
             tools:alpha="1"
             android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="0dp"
             android:alpha="0.1"
             android:background="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_bottomAppBarTopLine"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -155,11 +172,12 @@
             android:textColor="#fff"
             android:textSize="7sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView_main_navHost"
+            tools:visibility="invisible"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
