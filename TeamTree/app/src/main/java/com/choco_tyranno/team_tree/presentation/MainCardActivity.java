@@ -98,23 +98,23 @@ public class MainCardActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 removeSwitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                float switchRatio = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
+                float switchRatioToTopAppBar = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
                 int switchHeightPx = removeSwitch.getHeight();
                 int topAppBarHeightPx = topAppBar.getHeight();
                 if (topAppBarHeightPx==0){
                     topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
-                            float multipleValue = switchRatio * topAppBarHeightPx / switchHeightPx;
-                            removeSwitch.setScaleX(multipleValue);
-                            removeSwitch.setScaleY(multipleValue);
+                            float multiplingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
+                            removeSwitch.setScaleX(multiplingValue);
+                            removeSwitch.setScaleY(multiplingValue);
                         }
                     });
                     return;
                 }
-                float multipleValue = switchRatio * topAppBarHeightPx / switchHeightPx;
-                removeSwitch.setScaleX(multipleValue);
-                removeSwitch.setScaleY(multipleValue);
+                float multiplingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
+                removeSwitch.setScaleX(multiplingValue);
+                removeSwitch.setScaleY(multiplingValue);
             }
         });
     }
