@@ -28,7 +28,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
         this.mBinding = binding;
         this.mViewModel = viewModel;
         this.mBinding.setViewModel(viewModel);
-        CardRecyclerView rv = mBinding.cardRecyclerview;
+        CardRecyclerView rv = mBinding.cardRecyclerViewCardContainerCards;
         rv.setAdapter(new CardAdapter(mBinding.getRoot().getContext()));
     }
 
@@ -39,7 +39,7 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     @Override
     public void bind(int containerPosition) {
         Logger.message("contVH#bind");
-        CardRecyclerView rv = mBinding.cardRecyclerview;
+        CardRecyclerView rv = mBinding.cardRecyclerViewCardContainerCards;
         CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
         if (cardAdapter==null)
             return;
@@ -60,8 +60,8 @@ public class CardContainerViewHolder extends ContainerViewHolder {
                 , containerPosition);
         rv.addOnScrollListener(scrollListener);
 
-        mBinding.prevCardArrow.setVisibility(View.INVISIBLE);
-        mBinding.nextCardArrow.setVisibility(View.INVISIBLE);
+        mBinding.imageViewCardContainerLeftArrow.setVisibility(View.INVISIBLE);
+        mBinding.imageViewCardContainerRightArrow.setVisibility(View.INVISIBLE);
 
         mBinding.setContainerNo(containerPosition + 1);
         mBinding.setContainer(targetContainer);

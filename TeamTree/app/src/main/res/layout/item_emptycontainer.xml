@@ -31,21 +31,21 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_contentsBoundary"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.3"
+            app:layout_constraintGuide_percent="0.2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_labelTopLine"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.1"
+            app:layout_constraintGuide_percent="0.05"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_labelBottomLine"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2"
+            app:layout_constraintGuide_percent="0.15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -68,7 +68,7 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_cardSpaceTopLine"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.3"
+            app:layout_constraintGuide_percent="0.2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

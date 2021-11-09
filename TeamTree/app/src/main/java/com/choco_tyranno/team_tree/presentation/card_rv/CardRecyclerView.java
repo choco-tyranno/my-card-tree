@@ -180,8 +180,8 @@ public class CardRecyclerView extends RecyclerView {
             if (mRecyclerView == null)
                 return;
             ViewGroup viewGroup = ((ViewGroup) mRecyclerView.getParent());
-            this.leftArrow = viewGroup.findViewById(R.id.prev_card_arrow);
-            this.rightArrow = viewGroup.findViewById(R.id.next_card_arrow);
+            this.leftArrow = viewGroup.findViewById(R.id.imageView_cardContainer_leftArrow);
+            this.rightArrow = viewGroup.findViewById(R.id.imageView_cardContainer_rightArrow);
             deployingArrow = new AtomicBoolean(false);
         }
 

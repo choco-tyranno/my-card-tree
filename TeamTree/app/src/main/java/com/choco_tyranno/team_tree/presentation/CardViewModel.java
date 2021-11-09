@@ -1439,7 +1439,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private CardRecyclerView findCardRecyclerViewFromContainerRecyclerView(ContainerRecyclerView containerRecyclerView, int containerPosition) {
         RecyclerView.ViewHolder viewHolder = containerRecyclerView.findViewHolderForAdapterPosition(containerPosition);
         if (viewHolder instanceof CardContainerViewHolder)
-            return ((CardContainerViewHolder) viewHolder).getBinding().cardRecyclerview;
+            return ((CardContainerViewHolder) viewHolder).getBinding().cardRecyclerViewCardContainerCards;
         return null;
     }
 

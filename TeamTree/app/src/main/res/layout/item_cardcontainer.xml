@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="java.util.List"/>
@@ -21,39 +22,84 @@
         android:id="@+id/constraintLayout_cardContainer_viewPositionManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/containerLayout_paddingBottom"
         android:clipChildren="false"
         android:clipToPadding="false">
 
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerLabelStartLine"
+            app:layout_constraintGuide_percent="0.05"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerLabelEndLine"
+            app:layout_constraintGuide_percent="0.35"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerLabelTopLine"
+            app:layout_constraintGuide_percent="0.05"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerLabelBottomLine"
+            app:layout_constraintGuide_percent="0.15"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerTopLine"
+            app:layout_constraintGuide_percent="0.2"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_cardContainer_containerBottomLine"
+            app:layout_constraintGuide_percent="0.95"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <!--Title-->
         <TextView
-            android:id="@+id/parent_item_title"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:padding="12sp"
+            android:id="@+id/textView_cardContainer_containerLabel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:text="layer 1 :"
             android:text='@{String.valueOf("layer:"+container_no)}'
             android:textColor="#000"
-            android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@id/guideline_cardContainer_containerLabelTopLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_cardContainer_containerLabelBottomLine"
+            app:layout_constraintStart_toStartOf="@id/guideline_cardContainer_containerLabelStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_cardContainer_containerLabelEndLine"
             />
 
         <!--Child RecyclerView-->
 
         <com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView
-            android:id="@+id/card_recyclerview"
-            android:layout_width="0dp"
+            android:id="@+id/cardRecyclerView_cardContainer_cards"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:layout_height="400dp"
             android:clipChildren="false"
             android:clipToPadding="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parent_item_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_cardContainer_containerTopLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_cardContainer_containerBottomLine"
             app:onDragListener="@{viewModel.onDragListenerForCardRecyclerView}"/>
 
         <ImageView
-            android:id="@+id/next_card_arrow"
+            android:id="@+id/imageView_cardContainer_rightArrow"
             android:visibility="invisible"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -65,7 +111,7 @@
             android:contentDescription="@string/next_arrow_desc" />
 
         <ImageView
-            android:id="@+id/prev_card_arrow"
+            android:id="@+id/imageView_cardContainer_leftArrow"
             android:visibility="invisible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"

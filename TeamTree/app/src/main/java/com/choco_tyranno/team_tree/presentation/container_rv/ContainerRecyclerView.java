@@ -120,7 +120,7 @@ public class ContainerRecyclerView extends RecyclerView {
             CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) mContainerRecyclerView.findViewHolderForAdapterPosition(targetContainerPosition);
             if (containerViewHolder == null)
                 return;
-            CardRecyclerView targetCardRecyclerView = containerViewHolder.getBinding().cardRecyclerview;
+            CardRecyclerView targetCardRecyclerView = containerViewHolder.getBinding().cardRecyclerViewCardContainerCards;
             targetCardRecyclerView.smoothScrollToPosition(targetCardPosition);
         }
 

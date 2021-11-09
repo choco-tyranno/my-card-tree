@@ -265,7 +265,7 @@ public class MainCardActivity extends AppCompatActivity {
                     CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
                     if (containerViewHolder == null)
                         throw new RuntimeException("MainCardActivity#scrollToFindingTargetCard - containerViewHolder == null");
-                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerview;
+                    RecyclerView cardRecyclerview = containerViewHolder.getBinding().cardRecyclerViewCardContainerCards;
                     cardRecyclerview.smoothScrollToPosition(scrollTargetCardSeqArr[s1]);
                 };
                 mMainHandler.postDelayed(delayedAction, 900);
