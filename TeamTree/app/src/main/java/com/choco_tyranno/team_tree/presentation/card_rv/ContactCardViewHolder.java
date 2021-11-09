@@ -5,8 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBindingImpl;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBindingImpl;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DisplayUtil;
@@ -16,13 +16,13 @@ import java.lang.reflect.Field;
 
 
 public class ContactCardViewHolder extends CardViewHolder {
-    private final ItemCardFrameBinding mBinding;
+    private final ItemCardframeBinding mBinding;
 
-    public ContactCardViewHolder(@NonNull ItemCardFrameBinding binding, CardViewModel viewModel) {
+    public ContactCardViewHolder(@NonNull ItemCardframeBinding binding, CardViewModel viewModel) {
         super(binding.getRoot());
         this.mBinding = binding;
         mBinding.setViewModel(viewModel);
-        mBinding.setCardRootReference((ItemCardFrameBindingImpl) mBinding);
+        mBinding.setCardRootReference((ItemCardframeBindingImpl) mBinding);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ContactCardViewHolder extends CardViewHolder {
         }
     }
 
-    public ItemCardFrameBinding getBinding() {
+    public ItemCardframeBinding getBinding() {
         return mBinding;
     }
 

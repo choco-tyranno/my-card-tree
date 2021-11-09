@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DisplayUtil;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
@@ -33,7 +33,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemCardFrameBinding binding = ItemCardFrameBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemCardframeBinding binding = ItemCardframeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ContactCardViewHolder(binding, viewModel);
     }
 

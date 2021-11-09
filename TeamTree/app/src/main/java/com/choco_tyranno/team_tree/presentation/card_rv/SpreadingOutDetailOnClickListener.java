@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.detail_page.DetailCardActivity;
@@ -23,7 +23,7 @@ public class SpreadingOutDetailOnClickListener implements OnClickListener {
         ConstraintLayout cardFrame = (ConstraintLayout) view.getParent().getParent().getParent();
         com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView cardRecyclerView = (CardRecyclerView) cardFrame.getParent();
         com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
-        ItemCardFrameBinding binding = cardViewHolder.getBinding();
+        ItemCardframeBinding binding = cardViewHolder.getBinding();
         CardDto cardDTO = binding.getCard();
         ImageView cardImageView = binding.cardBackLayout.backCardImage;
         com.choco_tyranno.team_tree.presentation.MainCardActivity mainCardActivity =((MainCardActivity)view.getContext());

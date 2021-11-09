@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.Logger;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DisplayUtil;
@@ -98,7 +98,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         if (cardRecyclerView == null || firstVisibleItemCardFrame == null) {
             return;
         }
-        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(firstVisibleItemCardFrame)).getBinding();
+        ItemCardframeBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(firstVisibleItemCardFrame)).getBinding();
         CardDto firstVisibleItemCardDto = cardFrameBinding.getCard();
         CardState firstVisibleItemCardState = cardFrameBinding.getCardState();
         int firstVisibleItemCardSeqNo = firstVisibleItemCardDto.getSeqNo();

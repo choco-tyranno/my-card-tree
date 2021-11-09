@@ -14,7 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.choco_tyranno.team_tree.Logger;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
@@ -115,7 +115,7 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
 
     /* end long pressed methods*/
 
-    private ItemCardFrameBinding getItemCardFrameBinding() {
+    private ItemCardframeBinding getItemCardFrameBinding() {
         ConstraintLayout cardFrame = (ConstraintLayout) view.getParent();
         CardRecyclerView cardRecyclerView = (CardRecyclerView) cardFrame.getParent();
         ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
@@ -135,7 +135,7 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         if (view == null) {
             return false;
         }
-        ItemCardFrameBinding binding = getItemCardFrameBinding();
+        ItemCardframeBinding binding = getItemCardFrameBinding();
         MaterialCardView frontCardView = binding.cardFrontLayout.frontCardCardView;
         MaterialCardView backCardView = binding.cardBackLayout.backCardCardView;
         CardState cardState = getCardState();

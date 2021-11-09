@@ -8,8 +8,8 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.team_tree.BR;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBindingImpl;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBindingImpl;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.SingleToastManager;
@@ -120,7 +120,7 @@ public class CardState extends BaseObservable{
             notifyPropertyChanged(BR.mode);
         }
 
-        public void onContactNumberEditTextChanged(ItemCardFrameBindingImpl cardFrameBinding){
+        public void onContactNumberEditTextChanged(ItemCardframeBindingImpl cardFrameBinding){
             AtomicReference<String> editTextValue = new AtomicReference<>();
             Optional.ofNullable(cardFrameBinding.cardFrontLayout.contactNumberEditor.getText()).ifPresent((text)->editTextValue.set(text.toString()));
             String formatNumber = PhoneNumberUtils.formatNumber(editTextValue.get(), Locale.getDefault().getCountry());
@@ -137,7 +137,7 @@ public class CardState extends BaseObservable{
                 toReadMode();
         }
 
-        public void onSaveButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDto cardDTO, CardViewModel viewModel) {
+        public void onSaveButtonClicked(ItemCardframeBindingImpl cardFrameBinding, CardDto cardDTO, CardViewModel viewModel) {
             SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
                     +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle()));
 
@@ -178,7 +178,7 @@ public class CardState extends BaseObservable{
             SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "수정된 정보가 없습니다."));
         }
 
-        public void onCancelButtonClicked(ItemCardFrameBindingImpl cardFrameBinding, CardDto cardDTO) {
+        public void onCancelButtonClicked(ItemCardframeBindingImpl cardFrameBinding, CardDto cardDTO) {
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.modeSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.titleEditor;
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.contactNumberEditor;

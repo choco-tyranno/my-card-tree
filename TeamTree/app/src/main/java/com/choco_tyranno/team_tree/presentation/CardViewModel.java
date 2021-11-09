@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
 import com.choco_tyranno.team_tree.domain.source.CardRepository;
@@ -588,7 +588,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         if (cardRecyclerView == null || prevSeqCardView == null) {
             return;
         }
-        ItemCardFrameBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(prevSeqCardView)).getBinding();
+        ItemCardframeBinding cardFrameBinding = ((ContactCardViewHolder) cardRecyclerView.getChildViewHolder(prevSeqCardView)).getBinding();
         CardDto prevSeqCardDto = cardFrameBinding.getCard();
         CardState prevCardState = cardFrameBinding.getCardState();
         int prevCardSeqNo = prevSeqCardDto.getSeqNo();

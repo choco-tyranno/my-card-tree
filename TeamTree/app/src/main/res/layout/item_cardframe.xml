@@ -11,7 +11,7 @@
 
         <variable
             name="cardRootReference"
-            type="com.choco_tyranno.team_tree.databinding.ItemCardFrameBindingImpl" />
+            type="com.choco_tyranno.team_tree.databinding.ItemCardframeBindingImpl" />
 
         <variable
             name="cardState"

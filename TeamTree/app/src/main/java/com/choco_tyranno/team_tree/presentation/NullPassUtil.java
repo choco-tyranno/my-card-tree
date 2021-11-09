@@ -5,7 +5,7 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
-import com.choco_tyranno.team_tree.databinding.ItemCardFrameBinding;
+import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 
 import java.util.Optional;
@@ -32,10 +32,10 @@ public class NullPassUtil {
         throw new RuntimeException("NullPassUtil#checkFrameLayout not found");
     }
 
-    public static ItemCardFrameBinding checkItemCardFrameBinding(ItemCardFrameBinding itemCardFrameBinding){
-        boolean  isPresent = Optional.ofNullable(itemCardFrameBinding).isPresent();
+    public static ItemCardframeBinding checkItemCardFrameBinding(ItemCardframeBinding itemCardframeBinding){
+        boolean  isPresent = Optional.ofNullable(itemCardframeBinding).isPresent();
         if (isPresent)
-            return itemCardFrameBinding;
+            return itemCardframeBinding;
         throw new RuntimeException("NullPassUtil#checkFrameLayout not found");
     }
 }
