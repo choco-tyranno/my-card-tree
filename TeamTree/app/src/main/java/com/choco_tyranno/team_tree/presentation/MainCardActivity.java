@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -38,6 +40,7 @@ import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHo
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -50,9 +53,9 @@ public class MainCardActivity extends AppCompatActivity {
     private Handler mMainHandler;
     private CardFinder cardFinder;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("@@H", "onCreate");
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
@@ -66,6 +69,8 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         setSearchingResultRv();
         cardFinder = new CardFinder(this);
+
+        scaleMainRemoveSwitch();
 
         ImageView searchBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
         ImageView searchCloseBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
@@ -83,6 +88,34 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel.loadData(() -> {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
+        });
+    }
+
+    private void scaleMainRemoveSwitch() {
+        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBarBackground;
+        SwitchMaterial removeSwitch = binding.layoutMainbody.switchMaterialMainBodyRemoveSwitch;
+        removeSwitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                removeSwitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                float switchRatio = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
+                int switchHeightPx = removeSwitch.getHeight();
+                int topAppBarHeightPx = topAppBar.getHeight();
+                if (topAppBarHeightPx==0){
+                    topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            float multipleValue = switchRatio * topAppBarHeightPx / switchHeightPx;
+                            removeSwitch.setScaleX(multipleValue);
+                            removeSwitch.setScaleY(multipleValue);
+                        }
+                    });
+                    return;
+                }
+                float multipleValue = switchRatio * topAppBarHeightPx / switchHeightPx;
+                removeSwitch.setScaleX(multipleValue);
+                removeSwitch.setScaleY(multipleValue);
+            }
         });
     }
 
