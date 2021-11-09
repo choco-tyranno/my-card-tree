@@ -18,7 +18,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_item"
+        android:id="@+id/constraintLayout_cardContainer_viewPositionManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/containerLayout_paddingBottom"
