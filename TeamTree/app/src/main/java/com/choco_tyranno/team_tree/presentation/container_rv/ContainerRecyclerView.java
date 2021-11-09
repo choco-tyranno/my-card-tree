@@ -168,8 +168,8 @@ public class ContainerRecyclerView extends RecyclerView {
             if (mContainerRecyclerView == null)
                 return;
             ViewGroup viewGroup = ((ViewGroup) mContainerRecyclerView.getParent());
-            this.topArrow = viewGroup.findViewById(R.id.imageView_main_topArrow);
-            this.bottomArrow = viewGroup.findViewById(R.id.imageView_main_bottomArrow);
+            this.topArrow = viewGroup.findViewById(R.id.imageView_mainBody_topArrow);
+            this.bottomArrow = viewGroup.findViewById(R.id.imageView_mainBody_bottomArrow);
         }
 
         private void showTopArrow() {

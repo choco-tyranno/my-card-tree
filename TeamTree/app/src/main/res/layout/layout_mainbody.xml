@@ -14,7 +14,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout_main_screenElementManager"
+        android:id="@+id/constraintLayout_mainBody_screenElementManager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
@@ -29,7 +29,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:visibility="invisible"
-            android:id="@+id/toolbar_main_appBar"
+            android:id="@+id/toolbar_mainBody_topAppBar"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/design_default_color_primary"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"/>
 
         <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
-            android:id="@+id/containerRecyclerView_main_containers"
+            android:id="@+id/containerRecyclerView_mainBody_containers"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipChildren="false"
@@ -72,45 +72,45 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_main_removeSwitchEndLine"
+            android:id="@+id/guideline_mainBody_removeSwitchEndLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.97" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchMaterial_main_removeSwitch"
+            android:id="@+id/switchMaterial_mainBody_removeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="15dp"
             android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
             app:layout_constraintBottom_toBottomOf="@id/view_mainBody_topAppBarBackground"
-            app:layout_constraintEnd_toEndOf="@id/guideline_main_removeSwitchEndLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_removeSwitchEndLine"
             app:layout_constraintTop_toTopOf="@id/view_mainBody_topAppBarBackground" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_main_verticalArrowStartLine"
+            android:id="@+id/guideline_mainBody_verticalArrowStartLine"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintGuide_percent="0.3"/>
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_main_verticalArrowEndLine"
+            android:id="@+id/guideline_mainBody_verticalArrowEndLine"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintGuide_percent="0.7"/>
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_main_topArrowBottomLine"
+            android:id="@+id/guideline_mainBody_topArrowBottomLine"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintGuide_percent="0.2"/>
 
         <ImageView
-            android:id="@+id/imageView_main_topArrow"
+            android:id="@+id/imageView_mainBody_topArrow"
             tools:alpha="1"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -118,14 +118,14 @@
             android:contentDescription="@string/prev_arrow_desc"
             android:elevation="15dp"
             android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
-            app:layout_constraintStart_toStartOf="@id/guideline_main_verticalArrowStartLine"
-            app:layout_constraintEnd_toEndOf="@id/guideline_main_verticalArrowEndLine"
+            app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
             app:layout_constraintTop_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_main_topArrowBottomLine"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topArrowBottomLine"
             app:onDragListener="@{viewModel.onDragListenerForTopArrow}" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_main_bottomArrowTopLine"
+            android:id="@+id/guideline_mainBody_bottomArrowTopLine"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -133,21 +133,21 @@
 
         <ImageView
             tools:alpha="1"
-            android:id="@+id/imageView_main_bottomArrow"
+            android:id="@+id/imageView_mainBody_bottomArrow"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:alpha="0"
             android:contentDescription="@string/next_arrow_desc"
             android:elevation="15dp"
             android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
-            app:layout_constraintTop_toTopOf="@id/guideline_main_bottomArrowTopLine"
-            app:layout_constraintBottom_toTopOf="@id/view_main_bottomBarBackground"
-            app:layout_constraintStart_toStartOf="@id/guideline_main_verticalArrowStartLine"
-            app:layout_constraintEnd_toEndOf="@id/guideline_main_verticalArrowEndLine"
+            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_bottomArrowTopLine"
+            app:layout_constraintBottom_toTopOf="@id/view_mainBody_bottomBarBackground"
+            app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
+            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
             app:onDragListener="@{viewModel.onDragListenerForBottomArrow}" />
 
         <View
-            android:id="@+id/view_main_bottomBarBackground"
+            android:id="@+id/view_mainBody_bottomBarBackground"
             tools:alpha="1"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -159,7 +159,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
-            android:id="@+id/addNewCardUtil_fab"
+            android:id="@+id/button_mainBody_newCard"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginBottom="20dp"

@@ -24,12 +24,12 @@ public class OnDragListenerForTopArrow implements View.OnDragListener {
             if (moveDragEvent)
                 return true;
         }
-        ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.containerRecyclerView_main_containers);
+        ContainerRecyclerView containerRecyclerView = ((ViewGroup) view.getParent().getParent()).findViewById(R.id.containerRecyclerView_mainBody_containers);
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         if (containerLayoutManager == null)
             return false;
         ViewGroup viewGroup = (ViewGroup) containerRecyclerView.getParent();
-        View nextContainerArrow = viewGroup.findViewById(R.id.imageView_main_bottomArrow);
+        View nextContainerArrow = viewGroup.findViewById(R.id.imageView_mainBody_bottomArrow);
         if (action == DragEvent.ACTION_DRAG_LOCATION) {
             if (containerLayoutManager.hasScrollAction()) {
                 return false;

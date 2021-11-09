@@ -60,7 +60,7 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
-        setSupportActionBar(binding.layoutMainbody.toolbarMainAppBar);
+        setSupportActionBar(binding.layoutMainbody.toolbarMainBodyTopAppBar);
         Objects.requireNonNull(getSupportActionBar()).hide();
         binding.setViewModel(viewModel);
         setContainerRv();
@@ -165,7 +165,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     public void showContainerCardUi() {
-        runOnUiThread(() -> Objects.requireNonNull(binding.layoutMainbody.containerRecyclerViewMainContainers.getAdapter())
+        runOnUiThread(() -> Objects.requireNonNull(binding.layoutMainbody.containerRecyclerViewMainBodyContainers.getAdapter())
                 .notifyDataSetChanged());
     }
 
@@ -201,7 +201,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void setContainerRv() {
-        ContainerRecyclerView rv = binding.layoutMainbody.containerRecyclerViewMainContainers;
+        ContainerRecyclerView rv = binding.layoutMainbody.containerRecyclerViewMainBodyContainers;
         rv.setAdapter(new ContainerAdapter(this));
         rv.setLayoutManager(new ContainerRecyclerView.ItemScrollingControlLayoutManager(MainCardActivity.this, LinearLayoutManager.VERTICAL, false));
         Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged();
@@ -252,7 +252,7 @@ public class MainCardActivity extends AppCompatActivity {
     public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
         final int startContainerPosition = scrollUtilDataForFindingOutCard.first;
         final Integer[] scrollTargetCardSeqArr = scrollUtilDataForFindingOutCard.second;
-        RecyclerView containerRecyclerview = binding.layoutMainbody.containerRecyclerViewMainContainers;
+        RecyclerView containerRecyclerview = binding.layoutMainbody.containerRecyclerViewMainBodyContainers;
         Queue<Runnable> scrollActionQueue = new LinkedList<>();
         int s = 0;
         for (int i = startContainerPosition; i < startContainerPosition + scrollTargetCardSeqArr.length; i++) {
