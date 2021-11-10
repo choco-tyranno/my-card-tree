@@ -2,6 +2,7 @@ package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.BaseObservable;

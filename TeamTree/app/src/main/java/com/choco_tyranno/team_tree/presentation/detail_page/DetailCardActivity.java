@@ -211,10 +211,10 @@ public class DetailCardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        binding.utilContainerFab.setVisibility(View.GONE);
-        binding.takePictureFab.setVisibility(View.GONE);
-        binding.openGalleryFab.setVisibility(View.GONE);
-        binding.loadContactInfoFab.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailUtilContainer.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailCamera.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailGallery.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailContactInfo.setVisibility(View.GONE);
         
         Intent intent = new Intent();
         intent.putExtra("post_card", getCardDto());

@@ -2,6 +2,7 @@ package com.choco_tyranno.team_tree.presentation.detail_page;
 
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -25,10 +26,10 @@ public class OnClickListenerForSaveBtn implements View.OnClickListener {
 
     private void compareAndSave(ActivityDetailBinding binding) {
         CardDto cardDto = binding.getCard();
-        AppCompatEditText titleEt = binding.detailTitleEt;
-        AppCompatEditText subtitleEt = binding.detailSubtitleEt;
-        AppCompatEditText contactNumberEt = binding.detailContactNumberEt;
-        AppCompatEditText freeNoteEt = binding.detailFreeNoteEt;
+        AppCompatEditText titleEt = binding.appCompatEditTextDetailTitleEditor;
+        AppCompatEditText subtitleEt = binding.appCompatEditTextDetailSubtitleEditor;
+        AppCompatEditText contactNumberEt = binding.appCompatEditTextDetailContactNumberEditor;
+        AppCompatEditText freeNoteEt = binding.appCompatEditTextDetailNoteEditor;
         String currentTitle;
         String currentSubtitle;
         String currentContactNumber;

@@ -11,10 +11,10 @@ public class OnClickListenerForBackBtn implements View.OnClickListener {
     public void onClick(View v) {
         DetailCardActivity detailCardActivity = ((DetailCardActivity)v.getContext());
         ActivityDetailBinding binding = detailCardActivity.getBinding();
-        binding.utilContainerFab.setVisibility(View.GONE);
-        binding.takePictureFab.setVisibility(View.GONE);
-        binding.openGalleryFab.setVisibility(View.GONE);
-        binding.loadContactInfoFab.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailUtilContainer.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailCamera.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailGallery.setVisibility(View.GONE);
+        binding.floatingActionButtonDetailContactInfo.setVisibility(View.GONE);
         Intent intent = new Intent();
         intent.putExtra("post_card", detailCardActivity.getCardDto());
         detailCardActivity.setResult(Activity.RESULT_OK, intent);

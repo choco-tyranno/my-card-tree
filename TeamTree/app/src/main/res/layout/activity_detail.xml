@@ -5,7 +5,8 @@
     tools:context=".card_crud_feature.presentation.detail_page.DetailCardActivity">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -14,6 +15,7 @@
         <variable
             name="card"
             type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />
+
         <variable
             name="detailPage"
             type="com.choco_tyranno.team_tree.presentation.detail_page.DetailPage" />
@@ -27,282 +29,438 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:tag="container">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout_detail_viewPositionManager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_margin="8dp">
+                    tools:layout_height="700dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_cardImageTopLine"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.02" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_cardImageBottomLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.3" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_cardImageStartLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.02" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_cardImageEndLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.98" />
+
+                    <ImageView
+                        android:id="@+id/imageView_detail_cardImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:contentDescription="@string/detail_main_image_view_desc"
+                        android:scaleType="centerCrop"
+                        android:transitionName="shared_element_img"
+                        app:cardImage="@{detailPage.cardImage}"
+                        app:defaultCardImage="@{viewModel.defaultCardImage}"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_cardImageBottomLine"
+                        app:layout_constraintDimensionRatio="2:1"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_cardImageEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_cardImageStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_cardImageTopLine"
+                        app:onClickListener="@{viewModel.onClickListenerForSpreadingImage}"
+                        tools:src="@drawable/card_back_img01" />
+
+                    <!--Complete                    -->
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_textContentsStartLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.05" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_textContentsDefaultEndLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.7" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_titleTopLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.35" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_titleBottomLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.4" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/appCompatEditText_detail_titleEditor"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:inputType="text"
+                        android:importantForAutofill="no"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_titleEt_text"
+                        android:singleLine="true"
+                        android:text="@{card.title}"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_titleBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_titleTopLine" />
+
+                    <TextView
+                        android:id="@+id/textView_detail_title"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_titleTv_text"
+                        android:singleLine="true"
+                        android:text="@{card.title}"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_titleBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_titleTopLine" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_subtitleTopLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.42" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_subtitleBottomLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.47" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/appCompatEditText_detail_subtitleEditor"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:inputType="text"
+                        android:importantForAutofill="no"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_subtitleEt_text"
+                        android:singleLine="true"
+                        android:text="@{card.subtitle}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="#000"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_subtitleBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_subtitleTopLine" />
+
+                    <TextView
+                        android:id="@+id/textView_detail_subtitle"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_subtitleTv_text"
+                        android:singleLine="true"
+                        android:text="@{card.subtitle}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="#000"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_subtitleBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_subtitleTopLine" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_contactNumberTopLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.49" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_contactNumberBottomLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.54" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/appCompatEditText_detail_contactNumberEditor"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:importantForAutofill="no"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_contactNumberEt_text"
+                        android:inputType="phone"
+                        android:singleLine="true"
+                        android:text="@{card.contactNumber}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="#000"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_contactNumberBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_contactNumberTopLine" />
+
+                    <TextView
+                        android:id="@+id/textView_detail_contactNumber"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_contactNumberTv_text"
+                        android:singleLine="true"
+                        android:text="@{card.contactNumber}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="#000"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_contactNumberBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_contactNumberTopLine" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_noteLabelTopLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.58" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_noteLabelBottomLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.63" />
+
+                    <TextView
+                        android:id="@+id/textView_detail_noteLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeTextType="uniform"
+                        android:text="@string/detail_noteLabel"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_noteLabelBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsDefaultEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_noteLabelTopLine"
+                        tools:text="note:" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_noteTopLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.65" />
 
 
-                        <!-- Media -->
-                        <ImageView
-                            android:id="@+id/detail_main_image_view"
-                            app:onClickListener="@{viewModel.onClickListenerForSpreadingImage}"
-                            android:layout_width="match_parent"
-                            android:layout_height="194dp"
-                            android:contentDescription="@string/detail_main_image_view_desc"
-                            android:scaleType="centerCrop"
-                            android:transitionName="shared_element_img"
-                            app:cardImage="@{detailPage.cardImage}"
-                            app:defaultCardImage="@{viewModel.defaultCardImage}"/>
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_textContentsMaxEndLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.95" />
 
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/appCompatEditText_detail_noteEditor"
+                        android:layout_width="0dp"
+                        android:inputType="text"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:importantForAutofill="no"
+                        android:layout_height="wrap_content"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_memoEt_text"
+                        android:text="@{card.freeNote}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="#000"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsMaxEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_noteTopLine" />
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/tv_frame"
-                                android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textView_detail_note"
+                        android:layout_width="0dp"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        android:layout_height="wrap_content"
+                        android:autoSizeTextType="uniform"
+                        android:hint="@string/detail_memoTv_text"
+                        android:text="@{card.freeNote}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsMaxEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_noteTopLine"
+                        tools:text="메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다.메모를 합니다." />
 
-                                <TextView
-                                    android:id="@+id/detail_title_tv"
-                                    android:text="@{card.title}"
-                                    android:hint="@string/detail_titleTv_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:layout_marginTop="20dp"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_modifyEndLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.3" />
 
-                                <TextView
-                                    android:id="@+id/detail_subtitle_tv"
-                                    android:text="@{card.subtitle}"
-                                    android:hint="@string/detail_subtitleTv_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="20dp"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="#000"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_title_tv"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_title_tv" />
 
-                                <TextView
-                                    android:id="@+id/detail_contact_number_tv"
-                                    android:text="@{card.contactNumber}"
-                                    android:hint="@string/detail_contactNumberTv_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="20dp"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="#000"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_subtitle_tv"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_subtitle_tv" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/MaterialButton_detail_save"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        style="?attr/borderlessButtonStyle"
+                        onClickListener="@{viewModel.onClickListenerForSaveBtn}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:autoSizeTextType="uniform"
+                        android:text="@string/detail_save_btn_text"
+                        android:textColor="@color/colorAccent_c"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_modifyEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toBottomOf="@id/textView_detail_note" />
 
-                                <TextView
-                                    android:id="@+id/detail_free_note_tv"
-                                    android:text="@{card.freeNote}"
-                                    android:hint="@string/detail_memoTv_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="20dp"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:textSize="20sp"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_contact_number_tv"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_contact_number_tv" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/materialButton_detail_modify"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        style="?attr/borderlessButtonStyle"
+                        onClickListener="@{viewModel.onClickListenerForModeSwitchBtn}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:autoSizeTextType="uniform"
+                        android:text="@string/detail_modify_btn_text"
+                        android:textColor="@color/colorAccent_c"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_modifyEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_textContentsStartLine"
+                        app:layout_constraintTop_toBottomOf="@id/textView_detail_note" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/detail_modify_btn"
-                                    onClickListener="@{viewModel.onClickListenerForModeSwitchBtn}"
-                                    style="?attr/borderlessButtonStyle"
-                                    android:textColor="@color/colorAccent_c"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:text="@string/detail_modify_btn_text"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_free_note_tv" />
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_detail_backStartLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.7" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/detail_back_btn"
-                                    onClickListener="@{viewModel.onClickListenerForBackBtn}"
-                                    style="?attr/borderlessButtonStyle"
-                                    android:textColor="@color/colorAccent_c"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/detail_back_btn_text"
-                                    app:layout_constraintBottom_toBottomOf="@+id/detail_modify_btn"
-                                    app:layout_constraintRight_toRightOf="parent" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/detail_cancel_btn"
+                        android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
+                        style="?attr/borderlessButtonStyle"
+                        onClickListener="@{viewModel.onClickListenerForModeSwitchBtn}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:autoSizeTextType="uniform"
+                        android:text="@string/detail_cancel_btn_text"
+                        android:textColor="@color/colorAccent_c"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsMaxEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_backStartLine"
+                        app:layout_constraintTop_toBottomOf="@id/textView_detail_note" />
 
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/materialButton_detail_back"
+                        android:visibility="@{detailPage.pageMode==detailPage.READ_MODE? View.VISIBLE : View.INVISIBLE}"
+                        style="?attr/borderlessButtonStyle"
+                        onClickListener="@{viewModel.onClickListenerForBackBtn}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:autoSizeTextType="uniform"
+                        android:text="@string/detail_back_btn_text"
+                        android:textColor="@color/colorAccent_c"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsMaxEndLine"
+                        app:layout_constraintStart_toStartOf="@id/guideline_detail_backStartLine"
+                        app:layout_constraintTop_toBottomOf="@id/textView_detail_note" />
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/et_frame"
-                                android:visibility="@{detailPage.pageMode==detailPage.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                    <!--do Start -->
 
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/detail_title_et"
-                                    android:text="@{card.title}"
-                                    android:hint="@string/detail_titleEt_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:layout_marginTop="10dp"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatingActionButton_detail_utilContainer"
+                        onClickListener="@{viewModel.onClickListenerForUtilContainerFab}"
+                        android:contentDescription="@string/util_container_fab_desc"
+                        app:layout_constraintTop_toTopOf="@id/guideline_detail_cardImageBottomLine"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline_detail_cardImageBottomLine"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_detail_textContentsMaxEndLine"
+                        android:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary_b"
+                        android:clickable="true"
+                        android:src="@drawable/baseline_add_white_48"
+                        app:rippleColor="#fff" />
 
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/detail_subtitle_et"
-                                    android:text="@{card.subtitle}"
-                                    android:hint="@string/detail_subtitleEt_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="#000"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_title_et"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_title_et" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatingActionButton_detail_camera"
+                        onClickListener="@{viewModel.onClickListenerForTakePictureFab}"
+                        android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                        android:contentDescription="@string/take_picture_fab_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary_b"
+                        android:clickable="true"
+                        android:src="@drawable/baseline_camera_white_48"
+                        app:layout_constraintEnd_toStartOf="@id/floatingActionButton_detail_utilContainer"
+                        app:layout_constraintTop_toBottomOf="@id/floatingActionButton_detail_utilContainer"
+                        app:layout_constraintCircle="@id/floatingActionButton_detail_utilContainer"
+                        app:layout_constraintCircleRadius="90dp"
+                        app:layout_constraintCircleAngle="225"
+                        app:rippleColor="#fff" />
 
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/detail_contact_number_et"
-                                    android:text="@{card.contactNumber}"
-                                    android:hint="@string/detail_contactNumberEt_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="phone"
-                                    android:singleLine="true"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="#000"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_subtitle_et"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_subtitle_et" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatingActionButton_detail_gallery"
+                        app:layout_constraintStart_toEndOf="@id/floatingActionButton_detail_camera"
+                        app:layout_constraintTop_toBottomOf="@id/floatingActionButton_detail_camera"
+                        app:layout_constraintCircle="@id/floatingActionButton_detail_camera"
+                        app:layout_constraintCircleRadius="90dp"
+                        app:layout_constraintCircleAngle="135"
+                        android:contentDescription="@string/open_gallery_fab_desc"
+                        onClickListener="@{viewModel.onClickListenerForOpenGalleryFab}"
+                        android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary_b"
+                        android:clickable="true"
+                        android:src="@drawable/baseline_collections_white_24"
+                        app:rippleColor="#fff" />
 
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/detail_free_note_et"
-                                    android:text="@{card.freeNote}"
-                                    android:hint="@string/detail_memoEt_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="#000"
-                                    android:textSize="20sp"
-                                    app:layout_constraintLeft_toLeftOf="@+id/detail_contact_number_et"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_contact_number_et" />
-
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/detail_save_btn"
-                                    onClickListener="@{viewModel.onClickListenerForSaveBtn}"
-                                    style="?attr/borderlessButtonStyle"
-                                    android:textColor="@color/colorAccent_c"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="8dp"
-                                    android:text="@string/detail_save_btn_text"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/detail_free_note_et" />
-
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/detail_cancel_btn"
-                                    onClickListener="@{viewModel.onClickListenerForModeSwitchBtn}"
-                                    style="?attr/borderlessButtonStyle"
-                                    android:textColor="@color/colorAccent_c"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/detail_cancel_btn_text"
-                                    app:layout_constraintBottom_toBottomOf="@+id/detail_save_btn"
-                                    app:layout_constraintRight_toRightOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        </FrameLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </FrameLayout>
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatingActionButton_detail_contactInfo"
+                        android:contentDescription="@string/load_contact_info_fab_desc"
+                        app:layout_constraintEnd_toStartOf="@id/floatingActionButton_detail_gallery"
+                        app:layout_constraintTop_toBottomOf="@id/floatingActionButton_detail_gallery"
+                        app:layout_constraintCircle="@id/floatingActionButton_detail_gallery"
+                        app:layout_constraintCircleRadius="90dp"
+                        app:layout_constraintCircleAngle="225"
+                        onClickListener="@{viewModel.onClickListenerForLoadContactInfoFab}"
+                        android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary_b"
+                        android:clickable="true"
+                        android:src="@drawable/baseline_contact_phone_white_48"
+                        app:rippleColor="#fff" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
         </ScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_anchor="@+id/detail_main_image_view"
-            app:layout_anchorGravity="bottom|right|end">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/util_container_fab"
-                onClickListener="@{viewModel.onClickListenerForUtilContainerFab}"
-                android:contentDescription="@string/util_container_fab_desc"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:backgroundTint="@color/colorPrimary_b"
-                android:clickable="true"
-                android:src="@drawable/baseline_add_white_48"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="#fff" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/take_picture_fab"
-                onClickListener="@{viewModel.onClickListenerForTakePictureFab}"
-                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
-                android:contentDescription="@string/take_picture_fab_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:layout_marginEnd="15dp"
-                android:backgroundTint="@color/colorPrimary_b"
-                android:clickable="true"
-                android:src="@drawable/baseline_camera_white_48"
-                app:layout_constraintRight_toLeftOf="@+id/util_container_fab"
-                app:layout_constraintTop_toTopOf="@+id/util_container_fab"
-                app:rippleColor="#fff" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/open_gallery_fab"
-                android:contentDescription="@string/open_gallery_fab_desc"
-                onClickListener="@{viewModel.onClickListenerForOpenGalleryFab}"
-                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:backgroundTint="@color/colorPrimary_b"
-                android:clickable="true"
-                android:src="@drawable/baseline_collections_white_24"
-                app:layout_constraintRight_toRightOf="@+id/util_container_fab"
-                app:layout_constraintTop_toBottomOf="@+id/util_container_fab"
-                app:rippleColor="#fff" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/load_contact_info_fab"
-                android:contentDescription="@string/load_contact_info_fab_desc"
-                onClickListener="@{viewModel.onClickListenerForLoadContactInfoFab}"
-                android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:backgroundTint="@color/colorPrimary_b"
-                android:clickable="true"
-                android:src="@drawable/baseline_contact_phone_white_48"
-                app:layout_constraintRight_toRightOf="@+id/take_picture_fab"
-                app:layout_constraintTop_toBottomOf="@+id/take_picture_fab"
-                app:rippleColor="#fff" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
