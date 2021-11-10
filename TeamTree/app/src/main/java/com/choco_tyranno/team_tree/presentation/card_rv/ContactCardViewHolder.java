@@ -31,11 +31,11 @@ public class ContactCardViewHolder extends CardViewHolder {
         mBinding.setCard(cardDTO);
         mBinding.setCardImage(cardImage);
         mBinding.executePendingBindings();
-        float switchRatio = Float.parseFloat(mBinding.getRoot().getContext().getResources().getString(R.string.card_switch_ratio));
+        float switchRatioToCardFrame = Float.parseFloat(mBinding.getRoot().getContext().getResources().getString(R.string.cardFront_cardSwitchRatioToCardFrame));
         int cardFramePx = mBinding.constraintLayoutMainCardFramePositioningManager.getWidth();
         int switchPx = mBinding.cardFrontLayout.modeSwitch.getWidth();
         if (cardFramePx != 0) {
-            float multipleValue = switchRatio*cardFramePx/switchPx;
+            float multipleValue = switchRatioToCardFrame*cardFramePx/switchPx;
             mBinding.cardFrontLayout.modeSwitch.setScaleX(multipleValue);
             mBinding.cardFrontLayout.modeSwitch.setScaleY(multipleValue);
         }
