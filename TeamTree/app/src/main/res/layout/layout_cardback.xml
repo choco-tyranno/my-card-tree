@@ -23,7 +23,7 @@
     </data>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/backCard_cardView"
+            android:id="@+id/materialCardView_cardBack_frame"
             android:alpha="@{cardState.back.cardBackAlpha}"
             android:visibility="@{cardState.back.cardBackVisibility}"
             android:onTouchListener="@{viewModel.onTouchListenerForCard}"
@@ -41,7 +41,7 @@
             app:cardElevation="12dp">
 
             <ImageView
-                android:id="@+id/back_card_image"
+                android:id="@+id/imageView_cardBack_cardImage"
                 android:visibility="@{cardState.back.cardBackVisibility}"
                 app:cardThumbnail="@{cardImage.thumbnail}"
                 app:defaultCardThumbnail="@{viewModel.defaultCardThumbnail}"
@@ -53,7 +53,7 @@
 
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/spreadingOutDetail"
+                android:id="@+id/ShapeableImageView_cardBack_detailTrigger"
                 android:onClickListener="@{viewModel.spreadingOutDetailOnClickListener}"
                 android:layout_gravity="top|end"
                 android:src="@drawable/ic_baseline_fullscreen_24"

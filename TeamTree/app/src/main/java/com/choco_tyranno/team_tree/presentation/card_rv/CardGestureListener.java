@@ -137,7 +137,7 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         }
         ItemCardframeBinding binding = getItemCardFrameBinding();
         MaterialCardView frontCardView = binding.cardFrontLayout.frontCardCardView;
-        MaterialCardView backCardView = binding.cardBackLayout.backCardCardView;
+        MaterialCardView backCardView = binding.cardBackLayout.materialCardViewCardBackFrame;
         CardState cardState = getCardState();
         flippingCard(frontCardView, backCardView, cardState);
         clearView();

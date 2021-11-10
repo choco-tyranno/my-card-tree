@@ -25,7 +25,7 @@ public class SpreadingOutDetailOnClickListener implements OnClickListener {
         com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder cardViewHolder = (ContactCardViewHolder) cardRecyclerView.getChildViewHolder(cardFrame);
         ItemCardframeBinding binding = cardViewHolder.getBinding();
         CardDto cardDTO = binding.getCard();
-        ImageView cardImageView = binding.cardBackLayout.backCardImage;
+        ImageView cardImageView = binding.cardBackLayout.imageViewCardBackCardImage;
         com.choco_tyranno.team_tree.presentation.MainCardActivity mainCardActivity =((MainCardActivity)view.getContext());
         Intent intent = new Intent(mainCardActivity, DetailCardActivity.class);
         intent.putExtra("post_card", cardDTO);
