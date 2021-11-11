@@ -91,6 +91,7 @@ public class MainCardActivity extends AppCompatActivity {
         });
     }
 
+
     private void scaleMainRemoveSwitch() {
         View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBarBackground;
         SwitchMaterial removeSwitch = binding.layoutMainbody.switchMaterialMainBodyRemoveSwitch;

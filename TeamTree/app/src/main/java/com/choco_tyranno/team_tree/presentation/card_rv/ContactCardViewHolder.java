@@ -50,9 +50,7 @@ public class ContactCardViewHolder extends CardViewHolder {
     }
 
     private void setContentsViewsTextSize(){
-        int autoSizedTextPx = (int) mBinding.cardFrontLayout.frontCardEditToolSaveBtn.getTextSize();
-        mBinding.cardFrontLayout.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
-        mBinding.cardFrontLayout.contactNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
+        int autoSizedTextPx = (int) mBinding.cardFrontLayout.title.getTextSize();
         mBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
         mBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
     }

@@ -93,6 +93,7 @@
             <com.google.android.material.textview.MaterialTextView
                 tools:visibility="invisible"
                 android:id="@+id/title"
+                android:autoSizeTextType="uniform"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fontFamily="@font/humanletter"
@@ -162,6 +163,7 @@
                 app:layout_constraintTop_toTopOf="@id/contactNumberTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/contactNumberBottomLine"
                 android:layout_width="0dp"
+                android:autoSizeTextType="uniform"
                 android:layout_height="0dp"
                 android:fontFamily="@font/humanletter"
                 android:hint="@string/card_contact_number_hint"
