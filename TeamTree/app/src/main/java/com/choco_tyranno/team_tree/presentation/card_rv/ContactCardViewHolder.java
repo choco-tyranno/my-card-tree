@@ -1,6 +1,9 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
+import android.graphics.Point;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 
 import androidx.annotation.NonNull;
 
@@ -31,14 +34,27 @@ public class ContactCardViewHolder extends CardViewHolder {
         mBinding.setCard(cardDTO);
         mBinding.setCardImage(cardImage);
         mBinding.executePendingBindings();
+        setContentsViewsScale();
+        setContentsViewsTextSize();
+    }
+
+    private void setContentsViewsScale(){
         float switchRatioToCardFrame = Float.parseFloat(mBinding.getRoot().getContext().getResources().getString(R.string.cardFront_cardSwitchRatioToCardFrame));
         int cardFramePx = mBinding.constraintLayoutMainCardFramePositioningManager.getWidth();
         int switchPx = mBinding.cardFrontLayout.modeSwitch.getWidth();
         if (cardFramePx != 0) {
-            float multipleValue = switchRatioToCardFrame*cardFramePx/switchPx;
+            float multipleValue = switchRatioToCardFrame * cardFramePx / switchPx;
             mBinding.cardFrontLayout.modeSwitch.setScaleX(multipleValue);
             mBinding.cardFrontLayout.modeSwitch.setScaleY(multipleValue);
         }
+    }
+
+    private void setContentsViewsTextSize(){
+        int autoSizedTextPx = (int) mBinding.cardFrontLayout.frontCardEditToolSaveBtn.getTextSize();
+        mBinding.cardFrontLayout.title.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
+        mBinding.cardFrontLayout.contactNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
+        mBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
+        mBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
     }
 
     public ItemCardframeBinding getBinding() {
