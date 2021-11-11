@@ -72,10 +72,9 @@
                 android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/titleEditor"
+                android:id="@+id/appCompatEditText_cardFront_titleEditor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:autoSizeTextType="uniform"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/humanletter"
                 android:hint="@string/card_title_hint"
@@ -92,16 +91,15 @@
                 tools:text="EditText" />
 
             <com.google.android.material.textview.MaterialTextView
+                tools:visibility="invisible"
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:autoSizeTextType="uniform"
                 android:fontFamily="@font/humanletter"
                 android:hint="@string/card_title_hint"
                 android:singleLine="true"
                 android:text="@{card.title}"
                 android:textColor="@color/colorAccent"
-                android:textSize="24sp"
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/titleTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
@@ -165,7 +163,6 @@
                 app:layout_constraintBottom_toBottomOf="@id/contactNumberBottomLine"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:autoSizeTextType="uniform"
                 android:fontFamily="@font/humanletter"
                 android:hint="@string/card_contact_number_hint"
                 android:singleLine="true"
@@ -176,14 +173,13 @@
 
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/contactNumberEditor"
+                android:id="@+id/appCompatEditText_cardFront_contactNumberEditor"
                 app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 app:layout_constraintTop_toTopOf="@id/contactNumberTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/contactNumberBottomLine"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:autoSizeTextType="uniform"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/humanletter"
                 android:hint="@string/card_contact_number_hint"
@@ -192,7 +188,6 @@
                 android:singleLine="true"
                 android:text="@{card.contactNumber}"
                 android:textColor="@color/colorAccent"
-                android:textSize="24sp"
                 android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
             <androidx.constraintlayout.widget.Guideline
