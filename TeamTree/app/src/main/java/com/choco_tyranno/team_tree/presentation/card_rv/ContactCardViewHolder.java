@@ -51,6 +51,7 @@ public class ContactCardViewHolder extends CardViewHolder {
 
     private void setContentsViewsTextSize(){
         int autoSizedTextPx = (int) mBinding.cardFrontLayout.title.getTextSize();
+        Log.d("@@HOTFIX","card - autoSizedTextPx:"+autoSizedTextPx);
         mBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
         mBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoSizedTextPx);
     }

@@ -40,4 +40,7 @@
     <dimen name="createCardFab_shadow_width">230dp</dimen>
     <dimen name="createCardFab_shadow_height">100dp</dimen>
 
+    <dimen name="univ_defaultVerticalSpace">16dp</dimen>
+    <dimen name="univ_defaultHorizontalSpace">8dp</dimen>
+
 </resources>

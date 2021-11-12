@@ -1,5 +1,6 @@
 package com.choco_tyranno.team_tree.presentation.detail_page;
 
+import android.util.Log;
 import android.view.View;
 
 import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;

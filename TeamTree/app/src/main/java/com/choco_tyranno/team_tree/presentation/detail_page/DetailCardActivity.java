@@ -13,7 +13,10 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -61,6 +64,27 @@ public class DetailCardActivity extends AppCompatActivity {
         binding.setCard(ownerCardDto);
         binding.setDetailPage(detailPage);
         binding.executePendingBindings();
+        setContentViewsTextSize();
+    }
+
+    private void setContentViewsTextSize() {
+        binding.textViewDetailTitle.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int textSizePx = (int) binding.textViewDetailTitle.getTextSize();
+                binding.appCompatEditTextDetailTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+                binding.appCompatEditTextDetailSubtitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+                binding.appCompatEditTextDetailContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+
+                float secondaryTextSizePx = (float)textSizePx*3/5;
+                binding.appCompatEditTextDetailNoteEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+                binding.textViewDetailNote.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+                binding.materialButtonDetailModify.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+                binding.materialButtonDetailSave.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+                binding.materialButtonDetailBack.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+                binding.materialDetailCancel.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            }
+        });
     }
 
     @Override
@@ -215,7 +239,7 @@ public class DetailCardActivity extends AppCompatActivity {
         binding.floatingActionButtonDetailCamera.setVisibility(View.GONE);
         binding.floatingActionButtonDetailGallery.setVisibility(View.GONE);
         binding.floatingActionButtonDetailContactInfo.setVisibility(View.GONE);
-        
+
         Intent intent = new Intent();
         intent.putExtra("post_card", getCardDto());
         setResult(Activity.RESULT_OK, intent);
