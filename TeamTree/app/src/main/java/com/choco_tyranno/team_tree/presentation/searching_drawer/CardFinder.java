@@ -44,7 +44,7 @@ public class CardFinder {
                 ActivityMainBinding binding = mainCardActivity.getMainBinding();
                 DrawerLayout MainDL = binding.drawerLayoutMainSearchDrawer;
                 MainDL.closeDrawer(GravityCompat.END);
-                SearchView searchView = binding.layoutMainrightdrawer.cardSearchView;
+                SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
                 searchView.setQuery("",false);
                 searchView.setIconified(true);
                 Optional.ofNullable(finishAction).ifPresent(Runnable::run);

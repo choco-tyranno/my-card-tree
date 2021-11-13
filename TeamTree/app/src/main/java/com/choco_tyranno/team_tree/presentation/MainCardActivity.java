@@ -72,9 +72,9 @@ public class MainCardActivity extends AppCompatActivity {
 
         scaleMainRemoveSwitch();
 
-        ImageView searchBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
-        ImageView searchCloseBtn = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        SearchView.SearchAutoComplete searchAutoComplete = binding.layoutMainrightdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        ImageView searchBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
+        ImageView searchCloseBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        SearchView.SearchAutoComplete searchAutoComplete = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchBtn.setColorFilter(R.color.colorPrimary_a);
         searchCloseBtn.setColorFilter(R.color.colorPrimary_a);
         searchAutoComplete.setTextColor(getResources().getColor(R.color.colorPrimary, getTheme()));
@@ -132,7 +132,7 @@ public class MainCardActivity extends AppCompatActivity {
         DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
         if (mainDL.isDrawerOpen(GravityCompat.END)) {
             mainDL.closeDrawer(GravityCompat.END);
-            SearchView searchView = binding.layoutMainrightdrawer.cardSearchView;
+            SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
             searchView.setQuery("", false);
             searchView.setIconified(true);
             cardFinder.setSendingFindCardReq(false);
@@ -154,7 +154,7 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void setSearchingResultRv() {
-        binding.layoutMainrightdrawer.cardSearchResultRecyclerview
+        binding.layoutSearchdrawer.cardSearchResultRecyclerview
                 .addItemDecoration(new DividerItemDecoration(MainCardActivity.this, DividerItemDecoration.VERTICAL));
     }
 

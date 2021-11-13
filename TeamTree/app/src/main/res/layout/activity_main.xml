@@ -22,9 +22,9 @@
             layout="@layout/layout_mainbody" />
 
         <include
-            android:id="@+id/layout_mainrightdrawer"
+            android:id="@+id/layout_searchdrawer"
             bind:viewModel="@{viewModel}"
-            layout="@layout/layout_mainrightdrawer"/>
+            layout="@layout/layout_searchdrawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
