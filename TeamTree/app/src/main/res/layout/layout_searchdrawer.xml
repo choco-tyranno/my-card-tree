@@ -12,7 +12,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,29 +25,12 @@
             android:layout_width="0dp"
             android:layout_height="0dp">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_searchDrawer_settingsEndLine"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.98"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <View
-                app:layout_constraintWidth_percent="0.02"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@color/colorAccent_c"
-                app:layout_constraintHeight_percent="0.08"
-                app:layout_constraintTop_toTopOf="@id/card_search_view"
-                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"/>
-
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/card_search_view"
                 onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.9"
+                app:layout_constraintWidth_percent="0.85"
                 app:layout_constraintHeight_percent="0.08"
                 android:background="@color/colorAccent_c"
                 android:iconifiedByDefault="true"
@@ -55,15 +38,44 @@
                 app:layout_constraintTop_toTopOf="parent">
             </androidx.appcompat.widget.SearchView>
 
+            <View
+                android:id="@+id/view_searchDrawer_searchViewHorizontalCenterLine"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/card_search_view"
+                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                />
+
+            <View
+                android:id="@+id/view_searchDrawer_settingsBackground"
+                android:background="@color/colorAccent_c"
+                app:layout_constraintStart_toEndOf="@id/card_search_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/card_search_view"
+                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_searchDrawer_settingsEndLine"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.98"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <ImageButton
+                android:id="@+id/imageView_searchDrawer_settings"
                 android:background="@color/colorAccent_c"
                 android:src="@drawable/ic_baseline_settings_40"
+                app:layout_constraintHeight_min="40dp"
                 android:onClickListener="@{viewModel.onClickListenerForSettingButton}"
-                app:layout_constraintWidth_percent="0.1"
-                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
-                app:layout_constraintEnd_toEndOf="@id/guideline_searchDrawer_settingsEndLine"
+                app:layout_constraintTop_toTopOf="@id/view_searchDrawer_searchViewHorizontalCenterLine"
+                app:layout_constraintBottom_toBottomOf="@id/view_searchDrawer_searchViewHorizontalCenterLine"
                 app:layout_constraintStart_toEndOf="@id/card_search_view"
-                app:layout_constraintTop_toTopOf="@id/card_search_view"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/searDrawer_settingsBtnDesc" />

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,6 +21,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -72,6 +75,8 @@ public class MainCardActivity extends AppCompatActivity {
 
         scaleMainRemoveSwitch();
 
+        setSearchViewAttributes();
+
         ImageView searchBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
         ImageView searchCloseBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         SearchView.SearchAutoComplete searchAutoComplete = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -89,6 +94,24 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
+    }
+
+    private void setSearchViewAttributes() {
+        SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
+        searchView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                searchView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int searchViewHeight = searchView.getHeight();
+                final ConstraintSet constraintSet = new ConstraintSet();
+                ConstraintLayout parent = (ConstraintLayout)searchView.getParent();
+                constraintSet.clone(parent);
+                constraintSet.constrainMinHeight(searchView.getId(), searchViewHeight);
+                constraintSet.applyTo(parent);
+            }
+        });
+
+
     }
 
 
