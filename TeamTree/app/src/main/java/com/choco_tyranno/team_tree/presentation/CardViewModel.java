@@ -518,6 +518,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
             mainDL.closeDrawer(GravityCompat.END);
             toggleSettingsOn();
+
             ActionBar appBar = ((MainCardActivity)view.getContext()).getSupportActionBar();
             Objects.requireNonNull(appBar).setTitle("설정");
             appBar.setDisplayHomeAsUpEnabled(true);

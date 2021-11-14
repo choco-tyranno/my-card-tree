@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"/>
 
         <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:id="@+id/containerRecyclerView_mainBody_containers"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -65,6 +66,7 @@
             android:id="@+id/view_mainBody_topAppBarBackground"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:background="@drawable/default_card_image_01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,10 +81,10 @@
             app:layout_constraintGuide_percent="0.97" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:id="@+id/switchMaterial_mainBody_removeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="15dp"
             android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
             app:layout_constraintBottom_toBottomOf="@id/view_mainBody_topAppBarBackground"
             app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_removeSwitchEndLine"
@@ -110,6 +112,7 @@
             app:layout_constraintGuide_percent="0.2"/>
 
         <ImageView
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:id="@+id/imageView_mainBody_topArrow"
             tools:alpha="1"
             android:layout_width="0dp"
@@ -132,6 +135,7 @@
             app:layout_constraintGuide_percent="0.8"/>
 
         <ImageView
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             tools:alpha="1"
             android:id="@+id/imageView_mainBody_bottomArrow"
             android:layout_width="0dp"
@@ -147,6 +151,7 @@
             app:onDragListener="@{viewModel.onDragListenerForBottomArrow}" />
 
         <View
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:id="@+id/view_mainBody_bottomBarBackground"
             tools:alpha="1"
             android:layout_width="0dp"
@@ -159,13 +164,13 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
+            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
             android:id="@+id/button_mainBody_newCard"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/colorAccent_b"
             android:contentDescription="@string/order_card_fab_content_description"
-            android:elevation="20dp"
             android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
             android:rotation="50"
             android:text="@string/addNewCardUtil_fab_text"
