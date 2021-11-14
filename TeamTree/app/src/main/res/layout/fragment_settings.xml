@@ -24,20 +24,27 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.08"
+            android:id="@+id/guideline_settings_contentTopLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/contact_license"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="32dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.05"
+            app:layout_constraintWidth_percent="0.9"
+            android:layout_marginTop="@dimen/univ_defaultVerticalSpace"
+            android:autoSizeTextType="uniform"
             android:textColor="@color/colorPrimaryDark"
             android:onClick="@{(view)->settings_viewmodel.openPageOssLicense(view)}"
             android:text="@string/settings_fragment_oss_license_title"
-            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/guideline_settings_contentTopLine" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
