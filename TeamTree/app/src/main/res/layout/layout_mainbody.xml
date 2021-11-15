@@ -13,188 +13,190 @@
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout_mainBody_screenElementManager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff"
-        tools:context=".card_crud_feature.presentation.MainCardActivity">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_mainBody_screenElementManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            tools:context=".card_crud_feature.presentation.MainCardActivity">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_topAppBarBottomLine"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.08"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_topAppBarBottomLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.08" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:visibility="invisible"
-            android:id="@+id/toolbar_mainBody_topAppBar"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/design_default_color_primary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
-            bind:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_mainBody_defaultAppBar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/design_default_color_primary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                bind:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_bottomAppBarTopLine"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.92"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_bottomAppBarTopLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.92" />
 
-        <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:id="@+id/containerRecyclerView_mainBody_containers"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipChildren="false"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_topAppBarBottomLine"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_bottomAppBarTopLine"
-            app:onDragListener="@{viewModel.onDragListenerForContainerRecyclerView}"
-            app:onScrollListener="@{viewModel.onScrollListenerForContainerRecyclerView}" />
+            <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
+                android:id="@+id/containerRecyclerView_mainBody_containers"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipChildren="false"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintBottom_toTopOf="@id/view_mainBody_bottomBarBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_mainBody_topAppBar"
+                app:onDragListener="@{viewModel.onDragListenerForContainerRecyclerView}"
+                app:onScrollListener="@{viewModel.onScrollListenerForContainerRecyclerView}" />
 
-        <View
-            android:id="@+id/view_mainBody_topAppBarBackground"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:background="@drawable/default_card_image_01"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
-            app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/view_mainBody_topAppBar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/default_card_image_01"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="1" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_removeSwitchEndLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.97" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_removeSwitchEndLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.97" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:id="@+id/switchMaterial_mainBody_removeSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
-            app:layout_constraintBottom_toBottomOf="@id/view_mainBody_topAppBarBackground"
-            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_removeSwitchEndLine"
-            app:layout_constraintTop_toTopOf="@id/view_mainBody_topAppBarBackground" />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchMaterial_mainBody_removeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/view_mainBody_topAppBar"
+                app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_removeSwitchEndLine"
+                app:layout_constraintTop_toTopOf="@id/view_mainBody_topAppBar" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_verticalArrowStartLine"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.3"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_verticalArrowStartLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.3" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_verticalArrowEndLine"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.7"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_verticalArrowEndLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.7" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_topArrowBottomLine"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.2"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_topArrowBottomLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.2" />
 
-        <ImageView
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:id="@+id/imageView_mainBody_topArrow"
-            tools:alpha="1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0"
-            android:contentDescription="@string/prev_arrow_desc"
-            android:elevation="15dp"
-            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
-            app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
-            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
-            app:layout_constraintTop_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topArrowBottomLine"
-            app:onDragListener="@{viewModel.onDragListenerForTopArrow}" />
+            <ImageView
+                android:id="@+id/imageView_mainBody_topArrow"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0"
+                android:contentDescription="@string/prev_arrow_desc"
+                android:elevation="15dp"
+                android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topArrowBottomLine"
+                app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
+                app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
+                app:layout_constraintTop_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
+                app:onDragListener="@{viewModel.onDragListenerForTopArrow}"
+                tools:alpha="1" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_mainBody_bottomArrowTopLine"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.8"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_mainBody_bottomArrowTopLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.8" />
 
-        <ImageView
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            tools:alpha="1"
-            android:id="@+id/imageView_mainBody_bottomArrow"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0"
-            android:contentDescription="@string/next_arrow_desc"
-            android:elevation="15dp"
-            android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
-            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_bottomArrowTopLine"
-            app:layout_constraintBottom_toTopOf="@id/view_mainBody_bottomBarBackground"
-            app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
-            app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
-            app:onDragListener="@{viewModel.onDragListenerForBottomArrow}" />
+            <ImageView
+                android:id="@+id/imageView_mainBody_bottomArrow"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.1"
+                android:alpha="0"
+                android:contentDescription="@string/next_arrow_desc"
+                android:elevation="15dp"
+                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@id/containerRecyclerView_mainBody_containers"
+                app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
+                app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
+                app:onDragListener="@{viewModel.onDragListenerForBottomArrow}"
+                tools:alpha="1" />
 
-        <View
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:id="@+id/view_mainBody_bottomBarBackground"
-            tools:alpha="1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.1"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline_mainBody_bottomAppBarTopLine"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <View
+                android:id="@+id/view_mainBody_bottomBarBackground"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.1"
+                android:background="@color/colorPrimaryDark"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_percent="1"
+                app:layout_constraintHeight_percent="0.08"
+                tools:alpha="1" />
 
-        <Button
-            android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-            android:id="@+id/button_mainBody_newCard"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/colorAccent_b"
-            android:contentDescription="@string/order_card_fab_content_description"
-            android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
-            android:rotation="50"
-            android:text="@string/addNewCardUtil_fab_text"
-            android:textColor="#fff"
-            android:textSize="7sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <Button
+                android:id="@+id/button_mainBody_newCard"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/colorAccent_b"
+                android:contentDescription="@string/order_card_fab_content_description"
+                android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
+                android:rotation="50"
+                android:text="@string/addNewCardUtil_fab_text"
+                android:textColor="#fff"
+                android:textSize="7sp"
+                android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView_main_navHost"
-            tools:visibility="invisible"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="@{viewModel.isSettingsOn() ? View.VISIBLE:View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            bind:defaultNavHost="true"
-            bind:navGraph="@navigation/nav_graph"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="314dp" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentContainerView_main_navHost"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="@{viewModel.isSettingsOn() ? View.VISIBLE:View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                bind:defaultNavHost="true"
+                bind:navGraph="@navigation/nav_graph"
+                tools:visibility="invisible" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

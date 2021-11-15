@@ -45,10 +45,14 @@ import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerVi
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
@@ -66,16 +70,14 @@ public class MainCardActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
-        setSupportActionBar(binding.layoutMainbody.toolbarMainBodyTopAppBar);
+        setSupportActionBar(binding.layoutMainbody.toolbarMainBodyDefaultAppBar);
         Objects.requireNonNull(getSupportActionBar()).hide();
         binding.setViewModel(viewModel);
         setContainerRv();
         setSearchingResultRv();
         cardFinder = new CardFinder(this);
 
-        scaleMainRemoveSwitch();
-
-        setSearchViewAttributes();
+        initView();
 
         ImageView searchBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
         ImageView searchCloseBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
@@ -96,27 +98,59 @@ public class MainCardActivity extends AppCompatActivity {
         });
     }
 
-    private void setSearchViewAttributes() {
-        SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
-        searchView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    private void initView() {
+        scaleMainRemoveSwitch();
+        List<Consumer<Integer>> mainAppBarSizeRelatedViewActionList = new ArrayList<>();
+        mainAppBarSizeRelatedViewActionList.add(this::setTopAppBarAttributes);
+        mainAppBarSizeRelatedViewActionList.add(this::setSearchViewAttributes);
+        setMainAppBarSizeRelatedViewsConstraintMinHeight(mainAppBarSizeRelatedViewActionList);
+    }
+
+    private void setMainAppBarSizeRelatedViewsConstraintMinHeight(List<Consumer<Integer>> afterActions) {
+        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
+        topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                searchView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int searchViewHeight = searchView.getHeight();
-                final ConstraintSet constraintSet = new ConstraintSet();
-                ConstraintLayout parent = (ConstraintLayout)searchView.getParent();
-                constraintSet.clone(parent);
-                constraintSet.constrainMinHeight(searchView.getId(), searchViewHeight);
-                constraintSet.applyTo(parent);
+                topAppBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                final int fixedAppBarHeight = topAppBar.getHeight();
+                Log.d("@@HOTFIX", "fixedAppBarHeight:"+fixedAppBarHeight);
+                afterActions.forEach(action->action.accept(fixedAppBarHeight));
             }
         });
+    }
 
+    private void setTopAppBarAttributes(int fixedAppBarHeight) {
+        Log.d("@@HOTFIX", "setTopAppBarAttributes fixedAppBarHeight:"+fixedAppBarHeight);
+        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
+        final ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout parent = (ConstraintLayout)topAppBar.getParent();
+        constraintSet.clone(parent);
+        constraintSet.constrainMinHeight(topAppBar.getId(), fixedAppBarHeight);
+        constraintSet.applyTo(parent);
+
+        View bottomAppBar = binding.layoutMainbody.viewMainBodyBottomBarBackground;
+        final ConstraintSet constraintSet1 = new ConstraintSet();
+        ConstraintLayout parent1 = (ConstraintLayout)bottomAppBar.getParent();
+        constraintSet.clone(parent1);
+        constraintSet.constrainMinHeight(bottomAppBar.getId(), fixedAppBarHeight);
+        constraintSet.applyTo(parent1);
 
     }
 
 
+    private void setSearchViewAttributes(int fixedAppBarHeight) {
+        Log.d("@@HOTFIX", "setSearchViewAttributes fixedAppBarHeight:"+fixedAppBarHeight);
+        SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
+        final ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout parent = (ConstraintLayout)searchView.getParent();
+        constraintSet.clone(parent);
+        constraintSet.constrainMinHeight(searchView.getId(), fixedAppBarHeight);
+        constraintSet.applyTo(parent);
+    }
+
+
     private void scaleMainRemoveSwitch() {
-        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBarBackground;
+        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
         SwitchMaterial removeSwitch = binding.layoutMainbody.switchMaterialMainBodyRemoveSwitch;
         removeSwitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
