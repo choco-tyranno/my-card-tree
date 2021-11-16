@@ -49,6 +49,7 @@ import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -102,16 +103,32 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        scaleMainRemoveSwitch();
-        List<Consumer<Integer>> mainAppBarSizeRelatedViewActionList = new ArrayList<>();
-        mainAppBarSizeRelatedViewActionList.add(this::setTopAppBarAttributes);
-        mainAppBarSizeRelatedViewActionList.add(this::setSearchViewAttributes);
-        setMainAppBarSizeRelatedViewsConstraintMinHeight(mainAppBarSizeRelatedViewActionList);
+        observeViewAndConsume(binding.layoutMainbody.viewMainBodyTopAppBar,
+                this::setRemoveSwitchScale,
+                this::setTopAppBarConstrainMinHeight,
+                this::setSearchViewConstrainMinHeight
+        );
 
-        List<Consumer<Button>> newCardButtonConsumerList = new ArrayList<>();
-        newCardButtonConsumerList.add(this::setNewCardButtonMarginBottom);
-        newCardButtonConsumerList.add(this::setBottomBarHeight);
-        setNewCardButtonRelatedViewAttributes(newCardButtonConsumerList);
+        observeViewAndConsume(binding.layoutMainbody.buttonMainBodyNewCard,
+                this::setNewCardButtonMarginBottom,
+                this::setBottomBarHeight
+        );
+    }
+
+
+    @SafeVarargs
+    private <T> void observeViewAndConsume(T observedView, TypeAccessableConsumer<T>... consumers) {
+        ((View) observedView).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ((View) observedView).getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Stream.of(consumers).filter(content -> {
+                    int lambdaType = ((View)content.returnType(observedView)).getId();
+                    int observedViewId = ((View) observedView).getId();
+                    return lambdaType == observedViewId;
+                }).forEach(consumer -> consumer.accept(observedView));
+            }
+        });
     }
 
     private void setBottomBarHeight(Button newCardButton) {
@@ -126,17 +143,6 @@ public class MainCardActivity extends AppCompatActivity {
         constraintSet.applyTo(parent);
     }
 
-    private void setNewCardButtonRelatedViewAttributes(List<Consumer<Button>> newCardButtonConsumers) {
-        Button newCardButton = binding.layoutMainbody.buttonMainBodyNewCard;
-        newCardButton.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                newCardButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                newCardButtonConsumers.forEach(consumer -> consumer.accept(newCardButton));
-            }
-        });
-    }
-
     private void setNewCardButtonMarginBottom(Button newCardButton) {
         final int newCardButtonHeight = newCardButton.getHeight();
         final int newCardButtonMarginBottom = newCardButtonHeight / 4;
@@ -147,43 +153,26 @@ public class MainCardActivity extends AppCompatActivity {
         constraintSet.applyTo(parent);
     }
 
-    private void setMainAppBarSizeRelatedViewsConstraintMinHeight(List<Consumer<Integer>> afterActions) {
-        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
-        topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                topAppBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                final int fixedAppBarHeight = topAppBar.getHeight();
-                Log.d("@@HOTFIX", "fixedAppBarHeight:" + fixedAppBarHeight);
-                afterActions.forEach(action -> action.accept(fixedAppBarHeight));
-            }
-        });
-    }
-
-    private void setTopAppBarAttributes(int fixedAppBarHeight) {
-        Log.d("@@HOTFIX", "setTopAppBarAttributes fixedAppBarHeight:" + fixedAppBarHeight);
-        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
+    private void setTopAppBarConstrainMinHeight(View topAppBar) {
         final ConstraintSet constraintSet = new ConstraintSet();
         ConstraintLayout parent = (ConstraintLayout) topAppBar.getParent();
         constraintSet.clone(parent);
-        constraintSet.constrainMinHeight(topAppBar.getId(), fixedAppBarHeight);
+        constraintSet.constrainMinHeight(topAppBar.getId(), topAppBar.getHeight());
         constraintSet.applyTo(parent);
     }
 
 
-    private void setSearchViewAttributes(int fixedAppBarHeight) {
-        Log.d("@@HOTFIX", "setSearchViewAttributes fixedAppBarHeight:" + fixedAppBarHeight);
+    private void setSearchViewConstrainMinHeight(View topAppBar) {
         SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
         final ConstraintSet constraintSet = new ConstraintSet();
         ConstraintLayout parent = (ConstraintLayout) searchView.getParent();
         constraintSet.clone(parent);
-        constraintSet.constrainMinHeight(searchView.getId(), fixedAppBarHeight);
+        constraintSet.constrainMinHeight(searchView.getId(), topAppBar.getHeight());
         constraintSet.applyTo(parent);
     }
 
 
-    private void scaleMainRemoveSwitch() {
-        View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
+    private void setRemoveSwitchScale(View topAppBar) {
         SwitchMaterial removeSwitch = binding.layoutMainbody.switchMaterialMainBodyRemoveSwitch;
         removeSwitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -192,20 +181,9 @@ public class MainCardActivity extends AppCompatActivity {
                 float switchRatioToTopAppBar = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
                 int switchHeightPx = removeSwitch.getHeight();
                 int topAppBarHeightPx = topAppBar.getHeight();
-                if (topAppBarHeightPx == 0) {
-                    topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            float multiplingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
-                            removeSwitch.setScaleX(multiplingValue);
-                            removeSwitch.setScaleY(multiplingValue);
-                        }
-                    });
-                    return;
-                }
-                float multiplingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
-                removeSwitch.setScaleX(multiplingValue);
-                removeSwitch.setScaleY(multiplingValue);
+                float multiplyingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
+                removeSwitch.setScaleX(multiplyingValue);
+                removeSwitch.setScaleY(multiplyingValue);
             }
         });
     }
