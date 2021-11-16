@@ -41,13 +41,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 bind:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_mainBody_bottomAppBarTopLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.92" />
-
             <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
                 android:id="@+id/containerRecyclerView_mainBody_containers"
                 android:layout_width="0dp"
@@ -55,7 +48,7 @@
                 android:clipChildren="false"
                 android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:layout_constraintBottom_toTopOf="@id/view_mainBody_bottomBarBackground"
+                app:layout_constraintBottom_toTopOf="@id/view_mainBody_bottomBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_mainBody_topAppBar"
@@ -70,8 +63,8 @@
                 android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintHeight_percent="0.08"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="1" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_mainBody_removeSwitchEndLine"
@@ -120,10 +113,10 @@
                 android:elevation="15dp"
                 android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
                 android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@id/guideline_mainBody_topArrowBottomLine"
-                app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
+                app:layout_constraintHeight_percent="0.1"
                 app:layout_constraintStart_toStartOf="@id/guideline_mainBody_verticalArrowStartLine"
-                app:layout_constraintTop_toBottomOf="@id/guideline_mainBody_topAppBarBottomLine"
+                app:layout_constraintEnd_toEndOf="@id/guideline_mainBody_verticalArrowEndLine"
+                app:layout_constraintTop_toTopOf="@id/containerRecyclerView_mainBody_containers"
                 app:onDragListener="@{viewModel.onDragListenerForTopArrow}"
                 tools:alpha="1" />
 
@@ -151,24 +144,21 @@
                 tools:alpha="1" />
 
             <View
-                android:id="@+id/view_mainBody_bottomBarBackground"
+                android:id="@+id/view_mainBody_bottomBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0.1"
                 android:background="@color/colorPrimaryDark"
                 android:visibility="@{viewModel.isSettingsOn() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent="1"
-                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:alpha="1" />
 
             <Button
                 android:id="@+id/button_mainBody_newCard"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/colorAccent_b"
                 android:contentDescription="@string/order_card_fab_content_description"
                 android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
@@ -187,12 +177,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="@{viewModel.isSettingsOn() ? View.VISIBLE:View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintBottom_toBottomOf="parent"
                 bind:defaultNavHost="true"
                 bind:navGraph="@navigation/nav_graph"
                 tools:visibility="invisible" />

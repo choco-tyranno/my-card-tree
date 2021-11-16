@@ -18,13 +18,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.print.PrintAttributes;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -104,6 +107,44 @@ public class MainCardActivity extends AppCompatActivity {
         mainAppBarSizeRelatedViewActionList.add(this::setTopAppBarAttributes);
         mainAppBarSizeRelatedViewActionList.add(this::setSearchViewAttributes);
         setMainAppBarSizeRelatedViewsConstraintMinHeight(mainAppBarSizeRelatedViewActionList);
+
+        List<Consumer<Button>> newCardButtonConsumerList = new ArrayList<>();
+        newCardButtonConsumerList.add(this::setNewCardButtonMarginBottom);
+        newCardButtonConsumerList.add(this::setBottomBarHeight);
+        setNewCardButtonRelatedViewAttributes(newCardButtonConsumerList);
+    }
+
+    private void setBottomBarHeight(Button newCardButton) {
+        View bottomBar = binding.layoutMainbody.viewMainBodyBottomBar;
+        ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout parent = (ConstraintLayout) bottomBar.getParent();
+        constraintSet.clone(parent);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newCardButton.getLayoutParams();
+        final int newCardBottomMargin = params.bottomMargin;
+        final int bottomBarHeight = newCardButton.getHeight() / 2 + newCardBottomMargin;
+        constraintSet.constrainHeight(bottomBar.getId(), bottomBarHeight);
+        constraintSet.applyTo(parent);
+    }
+
+    private void setNewCardButtonRelatedViewAttributes(List<Consumer<Button>> newCardButtonConsumers) {
+        Button newCardButton = binding.layoutMainbody.buttonMainBodyNewCard;
+        newCardButton.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                newCardButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                newCardButtonConsumers.forEach(consumer -> consumer.accept(newCardButton));
+            }
+        });
+    }
+
+    private void setNewCardButtonMarginBottom(Button newCardButton) {
+        final int newCardButtonHeight = newCardButton.getHeight();
+        final int newCardButtonMarginBottom = newCardButtonHeight / 4;
+        ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout parent = (ConstraintLayout) newCardButton.getParent();
+        constraintSet.clone(parent);
+        constraintSet.setMargin(newCardButton.getId(), ConstraintLayout.LayoutParams.BOTTOM, newCardButtonMarginBottom);
+        constraintSet.applyTo(parent);
     }
 
     private void setMainAppBarSizeRelatedViewsConstraintMinHeight(List<Consumer<Integer>> afterActions) {
@@ -113,36 +154,28 @@ public class MainCardActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 topAppBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 final int fixedAppBarHeight = topAppBar.getHeight();
-                Log.d("@@HOTFIX", "fixedAppBarHeight:"+fixedAppBarHeight);
-                afterActions.forEach(action->action.accept(fixedAppBarHeight));
+                Log.d("@@HOTFIX", "fixedAppBarHeight:" + fixedAppBarHeight);
+                afterActions.forEach(action -> action.accept(fixedAppBarHeight));
             }
         });
     }
 
     private void setTopAppBarAttributes(int fixedAppBarHeight) {
-        Log.d("@@HOTFIX", "setTopAppBarAttributes fixedAppBarHeight:"+fixedAppBarHeight);
+        Log.d("@@HOTFIX", "setTopAppBarAttributes fixedAppBarHeight:" + fixedAppBarHeight);
         View topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
         final ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout)topAppBar.getParent();
+        ConstraintLayout parent = (ConstraintLayout) topAppBar.getParent();
         constraintSet.clone(parent);
         constraintSet.constrainMinHeight(topAppBar.getId(), fixedAppBarHeight);
         constraintSet.applyTo(parent);
-
-        View bottomAppBar = binding.layoutMainbody.viewMainBodyBottomBarBackground;
-        final ConstraintSet constraintSet1 = new ConstraintSet();
-        ConstraintLayout parent1 = (ConstraintLayout)bottomAppBar.getParent();
-        constraintSet.clone(parent1);
-        constraintSet.constrainMinHeight(bottomAppBar.getId(), fixedAppBarHeight);
-        constraintSet.applyTo(parent1);
-
     }
 
 
     private void setSearchViewAttributes(int fixedAppBarHeight) {
-        Log.d("@@HOTFIX", "setSearchViewAttributes fixedAppBarHeight:"+fixedAppBarHeight);
+        Log.d("@@HOTFIX", "setSearchViewAttributes fixedAppBarHeight:" + fixedAppBarHeight);
         SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
         final ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout)searchView.getParent();
+        ConstraintLayout parent = (ConstraintLayout) searchView.getParent();
         constraintSet.clone(parent);
         constraintSet.constrainMinHeight(searchView.getId(), fixedAppBarHeight);
         constraintSet.applyTo(parent);
@@ -159,7 +192,7 @@ public class MainCardActivity extends AppCompatActivity {
                 float switchRatioToTopAppBar = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
                 int switchHeightPx = removeSwitch.getHeight();
                 int topAppBarHeightPx = topAppBar.getHeight();
-                if (topAppBarHeightPx==0){
+                if (topAppBarHeightPx == 0) {
                     topAppBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
