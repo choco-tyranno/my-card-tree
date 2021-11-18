@@ -2,6 +2,7 @@ package com.choco_tyranno.team_tree.presentation.main;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -16,9 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 
-public class RemoveSwitch extends SwitchMaterial {
-    private boolean ready = false;
-    final private Queue<Runnable> attributeSettingActions = new LinkedList<>();
+public class RemoveSwitch extends SwitchMaterial implements DependentView{
 
     public RemoveSwitch(@NonNull Context context) {
         super(context);
@@ -36,12 +35,14 @@ public class RemoveSwitch extends SwitchMaterial {
     }
 
     public void ready() {
+        if (ready.get())
+            return;
+        RemoveSwitch view = this;
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                RemoveSwitch.this.ready = true;
-
+                RemoveSwitch.this.ready.set(true);
                 if (!attributeSettingActions.isEmpty()) {
                     while (!attributeSettingActions.isEmpty()) {
                         Runnable action = attributeSettingActions.poll();
@@ -52,7 +53,8 @@ public class RemoveSwitch extends SwitchMaterial {
         });
     }
 
-    public void setScaleByTopAppBar(View topAppBar) {
+    //Promise the param(View topAppBar) view layout is ready.
+    public void setScaleByTopAppBar(@NonNull View topAppBar) {
         Runnable action = () -> {
             final float switchRatioToTopAppBar = Float.parseFloat(this.getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
             final int switchHeightPx = this.getHeight();
@@ -61,12 +63,8 @@ public class RemoveSwitch extends SwitchMaterial {
             this.setScaleX(multiplyingValue);
             this.setScaleY(multiplyingValue);
         };
-        if (!ready) {
-            attributeSettingActions.offer(action);
-            return;
-        }
-        action.run();
-    }
 
+        postAttributeSettingAction(action);
+    }
 
 }
