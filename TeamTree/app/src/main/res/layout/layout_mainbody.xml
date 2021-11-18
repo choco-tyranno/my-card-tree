@@ -143,8 +143,8 @@
                 app:onDragListener="@{viewModel.onDragListenerForBottomArrow}"
                 tools:alpha="1" />
 
-            <View
-                android:id="@+id/view_mainBody_bottomBar"
+            <com.choco_tyranno.team_tree.presentation.main.BottomBar
+                android:id="@+id/bottomBar_mainBody_bottomBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0.1"
