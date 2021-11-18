@@ -73,8 +73,8 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.97" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchMaterial_mainBody_removeSwitch"
+            <com.choco_tyranno.team_tree.presentation.main.RemoveSwitch
+                android:id="@+id/removeSwitch_mainBody_removeSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onCheckedChanged="@{(view, isOn)->viewModel.onModeChanged(view, isOn)}"
