@@ -1457,7 +1457,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private SwitchMaterial findRemoveBtnByContainerRecyclerView(RecyclerView containerRecyclerView) {
-        return ((ViewGroup) containerRecyclerView.getParent()).findViewById(R.id.switchMaterial_mainBody_removeSwitch);
+        return ((ViewGroup) containerRecyclerView.getParent()).findViewById(R.id.removeSwitch_mainBody_removeSwitch);
     }
 
     //{@param direction} :
