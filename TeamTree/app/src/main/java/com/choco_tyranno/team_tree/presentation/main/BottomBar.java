@@ -18,11 +18,8 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 
-public class BottomBar extends View {
-    private boolean ready = false;
-    final private Queue<Runnable> attributeSettingActions = new LinkedList<>();
+public class BottomBar extends View implements DependentView{
 
-    private String TAG = "@@HOTFIX";
     public BottomBar(Context context) {
         super(context);
         ready();
@@ -43,17 +40,15 @@ public class BottomBar extends View {
         ready();
     }
 
-
     public void ready() {
+        if (ready.get())
+            return;
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.d(TAG, "ready().onGlobalLayout()");
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                BottomBar.this.ready = true;
-                Log.d(TAG, "ready = true");
+                BottomBar.this.ready.set(true);
                 if (!attributeSettingActions.isEmpty()) {
-                    Log.d(TAG, "ready().onGlobalLayout() !attributeSettingActions.isEmpty() -> Runnable::run");
                     while (!attributeSettingActions.isEmpty()) {
                         Runnable action = attributeSettingActions.poll();
                         Optional.ofNullable(action).ifPresent(Runnable::run);
@@ -67,7 +62,6 @@ public class BottomBar extends View {
     //Promise the param(Button newCardButton) view layout is ready.
     public void setHeightByNewCardButton(@NonNull Button newCardButton) {
         Runnable action = () -> {
-            Log.d(TAG, "/ RUN / setHeightByNewCardButton() action.run");
             ConstraintSet constraintSet = new ConstraintSet();
             ConstraintLayout parent = (ConstraintLayout) this.getParent();
             constraintSet.clone(parent);
@@ -77,13 +71,7 @@ public class BottomBar extends View {
             constraintSet.constrainHeight(this.getId(), bottomBarHeight);
             constraintSet.applyTo(parent);
         };
-        if (!ready) {
-            Log.d(TAG, "setHeightByNewCardButton() !ready");
-            attributeSettingActions.offer(action);
-            return;
-        }
-        Log.d(TAG, "setHeightByNewCardButton() ready");
-        action.run();
+        postAttributeSettingAction(action);
     }
 
 }
