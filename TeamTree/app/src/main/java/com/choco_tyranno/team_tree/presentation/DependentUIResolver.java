@@ -53,6 +53,12 @@ public class DependentUIResolver<T extends View> {
             return this;
         }
 
+        /*
+        * Method 'with' has build code of DependentViewAction.
+        *
+        * Recommend :
+        * Pass argument 'actions' using method reference the view method.
+        * */
         @SafeVarargs
         public final DependentUIResolverBuilder<T> with(int viewId, Consumer<T>... actions) {
             readyInstance();
@@ -67,6 +73,9 @@ public class DependentUIResolver<T extends View> {
             return instance != null && instance.isSetBaseView() && instance.isSetAction();
         }
 
+        /*
+        * Build method has a responsibility of checking build code completion.
+        * */
         public DependentUIResolver<T> build() {
             if (isBuildReady())
                 return instance;
@@ -124,6 +133,9 @@ public class DependentUIResolver<T extends View> {
                     return instance != null && instance.isSetActions() && instance.isSetViewId();
                 }
 
+                /*
+                 * Build method has a responsibility of checking build code completion.
+                 * */
                 private DependentViewAction<T> build() {
                     if (isBuildReady())
                         return instance;
