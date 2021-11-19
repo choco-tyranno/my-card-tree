@@ -87,7 +87,9 @@ public class DependentUIResolver<T extends View> {
         * This class DependentViewAction is view attribute setting action container
         * with baseView id matchable.
         *
-        * param{view}
+        * param{baseViewId : used when running action for baseView match.
+        * actions : dependent views attribute setting action.
+        * }
         * */
         private static class DependentViewAction<T extends View> {
             private int baseViewId = -1;
