@@ -2,6 +2,8 @@ package com.choco_tyranno.team_tree.presentation;
 
 import android.view.View;
 
+import com.choco_tyranno.team_tree.Box;
+
 import java.util.function.Consumer;
 
 /*
@@ -39,17 +41,20 @@ public class DependentUIResolver<T extends View> {
         this.action = action;
     }
 
+    /*
+    *
+    * */
     public static class DependentUIResolverBuilder<T extends View> {
-        private DependentUIResolver<T> instance;
+        private Box<DependentUIResolver<T>> instanceBox = new Box<>();
 
         private void readyInstance() {
-            if (instance == null)
-                instance = new DependentUIResolver<T>();
+            if (!instanceBox.isContain())
+                instanceBox.box(new DependentUIResolver<T>());
         }
 
         public DependentUIResolverBuilder<T> baseView(T view) {
             readyInstance();
-            instance.setBaseView(view);
+            instanceBox.check().setBaseView(view);
             return this;
         }
 
@@ -62,7 +67,7 @@ public class DependentUIResolver<T extends View> {
         @SafeVarargs
         public final DependentUIResolverBuilder<T> with(int viewId, Consumer<T>... actions) {
             readyInstance();
-            instance.setAction(
+            instanceBox.check().setAction(
                     new DependentViewAction.DependentViewActionBuilder<T>().
                             baseViewId(viewId).actions(actions).build()
             );
@@ -70,15 +75,16 @@ public class DependentUIResolver<T extends View> {
         }
 
         private boolean isBuildReady() {
-            return instance != null && instance.isSetBaseView() && instance.isSetAction();
+            return instanceBox.isContain() && instanceBox.check().isSetBaseView() && instanceBox.check().isSetAction();
         }
 
         /*
         * Build method has a responsibility of checking build code completion.
         * */
-        public DependentUIResolver<T> build() {
-            if (isBuildReady())
-                return instance;
+        public DependentUIResolver<T> build(){
+            if (isBuildReady()){
+                return instanceBox.unbox();
+            }
             throw new RuntimeException("build fail -> trace : !isBuildReady");
         }
 
@@ -119,7 +125,7 @@ public class DependentUIResolver<T extends View> {
 
                 private DependentViewActionBuilder<T> baseViewId(int viewId) {
                     readyInstance();
-                    instance.baseViewId = viewId;
+                    instance.setBaseViewId(viewId);
                     return this;
                 }
 
@@ -129,7 +135,7 @@ public class DependentUIResolver<T extends View> {
                  * */
                 private DependentViewActionBuilder<T> actions(Consumer<T>[] actions) {
                     readyInstance();
-                    instance.actions = actions;
+                    instance.setActions(actions);
                     return this;
                 }
 
