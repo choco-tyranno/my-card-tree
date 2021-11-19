@@ -4,6 +4,14 @@ import android.view.View;
 
 import java.util.function.Consumer;
 
+/*
+* This class DependentUIResolver is created with consider of dynamic view attribute setting
+* and the attribute is depends on another view has attribute not static.
+*
+* param {baseView : view what is handling dependency.
+* action : dependent views attribute setting action what consuming baseView.
+* }
+* */
 public class DependentUIResolver<T extends View> {
     private T baseView = null;
     private DependentUIResolverBuilder.DependentViewAction<T> action = null;
