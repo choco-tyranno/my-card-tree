@@ -64,7 +64,7 @@ public class DependentUIResolver<T extends View> {
             readyInstance();
             instance.setAction(
                     new DependentViewAction.DependentViewActionBuilder<T>().
-                            viewId(viewId).actions(actions).build()
+                            baseViewId(viewId).actions(actions).build()
             );
             return this;
         }
@@ -82,20 +82,27 @@ public class DependentUIResolver<T extends View> {
             throw new RuntimeException("build fail -> trace : !isBuildReady");
         }
 
+
+        /*
+        * This class DependentViewAction is view attribute setting action container
+        * with baseView id matchable.
+        *
+        * param{view}
+        * */
         private static class DependentViewAction<T extends View> {
-            private int viewId = -1;
+            private int baseViewId = -1;
             private Consumer<T>[] actions = null;
 
-            private void setViewId(int viewId) {
-                this.viewId = viewId;
+            private void setBaseViewId(int viewId) {
+                this.baseViewId = viewId;
             }
 
             private void setActions(Consumer<T>[] actions) {
                 this.actions = actions;
             }
 
-            private boolean isSetViewId() {
-                return viewId != -1;
+            private boolean isSetBaseViewId() {
+                return baseViewId != -1;
             }
 
             private boolean isSetActions() {
@@ -108,9 +115,9 @@ public class DependentUIResolver<T extends View> {
                 private DependentViewActionBuilder() {
                 }
 
-                private DependentViewActionBuilder<T> viewId(int viewId) {
+                private DependentViewActionBuilder<T> baseViewId(int viewId) {
                     readyInstance();
-                    instance.viewId = viewId;
+                    instance.baseViewId = viewId;
                     return this;
                 }
 
@@ -130,7 +137,7 @@ public class DependentUIResolver<T extends View> {
                 }
 
                 private boolean isBuildReady() {
-                    return instance != null && instance.isSetActions() && instance.isSetViewId();
+                    return instance != null && instance.isSetActions() && instance.isSetBaseViewId();
                 }
 
                 /*
