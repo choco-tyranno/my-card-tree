@@ -42,7 +42,7 @@ public class RemoveSwitch extends SwitchMaterial implements DependentView{
             @Override
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                RemoveSwitch.this.ready.set(true);
+                view.ready.set(true);
                 if (!attributeSettingActions.isEmpty()) {
                     while (!attributeSettingActions.isEmpty()) {
                         Runnable action = attributeSettingActions.poll();
@@ -54,11 +54,11 @@ public class RemoveSwitch extends SwitchMaterial implements DependentView{
     }
 
     //Promise the param(View baseView) view layout is ready.
-    public void setScaleByTopAppBar(@NonNull View baseView) {
+    public void setScaleByTopAppBar(@NonNull View topAppBar) {
         Runnable action = () -> {
             final float switchRatioToTopAppBar = Float.parseFloat(this.getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
             final int switchHeightPx = this.getHeight();
-            final int topAppBarHeightPx = baseView.getHeight();
+            final int topAppBarHeightPx = topAppBar.getHeight();
             final float multiplyingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
             this.setScaleX(multiplyingValue);
             this.setScaleY(multiplyingValue);
