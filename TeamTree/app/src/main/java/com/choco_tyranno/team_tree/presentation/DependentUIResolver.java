@@ -1,10 +1,12 @@
 package com.choco_tyranno.team_tree.presentation;
 
 import android.view.View;
+import android.view.ViewTreeObserver;
 
-import com.choco_tyranno.team_tree.Box;
+import com.choco_tyranno.team_tree.Wrapper;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /*
 * This class DependentUIResolver is created with consider of dynamic view attribute setting
@@ -18,12 +20,23 @@ public class DependentUIResolver<T extends View> {
     private T baseView = null;
     private DependentUIResolverBuilder.DependentViewAction<T> action = null;
 
-    private void setBaseView(T view) {
-        baseView = view;
+    public void resolve(){
+        if (baseView==null)
+            throw new RuntimeException("resolve() - baseView is null");
+        if (action==null)
+            throw new RuntimeException("resolve() - action is null");
+        baseView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                baseView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (baseView.getId()==action.getBaseViewId())
+                    Stream.of(action.actions).forEach(action->action.accept(baseView));
+            }
+        });
     }
 
-    public View getBaseView() {
-        return baseView;
+    private void setBaseView(T view) {
+        baseView = view;
     }
 
     private boolean isSetBaseView() {
@@ -35,6 +48,7 @@ public class DependentUIResolver<T extends View> {
     }
 
     private DependentUIResolver() {
+
     }
 
     private void setAction(DependentUIResolverBuilder.DependentViewAction<T> action) {
@@ -45,16 +59,16 @@ public class DependentUIResolver<T extends View> {
     *
     * */
     public static class DependentUIResolverBuilder<T extends View> {
-        private Box<DependentUIResolver<T>> instanceBox = new Box<>();
+        private final Wrapper<DependentUIResolver<T>> instanceWrapper = new Wrapper<>();
 
         private void readyInstance() {
-            if (!instanceBox.isContain())
-                instanceBox.box(new DependentUIResolver<T>());
+            if (!instanceWrapper.isContain())
+                instanceWrapper.wrap(new DependentUIResolver<T>());
         }
 
         public DependentUIResolverBuilder<T> baseView(T view) {
             readyInstance();
-            instanceBox.check().setBaseView(view);
+            instanceWrapper.check().setBaseView(view);
             return this;
         }
 
@@ -67,7 +81,7 @@ public class DependentUIResolver<T extends View> {
         @SafeVarargs
         public final DependentUIResolverBuilder<T> with(int viewId, Consumer<T>... actions) {
             readyInstance();
-            instanceBox.check().setAction(
+            instanceWrapper.check().setAction(
                     new DependentViewAction.DependentViewActionBuilder<T>().
                             baseViewId(viewId).actions(actions).build()
             );
@@ -75,7 +89,7 @@ public class DependentUIResolver<T extends View> {
         }
 
         private boolean isBuildReady() {
-            return instanceBox.isContain() && instanceBox.check().isSetBaseView() && instanceBox.check().isSetAction();
+            return instanceWrapper.isContain() && instanceWrapper.check().isSetBaseView() && instanceWrapper.check().isSetAction();
         }
 
         /*
@@ -83,7 +97,7 @@ public class DependentUIResolver<T extends View> {
         * */
         public DependentUIResolver<T> build(){
             if (isBuildReady()){
-                return instanceBox.unbox();
+                return instanceWrapper.unwrap();
             }
             throw new RuntimeException("build fail -> trace : !isBuildReady");
         }
@@ -100,6 +114,8 @@ public class DependentUIResolver<T extends View> {
         private static class DependentViewAction<T extends View> {
             private int baseViewId = -1;
             private Consumer<T>[] actions = null;
+
+            public int getBaseViewId(){return baseViewId;}
 
             private void setBaseViewId(int viewId) {
                 this.baseViewId = viewId;
@@ -118,14 +134,14 @@ public class DependentUIResolver<T extends View> {
             }
 
             private static class DependentViewActionBuilder<T extends View> {
-                private DependentViewAction<T> instance;
+                private final Wrapper<DependentViewAction<T>> instanceWrapper = new Wrapper<>();
 
                 private DependentViewActionBuilder() {
                 }
 
                 private DependentViewActionBuilder<T> baseViewId(int viewId) {
                     readyInstance();
-                    instance.setBaseViewId(viewId);
+                    instanceWrapper.check().setBaseViewId(viewId);
                     return this;
                 }
 
@@ -135,17 +151,17 @@ public class DependentUIResolver<T extends View> {
                  * */
                 private DependentViewActionBuilder<T> actions(Consumer<T>[] actions) {
                     readyInstance();
-                    instance.setActions(actions);
+                    instanceWrapper.check().setActions(actions);
                     return this;
                 }
 
                 private void readyInstance() {
-                    if (instance == null)
-                        instance = new DependentViewAction<T>();
+                    if (!instanceWrapper.isContain())
+                        instanceWrapper.wrap(new DependentViewAction<T>());
                 }
 
                 private boolean isBuildReady() {
-                    return instance != null && instance.isSetActions() && instance.isSetBaseViewId();
+                    return instanceWrapper.isContain() && instanceWrapper.check().isSetActions() && instanceWrapper.check().isSetBaseViewId();
                 }
 
                 /*
@@ -153,7 +169,7 @@ public class DependentUIResolver<T extends View> {
                  * */
                 private DependentViewAction<T> build() {
                     if (isBuildReady())
-                        return instance;
+                        return instanceWrapper.unwrap();
                     throw new RuntimeException("DependentViewActionBuilder build fail : !isBuildReady");
                 }
 
