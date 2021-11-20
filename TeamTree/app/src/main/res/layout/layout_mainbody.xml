@@ -55,7 +55,7 @@
                 app:onDragListener="@{viewModel.onDragListenerForContainerRecyclerView}"
                 app:onScrollListener="@{viewModel.onScrollListenerForContainerRecyclerView}" />
 
-            <View
+            <com.choco_tyranno.team_tree.presentation.main.TopAppBar
                 android:id="@+id/view_mainBody_topAppBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
