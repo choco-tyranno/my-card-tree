@@ -8,7 +8,7 @@ import java.util.Queue;
 
 /*
 * This class Wrapper is single item container.
-* Method 'unbox' is useful for return instance and auto remove reference immediately from this Wrapper.class.
+* Method 'unwrap' is useful for return instance and auto remove reference immediately from this Wrapper.class.
 * */
 public class Wrapper<T>{
     T item;

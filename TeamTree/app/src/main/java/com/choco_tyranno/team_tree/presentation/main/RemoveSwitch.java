@@ -53,12 +53,12 @@ public class RemoveSwitch extends SwitchMaterial implements DependentView{
         });
     }
 
-    //Promise the param(View topAppBar) view layout is ready.
-    public void setScaleByTopAppBar(@NonNull View topAppBar) {
+    //Promise the param(View baseView) view layout is ready.
+    public void setScaleByTopAppBar(@NonNull View baseView) {
         Runnable action = () -> {
             final float switchRatioToTopAppBar = Float.parseFloat(this.getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
             final int switchHeightPx = this.getHeight();
-            final int topAppBarHeightPx = topAppBar.getHeight();
+            final int topAppBarHeightPx = baseView.getHeight();
             final float multiplyingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
             this.setScaleX(multiplyingValue);
             this.setScaleY(multiplyingValue);

@@ -79,7 +79,7 @@ public class DependentUIResolver<T extends View> {
         * Pass argument 'actions' using method reference the view method.
         * */
         @SafeVarargs
-        public final DependentUIResolverBuilder<T> with(int viewId, Consumer<T>... actions) {
+        public final DependentUIResolverBuilder<T> with(int viewId, Consumer<View>... actions) {
             readyInstance();
             instanceWrapper.check().setAction(
                     new DependentViewAction.DependentViewActionBuilder<T>().
@@ -113,7 +113,7 @@ public class DependentUIResolver<T extends View> {
         * */
         private static class DependentViewAction<T extends View> {
             private int baseViewId = -1;
-            private Consumer<T>[] actions = null;
+            private Consumer<View>[] actions = null;
 
             public int getBaseViewId(){return baseViewId;}
 
@@ -121,7 +121,7 @@ public class DependentUIResolver<T extends View> {
                 this.baseViewId = viewId;
             }
 
-            private void setActions(Consumer<T>[] actions) {
+            private void setActions(Consumer<View>[] actions) {
                 this.actions = actions;
             }
 
@@ -149,7 +149,7 @@ public class DependentUIResolver<T extends View> {
                  * Recommend :
                  * Pass argument by method reference the view method.
                  * */
-                private DependentViewActionBuilder<T> actions(Consumer<T>[] actions) {
+                private DependentViewActionBuilder<T> actions(Consumer<View>[] actions) {
                     readyInstance();
                     instanceWrapper.check().setActions(actions);
                     return this;
