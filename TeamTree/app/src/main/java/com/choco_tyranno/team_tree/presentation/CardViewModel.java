@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -127,6 +128,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private final int NO_FOCUS_PAGE = 0;
 
     private boolean sendingFindCardReq = false;
+
+    private String TAG = "@@HOTFIX";
 
     public void findCurrentOnFocusCardPositions(int containerNo, List<Integer> currentSavedOnFocusCardPositionList) {
         for (int i = 0; i < containerNo; i++) {
@@ -1124,9 +1127,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void initEmptyCardSpaceDragListener() {
         onDragListenerForEmptyCardSpace = (view, event) -> {
-            if (!(view instanceof TextView)) {
+            if(view.getId()!=R.id.view_emptyContainer_cardSpace)
                 return false;
-            }
 
             String dragType = "";
             if (event.getLocalState() instanceof Pair)
