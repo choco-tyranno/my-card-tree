@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"/>
 
         <View
-            android:id="@+id/textView_emptyContainer_cardSpace"
+            android:id="@+id/view_emptyContainer_cardSpace"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="2:1"
@@ -122,14 +122,14 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_cardSpaceTextTopLine"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.55"
+            app:layout_constraintGuide_percent="0.5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_emptyContainer_cardSpaceTextBottomLine"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.65"
+            app:layout_constraintGuide_percent="0.60"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
