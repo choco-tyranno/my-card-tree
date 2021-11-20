@@ -155,7 +155,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:alpha="1" />
 
-            <Button
+            <com.choco_tyranno.team_tree.presentation.main.NewCardButton
                 android:id="@+id/button_mainBody_newCard"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"

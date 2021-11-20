@@ -60,7 +60,8 @@ public class BottomBar extends View implements DependentView{
 
 
     //Promise the param(Button newCardButton) view layout is ready.
-    public void setHeightByNewCardButton(@NonNull Button newCardButton) {
+    public void setHeightByNewCardButton(@NonNull View baseView) {
+        NewCardButton newCardButton = (NewCardButton) baseView;
         Runnable action = () -> {
             ConstraintSet constraintSet = new ConstraintSet();
             ConstraintLayout parent = (ConstraintLayout) this.getParent();
