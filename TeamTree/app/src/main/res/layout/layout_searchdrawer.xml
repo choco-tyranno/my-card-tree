@@ -30,11 +30,11 @@
                 onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.85"
                 app:layout_constraintHeight_percent="0.08"
                 android:background="@color/colorAccent_c"
                 android:iconifiedByDefault="true"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/view_searchDrawer_settingsBackground"
                 app:layout_constraintTop_toTopOf="parent">
             </com.choco_tyranno.team_tree.presentation.main.SearchView>
 
@@ -52,10 +52,10 @@
             <View
                 android:id="@+id/view_searchDrawer_settingsBackground"
                 android:background="@color/colorAccent_c"
-                app:layout_constraintStart_toEndOf="@id/card_search_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/card_search_view"
                 app:layout_constraintBottom_toBottomOf="@id/card_search_view"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"/>
 
@@ -72,9 +72,10 @@
                 android:src="@drawable/ic_baseline_settings_40"
                 app:layout_constraintHeight_min="40dp"
                 android:onClickListener="@{viewModel.onClickListenerForSettingButton}"
-                app:layout_constraintTop_toTopOf="@id/view_searchDrawer_searchViewHorizontalCenterLine"
-                app:layout_constraintBottom_toBottomOf="@id/view_searchDrawer_searchViewHorizontalCenterLine"
-                app:layout_constraintStart_toEndOf="@id/card_search_view"
+                app:layout_constraintTop_toTopOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintBottom_toBottomOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintStart_toStartOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintEnd_toEndOf="@id/view_searchDrawer_settingsBackground"
                 app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
