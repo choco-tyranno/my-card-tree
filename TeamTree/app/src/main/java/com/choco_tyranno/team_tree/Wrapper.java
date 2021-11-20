@@ -7,22 +7,22 @@ import java.util.Queue;
 
 
 /*
-* This class Box is single item container.
-* Method 'unbox' is useful for return instance and auto remove reference immediately from this Box.class.
+* This class Wrapper is single item container.
+* Method 'unbox' is useful for return instance and auto remove reference immediately from this Wrapper.class.
 * */
-public class Box<T>{
+public class Wrapper<T>{
     T item;
-    public T unbox(){
-        final T unBoxedItem = item;
+    public T unwrap(){
+        final T unwrappedItem = item;
         item = null;
-        return unBoxedItem;
+        return unwrappedItem;
     }
 
     public T check(){
         return item;
     }
 
-    public void box(@NonNull T item){
+    public void wrap(@NonNull T item){
         this.item = item;
     }
 
