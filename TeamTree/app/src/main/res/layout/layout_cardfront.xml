@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardTitleEditor
                 android:id="@+id/appCompatEditText_cardFront_titleEditor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -130,8 +130,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/modeSwitch"
+            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardModeSwitch
+                android:id="@+id/cardModeSwitch_cardFront_cardModeSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="12dp"
@@ -174,7 +174,7 @@
                 tools:text="010-3355-5252" />
 
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardContactNumberEditor
                 android:id="@+id/appCompatEditText_cardFront_contactNumberEditor"
                 app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
