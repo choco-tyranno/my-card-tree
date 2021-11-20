@@ -45,6 +45,8 @@ import com.choco_tyranno.team_tree.presentation.card_rv.SpreadingOutDetailOnClic
 import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.team_tree.presentation.main.NewCardButton;
+import com.choco_tyranno.team_tree.presentation.main.TopAppBar;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -103,89 +105,23 @@ public class MainCardActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        observeViewAndConsume(binding.layoutMainbody.viewMainBodyTopAppBar,
-                this::setRemoveSwitchScale,
-                this::setTopAppBarConstrainMinHeight,
-                this::setSearchViewConstrainMinHeight
-        );
+        TopAppBar topAppBar = binding.layoutMainbody.viewMainBodyTopAppBar;
+        new DependentUIResolver.DependentUIResolverBuilder<View>()
+                .baseView(topAppBar)
+                .with(topAppBar.getId()
+                        ,binding.layoutMainbody.removeSwitchMainBodyRemoveSwitch::setScaleByTopAppBar
+                        ,binding.layoutSearchdrawer.cardSearchView::setConstrainMinHeightByTopAppBar
+                ).build()
+                .resolve();
 
-        observeViewAndConsume(binding.layoutMainbody.buttonMainBodyNewCard,
-                this::setNewCardButtonMarginBottom,
-                this::setBottomBarHeight
-        );
-    }
+        NewCardButton newCardButton = binding.layoutMainbody.buttonMainBodyNewCard;
+        new DependentUIResolver.DependentUIResolverBuilder<View>()
+                .baseView(newCardButton)
+                .with(newCardButton.getId()
+                        ,binding.layoutMainbody.bottomBarMainBodyBottomBar::setHeightByNewCardButton
+                ).build()
+                .resolve();
 
-
-    @SafeVarargs
-    private <T> void observeViewAndConsume(T observedView, TypeAccessableConsumer<T>... consumers) {
-        ((View) observedView).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ((View) observedView).getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Stream.of(consumers).filter(content -> {
-                    int lambdaType = ((View)content.returnType(observedView)).getId();
-                    int observedViewId = ((View) observedView).getId();
-                    return lambdaType == observedViewId;
-                }).forEach(consumer -> consumer.accept(observedView));
-            }
-        });
-    }
-
-    private void setBottomBarHeight(Button newCardButton) {
-        View bottomBar = binding.layoutMainbody.viewMainBodyBottomBar;
-        ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout) bottomBar.getParent();
-        constraintSet.clone(parent);
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newCardButton.getLayoutParams();
-        final int newCardBottomMargin = params.bottomMargin;
-        final int bottomBarHeight = newCardButton.getHeight() / 2 + newCardBottomMargin;
-        constraintSet.constrainHeight(bottomBar.getId(), bottomBarHeight);
-        constraintSet.applyTo(parent);
-    }
-
-    private void setNewCardButtonMarginBottom(Button newCardButton) {
-        final int newCardButtonHeight = newCardButton.getHeight();
-        final int newCardButtonMarginBottom = newCardButtonHeight / 4;
-        ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout) newCardButton.getParent();
-        constraintSet.clone(parent);
-        constraintSet.setMargin(newCardButton.getId(), ConstraintLayout.LayoutParams.BOTTOM, newCardButtonMarginBottom);
-        constraintSet.applyTo(parent);
-    }
-
-    private void setTopAppBarConstrainMinHeight(View topAppBar) {
-        final ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout) topAppBar.getParent();
-        constraintSet.clone(parent);
-        constraintSet.constrainMinHeight(topAppBar.getId(), topAppBar.getHeight());
-        constraintSet.applyTo(parent);
-    }
-
-
-    private void setSearchViewConstrainMinHeight(View topAppBar) {
-        SearchView searchView = binding.layoutSearchdrawer.cardSearchView;
-        final ConstraintSet constraintSet = new ConstraintSet();
-        ConstraintLayout parent = (ConstraintLayout) searchView.getParent();
-        constraintSet.clone(parent);
-        constraintSet.constrainMinHeight(searchView.getId(), topAppBar.getHeight());
-        constraintSet.applyTo(parent);
-    }
-
-
-    private void setRemoveSwitchScale(View topAppBar) {
-        SwitchMaterial removeSwitch = binding.layoutMainbody.switchMaterialMainBodyRemoveSwitch;
-        removeSwitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                removeSwitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                float switchRatioToTopAppBar = Float.parseFloat(binding.getRoot().getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
-                int switchHeightPx = removeSwitch.getHeight();
-                int topAppBarHeightPx = topAppBar.getHeight();
-                float multiplyingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
-                removeSwitch.setScaleX(multiplyingValue);
-                removeSwitch.setScaleY(multiplyingValue);
-            }
-        });
     }
 
     @Override
