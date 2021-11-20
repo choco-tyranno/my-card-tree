@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/*
+*
+* */
 public interface DependentView {
     AtomicBoolean ready = new AtomicBoolean(false);
     Queue<Runnable> attributeSettingActions = new LinkedList<>();
@@ -16,6 +19,11 @@ public interface DependentView {
     * */
     void ready();
 
+    /*
+    * With creating another view dependent method,
+    * make Runnable containing attribute setting code in the method body.
+    * And then call this postAttributeSettingAction(Runnable) method.
+    * */
     default void postAttributeSettingAction(Runnable action){
         if (!ready.get()) {
             attributeSettingActions.offer(action);
