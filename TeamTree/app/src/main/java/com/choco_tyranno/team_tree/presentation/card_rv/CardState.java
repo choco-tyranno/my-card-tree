@@ -142,7 +142,7 @@ public class CardState extends BaseObservable{
             SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
                     +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle()));
 
-            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.modeSwitch;
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.cardModeSwitchCardFrontCardModeSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor;
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor;
 
@@ -180,7 +180,7 @@ public class CardState extends BaseObservable{
         }
 
         public void onCancelButtonClicked(ItemCardframeBindingImpl cardFrameBinding, CardDto cardDTO) {
-            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.modeSwitch;
+            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.cardModeSwitchCardFrontCardModeSwitch;
             AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor;
             AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor;
             titleEditText.setText(cardDTO.getTitle());
