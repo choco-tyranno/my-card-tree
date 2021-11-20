@@ -53,7 +53,6 @@ public class ContactCardViewHolder extends CardViewHolder {
 
     @Override
     public void bind(CardDto cardDTO, CardState cardState, ObservableBitmap cardImage) {
-        Log.d(TAG, "ContactCardViewHolder.bind");
         mBinding.setCardState(cardState);
         mBinding.setCard(cardDTO);
         mBinding.setCardImage(cardImage);
