@@ -15,6 +15,9 @@ import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.SingleToastManager;
 import com.choco_tyranno.team_tree.presentation.SingleToaster;
+import com.choco_tyranno.team_tree.presentation.card_rv.view.CardContactNumberEditor;
+import com.choco_tyranno.team_tree.presentation.card_rv.view.CardModeSwitch;
+import com.choco_tyranno.team_tree.presentation.card_rv.view.CardTitleEditor;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Locale;
 import java.util.Optional;
@@ -123,12 +126,12 @@ public class CardState extends BaseObservable{
 
         public void onContactNumberEditTextChanged(ItemCardframeBindingImpl cardFrameBinding){
             AtomicReference<String> editTextValue = new AtomicReference<>();
-            Optional.ofNullable(cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.getText()).ifPresent((text)->editTextValue.set(text.toString()));
+            Optional.ofNullable(cardFrameBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor.getText()).ifPresent((text)->editTextValue.set(text.toString()));
             String formatNumber = PhoneNumberUtils.formatNumber(editTextValue.get(), Locale.getDefault().getCountry());
             if(editTextValue.get().equals(formatNumber))
                 return;
-            cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.setText(formatNumber);
-            cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor.setSelection(formatNumber.length());
+            cardFrameBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor.setText(formatNumber);
+            cardFrameBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor.setSelection(formatNumber.length());
         }
 
         public void onSwitchChanged(CardDto dto, boolean isOn) {
@@ -142,37 +145,37 @@ public class CardState extends BaseObservable{
             SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "onSaveBtnClicked! cardNo:"
                     +cardDTO.getCardNo()+"/title:"+cardDTO.getTitle()));
 
-            SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.cardModeSwitchCardFrontCardModeSwitch;
-            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor;
-            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor;
+            CardModeSwitch modeSwitch = cardFrameBinding.cardFrontLayout.cardModeSwitchCardFrontCardModeSwitch;
+            CardTitleEditor titleEditor = cardFrameBinding.cardFrontLayout.cardTitleEditorCardFrontTitleEditor;
+            CardContactNumberEditor contactNumberEditor = cardFrameBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor;
 
-            AtomicReference<String> textOfTitleEditText = new AtomicReference<>("");
-            Optional.ofNullable(titleEditText.getText()).ifPresent(text->
-                textOfTitleEditText.set(text.toString())
+            AtomicReference<String> titleEditorText = new AtomicReference<>("");
+            Optional.ofNullable(titleEditor.getText()).ifPresent(text->
+                    titleEditorText.set(text.toString())
             );
 
-            AtomicReference<String> textOfContactNumberEditText = new AtomicReference<>("");
-            Optional.ofNullable(contactNumberEditText.getText()).ifPresent(text->
-                textOfContactNumberEditText.set(text.toString())
+            AtomicReference<String> contactNumberEditorText = new AtomicReference<>("");
+            Optional.ofNullable(contactNumberEditor.getText()).ifPresent(text->
+                    contactNumberEditorText.set(text.toString())
             );
 
             boolean isTitleChanged = false;
             boolean isContactNumberChanged = false;
 
-            if (!cardDTO.getTitle().equals(textOfTitleEditText.get())){
+            if (!cardDTO.getTitle().equals(titleEditorText.get())){
                 isTitleChanged = true;
-                cardDTO.setTitle(textOfTitleEditText.get());
+                cardDTO.setTitle(titleEditorText.get());
             }
 
-            if (!cardDTO.getContactNumber().equals(textOfContactNumberEditText.get())){
+            if (!cardDTO.getContactNumber().equals(contactNumberEditorText.get())){
                 isContactNumberChanged = true;
-                cardDTO.setContactNumber(textOfContactNumberEditText.get());
+                cardDTO.setContactNumber(contactNumberEditorText.get());
             }
 
             if (isTitleChanged||isContactNumberChanged){
                 viewModel.updateCard(cardDTO);
                 SingleToastManager.show(SingleToaster.makeTextShort(cardFrameBinding.getRoot().getContext(), "카드가 수정되었습니다."));
-                switchView.setChecked(false);
+                modeSwitch.setChecked(false);
                 return;
             }
 
@@ -181,8 +184,8 @@ public class CardState extends BaseObservable{
 
         public void onCancelButtonClicked(ItemCardframeBindingImpl cardFrameBinding, CardDto cardDTO) {
             SwitchMaterial switchView = cardFrameBinding.cardFrontLayout.cardModeSwitchCardFrontCardModeSwitch;
-            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor;
-            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor;
+            AppCompatEditText titleEditText = cardFrameBinding.cardFrontLayout.cardTitleEditorCardFrontTitleEditor;
+            AppCompatEditText contactNumberEditText = cardFrameBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor;
             titleEditText.setText(cardDTO.getTitle());
             contactNumberEditText.setText(cardDTO.getContactNumber());
             switchView.setChecked(false);
