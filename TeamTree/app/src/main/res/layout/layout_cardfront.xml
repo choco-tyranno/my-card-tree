@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content" />
 
             <com.choco_tyranno.team_tree.presentation.card_rv.view.CardTitleEditor
-                android:id="@+id/appCompatEditText_cardFront_titleEditor"
+                android:id="@+id/cardTitleEditor_cardFront_titleEditor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@android:color/transparent"
@@ -175,7 +175,7 @@
 
 
             <com.choco_tyranno.team_tree.presentation.card_rv.view.CardContactNumberEditor
-                android:id="@+id/appCompatEditText_cardFront_contactNumberEditor"
+                android:id="@+id/cardContactNumberEditor_cardFront_contactNumberEditor"
                 app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
                 app:layout_constraintTop_toTopOf="@id/contactNumberTopLine"
