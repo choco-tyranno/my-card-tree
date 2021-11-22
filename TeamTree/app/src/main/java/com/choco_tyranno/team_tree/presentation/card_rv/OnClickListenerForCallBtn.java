@@ -12,7 +12,8 @@ import com.google.android.material.card.MaterialCardView;
 public class OnClickListenerForCallBtn implements View.OnClickListener {
     @Override
     public void onClick(View callBtn) {
-        MaterialCardView cardView  = (MaterialCardView) callBtn.getParent();
+        ConstraintLayout viewPositionManager =(ConstraintLayout) callBtn.getParent();
+        MaterialCardView cardView  = (MaterialCardView) viewPositionManager.getParent();
         ConstraintLayout cardFrame = (ConstraintLayout) cardView.getParent();
         RecyclerView cardRecyclerView = (RecyclerView) cardFrame.getParent();
         String targetContactNumber = ((ContactCardViewHolder)cardRecyclerView.getChildViewHolder(cardFrame)).getBinding().getCard().getContactNumber();
