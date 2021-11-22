@@ -1,6 +1,7 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.telephony.PhoneNumberUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -161,7 +162,6 @@ public class CardState extends BaseObservable{
 
             boolean isTitleChanged = false;
             boolean isContactNumberChanged = false;
-
             if (!cardDTO.getTitle().equals(titleEditorText.get())){
                 isTitleChanged = true;
                 cardDTO.setTitle(titleEditorText.get());

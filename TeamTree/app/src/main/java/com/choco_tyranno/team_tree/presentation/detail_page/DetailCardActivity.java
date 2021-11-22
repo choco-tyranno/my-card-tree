@@ -12,8 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -76,7 +77,7 @@ public class DetailCardActivity extends AppCompatActivity {
                 binding.appCompatEditTextDetailSubtitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
                 binding.appCompatEditTextDetailContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
 
-                float secondaryTextSizePx = (float)textSizePx*3/5;
+                float secondaryTextSizePx = (float) textSizePx * 3 / 5;
                 binding.appCompatEditTextDetailNoteEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
                 binding.textViewDetailNote.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
                 binding.materialButtonDetailModify.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
@@ -138,9 +139,15 @@ public class DetailCardActivity extends AppCompatActivity {
                     null, null, null);
             cursor.moveToFirst();
             String retrievedName = cursor.getString(0);
-            String retrievedPhone = cursor.getString(1);
+            String retrievedPhoneNumber = cursor.getString(1);
+
+            String normalizedPhoneNumber = PhoneNumberUtils.normalizeNumber(retrievedPhoneNumber);
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+            String countryCode = telephonyManager.getSimCountryIso();
+            String formattedNumber = PhoneNumberUtils.formatNumber(normalizedPhoneNumber, countryCode);
+
             ownerCardDto.setTitle(retrievedName);
-            ownerCardDto.setContactNumber(retrievedPhone);
+            ownerCardDto.setContactNumber(formattedNumber);
             cursor.close();
             viewModel.update(ownerCardDto);
             SingleToastManager.show(SingleToaster.makeTextShort(this, "연락처를 불러왔습니다."));
