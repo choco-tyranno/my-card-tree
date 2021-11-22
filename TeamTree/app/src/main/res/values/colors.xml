@@ -14,4 +14,7 @@
     <color name="colorAccent_b">#3949A9</color>
     <color name="colorAccent_c">#2F3F9E</color>
     <color name="defaultTextColor">#000</color>
+    <color name="defaultEditorTextColor">#8000</color>
+
+
 </resources>
