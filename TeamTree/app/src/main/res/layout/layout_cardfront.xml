@@ -81,7 +81,7 @@
                 android:inputType="text"
                 android:singleLine="true"
                 android:text="@{card.title}"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/defaultEditorTextColor"
                 android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/titleTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/titleBottomLine"
@@ -189,7 +189,7 @@
                 android:onTextChanged="@{()->cardState.front.onContactNumberEditTextChanged(cardRootReference)}"
                 android:singleLine="true"
                 android:text="@{card.contactNumber}"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/defaultEditorTextColor"
                 android:visibility="@{frontState.mode==frontState.EDIT_MODE? View.VISIBLE : View.INVISIBLE}" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -222,7 +222,7 @@
                 android:layout_height="wrap_content" />
 
             <ImageButton
-                android:id="@+id/frontCard_callBtn"
+                android:id="@+id/imageButton_cardFront_callBtn"
                 android:scaleType="fitCenter"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
