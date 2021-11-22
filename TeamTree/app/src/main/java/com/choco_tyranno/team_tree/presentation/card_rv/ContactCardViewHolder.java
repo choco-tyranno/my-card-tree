@@ -45,8 +45,8 @@ public class ContactCardViewHolder extends CardViewHolder {
         new DependentUIResolver.DependentUIResolverBuilder<View>()
                 .baseView(title)
                 .with(title.getId(),
-                    mBinding.cardFrontLayout.appCompatEditTextCardFrontTitleEditor::setTextSizeByTitle,
-                    mBinding.cardFrontLayout.appCompatEditTextCardFrontContactNumberEditor::setTextSizeByTitle
+                    mBinding.cardFrontLayout.cardTitleEditorCardFrontTitleEditor::setTextSizeByTitle,
+                    mBinding.cardFrontLayout.cardContactNumberEditorCardFrontContactNumberEditor::setTextSizeByTitle
                 ).build()
                 .resolve();
     }
