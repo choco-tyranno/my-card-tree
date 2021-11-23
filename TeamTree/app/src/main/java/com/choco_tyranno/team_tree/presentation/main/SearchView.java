@@ -34,12 +34,12 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
         });
     }
 
-    public void setConstrainMinHeightByTopAppBar(@NonNull View topAppBar){
+    public void setConstrainFixedHeightByTopAppBar(@NonNull View topAppBar){
         Runnable action = ()->{
             final ConstraintSet constraintSet = new ConstraintSet();
             ConstraintLayout parent = (ConstraintLayout) this.getParent();
             constraintSet.clone(parent);
-            constraintSet.constrainMinHeight(this.getId(), topAppBar.getHeight());
+            constraintSet.constrainHeight(this.getId(), topAppBar.getHeight());
             constraintSet.applyTo(parent);
         };
         postAttributeSettingAction(action);
