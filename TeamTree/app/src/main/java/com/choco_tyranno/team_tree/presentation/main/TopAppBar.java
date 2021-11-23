@@ -2,7 +2,6 @@ package com.choco_tyranno.team_tree.presentation.main;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -55,15 +54,15 @@ public class TopAppBar extends View implements DependentView{
     }
 
     private void initAttributes() {
-        setConstrainMinHeight();
+        setConstrainFixedHeight();
     }
 
-    private void setConstrainMinHeight() {
+    private void setConstrainFixedHeight() {
         Runnable action = ()->{
             final ConstraintSet constraintSet = new ConstraintSet();
             ConstraintLayout parent = (ConstraintLayout) this.getParent();
             constraintSet.clone(parent);
-            constraintSet.constrainMinHeight(this.getId(), this.getHeight());
+            constraintSet.constrainHeight(this.getId(), this.getHeight());
             constraintSet.applyTo(parent);
         };
         
