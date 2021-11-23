@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -110,7 +111,7 @@ public class MainCardActivity extends AppCompatActivity {
                 .baseView(topAppBar)
                 .with(topAppBar.getId()
                         ,binding.layoutMainbody.removeSwitchMainBodyRemoveSwitch::setScaleByTopAppBar
-                        ,binding.layoutSearchdrawer.cardSearchView::setConstrainMinHeightByTopAppBar
+                        ,binding.layoutSearchdrawer.cardSearchView::setConstrainFixedHeightByTopAppBar
                 ).build()
                 .resolve();
 
