@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
+import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DependentUIResolver;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.main.DependentView;
@@ -150,11 +151,20 @@ public class SearchResultPager extends MaterialButton implements DependentView {
     }
 
     private void setDefaultOnClickListener() {
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        this.setOnClickListener(new SearchResultPagerClickListener());
+    }
 
+    public static class SearchResultPagerClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (!(v instanceof SearchResultPager)){
+                return;
             }
-        });
+            SearchResultPager view = (SearchResultPager) v;
+            CardViewModel viewModel = ((MainCardActivity)v.getContext()).getCardViewModel();
+            viewModel.setFocusPageNo(Integer.parseInt(view.getText().toString()));
+            viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
+        }
     }
 }
