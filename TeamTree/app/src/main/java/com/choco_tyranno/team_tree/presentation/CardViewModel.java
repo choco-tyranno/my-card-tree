@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -64,7 +63,6 @@ import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForCo
 import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForTopArrow;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
-import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForPageBtn;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.SearchingResultAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -119,7 +117,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private CardGestureListener cardGestureListener;
     private SearchingResultAdapter searchingResultAdapter;
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
-    private View.OnClickListener onClickListenerForPageBtn;
     private View.OnClickListener onClickListenerForMovingPageBundleBtn;
 
     private final int CARD_LOCATION_LEFT = 0;
@@ -298,10 +295,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public View.OnClickListener getOnClickListenerForMovingPageBundleBtn() {
         return this.onClickListenerForMovingPageBundleBtn;
-    }
-
-    public View.OnClickListener getOnClickListenerForPageBtn() {
-        return this.onClickListenerForPageBtn;
     }
 
     public void setFocusPageNo(int pageNo) {
@@ -550,7 +543,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initSpreadingOutDetailOnClickListener();
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
-        initOnClickListenerForPageBtn();
         initOnClickListenerForMovingPageBundleBtn();
         initOnClickListenerForCallBtn();
         initOnClickListenerForMessageBtn();
@@ -600,10 +592,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnClickListenerForMovingPageBundleBtn() {
         this.onClickListenerForMovingPageBundleBtn = new OnClickListenerForMovingPageBundleBtn();
-    }
-
-    private void initOnClickListenerForPageBtn() {
-        this.onClickListenerForPageBtn = new OnClickListenerForPageBtn();
     }
 
     private void initOnClickListenerForFindingSearchingResultTargetBtn() {
