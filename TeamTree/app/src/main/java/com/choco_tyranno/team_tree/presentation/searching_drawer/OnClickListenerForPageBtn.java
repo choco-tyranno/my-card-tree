@@ -14,6 +14,5 @@ public class OnClickListenerForPageBtn implements View.OnClickListener {
         final int pageNo = Integer.parseInt(view.getText().toString());
         viewModel.setFocusPageNo(pageNo);
         viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
-        viewModel.getPageNavigationRecyclerViewAdapter().notifyDataSetChanged();
     }
 }
