@@ -6,104 +6,102 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_gravity="end"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="end">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintHeight_percent="1.0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="#fff"
             android:layout_width="0dp"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:background="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="1.0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.9">
 
             <com.choco_tyranno.team_tree.presentation.main.SearchView
                 android:id="@+id/card_search_view"
                 onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.08"
                 android:background="@color/colorAccent_c"
                 android:iconifiedByDefault="true"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/view_searchDrawer_settingsBackground"
-                app:layout_constraintTop_toTopOf="parent">
-            </com.choco_tyranno.team_tree.presentation.main.SearchView>
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/view_searchDrawer_searchViewHorizontalCenterLine"
-                android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/card_search_view"
-                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
-                android:layout_height="1dp"
                 android:layout_width="match_parent"
-                />
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/card_search_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/card_search_view" />
 
             <View
                 android:id="@+id/view_searchDrawer_settingsBackground"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@color/colorAccent_c"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/card_search_view"
                 app:layout_constraintBottom_toBottomOf="@id/card_search_view"
                 app:layout_constraintDimensionRatio="1:1"
-                android:layout_width="0dp"
-                android:layout_height="0dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/card_search_view" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_searchDrawer_settingsEndLine"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.98"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.98" />
 
             <ImageButton
                 android:id="@+id/imageView_searchDrawer_settings"
-                android:background="@color/colorAccent_c"
-                android:src="@drawable/ic_baseline_settings_40"
-                app:layout_constraintHeight_min="40dp"
-                android:onClickListener="@{viewModel.onClickListenerForSettingButton}"
-                app:layout_constraintTop_toTopOf="@id/view_searchDrawer_settingsBackground"
-                app:layout_constraintBottom_toBottomOf="@id/view_searchDrawer_settingsBackground"
-                app:layout_constraintStart_toStartOf="@id/view_searchDrawer_settingsBackground"
-                app:layout_constraintEnd_toEndOf="@id/view_searchDrawer_settingsBackground"
-                app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:contentDescription="@string/searDrawer_settingsBtnDesc" />
+                android:background="@color/colorAccent_c"
+                android:contentDescription="@string/searDrawer_settingsBtnDesc"
+                android:onClickListener="@{viewModel.onClickListenerForSettingButton}"
+                android:src="@drawable/ic_baseline_settings_40"
+                app:layout_constraintBottom_toBottomOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintHeight_min="40dp"
+                app:layout_constraintStart_toStartOf="@id/view_searchDrawer_settingsBackground"
+                app:layout_constraintTop_toTopOf="@id/view_searchDrawer_settingsBackground" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/card_search_result_recyclerview"
                 recyclerViewAdapter="@{viewModel.searchingResultRecyclerViewAdapter}"
-                app:layout_constraintWidth_percent="0.8"
-                app:layout_constraintHeight_percent="0.84"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_below="@+id/card_search_view"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintHeight_percent="0.75"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_search_view"
-                tools:itemCount="6"
+                app:layout_constraintWidth_percent="0.8"
+                tools:itemCount="5"
                 tools:listitem="@layout/item_searching_result" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_searchDrawer_prevPageBtnEndline"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                app:layout_constraintGuide_percent="0.1"
                 android:layout_height="wrap_content"
-                />
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.1" />
 
             <ImageButton
                 android:id="@+id/prev_page_btn"
@@ -111,26 +109,14 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0.3"
-                app:layout_constraintWidth_percent="0.1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/prev_page_btn_desc"
                 android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
-                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/page_navigation_recyclerview"
-                recyclerViewAdapter="@{viewModel.pageNavigationRecyclerViewAdapter}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintStart_toEndOf="@id/prev_page_btn"
-                app:layout_constraintEnd_toStartOf="@id/next_page_btn"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_page_navigation" />
+                app:layout_constraintWidth_percent="0.15" />
 
             <ImageButton
                 android:id="@+id/next_page_btn"
@@ -139,12 +125,84 @@
                 android:layout_height="0dp"
                 android:alpha="0.3"
                 android:background="@android:color/transparent"
-                app:layout_constraintWidth_percent="0.1"
                 android:contentDescription="@string/next_page_btn_desc"
                 android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
-                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+                android:id="@+id/searchResultPager_searchDrawer_pager1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.pagerCount &lt; 1 ? View.GONE : View.VISIBLE}"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@{viewModel.searchResultPager1Text}"
+                android:textColor="@color/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchResultPager_searchDrawer_pager2"
+                app:layout_constraintStart_toEndOf="@id/prev_page_btn"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                app:longPagerMode="@{viewModel.longPagerOn}"
+                tools:text="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/searchResultPager_searchDrawer_pager2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.pagerCount &lt; 2 ? View.GONE : View.VISIBLE}"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@{viewModel.searchResultPager2Text}"
+                android:textColor="@color/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchResultPager_searchDrawer_pager3"
+                app:layout_constraintStart_toEndOf="@id/searchResultPager_searchDrawer_pager1"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                tools:text="2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/searchResultPager_searchDrawer_pager3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.pagerCount &lt; 3 ? View.GONE : View.VISIBLE}"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@{viewModel.searchResultPager3Text}"
+                android:textColor="@color/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchResultPager_searchDrawer_pager4"
+                app:layout_constraintStart_toEndOf="@id/searchResultPager_searchDrawer_pager2"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                tools:text="3" />
+
+            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+                android:id="@+id/searchResultPager_searchDrawer_pager4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.pagerCount &lt; 4 ? View.GONE : View.VISIBLE}"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@{viewModel.searchResultPager4Text}"
+                android:textColor="@color/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchResultPager_searchDrawer_pager5"
+                app:layout_constraintStart_toEndOf="@id/searchResultPager_searchDrawer_pager3"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                tools:text="4" />
+
+            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+                android:id="@+id/searchResultPager_searchDrawer_pager5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:visibility="@{viewModel.pagerCount &lt; 5 ? View.GONE : View.VISIBLE}"
+                android:text="@{viewModel.searchResultPager5Text}"
+                android:textColor="@color/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/next_page_btn"
+                app:layout_constraintStart_toEndOf="@id/searchResultPager_searchDrawer_pager4"
+                app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
+                tools:text="5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
