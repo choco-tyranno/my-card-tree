@@ -66,7 +66,6 @@ import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListener
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForPageBtn;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
-import com.choco_tyranno.team_tree.presentation.searching_drawer.PageNavigationAdapter;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.SearchingResultAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -93,6 +92,9 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private List<List<Pair<CardDto, CardState>>> mPresentData;
 
     private MutableLiveData<Boolean> settingsOn;
+    private MutableLiveData<Integer> pagerCount;
+    private MutableLiveData<Boolean> longPagerOn;
+    private List<MutableLiveData<String>> searchResultPagerTextList;
 
     private List<CardDto> searchingResultCardList;
     private ObservableInt focusPageNo;
@@ -116,20 +118,27 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private GestureDetectorCompat cardGestureDetector;
     private CardGestureListener cardGestureListener;
     private SearchingResultAdapter searchingResultAdapter;
-    private PageNavigationAdapter pageNavigationAdapter;
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
     private View.OnClickListener onClickListenerForPageBtn;
     private View.OnClickListener onClickListenerForMovingPageBundleBtn;
 
     private final int CARD_LOCATION_LEFT = 0;
     private final int CARD_LOCATION_RIGHT = 1;
-    public static final int SEARCHING_RESULT_MAX_COUNT = 6;
+    public static final int SEARCHING_RESULT_MAX_COUNT = 5;
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
+    private final int LONG_LENGTH_PAGER_NO = 10;
     private final int NO_FOCUS_PAGE = 0;
 
     private boolean sendingFindCardReq = false;
 
-    private String TAG = "@@HOTFIX";
+
+    public MutableLiveData<Boolean> getLongPagerOn() {
+        return longPagerOn;
+    }
+
+    public MutableLiveData<Integer> getPagerCount() {
+        return pagerCount;
+    }
 
     public void findCurrentOnFocusCardPositions(int containerNo, List<Integer> currentSavedOnFocusCardPositionList) {
         for (int i = 0; i < containerNo; i++) {
@@ -263,16 +272,27 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public boolean hasPrevPageBundle() {
-        final int baseMaxPageBundleCount = countBaseMaxPageBundle();
-        return baseMaxPageBundleCount > 0;
+        return getPageBundleNoByPageNo(getFocusPageNo()) > 1;
+//        final int baseMaxPageBundleCount = countBaseMaxPageBundle();
+//        return baseMaxPageBundleCount > 0;
     }
 
     public boolean hasNextPageBundle() {
-        final int allPageCount = countAllPage();
-        final int baseMaxPageBundleCount = countBaseMaxPageBundle();
-        int basePageCount = baseMaxPageBundleCount * VISIBLE_PAGE_ITEM_MAX_COUNT;
-        final int nextPagesCount = allPageCount - basePageCount;
-        return nextPagesCount > VISIBLE_PAGE_ITEM_MAX_COUNT;
+        final int allPageLastNo = countAllPage();
+        final int currentFocusPageNo = getFocusPageNo();
+        final int maxPageBundleNo = getPageBundleNoByPageNo(allPageLastNo);
+        final int currentPageBundleNo = getPageBundleNoByPageNo(currentFocusPageNo);
+        return currentPageBundleNo < maxPageBundleNo;
+    }
+
+    private int getPageBundleNoByPageNo(int pageNo) {
+        int pageBundleNo = 0;
+        final int quotient = Math.floorDiv(pageNo, VISIBLE_PAGE_ITEM_MAX_COUNT);
+        final boolean hasRemainder = Math.floorMod(pageNo, VISIBLE_PAGE_ITEM_MAX_COUNT) != 0;
+        pageBundleNo = quotient;
+        if (hasRemainder)
+            pageBundleNo++;
+        return pageBundleNo;
     }
 
 
@@ -292,21 +312,25 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return focusPageNo.get();
     }
 
-    public int getPageNavigationCount() {
+    public int getCurrentPageCount() {
         final int allItemCount = searchingResultCardList.size();
         if (allItemCount == 0)
             return 0;
-        int allPageCount = Math.floorDiv(allItemCount, SEARCHING_RESULT_MAX_COUNT);
+        final int maxItemPageCount = Math.floorDiv(allItemCount, SEARCHING_RESULT_MAX_COUNT);
+        int allPageCount = 0;
+        allPageCount += maxItemPageCount;
         boolean hasRemainder = Math.floorMod(allItemCount, SEARCHING_RESULT_MAX_COUNT) > 0;
         if (hasRemainder)
             allPageCount++;
         final int focusPageNo = getFocusPageNo();
-        int baseMaxPageSetCount = Math.floorDiv(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT);
-        final boolean noRemainderPage = Math.floorMod(focusPageNo, CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
+        final int maxItemPageBundleCount = Math.floorDiv(focusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT);
+        int baseMaxItemPageBundleCount = 0;
+        baseMaxItemPageBundleCount += maxItemPageBundleCount;
+        final boolean noRemainderPage = Math.floorMod(focusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
         if (noRemainderPage) {
-            baseMaxPageSetCount--;
+            baseMaxItemPageBundleCount--;
         }
-        int basePageCount = baseMaxPageSetCount * CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT;
+        int basePageCount = baseMaxItemPageBundleCount * VISIBLE_PAGE_ITEM_MAX_COUNT;
         final int nextPagesCount = allPageCount - basePageCount;
         return Math.min(nextPagesCount, VISIBLE_PAGE_ITEM_MAX_COUNT);
     }
@@ -370,10 +394,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public SearchingResultAdapter getSearchingResultRecyclerViewAdapter() {
         return searchingResultAdapter;
-    }
-
-    public PageNavigationAdapter getPageNavigationRecyclerViewAdapter() {
-        return pageNavigationAdapter;
     }
 
     @BindingAdapter("recyclerViewAdapter")
@@ -487,10 +507,35 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 //        this.searchingQueryText = new ObservableString();
         this.searchingResultCardList = new ArrayList<>();
         this.searchingResultAdapter = new SearchingResultAdapter(this);
-        this.pageNavigationAdapter = new PageNavigationAdapter(this);
         focusPageNo = new ObservableInt(NO_FOCUS_PAGE);
         this.settingsOn = new MutableLiveData<>(false);
+        this.longPagerOn = new MutableLiveData<>(false);
+        this.pagerCount = new MutableLiveData<>(0);
+        this.searchResultPagerTextList = new ArrayList<>();
+        for (int i = 0; i < VISIBLE_PAGE_ITEM_MAX_COUNT; i++) {
+            searchResultPagerTextList.add(new MutableLiveData<>(""));
+        }
         initListeners();
+    }
+
+    public MutableLiveData<String> getSearchResultPager1Text() {
+        return searchResultPagerTextList.get(0);
+    }
+
+    public MutableLiveData<String> getSearchResultPager2Text() {
+        return searchResultPagerTextList.get(1);
+    }
+
+    public MutableLiveData<String> getSearchResultPager3Text() {
+        return searchResultPagerTextList.get(2);
+    }
+
+    public MutableLiveData<String> getSearchResultPager4Text() {
+        return searchResultPagerTextList.get(3);
+    }
+
+    public MutableLiveData<String> getSearchResultPager5Text() {
+        return searchResultPagerTextList.get(4);
     }
 
     // ***** Start Listener
@@ -522,7 +567,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
             mainDL.closeDrawer(GravityCompat.END);
             toggleSettingsOn();
 
-            ActionBar appBar = ((MainCardActivity)view.getContext()).getSupportActionBar();
+            ActionBar appBar = ((MainCardActivity) view.getContext()).getSupportActionBar();
             Objects.requireNonNull(appBar).setTitle("설정");
             appBar.setDisplayHomeAsUpEnabled(true);
             appBar.show();
@@ -857,14 +902,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 CardRecyclerView cardRecyclerView = (CardRecyclerView) view;
                 ContainerRecyclerView containerRecyclerView = cardRecyclerView.getContainerRecyclerView();
                 if (containerRecyclerView.isOnDragMove()) {
-                    Logger.hotfixMessage("<!posted>cardRecyclerView.isOnDragMove()");
                     cardRecyclerView.postChangingFocusAction(() -> {
                         mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
                         presentChildren(view, containerPosition, cardPosition);
                     });
                     return;
                 }
-                Logger.hotfixMessage("<!executed>onNextFocused.presentChildren()");
                 mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
                 presentChildren(view, containerPosition, cardPosition);
             }
@@ -874,14 +917,12 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                 CardRecyclerView cardRecyclerView = (CardRecyclerView) view;
                 ContainerRecyclerView containerRecyclerView = cardRecyclerView.getContainerRecyclerView();
                 if (containerRecyclerView.isOnDragMove()) {
-                    Logger.hotfixMessage("<!posted>cardRecyclerView.isOnDragMove()");
                     cardRecyclerView.postChangingFocusAction(() -> {
                         mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
                         presentChildren(view, containerPosition, cardPosition);
                     });
                     return;
                 }
-                Logger.hotfixMessage("<!executed>onPreviousFocused/presentChildren()");
                 mPresentContainerList.get(containerPosition).setFocusCardPosition(cardPosition);
                 presentChildren(view, containerPosition, cardPosition);
             }
@@ -1127,7 +1168,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public void initEmptyCardSpaceDragListener() {
         onDragListenerForEmptyCardSpace = (view, event) -> {
-            if(view.getId()!=R.id.view_emptyContainer_cardSpace)
+            if (view.getId() != R.id.view_emptyContainer_cardSpace)
                 return false;
 
             String dragType = "";
@@ -1234,7 +1275,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         CardAdapter cardAdapter = targetCardRecyclerView.getAdapter();
                         if (cardAdapter == null)
                             return;
-                        Logger.hotfixMessage("<!extd 6> containerRecyclerView.smoothScrollToPosition(rootCardContainerPosition) : " + rootCardContainerPosition);
                         cardAdapter.notifyItemInserted(rootCard.getSeqNo());
                         targetCardRecyclerView.smoothScrollToPosition(rootCard.getSeqNo());
 //                        presentChildren(targetCardRecyclerView, rootCard.getContainerNo(), rootCard.getSeqNo());
@@ -1297,7 +1337,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         containerRecyclerViewLayoutManager.setRollbackMoveActionFlagQueue(rollbackMoveActionFlagQueue);
         containerRecyclerViewLayoutManager.setRollbackMoveFinishAction(finishAction);
         containerRecyclerViewLayoutManager.executeNextRollbackMoveAction();
-        Logger.hotfixMessage("<!>start executeNextRollbackMoveAction");
 //        rollbackActionQueue.offer(() -> containerRecyclerView.smoothScrollToPosition(rootCardContainerPosition));
 //        ((MainCardActivity) containerRecyclerView.getContext()).scrollActionDelayed(rollbackActionQueue, finishAction);
     }
@@ -1693,6 +1732,104 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         mCardRepository.update(dtoListToEntityList(toUpdateCardList), uiUpdateAction);
     }
 
+    public void notifySearchQueryTextChanged(String queryText) {
+        searchCards(queryText);
+        resetFocusPageNo();
+        refreshSearchResultPagers();
+        getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
+    }
+
+    private void refreshSearchResultPagers() {
+        // prepared : focusPageNo,
+        final int currentPageCount = getCurrentPageCount();
+        //setPageCount -> change pagers visibility.
+        setPageCount(currentPageCount);
+
+        final int mFocusPageNo = focusPageNo.get();
+        final int maxItemPageSetCount = Math.floorDiv(mFocusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT);
+        int baseMaxItemPageSetCount = 0;
+        baseMaxItemPageSetCount = maxItemPageSetCount;
+        final boolean noRemainderPage = Math.floorMod(mFocusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT) == 0;
+        int basePageCount = 0;
+        if (noRemainderPage && baseMaxItemPageSetCount != 0) {
+            baseMaxItemPageSetCount--;
+        }
+//        basePageCount = Math.max(baseMaxItemPageSetCount * VISIBLE_PAGE_ITEM_MAX_COUNT, 0);
+        basePageCount = baseMaxItemPageSetCount * VISIBLE_PAGE_ITEM_MAX_COUNT;
+
+        //setLongPagerMode -> change pager constraint attrs.
+        setLongPagerMode();
+
+        //set pager text value the page number.
+        //note : somewhere do clear.
+        for (int i = 0; i < currentPageCount; i++) {
+            final int pageNumber = basePageCount + i + 1;
+            searchResultPagerTextList.get(i).setValue(String.valueOf(pageNumber));
+        }
+
+        //setBackgroundColor colorAccent_c & alpha 1.0f(focus) or 0.2f
+        // -> dataBinding
+    }
+
+    //note : param basePageCount is (VISIBLE_PAGE_ITEM_MAX_COUNT * n).
+    private void setLongPagerMode() {
+        boolean currentModeIsLongPageMode = false;
+        if (longPagerOn.getValue() != null)
+            currentModeIsLongPageMode = longPagerOn.getValue();
+
+        final int currentPageBundleNo = getPageBundleNoByPageNo(getFocusPageNo());
+        final int currentFirstPagerNo = (currentPageBundleNo - 1) * VISIBLE_PAGE_ITEM_MAX_COUNT + 1;
+        if (pagerCount.getValue() == null)
+            return;
+        final int currentLastPagerNo = (currentPageBundleNo - 1) * VISIBLE_PAGE_ITEM_MAX_COUNT + pagerCount.getValue();
+        boolean hasLongLengthNo = false;
+        if (currentFirstPagerNo >= LONG_LENGTH_PAGER_NO || currentLastPagerNo >= LONG_LENGTH_PAGER_NO)
+            hasLongLengthNo = true;
+        if ((hasLongLengthNo && !currentModeIsLongPageMode)
+                || (!hasLongLengthNo && currentModeIsLongPageMode))
+            toggleLongPagerOn();
+
+//        ******
+//        note : It us target bundle no but target number not contained.
+//         ******
+
+//        currentPageBundleNo * VISIBLE_PAGE_ITEM_MAX_COUNT
+//        Math.floorDiv(currentPageBundleNo,)
+//        final int longPagerModeFlagPageNumber = VISIBLE_PAGE_ITEM_MAX_COUNT;
+
+    }
+
+    private void toggleLongPagerOn() {
+        if (longPagerOn.getValue() == null)
+            return;
+        boolean mode = longPagerOn.getValue();
+        longPagerOn.setValue(!mode);
+    }
+
+
+    private void setPageCount(int count) {
+        pagerCount.setValue(count);
+    }
+
+    public void prepareNextPagers() {
+        if (!hasNextPageBundle())
+            return;
+        int nextPageNo = getPageBundleNoByPageNo(getFocusPageNo()) * VISIBLE_PAGE_ITEM_MAX_COUNT + 1;
+        setFocusPageNo(nextPageNo);
+        refreshSearchResultPagers();
+        getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
+    }
+
+    public void preparePrevPagers() {
+        if (!hasPrevPageBundle())
+            return;
+        int prevPageNo = (getPageBundleNoByPageNo(getFocusPageNo()) - 1) * VISIBLE_PAGE_ITEM_MAX_COUNT;
+//        int prevPageNo = countBaseMaxPageBundle() * CardViewModel.VISIBLE_PAGE_ITEM_MAX_COUNT;
+        setFocusPageNo(prevPageNo);
+        refreshSearchResultPagers();
+        getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
+    }
+
     /* Drop Utils*/
     public interface DropDataInsertListener extends Consumer<CardEntity> {
         void accept(CardEntity cardEntity);
@@ -1825,7 +1962,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     public synchronized void presentChildren(RecyclerView cardRecyclerView, int rootContainerPosition, int rootCardPosition) {
-        Logger.hotfixMessage("vm#presentChildren/ rootContainerPosition :" + rootContainerPosition + "/rootCardPosition" + rootCardPosition);
         final int prevPresentContainerSize = mPresentContainerList.size();
         resetPresentContainerList(rootContainerPosition, rootCardPosition);
         resetChildrenPresentData(rootContainerPosition, rootCardPosition);
@@ -1903,7 +2039,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public Container getContainer(int containerPosition) {
         if (mPresentContainerList.size() > containerPosition)
             return mPresentContainerList.get(containerPosition);
-        Logger.hotfixMessage("getContainer - > null / " + mPresentContainerList.size());
         return null;
     }
 
