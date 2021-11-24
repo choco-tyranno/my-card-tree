@@ -92,7 +92,6 @@ public class SearchResultPager extends MaterialButton implements DependentView {
             defaultModeInitializedCount++;
             return;
         }
-        Toast.makeText(view.getContext(), "def", Toast.LENGTH_SHORT).show();
         ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
         MaterialButton pager3 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager3;
         SearchResultPager pager4 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager4;
@@ -117,7 +116,6 @@ public class SearchResultPager extends MaterialButton implements DependentView {
     }
 
     private void applyLongPagerMode(View view) {
-        Toast.makeText(view.getContext(), "long", Toast.LENGTH_SHORT).show();
         ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
         SearchResultPager pager1 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager1;
         MaterialButton pager3 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager3;
@@ -155,33 +153,7 @@ public class SearchResultPager extends MaterialButton implements DependentView {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityMainBinding binding = ((MainCardActivity) v.getContext()).getMainBinding();
-                SearchResultPager pager1 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager1;
-                MaterialButton pager3 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager3;
-                SearchResultPager pager4 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager4;
-                SearchResultPager pager5 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager5;
 
-                final ConstraintSet constraintSet = new ConstraintSet();
-                ConstraintLayout parent = (ConstraintLayout) v.getParent();
-                constraintSet.clone(parent);
-                constraintSet.clear(pager3.getId(), ConstraintSet.END);
-                constraintSet.clear(pager4.getId(), ConstraintSet.TOP);
-                constraintSet.clear(pager4.getId(), ConstraintSet.START);
-                constraintSet.clear(pager4.getId(), ConstraintSet.TOP);
-                constraintSet.clear(pager5.getId(), ConstraintSet.TOP);
-                constraintSet.connect(pager3.getId(), ConstraintSet.END, binding.layoutSearchdrawer.nextPageBtn.getId(), ConstraintSet.START);
-                constraintSet.connect(pager4.getId(), ConstraintSet.START, binding.layoutSearchdrawer.prevPageBtn.getId(), ConstraintSet.END);
-                constraintSet.connect(pager4.getId(), ConstraintSet.TOP, pager1.getId(), ConstraintSet.BOTTOM);
-                constraintSet.connect(pager5.getId(), ConstraintSet.TOP, pager1.getId(), ConstraintSet.BOTTOM);
-
-                new DependentUIResolver.DependentUIResolverBuilder<View>().baseView(pager1)
-                        .with(pager1.getId()
-                                , pager4::setWidthByPager1
-                                , pager5::setWidthByPager1
-                        )
-                        .build().resolve();
-
-                constraintSet.applyTo(parent);
             }
         });
     }
