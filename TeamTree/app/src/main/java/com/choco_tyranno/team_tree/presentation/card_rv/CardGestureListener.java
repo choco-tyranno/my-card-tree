@@ -55,7 +55,6 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         List<CardDto> currentNextCardList = new ArrayList<>();
         List<Integer> currentOnFocusPositionList = new ArrayList<>();
         CardDto cardDto = getCardDto();
-        Logger.hotfixMessage("cardDto seq : "+cardDto.getSeqNo());
         viewModel.findCurrentOnFocusCardPositions(cardDto.getContainerNo(), currentOnFocusPositionList);
         DragMoveDataContainer dragMoveDataContainer = new DragMoveDataContainer();
         dragMoveDataContainer.setRootCard(cardDto);
@@ -69,7 +68,6 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         final boolean hasLeftItemInTargetContainer = viewModel.removeSinglePresentCardDto(cardDto);
         if (!currentNextCardList.isEmpty()) {
             viewModel.reduceListSeq(currentNextCardList);
-            Logger.hotfixMessage("(After reducing currentNextCardList seq)cardDto seq : "+cardDto.getSeqNo());
         }
         if (hasLeftItemInTargetContainer) {
             if (cardRecyclerView.getAdapter() == null)

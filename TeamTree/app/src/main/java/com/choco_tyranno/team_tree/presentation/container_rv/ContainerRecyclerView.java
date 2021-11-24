@@ -98,11 +98,8 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         public void executeNextRollbackMoveAction() {
-            Logger.hotfixMessage("executeNextRollbackMoveAction()");
             if (rollbackMoveActionFlagQueue.isEmpty()) {
-                Logger.hotfixMessage("rollbackMoveActionFlagQueue.isEmpty()");
                 if (rollbackMoveFinishAction != null) {
-                    Logger.hotfixMessage("<run::finish action> rollbackMoveFinishAction != null");
                     rollbackMoveFinishAction.run();
                     rollbackMoveFinishAction = null;
                 }

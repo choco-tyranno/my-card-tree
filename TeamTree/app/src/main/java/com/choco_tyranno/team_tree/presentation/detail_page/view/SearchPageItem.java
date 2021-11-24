@@ -15,7 +15,6 @@ import com.google.android.material.button.MaterialButton;
 import java.util.Optional;
 
 public class SearchPageItem extends MaterialButton implements DependentView {
-    final String TAG = "@@HOTFIX";
 
     public SearchPageItem(@NonNull Context context) {
         super(context);
