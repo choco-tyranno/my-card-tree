@@ -59,7 +59,11 @@ public class RemoveSwitch extends SwitchMaterial implements DependentView{
             final float switchRatioToTopAppBar = Float.parseFloat(this.getContext().getResources().getString(R.string.mainBody_removeSwitchRatioToTopAppBar));
             final int switchHeightPx = this.getHeight();
             final int topAppBarHeightPx = topAppBar.getHeight();
-            final float multiplyingValue = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
+            float multiplyingValue = 1.0f;
+            float myScale = switchRatioToTopAppBar * topAppBarHeightPx / switchHeightPx;
+            if (myScale > 1){
+                multiplyingValue = myScale;
+            }
             this.setScaleX(multiplyingValue);
             this.setScaleY(multiplyingValue);
         };
