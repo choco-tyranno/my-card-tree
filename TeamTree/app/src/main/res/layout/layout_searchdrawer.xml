@@ -148,7 +148,7 @@
                 app:longPagerMode="@{viewModel.longPagerOn}"
                 tools:text="1" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 tools:text="2" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
