@@ -19,11 +19,7 @@ public class OnQueryTextListenerForSearchingCard implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextChange(String queryText) {
-        viewModel.searchCards(queryText);
-        viewModel.resetFocusPageNo();
-
-        viewModel.getPageNavigationRecyclerViewAdapter().notifyDataSetChanged();
-        viewModel.getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
+        viewModel.notifySearchQueryTextChanged(queryText);
         return false;
     }
 }
