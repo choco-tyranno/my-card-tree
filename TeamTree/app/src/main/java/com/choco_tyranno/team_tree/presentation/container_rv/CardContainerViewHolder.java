@@ -24,7 +24,6 @@ public class CardContainerViewHolder extends ContainerViewHolder {
 
     public CardContainerViewHolder(@NonNull ItemCardcontainerBinding binding, CardViewModel viewModel) {
         super(binding.getRoot());
-        Logger.message("contVH#constructor");
         this.mBinding = binding;
         this.mViewModel = viewModel;
         this.mBinding.setViewModel(viewModel);
@@ -38,7 +37,6 @@ public class CardContainerViewHolder extends ContainerViewHolder {
 
     @Override
     public void bind(int containerPosition) {
-        Logger.message("contVH#bind");
         CardRecyclerView rv = mBinding.cardRecyclerViewCardContainerCards;
         CardAdapter cardAdapter = (CardAdapter) rv.getAdapter();
         if (cardAdapter==null)
@@ -74,7 +72,6 @@ public class CardContainerViewHolder extends ContainerViewHolder {
     }
 
     public ItemCardcontainerBinding getBinding() {
-        Logger.message("contVH#getBinding");
         return mBinding;
     }
 }

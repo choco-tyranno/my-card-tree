@@ -69,7 +69,6 @@ public class MainCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("@@H", "onCreate");
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
@@ -253,14 +252,12 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.message("onStop");
         SingleToastManager.clear();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.message("destroyed");
         CardViewShadowProvider.onDestroy();
         SingleToastManager.clear();
     }

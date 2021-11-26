@@ -41,7 +41,6 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
 
 
     public CardScrollListener() {
-        Logger.message("cardScrollListener#constructor");
         this.registeredPosition = RecyclerView.NO_POSITION;
         this.containerPosition = -1;
         this.centerX = -1;
@@ -81,12 +80,10 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     public void setLayoutManager(CardRecyclerView.ScrollControllableLayoutManager layoutManager) {
-        Logger.message("cardScrollLsn#setLM");
         this.layoutManager = layoutManager;
     }
 
     public void setContainerPosition(int containerPosition) {
-        Logger.message("cardScrollListener#setContainerPos : " + containerPosition);
         this.containerPosition = containerPosition;
     }
 
@@ -111,11 +108,9 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         if (layoutManager == null) {
-            Logger.message("cardScrollLsn#onScrolled : lm null");
             return;
         }
         if (containerPosition == -1) {
-            Logger.message("cardScrollLsn#onScrolled : containerPos is -1");
             return;
         }
         if (getCenterX() == -1) {
@@ -138,7 +133,6 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private synchronized void handelSingleItemVisible(RecyclerView recyclerView, int visiblePosition) {
-        Logger.message("handleSingle/itemPos:" + visiblePosition + "/reg Pos:" + registeredPosition);
         if (visiblePosition == registeredPosition) {
             return;
         }
@@ -152,7 +146,6 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private synchronized void handleMultiItemVisible(RecyclerView recyclerView, int firstVisibleItemPosition, int lastVisibleItemPosition) {
-        Logger.message("handleMulti/f itemPos:" + firstVisibleItemPosition + "/l itemPos :" + lastVisibleItemPosition + "/reg Pos:" + registeredPosition);
         float lastVisibleItemX = Objects.requireNonNull(layoutManager.getChildAt(1)).getX();
 
         if (firstVisibleItemPosition == registeredPosition) {

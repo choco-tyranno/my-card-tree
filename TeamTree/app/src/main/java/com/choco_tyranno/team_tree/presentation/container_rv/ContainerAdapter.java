@@ -19,7 +19,6 @@ public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> 
     private static final int EMPTY_CARD_TYPE = 1;
 
     public ContainerAdapter(Context context) {
-        Logger.message("contAdapter#constructor");
         this.viewModel = ((MainCardActivity) context).getCardViewModel();
     }
 
@@ -36,7 +35,6 @@ public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        Logger.message("contAdapter#getItemViewType pos :"+position);
         if (position+1==viewModel.presentContainerCount())
             return EMPTY_CARD_TYPE;
         return CARD_TYPE;
@@ -44,13 +42,11 @@ public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ContainerViewHolder holder, int position) {
-        Logger.message("contAdapter#onBindVH pos :"+position);
         holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        Logger.message("contAdapter#getItemCount");
         return viewModel.presentContainerCount();
     }
 
