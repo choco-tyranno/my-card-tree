@@ -16,14 +16,10 @@
 
 - Keyword:
 
-  1. Android architecture Components[ViewModel, LiveData, DataBinding, Room]
-  2. MVVM design pattern with Repository pattern.
-  3. Nested RecyclerView and horizontal scroll listener handling for representing child card containers by onFocused card.
-  4. Search card with SearchView.
-  5. Using external storage for saving picture taken.
-  6. Drag & Drop for [adding card, moving card].
-
-  
+  + Android architecture Components[ViewModel, LiveData, DataBinding, Room]
+  + Nested RecyclerView
+  + SearchView
+  + Dynamic attribute setting
 
 ## Doc 
 
