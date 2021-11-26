@@ -4,7 +4,27 @@
 
 ## Team Tree
 
-+ Since : 2020.10.11.
++ Time line
+
+>Since : 2020.10.11.
+>
+>21.08.31 - version : 'Stick Insect 1.0.1' release
+>
+>
+>
+>21.11.26 - version : 'Stick Insect 1.1.1' release
+>
+>```
+>-Make view hierarchies flat on project.
+>
+>-Change SearchResultPager(View) type from RecyclerView item to button constrainted.
+>
+>-Make SearchView(View) and BottomBar(View) height and RemoveSwitch(View) scale reactive depends on TopAppBar(View) size.
+>
+>-Synchrounize text size between TextView(auto text sized view) and EditText(no auto text sizing attribute).
+>```
+>
+>
 
 - Contents:
 
