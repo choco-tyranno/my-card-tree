@@ -52,26 +52,27 @@ public abstract class TeamTreeDataBase extends RoomDatabase {
                  * create rootContainerItem.
                  * create nextItem for each rootCard.
                  * */
-//                List<CardEntity> prepopulateData = new ArrayList<>();
-//                int registeredCardNo = 0;
-//                for (int i = 0; i < 10; i++) {
-//                    registeredCardNo++;
-//                    prepopulateData.add(
-//                            new CardEntity.Builder().seqNo(i).containerNo(0).rootNo(0).title("test item["+i+"]")
-//                                    .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
-//                    );
-//                }
-//                final int lastRegisteredCardNo = registeredCardNo;
-//                for (int j = 1; j <lastRegisteredCardNo+1; j++){
-//                    for (int i = 0; i < 10; i++) {
-//                        prepopulateData.add(
-//                                new CardEntity.Builder().seqNo(i).containerNo(1).rootNo(j).title("test item[1_"+i+"]")
-//                                        .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
-//                        );
-//                    }
-//                }
-//                cardDAO.insert(prepopulateData);
+                /*List<CardEntity> prepopulateData = new ArrayList<>();
+                int registeredCardNo = 0;
+                for (int i = 0; i < 10; i++) {
+                    registeredCardNo++;
+                    prepopulateData.add(
+                            new CardEntity.Builder().seqNo(i).containerNo(0).rootNo(0).title("test item["+i+"]")
+                                    .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
+                    );
+                }
+                final int lastRegisteredCardNo = registeredCardNo;
+                for (int j = 1; j <lastRegisteredCardNo+1; j++){
+                    for (int i = 0; i < 10; i++) {
+                        prepopulateData.add(
+                                new CardEntity.Builder().seqNo(i).containerNo(1).rootNo(j).title("test item[1_"+i+"]")
+                                        .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
+                        );
+                    }
+                }
+                cardDAO.insert(prepopulateData);*/
                 cardDAO.insert(new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(CardDto.NO_ROOT_CARD).title("내 카드").build());
+
                 TeamTreeDataBase.setAssetInsertState(true);
             });
         }
