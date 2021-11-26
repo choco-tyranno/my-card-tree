@@ -8,11 +8,11 @@
 
 >Since : 2020.10.11.
 >
->21.08.31 - version : 'Stick Insect 1.0.1' release
+>21.08.31 - version : 'Stick Insect 1.0.1' released
 >
 >
 >
->21.11.26 - version : 'Stick Insect 1.1.1' release
+>21.11.26 - version : 'Stick Insect 1.1.1' released
 >
 >```
 >-Make view hierarchies flat on project.
