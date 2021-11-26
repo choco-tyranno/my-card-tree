@@ -34,16 +34,19 @@
 
   
 
-  
+
 
 - Keyword:
-
   + Android architecture Components[ViewModel, LiveData, DataBinding, Room]
   + Nested RecyclerView
   + Navigation
   + SearchView
+  + Drag & Drop
+  + Custom view
   + ConstraintLayout
   + Dynamic attribute setting
+
+
 
 ## Doc 
 
