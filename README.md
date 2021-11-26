@@ -4,13 +4,35 @@
 
 ## Team Tree
 
++ Since : 2020.10.11.
+
 - Contents:
 
   <img src = "https://user-images.githubusercontent.com/80248474/133612972-6ddd5b59-1319-4e0c-b0be-29a77becd90d.png" width = "100%">
 
-  <h3> 인물 정보를 '카드'로 정리하고 수직형 포함 관계를 구성해 관리합니다. </h3>
+  <h3> 이름과 별명, 연락처, 메모, 사진 등 인물 정보를 '카드'로 정리하고 수직형 포함 관계를 구성해 관리합니다. </h3>
 
-  > 이름과 별명, 연락처, 메모, 사진을 한 장의 카드에 저장하고,<br> 수직관계 연동으로 정보를 관리하세요!
+  > 타이틀, 서브타이틀, 메모, 그리고 사용자 디바이스의 사진앱 또는 Team-tree의 external storage에 저장된 사진으로 카드를 구성하고, 해당 카드의 아래 공간(해당 카드에 종속되는 카드들의 공간)에 카드를 추가해 나가며 트리구조의 수직형 포함 관계를 만드는 앱입니다.
+  >
+  > 
+  >
+  > MVVM패턴의 프로젝트로 비동기처리된 이미지 로딩
+  >
+  > , Databinding과 Observable 객체들을 통한 Reactive한 UI update
+  >
+  > , ConstraintLayout으로 flat한 view hierarchy
+  >
+  > , DragDrop으로 카드 추가 및 카드 구조 이동
+  >
+  > , 카드 hierarchy 삭제
+  >
+  > , Search result 카드를 찾아가기
+  >
+  > , Nested RecyclerView 스크롤 상태 및 뷰 상태 관리
+  >
+  > , 사용자 Device별 반응형 View 사이즈 및 텍스트 사이즈 등을 구현했습니다.
+
+  
 
   
 
@@ -18,7 +40,9 @@
 
   + Android architecture Components[ViewModel, LiveData, DataBinding, Room]
   + Nested RecyclerView
+  + Navigation
   + SearchView
+  + ConstraintLayout
   + Dynamic attribute setting
 
 ## Doc 
