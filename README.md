@@ -58,9 +58,9 @@
   >
   > , 사용자 Device별 반응형 View 사이즈 및 텍스트 사이즈 등을 구현했습니다.
 
+- Demo
+
   
-
-
 
 - Keyword:
   + Android architecture Components[ViewModel, LiveData, DataBinding, Room]
