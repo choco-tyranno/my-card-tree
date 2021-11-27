@@ -8,29 +8,13 @@
 
 >Since : 2020.10.11.
 >
->21.08.31 - version : 'Stick Insect 1.0.1' released
+>21.08.31 - version : 'Stick Insect 1.0.1' [**released**](https://github.com/choco-tyranno/team-tree/blob/main/Release-note/Stick-Insect-1.0.1.md)
 >
 >
 >
->21.11.26 - version : 'Stick Insect 1.1.1' released
+>21.11.26 - version : 'Stick Insect 1.1.1' [**released**](https://github.com/choco-tyranno/team-tree/blob/main/Release-note/Stick-Insect-1.1.1.md)
 >
->```
->What's new :
->
->-Make view hierarchies flat on project.
->
->-Change SearchResultPager(View) type from RecyclerView item to button constrainted.
->
->-Make SearchResultPager(View) constraintSet changed depending on whether the pager numbers contains two digits number or not.
->
->-Make SearchView(View) and BottomBar(View) height and RemoveSwitch(View) scale reactive depends on TopAppBar(View) size.
->
->-Synchrounize text size between TextView(auto text sized view) and EditText(no auto text sizing attribute).
->
->...
->```
->
->
+>~
 
 - Contents:
 
