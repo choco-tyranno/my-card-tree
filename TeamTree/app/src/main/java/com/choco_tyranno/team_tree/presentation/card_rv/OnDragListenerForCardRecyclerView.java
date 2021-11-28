@@ -23,6 +23,8 @@ import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DisplayUtil;
 import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.SingleToastManager;
+import com.choco_tyranno.team_tree.presentation.SingleToaster;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
@@ -38,6 +40,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     private final int CARD_LOCATION_RIGHT = 1;
     private final int ACTION_SCROLL_TO_POSITION = 1;
     private final int ACTION_PRESENT_CHILDREN = 2;
+    private final int ACTION_SHOW_MOVE_SUCCESS_MESSAGE = 3;
 
 
     @Override
@@ -280,8 +283,10 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             Runnable itemInsertAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
             Runnable smoothScrollToPositionAction = () -> cardRecyclerView.scrollToPosition(movedRootCard.getSeqNo());
             Runnable presentChildrenAction = () -> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
+            Runnable finishToastMessageAction = ()-> SingleToaster.makeTextShort(cardRecyclerView.getContext(), "카드 세트가 이동되었습니다.").show();
             delayActionQueue.offer(Pair.create(ACTION_SCROLL_TO_POSITION, smoothScrollToPositionAction));
             delayActionQueue.offer(Pair.create(ACTION_PRESENT_CHILDREN, presentChildrenAction));
+            delayActionQueue.offer(Pair.create(ACTION_SHOW_MOVE_SUCCESS_MESSAGE, finishToastMessageAction));
             uiHandler.post(itemInsertAction);
             enqueueDelayedActions(delayActionQueue, uiHandler);
 //            viewModel.runOnUiThread(() -> {
@@ -306,7 +311,11 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             if (pair.first == ACTION_PRESENT_CHILDREN) {
                 uiHandler.postDelayed(pair.second, 250 + 100 + 30);
             }
+            if (pair.first == ACTION_SHOW_MOVE_SUCCESS_MESSAGE) {
+                uiHandler.postDelayed(pair.second, 30);
+            }
         });
+        enqueueDelayedActions(actionsQueue, uiHandler);
     }
 
     private boolean handleMoveServiceDragEnteredEvent(CardRecyclerView cardRecyclerView) {
