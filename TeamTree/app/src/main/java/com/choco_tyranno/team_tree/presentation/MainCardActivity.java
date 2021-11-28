@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +52,18 @@ import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerVi
 import com.choco_tyranno.team_tree.presentation.main.NewCardButton;
 import com.choco_tyranno.team_tree.presentation.main.TopAppBar;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +80,120 @@ public class MainCardActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private Handler mMainHandler;
     private CardFinder cardFinder;
+    private final int REQ_UPDATE = 1992;
+    private final String TAG = "@@choco_tyranno";
+    AppUpdateManager appUpdateManager;
+    InstallStateUpdatedListener installStateUpdatedListenerForFlexibleUpdate;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SpreadingOutDetailOnClickListener.REQ_MANAGE_DETAIL) {
+            if (data == null)
+                return;
+            CardDto updatedCardDto = (CardDto) data.getSerializableExtra("post_card");
+            boolean imageChanged = viewModel.applyCardFromDetailActivity(updatedCardDto);
+            if (imageChanged) {
+                CardDto[] cardDTOArr = {updatedCardDto};
+                loadPictureCardImages(cardDTOArr, mMainHandler);
+            }
+            return;
+        }
+        if (requestCode == REQ_UPDATE && resultCode != RESULT_OK) {
+            SingleToaster.makeTextShort(this,"Team tree 업데이트 실패. 앱을 종료 후 다시 시도해 주세요.").show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appUpdateManager
+                .getAppUpdateInfo()
+                .addOnSuccessListener(appUpdateInfo -> {
+                    final int installType;
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
+                        installType = AppUpdateType.FLEXIBLE;
+                    else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
+                        installType = AppUpdateType.IMMEDIATE;
+                    else
+                        installType = -1;
+                    Log.d(TAG,"onResume#installType: "+installType);
+                    Log.d(TAG,"onResume#appUpdateInfo.updateAvailability(): "+appUpdateInfo.updateAvailability());
+                    Log.d(TAG,"onResume#appUpdateInfo.appUpdateInfo.installStatus(): "+appUpdateInfo.installStatus());
+                    if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                        popupSnackBarForCompleteFlexibleUpdate();
+                        return;
+                    }
+                    if(installType == AppUpdateType.IMMEDIATE &&
+                            appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
+                        try {
+                            appUpdateManager.startUpdateFlowForResult(
+                                    appUpdateInfo,
+                                    AppUpdateType.IMMEDIATE,
+                                    this,
+                                    REQ_UPDATE);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void checkUpdates() {
+        if (appUpdateManager == null)
+            appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            Log.d(TAG,"checkUpdates#appUpdateInfo.updateAvailability() : "+appUpdateInfo.updateAvailability());
+            Log.d(TAG,"checkUpdates#appUpdateInfo.installStatus() : "+appUpdateInfo.installStatus());
+            if (appUpdateInfo.updateAvailability() != UpdateAvailability.UPDATE_AVAILABLE &&
+                    appUpdateInfo.updateAvailability() != UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                return;
+            }
+            final int installType;
+            if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
+                installType = AppUpdateType.FLEXIBLE;
+            else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
+                installType = AppUpdateType.IMMEDIATE;
+            else
+                installType = -1;
+            Log.d(TAG,"checkUpdates()/installType:"+installType);
+            if (installType == -1)
+                return;
+            if (installType == AppUpdateType.FLEXIBLE) {
+                initInstallStateUpdatedListenerForFlexibleUpdate();
+                appUpdateManager.registerListener(installStateUpdatedListenerForFlexibleUpdate);
+            }
+            try {
+                appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
+                        installType,
+                        MainCardActivity.this,
+                        REQ_UPDATE);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void initInstallStateUpdatedListenerForFlexibleUpdate() {
+        if (installStateUpdatedListenerForFlexibleUpdate != null)
+            return;
+        installStateUpdatedListenerForFlexibleUpdate = installState -> {
+            if (installState.installStatus() == InstallStatus.DOWNLOADED)
+                popupSnackBarForCompleteFlexibleUpdate();
+            if (installState.installStatus() == InstallStatus.INSTALLED)
+                appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
+        };
+    }
+
+    private void popupSnackBarForCompleteFlexibleUpdate() {
+        Snackbar.make(binding.getRoot(), "\uD83C\uDF20새로운 버전 다운로드 완료!", Snackbar.LENGTH_INDEFINITE)
+                .setAction("설치", view -> {
+                    if (appUpdateManager != null)
+                        appUpdateManager.completeUpdate();
+                }).setActionTextColor(getResources().getColor(R.color.colorAccent_b, getTheme()))
+                .show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +201,7 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
             mMainHandler = new Handler(getMainLooper());
+        checkUpdates();
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
@@ -82,7 +211,6 @@ public class MainCardActivity extends AppCompatActivity {
         setContainerRv();
         setSearchingResultRv();
         cardFinder = new CardFinder(this);
-
         initView();
 
         ImageView searchBtn = binding.layoutSearchdrawer.cardSearchView.findViewById(androidx.appcompat.R.id.search_button);
@@ -109,8 +237,8 @@ public class MainCardActivity extends AppCompatActivity {
         new DependentUIResolver.DependentUIResolverBuilder<View>()
                 .baseView(topAppBar)
                 .with(topAppBar.getId()
-                        ,binding.layoutMainbody.removeSwitchMainBodyRemoveSwitch::setScaleByTopAppBar
-                        ,binding.layoutSearchdrawer.cardSearchView::setConstrainFixedHeightByTopAppBar
+                        , binding.layoutMainbody.removeSwitchMainBodyRemoveSwitch::setScaleByTopAppBar
+                        , binding.layoutSearchdrawer.cardSearchView::setConstrainFixedHeightByTopAppBar
                 ).build()
                 .resolve();
 
@@ -118,7 +246,7 @@ public class MainCardActivity extends AppCompatActivity {
         new DependentUIResolver.DependentUIResolverBuilder<View>()
                 .baseView(newCardButton)
                 .with(newCardButton.getId()
-                        ,binding.layoutMainbody.bottomBarMainBodyBottomBar::setHeightByNewCardButton
+                        , binding.layoutMainbody.bottomBarMainBodyBottomBar::setHeightByNewCardButton
                 ).build()
                 .resolve();
 
@@ -253,6 +381,7 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         SingleToastManager.clear();
+        appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
     }
 
     @Override
@@ -268,21 +397,6 @@ public class MainCardActivity extends AppCompatActivity {
 
     public Handler getMainHandler() {
         return mMainHandler;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SpreadingOutDetailOnClickListener.REQ_MANAGE_DETAIL) {
-            if (data == null)
-                return;
-            CardDto updatedCardDto = (CardDto) data.getSerializableExtra("post_card");
-            boolean imageChanged = viewModel.applyCardFromDetailActivity(updatedCardDto);
-            if (imageChanged) {
-                CardDto[] cardDTOArr = {updatedCardDto};
-                loadPictureCardImages(cardDTOArr, mMainHandler);
-            }
-        }
     }
 
     public void scrollToFindingTargetCard(Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard, Runnable finishAction) {
