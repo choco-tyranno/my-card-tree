@@ -14,7 +14,7 @@ android {
         applicationId "com.choco_tyranno.team_tree"
         minSdkVersion 30
         targetSdkVersion 31
-        versionCode 5
+        versionCode 6
         versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
