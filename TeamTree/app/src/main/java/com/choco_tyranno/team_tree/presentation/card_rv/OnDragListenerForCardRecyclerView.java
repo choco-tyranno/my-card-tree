@@ -289,15 +289,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             delayActionQueue.offer(Pair.create(ACTION_SHOW_MOVE_SUCCESS_MESSAGE, finishToastMessageAction));
             uiHandler.post(itemInsertAction);
             enqueueDelayedActions(delayActionQueue, uiHandler);
-//            viewModel.runOnUiThread(() -> {
-//                cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
-//                viewModel.throwToMainHandlerWithDelay(() -> {
-//                    cardRecyclerView.smoothScrollToPosition(movedRootCard.getSeqNo());
-//                    viewModel.throwToMainHandlerWithDelay(()->{
-//                        viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
-//                    },2000+30, cardRecyclerView.getContext());
-//                }, 120+30, cardRecyclerView.getContext());
-//            }, cardRecyclerView.getContext());
         };
     }
 
