@@ -72,17 +72,16 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         if (hasLeftItemInTargetContainer) {
             if (cardRecyclerView.getAdapter() == null)
                 throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
-            SingleToastManager.show(SingleToaster.makeTextShort(cardRecyclerView.getContext(),"t:"+cardDto.getTitle()+"seq:"+cardDto.getSeqNo()));
             cardRecyclerView.getAdapter().notifyItemRemoved(cardDto.getSeqNo());
-//            ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
-//                final int newFocusPosition = viewModel.findNearestItemPosition(cardDto.getContainerNo(), cardDto.getSeqNo());
-//                Container container = viewModel.getContainer(cardDto.getContainerNo());
-//                if (container != null) {
-//                    container.setFocusCardPosition(newFocusPosition);
-//                    cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-//                    viewModel.presentChildren(cardRecyclerView, cardDto.getContainerNo(), newFocusPosition);
-//                }
-//            }, 150);
+            ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
+                final int newFocusPosition = viewModel.findNearestItemPosition(cardDto.getContainerNo(), cardDto.getSeqNo());
+                Container container = viewModel.getContainer(cardDto.getContainerNo());
+                if (container != null) {
+                    container.setFocusCardPosition(newFocusPosition);
+                    cardRecyclerView.smoothScrollToPosition(newFocusPosition);
+                    viewModel.presentChildren(cardRecyclerView, cardDto.getContainerNo(), newFocusPosition);
+                }
+            }, 150);
         } else {
             ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
             ContainerAdapter containerAdapter = (ContainerAdapter) containerRecyclerView.getAdapter();
