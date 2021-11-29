@@ -100,7 +100,7 @@ public class MainCardActivity extends AppCompatActivity {
             return;
         }
         if (requestCode == REQ_UPDATE && resultCode != RESULT_OK) {
-            SingleToaster.makeTextShort(this,"Team tree 업데이트 실패. 앱을 종료 후 다시 시도해 주세요.").show();
+            SingleToaster.makeTextShort(this, "Team tree 업데이트 실패. 앱을 종료 후 다시 시도해 주세요.").show();
         }
     }
 
@@ -117,15 +117,15 @@ public class MainCardActivity extends AppCompatActivity {
                         installType = AppUpdateType.IMMEDIATE;
                     else
                         installType = -1;
-                    Log.d(TAG,"onResume#installType: "+installType);
-                    Log.d(TAG,"onResume#appUpdateInfo.updateAvailability(): "+appUpdateInfo.updateAvailability());
-                    Log.d(TAG,"onResume#appUpdateInfo.appUpdateInfo.installStatus(): "+appUpdateInfo.installStatus());
+                    Log.d(TAG, "onResume#installType: " + installType);
+                    Log.d(TAG, "onResume#appUpdateInfo.updateAvailability(): " + appUpdateInfo.updateAvailability());
+                    Log.d(TAG, "onResume#appUpdateInfo.appUpdateInfo.installStatus(): " + appUpdateInfo.installStatus());
                     if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                         popupSnackBarForCompleteFlexibleUpdate();
                         return;
                     }
-                    if(installType == AppUpdateType.IMMEDIATE &&
-                            appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
+                    if (installType == AppUpdateType.IMMEDIATE &&
+                            appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                         try {
                             appUpdateManager.startUpdateFlowForResult(
                                     appUpdateInfo,
@@ -144,8 +144,8 @@ public class MainCardActivity extends AppCompatActivity {
             appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-            Log.d(TAG,"checkUpdates#appUpdateInfo.updateAvailability() : "+appUpdateInfo.updateAvailability());
-            Log.d(TAG,"checkUpdates#appUpdateInfo.installStatus() : "+appUpdateInfo.installStatus());
+            Log.d(TAG, "checkUpdates#appUpdateInfo.updateAvailability() : " + appUpdateInfo.updateAvailability());
+            Log.d(TAG, "checkUpdates#appUpdateInfo.installStatus() : " + appUpdateInfo.installStatus());
             if (appUpdateInfo.updateAvailability() != UpdateAvailability.UPDATE_AVAILABLE &&
                     appUpdateInfo.updateAvailability() != UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 return;
@@ -157,7 +157,7 @@ public class MainCardActivity extends AppCompatActivity {
                 installType = AppUpdateType.IMMEDIATE;
             else
                 installType = -1;
-            Log.d(TAG,"checkUpdates()/installType:"+installType);
+            Log.d(TAG, "checkUpdates()/installType:" + installType);
             if (installType == -1)
                 return;
             if (installType == AppUpdateType.FLEXIBLE) {
@@ -381,7 +381,8 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         SingleToastManager.clear();
-        appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
+        if (installStateUpdatedListenerForFlexibleUpdate != null)
+            appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
     }
 
     @Override
