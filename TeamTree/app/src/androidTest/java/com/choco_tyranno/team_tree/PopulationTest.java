@@ -4,7 +4,11 @@ import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.choco_tyranno.team_tree.database_util.MockCard;
+import com.choco_tyranno.team_tree.database_util.MockCardFactory;
+import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
+import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,54 +16,73 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RunWith(AndroidJUnit4.class)
 public class PopulationTest {
     @Test
     public void makeName() {
-        List<CardEntity> prepopulateData = new ArrayList<>();
-//                직급별
-        String[] lastNameArr = {"김", "이", "박", "안", "원", "고", "안"};
-        String[] firstNameArr = {"민정", "소영", "민수", "아영", "소정", "민기", "비오", "아린"};
-        String[] rankArr = {"실장", "부장", "차장", "과장", "대리", "주임", "인턴"};
-        int[] vacantArr = {3, 6, 6, 6, 6, 12, 17};
-        List<String> fullNameList = new ArrayList<>();
-        String space = " ";
-        Arrays.stream(lastNameArr).forEach(
-                lastName -> Arrays.stream(firstNameArr).forEach(
-                        firstName -> fullNameList.add(lastName + firstName)
-                )
-        );
-        //총 좌석수 : 56
-        int 실장수 = 3;
-        //53 left
-        int 부장수 = 6;
-        //47 left
-        int 차장수 = 6;
-        //41 left
-        int 과장수 = 6;
-        //35 left
-        int 대리수 = 6;
-        //29 left
-        int 주임수 = 12;
-        //17 left
-        int 인턴수 = 17;
-        // 인턴 5+1명은 마지막 동그룹에 함께.
+        MockCardFactory mockCardFactory = new MockCardFactory();
+        List<String> fullNameList = mockCardFactory.createFullNameList();
 
-        int workedCount = 0;
-        for (int i = 0; i < vacantArr.length; i++) {
-            final int vacantValue = vacantArr[i];
-            final String rank = rankArr[i];
-            for (int j = 0; j < vacantValue; j++) {
-                fullNameList.set(workedCount, fullNameList.get(workedCount) + space + rank);
-                workedCount++;
-            }
-        }
         //output OK.
         for (String name : fullNameList) {
             Log.d("@@PopulationTest", name);
         }
         Assert.assertEquals(56, fullNameList.size());
+
+//        create cards and relationships.
+        /*
+         * 총 카드 수 : 56
+         * 직책별 수 array : {실장:3, 부장 6, 차장 6, 과장 6, 대리 6, 주임 12, 인턴 17}
+         *
+         * 실장1명당 직속 부장 2명,
+         * 부장1명당 직속 차장 1명,
+         * 차장1명당 직속 과장 1명,
+         * 과장1명당 직속 대리 1명,
+         * 대리1명당 직속 주임 2명,
+         * 주임{주임 cardNo가 빠른순서대로 주임 5명은 직속 인턴 2명,
+         * 나머지 주임 7명은 직속 인턴 1명}
+         * */
+
+        /*
+         * containerNo , seqNo, rootNo, cardNo
+         * title, type
+         * */
+
+        List<MockCard> mockCardList = new MockCardFactory().createCards(fullNameList);
+//        mockCardList.sort(Comparator.comparingInt(o -> o.containerNo));
+//        for (MockCard mockCard : mockCardList) {
+//            Log.d("@@TEST",
+//                    "_MockingCard: card[" + mockCard.cardNo +
+//                            "] - title:" + mockCard.title +
+//                            "/container:" + mockCard.containerNo +
+//                            "/seq:" + mockCard.seqNo +
+//                            "/root:" + mockCard.rootNo
+//            );
+//        }
+        List<CardEntity> result = mockCardList.stream()
+                .flatMap(mockCard-> Stream.of(mockCard.toCardEntity()))
+                .collect(Collectors.toList());
+
+        for (CardEntity cardEntity : result) {
+            Log.d("@@TEST",
+                    "_MockingCard: card[" + cardEntity.getCardNo() +
+                            "] - title:" + cardEntity.getTitle() +
+                            "/container:" + cardEntity.getContainerNo() +
+                            "/seq:" + cardEntity.getSeqNo() +
+                            "/root:" + cardEntity.getRootNo()
+            );
+        }
+
+        Assert.assertEquals(56, result.size());
+//        Assert.assertEquals(56, mockCardList.size());
     }
+
+
 }
