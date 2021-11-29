@@ -8,16 +8,21 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.choco_tyranno.team_tree.database_util.MockCard;
+import com.choco_tyranno.team_tree.database_util.MockCardFactory;
 import com.choco_tyranno.team_tree.domain.card_data.CardDao;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
 import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Database(entities = {CardEntity.class}, version = 1, exportSchema = false)
 public abstract class TeamTreeDataBase extends RoomDatabase {
@@ -49,30 +54,18 @@ public abstract class TeamTreeDataBase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 CardDao cardDAO = INSTANCE.cardDao();
                 /*
-                 * create rootContainerItem.
-                 * create nextItem for each rootCard.
-                 * */
-                /*List<CardEntity> prepopulateData = new ArrayList<>();
-                int registeredCardNo = 0;
-                for (int i = 0; i < 10; i++) {
-                    registeredCardNo++;
-                    prepopulateData.add(
-                            new CardEntity.Builder().seqNo(i).containerNo(0).rootNo(0).title("test item["+i+"]")
-                                    .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
-                    );
-                }
-                final int lastRegisteredCardNo = registeredCardNo;
-                for (int j = 1; j <lastRegisteredCardNo+1; j++){
-                    for (int i = 0; i < 10; i++) {
-                        prepopulateData.add(
-                                new CardEntity.Builder().seqNo(i).containerNo(1).rootNo(j).title("test item[1_"+i+"]")
-                                        .contactNumber("010-0000-0000").type(ContactCardViewHolder.CONTACT_CARD_TYPE).build()
-                        );
-                    }
-                }
-                cardDAO.insert(prepopulateData);*/
-                cardDAO.insert(new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(CardDto.NO_ROOT_CARD).title("내 카드").build());
+                * for release :
+                * cardDAO.insert(new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(CardDto.NO_ROOT_CARD).title("내 카드").build());
+                * */
 
+                // for test :
+                MockCardFactory mockCardFactory = new MockCardFactory();
+                List<String> fullNameList = mockCardFactory.createFullNameList();
+                List<MockCard> mockCardList = new MockCardFactory().createCards(fullNameList);
+                List<CardEntity> testCardList = mockCardList.stream()
+                        .flatMap(mockCard-> Stream.of(mockCard.toCardEntity()))
+                        .collect(Collectors.toList());
+                cardDAO.insert(testCardList);
                 TeamTreeDataBase.setAssetInsertState(true);
             });
         }
