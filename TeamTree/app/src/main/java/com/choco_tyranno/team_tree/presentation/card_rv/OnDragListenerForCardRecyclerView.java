@@ -188,7 +188,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             case DragEvent.ACTION_DRAG_LOCATION:
                 return handleMoveServiceDragLocationEvent(cardRecyclerView, event.getX());
             case DragEvent.ACTION_DRAG_STARTED:
-                return handleMoveServiceDragStarted(cardRecyclerView, event);
+                return handleMoveServiceDragStarted(cardRecyclerView);
             case DragEvent.ACTION_DRAG_ENTERED:
                 return handleMoveServiceDragEnteredEvent(cardRecyclerView);
             case DragEvent.ACTION_DRAG_EXITED:
@@ -201,17 +201,10 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return false;
     }
 
-    private boolean handleMoveServiceDragStarted(CardRecyclerView cardRecyclerView, DragEvent event) {
+    private boolean handleMoveServiceDragStarted(CardRecyclerView cardRecyclerView) {
         cardRecyclerView.attachOnScrollListenerForHorizontalArrow();
         cardRecyclerView.getContainerRecyclerView().setOnDragMove(true);
-        DragMoveDataContainer dragMoveDataContainer = (DragMoveDataContainer) event.getLocalState();
-        CardDto movedRootCard = dragMoveDataContainer.getRootCard();
-        final int movedRootCardContainerPosition = movedRootCard.getContainerNo();
-        if (cardRecyclerView.getAdapter()==null)
-            return false;
-        final int targetContainerPosition = cardRecyclerView.getAdapter().getContainerPosition();
-        final int targetContainerItemCount = cardRecyclerView.getAdapter().getItemCount();
-        return !(movedRootCardContainerPosition == targetContainerPosition && targetContainerItemCount == 1);
+        return true;
     }
 
     private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
@@ -278,12 +271,12 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
             //setFocusCardPosition to target container. && {later} smoothScrollToPosition(movingRootCard.getSeqNo) && presentChildren().
             viewModel.addSinglePresentCardDto(movedRootCard);
             Queue<Pair<Integer, Runnable>> delayActionQueue = new LinkedList<>();
-            if (cardRecyclerView.getAdapter()==null)
+            if (cardRecyclerView.getAdapter() == null)
                 return;
             Runnable itemInsertAction = () -> cardRecyclerView.getAdapter().notifyItemInserted(movedRootCard.getSeqNo());
             Runnable smoothScrollToPositionAction = () -> cardRecyclerView.scrollToPosition(movedRootCard.getSeqNo());
             Runnable presentChildrenAction = () -> viewModel.presentChildren(cardRecyclerView, movedRootCard.getContainerNo(), movedRootCard.getSeqNo());
-            Runnable finishToastMessageAction = ()-> SingleToaster.makeTextShort(cardRecyclerView.getContext(), "카드 세트가 이동되었습니다.").show();
+            Runnable finishToastMessageAction = () -> SingleToaster.makeTextShort(cardRecyclerView.getContext(), "카드 세트가 이동되었습니다.").show();
             delayActionQueue.offer(Pair.create(ACTION_SCROLL_TO_POSITION, smoothScrollToPositionAction));
             delayActionQueue.offer(Pair.create(ACTION_PRESENT_CHILDREN, presentChildrenAction));
             delayActionQueue.offer(Pair.create(ACTION_SHOW_MOVE_SUCCESS_MESSAGE, finishToastMessageAction));
@@ -398,7 +391,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
 
     private boolean handleMoveServiceDragExitedEvent(CardRecyclerView cardRecyclerView) {
         CardRecyclerView.ScrollControllableLayoutManager cardRecyclerViewLayoutManager = cardRecyclerView.getLayoutManager();
-        if (cardRecyclerViewLayoutManager==null)
+        if (cardRecyclerViewLayoutManager == null)
             return false;
         cardRecyclerViewLayoutManager.showCardArrows(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
         return true;
@@ -407,7 +400,7 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     private boolean handleMoveServiceDragEndedEvent(CardRecyclerView cardRecyclerView) {
         cardRecyclerView.detachOnScrollListenerForHorizontalArrow();
         cardRecyclerView.getContainerRecyclerView().setOnDragMove(false);
-        if (cardRecyclerView.getLayoutManager()==null)
+        if (cardRecyclerView.getLayoutManager() == null)
             return false;
         cardRecyclerView.getLayoutManager().showCardArrows(CardRecyclerView.ScrollControllableLayoutManager.DIRECTION_NO_ARROW);
         return true;
