@@ -10,6 +10,8 @@ import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 public class CardViewShadowProvider {
     private static LazyHolder holder;
     private View cloneCardViewInstance;
@@ -23,7 +25,7 @@ public class CardViewShadowProvider {
             holder = null;
     }
 
-    public static View getInstance(Context context, CardDto cardDto) {
+    public static View getInstance(Context context,@Nullable CardDto cardDto) {
         if (holder == null) {
             holder = new LazyHolder();
         }
@@ -34,9 +36,15 @@ public class CardViewShadowProvider {
             holder.get().cloneCardViewInstance.layout(0, 0, (int) context.getResources().getDimension(R.dimen.cloneCard_width), (int) context.getResources().getDimension(R.dimen.cloneCard_height));
         }
         View cardShadowView = holder.get().cloneCardViewInstance;
+
+        TextView title = cardShadowView.findViewById(R.id.cloneFrontCard_titleTextView);
+       TextView contactNumber = cardShadowView.findViewById(R.id.cloneFrontCard_contactNumberTextView);
         if (cardDto != null) {
-            ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_titleTextView)).setText(cardDto.getTitle());
-            ((TextView) cardShadowView.findViewById(R.id.cloneFrontCard_contactNumberTextView)).setText(cardDto.getContactNumber());
+            title.setText(cardDto.getTitle());
+            contactNumber.setText(cardDto.getContactNumber());
+        }else {
+            title.setText("");
+            contactNumber.setText("");
         }
         return holder.get().cloneCardViewInstance;
     }
