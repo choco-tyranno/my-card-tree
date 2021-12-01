@@ -84,8 +84,13 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-#Experiment
+# Experiment
 MyCardTree/
 
-#appKey
+# appKey
 appKey/
+
+# Test data schema
+testDataSchema/
+
+
