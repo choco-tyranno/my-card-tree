@@ -21,6 +21,9 @@ public class DragMoveDataContainer {
         this.rootCard = rootCard;
     }
 
+    /*
+    * note : movingCardList contains rootCard.
+    * */
     public void setMovingCardList(List<CardDto> movingCardList) {
         this.movingCardList = movingCardList;
 
