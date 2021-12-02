@@ -32,6 +32,9 @@ import java.util.List;
 public class CardGestureListener extends GestureDetector.SimpleOnGestureListener {
     private View view;
 
+    /*
+    * Moving card entry point.
+    * */
     @Override
     public void onLongPress(MotionEvent e) {
         super.onLongPress(e);
@@ -54,32 +57,33 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
         List<CardDto> movingCardList = new ArrayList<>();
         List<CardDto> currentNextCardList = new ArrayList<>();
         List<Integer> currentOnFocusPositionList = new ArrayList<>();
-        CardDto cardDto = getCardDto();
-        viewModel.findCurrentOnFocusCardPositions(cardDto.getContainerNo(), currentOnFocusPositionList);
+        CardDto rootCardDto = getCardDto();
+        viewModel.findCurrentOnFocusCardPositions(rootCardDto.getContainerNo(), currentOnFocusPositionList);
         DragMoveDataContainer dragMoveDataContainer = new DragMoveDataContainer();
-        dragMoveDataContainer.setRootCard(cardDto);
+        dragMoveDataContainer.setRootCard(rootCardDto);
         dragMoveDataContainer.setMovingCardList(movingCardList);
         dragMoveDataContainer.setPastLocationNextCardList(currentNextCardList);
         dragMoveDataContainer.setPastOnFocusPositionList(currentOnFocusPositionList);
-        viewModel.findChildrenCards(cardDto, movingCardList);
-        movingCardList.add(cardDto);
-        viewModel.findNextCards(cardDto.getContainerNo(), cardDto.getSeqNo(), currentNextCardList);
+        viewModel.findChildrenCards(rootCardDto, movingCardList);
+        movingCardList.add(rootCardDto);
+        viewModel.findNextCards(rootCardDto.getContainerNo(), rootCardDto.getSeqNo(), currentNextCardList);
         viewModel.removeFromAllList(movingCardList.toArray(new CardDto[0]));
-        final boolean hasLeftItemInTargetContainer = viewModel.removeSinglePresentCardDto(cardDto);
+
+        final boolean isItemLeftInTargetContainer = viewModel.removeSinglePresentCardDto(rootCardDto);
         if (!currentNextCardList.isEmpty()) {
-            viewModel.reduceListSeq(currentNextCardList);
+            viewModel.reduceCardSeqOneStep(currentNextCardList);
         }
-        if (hasLeftItemInTargetContainer) {
+        if (isItemLeftInTargetContainer) {
             if (cardRecyclerView.getAdapter() == null)
                 throw new RuntimeException("#prepareDragStart - cardRecyclerView is null");
-            cardRecyclerView.getAdapter().notifyItemRemoved(cardDto.getSeqNo());
+            cardRecyclerView.getAdapter().notifyItemRemoved(rootCardDto.getSeqNo());
             ((MainCardActivity) cardRecyclerView.getContext()).getMainHandler().postDelayed(() -> {
-                final int newFocusPosition = viewModel.findNearestItemPosition(cardDto.getContainerNo(), cardDto.getSeqNo());
-                Container container = viewModel.getContainer(cardDto.getContainerNo());
+                final int newFocusPosition = viewModel.findNearestItemPosition(rootCardDto.getContainerNo(), rootCardDto.getSeqNo());
+                Container container = viewModel.getContainer(rootCardDto.getContainerNo());
                 if (container != null) {
                     container.setFocusCardPosition(newFocusPosition);
                     cardRecyclerView.smoothScrollToPosition(newFocusPosition);
-                    viewModel.presentChildren(cardRecyclerView, cardDto.getContainerNo(), newFocusPosition);
+                    viewModel.presentChildren(cardRecyclerView, rootCardDto.getContainerNo(), newFocusPosition);
                 }
             }, 150);
         } else {
@@ -91,10 +95,10 @@ public class CardGestureListener extends GestureDetector.SimpleOnGestureListener
             if (containerLayoutManager == null)
                 return dragMoveDataContainer;
             int cardContainerCount = containerLayoutManager.getItemCount() - 1;
-            int removeCount = cardContainerCount - (cardDto.getContainerNo() + 1) + 1;
-            viewModel.clearContainerPositionPresentData(cardDto.getContainerNo());
-            viewModel.clearContainerAtPosition(cardDto.getContainerNo());
-            containerAdapter.notifyItemRangeRemoved(cardDto.getContainerNo(), removeCount);
+            int removeCount = cardContainerCount - (rootCardDto.getContainerNo() + 1) + 1;
+            viewModel.clearContainerPositionPresentData(rootCardDto.getContainerNo());
+            viewModel.clearContainerAtPosition(rootCardDto.getContainerNo());
+            containerAdapter.notifyItemRangeRemoved(rootCardDto.getContainerNo(), removeCount);
         }
         return dragMoveDataContainer;
     }
