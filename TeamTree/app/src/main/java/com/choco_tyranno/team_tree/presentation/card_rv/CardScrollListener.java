@@ -99,7 +99,7 @@ public class CardScrollListener extends RecyclerView.OnScrollListener {
             if (containerRecyclerViewLayoutManager == null)
                 return;
             if (containerRecyclerViewLayoutManager.isRollbackMoveActionRequired()) {
-                uiHandler.postDelayed(containerRecyclerViewLayoutManager::executeNextRollbackMoveAction, 2100);
+                uiHandler.postDelayed(containerRecyclerViewLayoutManager::executeCardMoveRollback, 2100);
             }
         }
     }
