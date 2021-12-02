@@ -53,19 +53,19 @@ public abstract class TeamTreeDataBase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 CardDao cardDAO = INSTANCE.cardDao();
-                /*
-                * for release :
-                * cardDAO.insert(new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(CardDto.NO_ROOT_CARD).title("내 카드").build());
-                * */
+
+//                for release :
+                cardDAO.insert(new CardEntity.Builder().seqNo(0).containerNo(0).rootNo(CardDto.NO_ROOT_CARD).title("내 카드").build());
 
                 // for test :
-                MockCardFactory mockCardFactory = new MockCardFactory();
+                /*MockCardFactory mockCardFactory = new MockCardFactory();
                 List<String> fullNameList = mockCardFactory.createFullNameList();
-                List<MockCard> mockCardList = new MockCardFactory().createCards(fullNameList);
+                List<MockCard> mockCardList = mockCardFactory.createCards(fullNameList);
                 List<CardEntity> testCardList = mockCardList.stream()
-                        .flatMap(mockCard-> Stream.of(mockCard.toCardEntity()))
+                        .map(MockCard::toCardEntity)
                         .collect(Collectors.toList());
-                cardDAO.insert(testCardList);
+                cardDAO.insert(testCardList);*/
+
                 TeamTreeDataBase.setAssetInsertState(true);
             });
         }
