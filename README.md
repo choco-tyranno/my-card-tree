@@ -90,9 +90,6 @@
     - [AOSP Java code style](https://source.android.com/setup/contribute/code-style)
     - [Android resources naming convention(by Jeroen Mols)](https://jeroenmols.com/blog/2016/03/07/resourcenaming/)
 
-    
-
-  - Branch rule: [Git flow](https://guides.github.com/introduction/flow/)
 
 ## Features
 
