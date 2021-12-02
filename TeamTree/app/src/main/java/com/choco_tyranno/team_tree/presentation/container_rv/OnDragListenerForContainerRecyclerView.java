@@ -1,6 +1,7 @@
 package com.choco_tyranno.team_tree.presentation.container_rv;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
 public class OnDragListenerForContainerRecyclerView implements View.OnDragListener {
     @Override
     public boolean onDrag(View v, DragEvent event) {
+        if (v.getId()!=R.id.containerRecyclerView_mainBody_containers)
+            return false;
         ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) v;
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerLayoutManager = containerRecyclerView.getLayoutManager();
         switch (event.getAction()) {
@@ -24,6 +27,8 @@ public class OnDragListenerForContainerRecyclerView implements View.OnDragListen
                     dragType = (String) ((Pair) event.getLocalState()).first;
                 if (event.getLocalState() instanceof DragMoveDataContainer)
                     dragType = ((DragMoveDataContainer) event.getLocalState()).getDragType();
+                if (dragType==null)
+                    return false;
                 final boolean moveDragEvent = TextUtils.equals(dragType, DragMoveDataContainer.DRAG_TYPE);
                 if (!moveDragEvent)
                     return false;
@@ -33,7 +38,7 @@ public class OnDragListenerForContainerRecyclerView implements View.OnDragListen
                 if (!event.getResult()) {
                     CardViewModel viewModel = ((MainCardActivity) v.getContext()).getCardViewModel();
                     containerLayoutManager.onDragEndWithDropFail(
-                            viewModel.createRollbackAction((DragMoveDataContainer) event.getLocalState()
+                            viewModel.createCardMovingRollbackAction((DragMoveDataContainer) event.getLocalState()
                                     , (ContainerRecyclerView) v)
                     );
                 }
