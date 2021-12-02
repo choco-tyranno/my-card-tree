@@ -96,7 +96,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/guideline_cardContainer_containerTopLine"
             app:layout_constraintBottom_toBottomOf="@id/guideline_cardContainer_containerBottomLine"
-            app:onDragListener="@{viewModel.onDragListenerForCardRecyclerView}"/>
+            app:onCardDragListener="@{viewModel.getOnDragListenerForCardRecyclerView(container_no)}"/>
 
         <ImageView
             android:id="@+id/imageView_cardContainer_rightArrow"
