@@ -207,8 +207,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return true;
     }
 
-    String DEBUG_TAG = "@@HOTFIX";
-
     private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
         CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         List<CardDto> movedCardList = dragMoveDataContainer.getMovingCardList();
