@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Pair;
+import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -77,35 +78,31 @@ public class ContainerRecyclerView extends RecyclerView {
         private int scrollOccupyingContainerPosition;
         private Queue<Runnable> scrollLockedQueue;
         public static final int NO_SCROLL_OCCUPYING_POSITION = -1;
-        private Queue<Pair<Integer, Integer>> rollbackMoveActionFlagQueue;
-        private Runnable rollbackMoveFinishAction;
+        private Queue<Pair<Integer, Integer>> cardMovePresetFlagQueue;
+        private Runnable cardMoveRollbackAction;
         private AtomicBoolean onRollbackMoveFinishAction = new AtomicBoolean(false);
-
-        public AtomicBoolean isOnRollbackMoveFinishAction(){
-            return onRollbackMoveFinishAction;
-        }
 
         public void setOnRollbackMoveFinishAction(boolean onRollbackMoveFinishAction) {
             this.onRollbackMoveFinishAction.set(onRollbackMoveFinishAction);
         }
 
-        public void setRollbackMoveFinishAction(Runnable rollbackMoveFinishAction) {
-            this.rollbackMoveFinishAction = rollbackMoveFinishAction;
+        public void setCardMoveRollbackAction(Runnable cardMoveRollbackAction) {
+            this.cardMoveRollbackAction = cardMoveRollbackAction;
         }
 
-        public void setRollbackMoveActionFlagQueue(Queue<Pair<Integer, Integer>> rollbackMoveActionFlagQueue) {
-            this.rollbackMoveActionFlagQueue = rollbackMoveActionFlagQueue;
+        public void setCardMovePresetFlagQueue(Queue<Pair<Integer, Integer>> cardMovePresetFlagQueue) {
+            this.cardMovePresetFlagQueue = cardMovePresetFlagQueue;
         }
 
-        public void executeNextRollbackMoveAction() {
-            if (rollbackMoveActionFlagQueue.isEmpty()) {
-                if (rollbackMoveFinishAction != null) {
-                    rollbackMoveFinishAction.run();
-                    rollbackMoveFinishAction = null;
+        public void executeCardMoveRollback() {
+            if (cardMovePresetFlagQueue.isEmpty()) {
+                if (cardMoveRollbackAction != null) {
+                    cardMoveRollbackAction.run();
+                    cardMoveRollbackAction = null;
                 }
                 return;
             }
-            Pair<Integer, Integer> rollbackMoveActionFlagPair = rollbackMoveActionFlagQueue.poll();
+            Pair<Integer, Integer> rollbackMoveActionFlagPair = cardMovePresetFlagQueue.poll();
             if (rollbackMoveActionFlagPair == null)
                 return;
             final int targetContainerPosition = rollbackMoveActionFlagPair.first;
@@ -113,7 +110,7 @@ public class ContainerRecyclerView extends RecyclerView {
             mContainerRecyclerView.smoothScrollToPosition(targetContainerPosition);
             CardViewModel viewModel = ((MainCardActivity)mContainerRecyclerView.getContext()).getCardViewModel();
             if (targetCardPosition==viewModel.getContainer(targetContainerPosition).getFocusCardPosition())
-                executeNextRollbackMoveAction();
+                executeCardMoveRollback();
             CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) mContainerRecyclerView.findViewHolderForAdapterPosition(targetContainerPosition);
             if (containerViewHolder == null)
                 return;
@@ -122,7 +119,7 @@ public class ContainerRecyclerView extends RecyclerView {
         }
 
         public boolean isRollbackMoveActionRequired() {
-            return !rollbackMoveActionFlagQueue.isEmpty() || rollbackMoveFinishAction != null;
+            return !cardMovePresetFlagQueue.isEmpty() || cardMoveRollbackAction != null;
         }
 
         public void onDragEndWithDropFail(@Nullable Runnable rollbackAction) {
@@ -217,7 +214,7 @@ public class ContainerRecyclerView extends RecyclerView {
             super(context, orientation, reverseLayout);
             scrollOccupyingContainerPosition = NO_SCROLL_OCCUPYING_POSITION;
             this.scrollLockedQueue = new LinkedList<>();
-            this.rollbackMoveActionFlagQueue = new LinkedList<>();
+            this.cardMovePresetFlagQueue = new LinkedList<>();
         }
 
         public void setContainerRecyclerView(ContainerRecyclerView containerRecyclerView) {
