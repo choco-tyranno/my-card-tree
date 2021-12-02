@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,7 +42,6 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
     private final int ACTION_SCROLL_TO_POSITION = 1;
     private final int ACTION_PRESENT_CHILDREN = 2;
     private final int ACTION_SHOW_MOVE_SUCCESS_MESSAGE = 3;
-
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
@@ -207,6 +207,8 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         return true;
     }
 
+    String DEBUG_TAG = "@@HOTFIX";
+
     private boolean handleMoveServiceDropEvent(CardRecyclerView cardRecyclerView, DragMoveDataContainer dragMoveDataContainer) {
         CardDto movedRootCard = dragMoveDataContainer.getRootCard();
         List<CardDto> movedCardList = dragMoveDataContainer.getMovingCardList();
@@ -214,10 +216,8 @@ public class OnDragListenerForCardRecyclerView implements View.OnDragListener {
         ContainerRecyclerView containerRecyclerView = (ContainerRecyclerView) cardRecyclerView.getParent().getParent();
         ContainerRecyclerView.ItemScrollingControlLayoutManager containerRecyclerViewLayoutManager = containerRecyclerView.getLayoutManager();
         CardViewModel viewModel = ((MainCardActivity) cardRecyclerView.getContext()).getCardViewModel();
-        // S
         if (containerRecyclerViewLayoutManager == null)
             return false;
-        // E
         CardAdapter cardAdapter = cardRecyclerView.getAdapter();
         if (cardAdapter == null)
             return false;
