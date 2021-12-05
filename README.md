@@ -60,12 +60,6 @@
 
 ## Doc 
 
-- ERD
-
-  <img src="https://user-images.githubusercontent.com/80248474/136549484-06179bfd-c9b5-4041-bb7c-e2016146d1d4.png" width="100%">
-
-  
-
 - Rules
 
   - Commit convention
