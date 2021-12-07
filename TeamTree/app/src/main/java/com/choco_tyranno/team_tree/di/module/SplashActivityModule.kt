@@ -17,5 +17,4 @@ object SplashActivityModule {
     fun provideAppUpdateManager(@ApplicationContext context : Context) : AppUpdateManager {
         return AppUpdateManagerFactory.create(context);
     }
-
 }
