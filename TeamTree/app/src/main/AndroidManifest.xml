@@ -8,11 +8,10 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28"
-        tools:ignore="ScopedStorage" />
+        tools:ignore="ScopedStorage"
+        tools:remove="android:maxSdkVersion" />
 
     <application
         android:allowBackup="false"
@@ -21,10 +20,9 @@
         android:roundIcon="@mipmap/team_tree_ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
+            android:name=".presentation.SplashActivity"
             android:exported="true"
-            android:name=".presentation.MainCardActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,12 +30,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".presentation.detail_page.DetailCardActivity" />
-
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/LicensesTheme" />
+            android:name=".presentation.MainCardActivity"
+            android:theme="@style/AppTheme"
+            android:exported="true"/>
+        <activity android:name=".presentation.detail_page.DetailCardActivity"
+            android:exported="true"/>
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/LicensesTheme"
+            android:exported="true"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
