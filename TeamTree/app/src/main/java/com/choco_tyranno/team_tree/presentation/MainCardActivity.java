@@ -1,11 +1,18 @@
 package com.choco_tyranno.team_tree.presentation;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -14,14 +21,18 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.print.PrintAttributes;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -52,28 +63,11 @@ import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerVi
 import com.choco_tyranno.team_tree.presentation.main.NewCardButton;
 import com.choco_tyranno.team_tree.presentation.main.TopAppBar;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.InstallState;
-import com.google.android.play.core.install.InstallStateUpdatedListener;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.InstallStatus;
-import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.OnSuccessListener;
-import com.google.android.play.core.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
@@ -82,8 +76,8 @@ public class MainCardActivity extends AppCompatActivity {
     private CardFinder cardFinder;
     private final int REQ_UPDATE = 1992;
     private final String TAG = "@@choco_tyranno";
-    AppUpdateManager appUpdateManager;
-    InstallStateUpdatedListener installStateUpdatedListenerForFlexibleUpdate;
+    ActivityResultLauncher<Intent> basePermissionRequestLauncher;
+    private final AtomicBoolean onManuallyPermissionIntent = new AtomicBoolean(false);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -107,92 +101,12 @@ public class MainCardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        appUpdateManager
-                .getAppUpdateInfo()
-                .addOnSuccessListener(appUpdateInfo -> {
-                    final int installType;
-                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
-                        installType = AppUpdateType.FLEXIBLE;
-                    else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
-                        installType = AppUpdateType.IMMEDIATE;
-                    else
-                        installType = -1;
-                    Log.d(TAG, "onResume#installType: " + installType);
-                    Log.d(TAG, "onResume#appUpdateInfo.updateAvailability(): " + appUpdateInfo.updateAvailability());
-                    Log.d(TAG, "onResume#appUpdateInfo.appUpdateInfo.installStatus(): " + appUpdateInfo.installStatus());
-                    if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                        popupSnackBarForCompleteFlexibleUpdate();
-                        return;
-                    }
-                    if (installType == AppUpdateType.IMMEDIATE &&
-                            appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                        try {
-                            appUpdateManager.startUpdateFlowForResult(
-                                    appUpdateInfo,
-                                    AppUpdateType.IMMEDIATE,
-                                    this,
-                                    REQ_UPDATE);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    private void checkUpdates() {
-        if (appUpdateManager == null)
-            appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
-        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-            Log.d(TAG, "checkUpdates#appUpdateInfo.updateAvailability() : " + appUpdateInfo.updateAvailability());
-            Log.d(TAG, "checkUpdates#appUpdateInfo.installStatus() : " + appUpdateInfo.installStatus());
-            if (appUpdateInfo.updateAvailability() != UpdateAvailability.UPDATE_AVAILABLE &&
-                    appUpdateInfo.updateAvailability() != UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                return;
-            }
-            final int installType;
-            if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
-                installType = AppUpdateType.FLEXIBLE;
-            else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
-                installType = AppUpdateType.IMMEDIATE;
-            else
-                installType = -1;
-            Log.d(TAG, "checkUpdates()/installType:" + installType);
-            if (installType == -1)
-                return;
-            if (installType == AppUpdateType.FLEXIBLE) {
-                initInstallStateUpdatedListenerForFlexibleUpdate();
-                appUpdateManager.registerListener(installStateUpdatedListenerForFlexibleUpdate);
-            }
-            try {
-                appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
-                        installType,
-                        MainCardActivity.this,
-                        REQ_UPDATE);
-            } catch (IntentSender.SendIntentException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void initInstallStateUpdatedListenerForFlexibleUpdate() {
-        if (installStateUpdatedListenerForFlexibleUpdate != null)
-            return;
-        installStateUpdatedListenerForFlexibleUpdate = installState -> {
-            if (installState.installStatus() == InstallStatus.DOWNLOADED)
-                popupSnackBarForCompleteFlexibleUpdate();
-            if (installState.installStatus() == InstallStatus.INSTALLED)
-                appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
-        };
-    }
-
-    private void popupSnackBarForCompleteFlexibleUpdate() {
-        Snackbar.make(binding.getRoot(), "\uD83C\uDF20새로운 버전 다운로드 완료!", Snackbar.LENGTH_INDEFINITE)
-                .setAction("설치", view -> {
-                    if (appUpdateManager != null)
-                        appUpdateManager.completeUpdate();
-                }).setActionTextColor(getResources().getColor(R.color.colorAccent_b, getTheme()))
-                .show();
+        if(onManuallyPermissionIntent.get()
+                &&checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_DENIED){
+            SingleToaster.makeTextShort(MainCardActivity.this,"close app - access denied.").show();
+            onManuallyPermissionIntent.set(false);
+            finish();
+        }
     }
 
     @Override
@@ -201,7 +115,7 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
             mMainHandler = new Handler(getMainLooper());
-        checkUpdates();
+        checkBasicAppPermissions();
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
@@ -230,6 +144,43 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
+    }
+
+    private void checkBasicAppPermissions() {
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("셋팅에서 권한 변경")
+                    .setMessage("앱 권한에서 저장공간 사용으로 변경해주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                            setOnManuallyPermissionIntent(true);
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.defaultTextColor,getTheme()));
+        } else {
+            SingleToaster.makeTextShort(this, "else case").show();
+            ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission()
+                    , isGranted -> {
+                        if (!isGranted) {
+//                            finish();
+                        }
+                    });
+            activityResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void setOnManuallyPermissionIntent(boolean onManuallyPermissionIntent) {
+        this.onManuallyPermissionIntent.set(onManuallyPermissionIntent);
     }
 
     private void initView() {
@@ -381,8 +332,6 @@ public class MainCardActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         SingleToastManager.clear();
-        if (installStateUpdatedListenerForFlexibleUpdate != null)
-            appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate);
     }
 
     @Override
@@ -412,7 +361,6 @@ public class MainCardActivity extends AppCompatActivity {
             scrollActionQueue.offer(() -> {
                 containerRecyclerview.smoothScrollToPosition(i1);
                 Runnable delayedAction = () -> {
-//<Exception>                    ClassCastException : below line.
                     CardContainerViewHolder containerViewHolder = (CardContainerViewHolder) containerRecyclerview.findViewHolderForAdapterPosition(i1);
                     if (containerViewHolder == null)
                         throw new RuntimeException("MainCardActivity#scrollToFindingTargetCard - containerViewHolder == null");
