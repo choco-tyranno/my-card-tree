@@ -50,7 +50,7 @@
 
     <string name="searDrawer_settingsBtnDesc">Settings button. Click to move for settings page.</string>
 
-<!--    Settings Fragment-->
+    <!--    Settings Fragment-->
     <string name="settings_fragment_top_app_bar_title">설정</string>
     <string name="settings_fragment_oss_license_title">🚀 오픈소스 라이선스</string>
 </resources>
