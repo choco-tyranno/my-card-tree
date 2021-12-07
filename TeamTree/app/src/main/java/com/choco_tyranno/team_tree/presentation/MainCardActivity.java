@@ -1,18 +1,9 @@
 package com.choco_tyranno.team_tree.presentation;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.concurrent.futures.CallbackToFutureAdapter;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -20,37 +11,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.print.PrintAttributes;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
@@ -67,17 +41,12 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainCardActivity extends AppCompatActivity {
     private CardViewModel viewModel;
     private ActivityMainBinding binding;
     private Handler mMainHandler;
     private CardFinder cardFinder;
-    private final int REQ_UPDATE = 1992;
-    private final String TAG = "@@choco_tyranno";
-    ActivityResultLauncher<Intent> basePermissionRequestLauncher;
-    private final AtomicBoolean onManuallyPermissionIntent = new AtomicBoolean(false);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -91,22 +60,12 @@ public class MainCardActivity extends AppCompatActivity {
                 CardDto[] cardDTOArr = {updatedCardDto};
                 loadPictureCardImages(cardDTOArr, mMainHandler);
             }
-            return;
-        }
-        if (requestCode == REQ_UPDATE && resultCode != RESULT_OK) {
-            SingleToaster.makeTextShort(this, "Team tree 업데이트 실패. 앱을 종료 후 다시 시도해 주세요.").show();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(onManuallyPermissionIntent.get()
-                &&checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_DENIED){
-            SingleToaster.makeTextShort(MainCardActivity.this,"close app - access denied.").show();
-            onManuallyPermissionIntent.set(false);
-            finish();
-        }
     }
 
     @Override
@@ -115,7 +74,6 @@ public class MainCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (!Optional.ofNullable(mMainHandler).isPresent())
             mMainHandler = new Handler(getMainLooper());
-        checkBasicAppPermissions();
         viewModel = new ViewModelProvider(MainCardActivity.this).get(CardViewModel.class);
         loadDefaultCardImage();
         mainBinding();
@@ -144,43 +102,6 @@ public class MainCardActivity extends AppCompatActivity {
             waitDefaultCardImageLoading(getMainHandler());
             loadPictureCardImages(viewModel.getPictureCardArr(), getMainHandler());
         });
-    }
-
-    private void checkBasicAppPermissions() {
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setTitle("셋팅에서 권한 변경")
-                    .setMessage("앱 권한에서 저장공간 사용으로 변경해주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", getPackageName(), null);
-                            intent.setData(uri);
-                            startActivity(intent);
-                            setOnManuallyPermissionIntent(true);
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.defaultTextColor,getTheme()));
-        } else {
-            SingleToaster.makeTextShort(this, "else case").show();
-            ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission()
-                    , isGranted -> {
-                        if (!isGranted) {
-//                            finish();
-                        }
-                    });
-            activityResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
-    private void setOnManuallyPermissionIntent(boolean onManuallyPermissionIntent) {
-        this.onManuallyPermissionIntent.set(onManuallyPermissionIntent);
     }
 
     private void initView() {
