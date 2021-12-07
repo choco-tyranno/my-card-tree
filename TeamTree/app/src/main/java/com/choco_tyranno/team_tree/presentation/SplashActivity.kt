@@ -12,6 +12,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.tasks.OnSuccessListener
 import com.google.android.play.core.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -64,10 +65,14 @@ class SplashActivity constructor(
                 && updateInfo.updateAvailability() != UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
             ) return@addOnSuccessListener
             var installType = -1
-            if (updateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) installType = AppUpdateType.FLEXIBLE
-            else if (updateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) installType = AppUpdateType.IMMEDIATE
+            if (updateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) installType =
+                AppUpdateType.FLEXIBLE
+            else if (updateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) installType =
+                AppUpdateType.IMMEDIATE
             if (installType == -1) return@addOnSuccessListener
-            if (installType == AppUpdateType.FLEXIBLE) appUpdateManager.registerListener(installStateUpdatedListenerForFlexibleUpdate)
+            if (installType == AppUpdateType.FLEXIBLE) appUpdateManager.registerListener(
+                installStateUpdatedListenerForFlexibleUpdate
+            )
             appUpdateManager.startUpdateFlowForResult(
                 updateInfo,
                 installType,
@@ -81,6 +86,31 @@ class SplashActivity constructor(
         super.onStop()
         SingleToastManager.clear()
         appUpdateManager.unregisterListener(installStateUpdatedListenerForFlexibleUpdate)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        appUpdateManager.appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                var installType = -1
+                if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
+                    installType = AppUpdateType.FLEXIBLE
+                else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
+                    installType = AppUpdateType.IMMEDIATE
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackBarForCompleteFlexibleUpdate()
+                    return@addOnSuccessListener
+                }
+                if (installType == AppUpdateType.IMMEDIATE
+                    && appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        this@SplashActivity,
+                        REQ_UPDATE
+                    )
+                }
+            }
     }
 
     companion object {
