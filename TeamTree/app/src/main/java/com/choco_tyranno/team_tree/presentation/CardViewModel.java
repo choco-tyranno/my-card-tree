@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -79,6 +80,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -126,6 +128,10 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
     private final int LONG_LENGTH_PAGER_NO = 10;
     private final int NO_FOCUS_PAGE = 0;
+
+    private final AtomicBoolean dataInitialized = new AtomicBoolean(false);
+
+    private final String TAG = "@@CardViewModel";
 
     public MutableLiveData<Boolean> getLongPagerOn() {
         return longPagerOn;
@@ -262,17 +268,17 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         changeFocusPagerNo();
     }
 
-    private void changeFocusPagerNo(){
+    private void changeFocusPagerNo() {
         final int focusPageNo = getFocusPageNo();
-        if (focusPageNo==0)
+        if (focusPageNo == 0)
             return;
-        int pagerNo = Math.floorMod(focusPageNo,VISIBLE_PAGE_ITEM_MAX_COUNT);
-        if (pagerNo==0)
+        int pagerNo = Math.floorMod(focusPageNo, VISIBLE_PAGE_ITEM_MAX_COUNT);
+        if (pagerNo == 0)
             pagerNo = VISIBLE_PAGE_ITEM_MAX_COUNT;
         focusPagerNo.setValue(pagerNo);
     }
 
-    public MutableLiveData<Integer> getFocusPagerNo(){
+    public MutableLiveData<Integer> getFocusPagerNo() {
         return focusPagerNo;
     }
 
@@ -369,7 +375,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         view.setAdapter(adapter);
     }
 
-    public void setPictureCardImage(Bitmap resource, int cardNo) {
+    public void setCardImageResource(Bitmap resource, int cardNo) {
         ObservableBitmap theImageHolder = cardImageMap.get(cardNo);
         if (theImageHolder != null)
             theImageHolder.setCardThumbnail(resource);
@@ -377,6 +383,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public CardDto[] getPictureCardArr() {
         return mCardRepository.getData().stream().map(CardEntity::toDTO).filter(cardDto -> !TextUtils.equals(cardDto.getImagePath(), "")).toArray(CardDto[]::new);
+    }
+
+    public boolean isCardImageChanged(CardDto updatedCardDto) {
+        CardDto previousCardDto = getCardDto(updatedCardDto.getContainerNo(), updatedCardDto.getSeqNo());
+        return !TextUtils.equals(previousCardDto.getImagePath(), updatedCardDto.getImagePath());
     }
 
     public boolean applyCardFromDetailActivity(CardDto updatedCardDto) {
@@ -411,7 +422,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     @BindingAdapter(value = {"cardThumbnail", "defaultCardThumbnail"})
-    public static void loadCardThumbnail(ImageView view, Bitmap cardThumbnail, Bitmap defaultCardThumbnail) {
+    public static void loadCardThumbnail(ImageView view, @Nullable Bitmap cardThumbnail, Bitmap defaultCardThumbnail) {
         if (cardThumbnail != null)
             view.setImageBitmap(cardThumbnail);
         else
@@ -673,8 +684,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     /*
-    * note : contains sort.
-    * */
+     * note : contains sort.
+     * */
     public void addToAllData(CardDto[] cardArr) {
         if (cardArr == null || cardArr.length == 0)
             return;
@@ -725,15 +736,15 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     /*
-    * For to add single cardDto to mPresentData by this method,
-    * must present container status has been guaranteed to contains target container or one lacking.
-    * */
+     * For to add single cardDto to mPresentData by this method,
+     * must present container status has been guaranteed to contains target container or one lacking.
+     * */
     public void addSinglePresentCardDto(CardDto cardDto) {
         final int containerNo = cardDto.getContainerNo();
         final int seqNo = cardDto.getSeqNo();
         if (mPresentData.size() + 1 == containerNo + 1) {
             mPresentData.add(new ArrayList<>());
-        } else if(mPresentData.size() + 1 < containerNo + 1)
+        } else if (mPresentData.size() + 1 < containerNo + 1)
             throw new RuntimeException(" tried : addSinglePresentCardDto / but, method concept unmatched.");
         mPresentData.get(containerNo).add(seqNo, Pair.create(cardDto, new CardState()));
     }
@@ -946,8 +957,8 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     /*
-    * note : found children cardDtos and add all to the list 'List<CardDto> foundChildrenCollector'.
-    * */
+     * note : found children cardDtos and add all to the list 'List<CardDto> foundChildrenCollector'.
+     * */
     public void findChildrenCards(CardDto rootCard, List<CardDto> foundChildrenCollector) {
         final int rootCardNo = rootCard.getCardNo();
         final int testChildContainerNo = rootCard.getContainerNo() + 1;
@@ -1238,22 +1249,31 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         return result;
     }
 
+    public boolean isDataInitialized() {
+        return dataInitialized.get();
+    }
+
+    public void setDataInitialized() {
+        dataInitialized.set(true);
+    }
+
+    /*
+     * param callback : loading card image and layout.
+     * */
     public void loadData(OnDataLoadListener callback) {
-        if (!mCardRepository.isDataPrepared()) {
-            mCardRepository.readData((lastContainerNo) -> {
-                initData(lastContainerNo);
-                callback.onLoadData();
-            });
-        } else {
-            if (!mCardRepository.getData().isEmpty())
-                initData(mCardRepository.getData().size() - 1);
+        if (dataInitialized.get()) {
             callback.onLoadData();
+            return;
         }
+        mCardRepository.readData((lastContainerNo) -> {
+            initData(lastContainerNo);
+            callback.onLoadData();
+        });
     }
 
     private void initPresentData(List<HashMap<Integer, List<CardDto>>> dataGroupedByRootNo) {
         mPresentData.clear();
-        if (!(mPresentContainerList.size() > 0))
+        if (mPresentContainerList.size() <= 0)
             return;
         if (dataGroupedByRootNo == null || dataGroupedByRootNo.isEmpty())
             return;
@@ -1291,11 +1311,14 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private void initContainerList(List<HashMap<Integer, List<CardDto>>> orderedData) {
         if (orderedData == null || orderedData.isEmpty())
             return;
-        List<CardDto> firstLayerItems = orderedData.get(0).get(CardDto.NO_ROOT_CARD);
-        if (firstLayerItems == null || firstLayerItems.isEmpty())
+        final int topRootContainerNo = 0;
+        HashMap<Integer, List<CardDto>> topRootContainerCardMap = orderedData.get(topRootContainerNo);
+        List<CardDto> topRootContainerCards = topRootContainerCardMap.get(CardDto.NO_ROOT_CARD);
+        if (topRootContainerCards == null || topRootContainerCards.isEmpty())
             return;
         mPresentContainerList.add(new Container(CardDto.NO_ROOT_CARD));
-        int rootCardNo = firstLayerItems.get(Container.DEFAULT_CARD_POSITION).getCardNo();
+        final int initCardNo = topRootContainerCards.get(0).getCardNo();
+        int rootCardNo = initCardNo;
         for (int i = 1; i < orderedData.size(); i++) {
             HashMap<Integer, List<CardDto>> testMap = orderedData.get(i);
             if (testMap.containsKey(rootCardNo)) {
@@ -1603,7 +1626,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     @BindingAdapter("onCardDragListener")
-    public static void setOnCardDragListener(CardRecyclerView cardRecyclerView, OnDragListenerForCardRecyclerView listener){
+    public static void setOnCardDragListener(CardRecyclerView cardRecyclerView, OnDragListenerForCardRecyclerView listener) {
         cardRecyclerView.setOnDragListener(listener);
     }
 

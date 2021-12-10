@@ -2,6 +2,7 @@ package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -17,7 +18,7 @@ public class ObservableBitmap extends BaseObservable {
         this.cardThumbnail = bitmap;
     }
 
-    public void setCardThumbnail(Bitmap bitmap){
+    public void setCardThumbnail(@Nullable Bitmap bitmap){
         this.cardThumbnail = bitmap;
         notifyPropertyChanged(BR.thumbnail);
     }

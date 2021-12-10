@@ -38,9 +38,10 @@ class SplashActivity constructor(
     lateinit var appUpdateManager: AppUpdateManager
     private val installStateUpdatedListenerForFlexibleUpdate: InstallStateUpdatedListener =
         createInstallStateUpdatedListenerForFlexibleUpdate()
-    private val activityResultLauncherForPermission : ActivityResultLauncher<String> = createActivityResultLauncherForPermission()
+    private val activityResultLauncherForPermission: ActivityResultLauncher<String> =
+        createActivityResultLauncherForPermission()
 
-    private fun createActivityResultLauncherForPermission(): ActivityResultLauncher<String>{
+    private fun createActivityResultLauncherForPermission(): ActivityResultLauncher<String> {
         return registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
@@ -49,6 +50,7 @@ class SplashActivity constructor(
             }
         }
     }
+
     private fun checkEssentialPermissions() {
         when {
             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -65,7 +67,7 @@ class SplashActivity constructor(
         }
     }
 
-    private fun showManualPermissionRequestDialog(){
+    private fun showManualPermissionRequestDialog() {
         val manualPermissionRequestDialogBuilder =
             AlertDialog.Builder(this@SplashActivity)
                 .setTitle("(필수) 저장공간 사용을 켜주세요")
@@ -138,7 +140,7 @@ class SplashActivity constructor(
     }
 
     private fun startMainCardActivity() {
-        if (essentialPermissionClean.get() && updateClean.get()){
+        if (essentialPermissionClean.get() && updateClean.get()) {
             startActivity(Intent(this@SplashActivity, MainCardActivity::class.java))
             finish()
         }
@@ -225,7 +227,7 @@ class SplashActivity constructor(
     }
 
     companion object {
-        val TAG = "@@Splash"
+        const val TAG = "@@Splash"
     }
 
 }

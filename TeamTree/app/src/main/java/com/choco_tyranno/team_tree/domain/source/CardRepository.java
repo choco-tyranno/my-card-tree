@@ -1,10 +1,8 @@
 package com.choco_tyranno.team_tree.domain.source;
 
 import android.app.Application;
-
 import com.choco_tyranno.team_tree.domain.card_data.CardDao;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
-
 import java.util.List;
 import java.util.function.Consumer;
 
