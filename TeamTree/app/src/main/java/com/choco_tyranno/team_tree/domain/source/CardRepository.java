@@ -22,10 +22,6 @@ public class CardRepository {
         return instance;
     }
 
-    public boolean isDataPrepared() {
-        return _originData != null;
-    }
-
     public void readData(Consumer<Integer> callback) {
         execute(() -> {
             int loopCount = 0;
