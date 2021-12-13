@@ -15,12 +15,10 @@ import com.choco_tyranno.team_tree.presentation.main.MainCardActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.install.InstallState
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.tasks.OnSuccessListener
 import com.google.android.play.core.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
@@ -69,9 +67,10 @@ class SplashActivity constructor(
     private fun showManualPermissionRequestDialog() {
         val manualPermissionRequestDialogBuilder =
             AlertDialog.Builder(this@SplashActivity)
-                .setTitle("(필수) 저장공간 사용을 켜주세요")
+                .setTitle(R.string.splashActivity_storagePermissionRequestDialogTitle)
+                .setMessage(R.string.splashActivity_storagePermissionRequestDialogMessage)
                 .setCancelable(false)
-                .setPositiveButton("SETTINGS") { dialog, id ->
+                .setPositiveButton(R.string.splashActivity_storagePermissionRequestDialogPositiveButtonText) { dialog, id ->
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", packageName, null)
                     intent.setData(uri)
@@ -82,15 +81,16 @@ class SplashActivity constructor(
         val permissionAlertDialog = manualPermissionRequestDialogBuilder.create()
         permissionAlertDialog.show()
         permissionAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(resources.getColor(R.color.defaultTextColor, theme))
+            .setTextColor(resources.getColor(R.color.colorAccent_c, theme))
     }
 
     private fun showEssentialPermissionDeniedDialog() {
         val permissionDeniedDialogBuilder =
             AlertDialog.Builder(this@SplashActivity)
-                .setTitle("필수 권한이 거부되어 앱을 종료합니다.")
+                .setTitle(R.string.splashActivity_storagePermissionRequestDialogDeniedTitle)
+                .setMessage(R.string.splashActivity_storagePermissionRequestDialogDeniedMessage)
                 .setCancelable(false)
-                .setPositiveButton("종료") { dialog, id ->
+                .setPositiveButton(R.string.splashActivity_storagePermissionRequestDialogDeniedPositiveButtonText) { dialog, id ->
                     finish()
                 }
         val permissionDeniedAlertDialog = permissionDeniedDialogBuilder.create()
@@ -117,11 +117,11 @@ class SplashActivity constructor(
     private fun showSnackBarForCompleteFlexibleUpdate() {
         Snackbar.make(
             this@SplashActivity.findViewById(R.id.constraintLayout_splash_rootView),
-            "\uD83C\uDF20새로운 버전 다운로드 완료!",
+            R.string.splashActivity_flexibleUpdateCompleteSnackBarMessage,
             Snackbar.LENGTH_INDEFINITE
         )
             .setAction(
-                "설치"
+                R.string.splashActivity_flexibleUpdateCompleteActionText
             ) { appUpdateManager.completeUpdate() }
             .setActionTextColor(resources.getColor(R.color.colorAccent_b, theme))
             .show()
@@ -200,7 +200,7 @@ class SplashActivity constructor(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_UPDATE && resultCode != RESULT_OK) {
-            SingleToaster.makeTextShort(this, "Team tree 업데이트 실패. 앱을 종료 후 다시 시도해 주세요.").show()
+            SingleToaster.makeTextLong(this, resources.getString(R.string.splashActivity_updateFailText)).show()
         }
     }
 

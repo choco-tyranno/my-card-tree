@@ -53,4 +53,23 @@
     <!--    Settings Fragment-->
     <string name="settings_fragment_top_app_bar_title">설정</string>
     <string name="settings_fragment_oss_license_title">🚀 오픈소스 라이선스</string>
+
+    <string name="splashActivity_storagePermissionRequestDialogMessage">
+        Team tree는 앱 데이터 저장을 위해 \'저장공간 권한\'을 필요로 합니다.
+        \n\n저장공간 사용을 켜주세요.</string>
+    <string name="splashActivity_storagePermissionRequestDialogTitle">
+        🧱저장공간 권한 요청</string>
+    <string name="splashActivity_storagePermissionRequestDialogPositiveButtonText">
+        SETTINGS</string>
+    <string name="splashActivity_storagePermissionRequestDialogDeniedTitle">
+        🙅</string>
+    <string name="splashActivity_storagePermissionRequestDialogDeniedMessage">
+        앱 필수 권한이 거부되어 앱을 종료합니다.</string>
+    <string name="splashActivity_storagePermissionRequestDialogDeniedPositiveButtonText">
+        종료</string>
+
+    <string name="splashActivity_flexibleUpdateCompleteSnackBarMessage">🌠새로운 버전 다운로드 완료!</string>
+    <string name="splashActivity_flexibleUpdateCompleteActionText">설치</string>
+    <string name="splashActivity_updateFailText">
+        Team tree 업데이트 실패. 앱 종료 후 다시 시도해 주세요.</string>
 </resources>
