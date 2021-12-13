@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
+
 import java.util.Optional;
 
 public interface UiThreadAccessible {

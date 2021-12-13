@@ -16,8 +16,8 @@ android {
         targetSdkVersion 31
         versionCode 9
         versionName "1.2.4"
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "com.choco_tyranno.team_tree.CustomTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner "com.choco_tyranno.team_tree.CustomTestRunner"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation":

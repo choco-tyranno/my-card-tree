@@ -2,26 +2,21 @@ package com.choco_tyranno.team_tree.presentation.searching_drawer.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.BindingAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DependentUIResolver;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.main.DependentView;
-import com.choco_tyranno.team_tree.presentation.main.TopAppBar;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Optional;
@@ -93,7 +88,7 @@ public class SearchResultPager extends MaterialButton implements DependentView {
             defaultModeInitializedCount++;
             return;
         }
-        ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
+        ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getBinding();
         MaterialButton pager3 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager3;
         SearchResultPager pager4 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager4;
         SearchResultPager pager5 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager5;
@@ -117,7 +112,7 @@ public class SearchResultPager extends MaterialButton implements DependentView {
     }
 
     private void applyLongPagerMode(View view) {
-        ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
+        ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getBinding();
         SearchResultPager pager1 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager1;
         MaterialButton pager3 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager3;
         SearchResultPager pager4 = binding.layoutSearchdrawer.searchResultPagerSearchDrawerPager4;

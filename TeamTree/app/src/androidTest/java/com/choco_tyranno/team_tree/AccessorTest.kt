@@ -40,6 +40,7 @@ class AccessorTest {
 
 class TestItem {
     private lateinit var a1: String
+    lateinit var a2: String
 
     fun setA1(str: String) {
         a1 = str

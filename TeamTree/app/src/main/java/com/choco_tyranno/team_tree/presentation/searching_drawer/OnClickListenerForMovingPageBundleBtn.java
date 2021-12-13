@@ -1,11 +1,10 @@
 package com.choco_tyranno.team_tree.presentation.searching_drawer;
 
-import android.text.TextUtils;
 import android.view.View;
 
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 public class OnClickListenerForMovingPageBundleBtn implements View.OnClickListener {
     @Override

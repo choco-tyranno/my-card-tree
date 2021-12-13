@@ -2,28 +2,22 @@ package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.content.ClipData;
 import android.content.Context;
-import android.os.Parcelable;
-import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
-import com.choco_tyranno.team_tree.presentation.SingleToastManager;
-import com.choco_tyranno.team_tree.presentation.SingleToaster;
 import com.choco_tyranno.team_tree.presentation.container_rv.CloneCardShadow;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;

@@ -17,7 +17,6 @@ class OnClickListenerForCallBtn private constructor(): View.OnClickListener {
     override fun onClick(v: View) = startCallDialActivity(v)
 
     private fun startCallDialActivity(callBtn : View){
-        SingleToaster.makeTextShort(callBtn.context,"it worked!").show()
         val viewPositionManager : ConstraintLayout = callBtn.parent as ConstraintLayout
         val cardView : MaterialCardView = viewPositionManager.parent as MaterialCardView
         val cardFrame : ConstraintLayout = cardView.parent as ConstraintLayout

@@ -2,33 +2,23 @@ package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
 import com.choco_tyranno.team_tree.presentation.DisplayUtil;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
-import com.choco_tyranno.team_tree.presentation.SingleToastManager;
 import com.choco_tyranno.team_tree.presentation.SingleToaster;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
-import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

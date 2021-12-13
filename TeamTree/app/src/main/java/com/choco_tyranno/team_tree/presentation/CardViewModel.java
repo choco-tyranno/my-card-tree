@@ -1,12 +1,10 @@
 package com.choco_tyranno.team_tree.presentation;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
@@ -15,9 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -33,10 +29,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
-import com.choco_tyranno.team_tree.databinding.ItemCardframeBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
 import com.choco_tyranno.team_tree.domain.source.CardRepository;
@@ -47,13 +41,12 @@ import com.choco_tyranno.team_tree.presentation.card_rv.CardScrollListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardState;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardTouchListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider;
-import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
 import com.choco_tyranno.team_tree.presentation.card_rv.SpreadingOutDetailOnClickListener;
 import com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap;
-import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForCallBtn;
 import com.choco_tyranno.team_tree.presentation.card_rv.OnClickListenerForMessageBtn;
 import com.choco_tyranno.team_tree.presentation.card_rv.OnDragListenerForCardRecyclerView;
+import com.choco_tyranno.team_tree.presentation.card_rv.listener.OnClickListenerForCallBtn;
 import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.team_tree.presentation.container_rv.CloneCardShadow;
 import com.choco_tyranno.team_tree.presentation.container_rv.Container;
@@ -63,6 +56,7 @@ import com.choco_tyranno.team_tree.presentation.container_rv.ContainerScrollList
 import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForBottomArrow;
 import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForContainerRecyclerView;
 import com.choco_tyranno.team_tree.presentation.container_rv.OnDragListenerForTopArrow;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnClickListenerForMovingPageBundleBtn;
 import com.choco_tyranno.team_tree.presentation.searching_drawer.OnQueryTextListenerForSearchingCard;
@@ -530,7 +524,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnClickListenerForSettingButton() {
         this.onClickListenerForSettingButton = view -> {
-            ActivityMainBinding binding = ((MainCardActivity) view.getContext()).getMainBinding();
+            ActivityMainBinding binding = ((MainCardActivity)view.getContext()).getBinding();
             DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
             mainDL.closeDrawer(GravityCompat.END);
             toggleSettingsOn();
@@ -563,7 +557,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     }
 
     private void initOnClickListenerForCallBtn() {
-        this.onClickListenerForCallBtn = new OnClickListenerForCallBtn();
+        this.onClickListenerForCallBtn = OnClickListenerForCallBtn.getInstance();
     }
 
     private void initOnClickListenerForMovingPageBundleBtn() {

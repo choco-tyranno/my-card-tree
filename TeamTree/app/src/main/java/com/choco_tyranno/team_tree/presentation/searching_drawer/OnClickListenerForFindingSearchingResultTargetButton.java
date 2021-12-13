@@ -5,11 +5,12 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemSearchingResultBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
+
+import java.lang.reflect.Array;
 
 public class OnClickListenerForFindingSearchingResultTargetButton implements View.OnClickListener {
     @Override

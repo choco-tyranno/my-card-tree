@@ -1,22 +1,25 @@
 package com.choco_tyranno.team_tree.presentation.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
+import android.util.Pair
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
-import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityCompat
 import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.activityViewModels
+import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -30,24 +33,69 @@ import com.choco_tyranno.team_tree.presentation.DependentUIResolver.DependentUIR
 import com.choco_tyranno.team_tree.presentation.SingleToastManager
 import com.choco_tyranno.team_tree.presentation.SingleToaster
 import com.choco_tyranno.team_tree.presentation.card_rv.CardGestureListener
-import com.choco_tyranno.team_tree.presentation.card_rv.CardTouchListener
 import com.choco_tyranno.team_tree.presentation.card_rv.CardViewShadowProvider
-import com.choco_tyranno.team_tree.presentation.card_rv.listener.OnClickListenerForCallBtn
+import com.choco_tyranno.team_tree.presentation.card_rv.SpreadingOutDetailOnClickListener
+import com.choco_tyranno.team_tree.presentation.container_rv.CardContainerViewHolder
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerAdapter
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
 import com.choco_tyranno.team_tree.presentation.searching_drawer.CardFinder
-import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import java.lang.RuntimeException
-import javax.inject.Inject
+import java.util.*
 import kotlin.math.roundToInt
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainCardActivity : AppCompatActivity() {
     val cardViewModel: CardViewModel by viewModels()
     private lateinit var handler: Handler
     private lateinit var binding: ActivityMainBinding
-    private lateinit var cardFounder : CardFinder
+    private lateinit var cardFinder: CardFinder
+
+    private fun scrollActionDelayed(scrollActionQueue : Queue<Runnable>, finishAction: Runnable?){
+        handler.postDelayed(Runnable {
+            if (scrollActionQueue.isEmpty()) {
+                Log.d("","")
+                finishAction?.run()
+                return@Runnable
+            }
+            scrollActionQueue.poll()?.run()
+            scrollActionDelayed(scrollActionQueue, finishAction)
+        }, 900)
+    }
+
+    fun scrollToFindingTargetCard(scrollUtilDataForFindingOutCard : Pair<Int, Array<Int>>, finishAction : Runnable){
+        val startContainerPosition = scrollUtilDataForFindingOutCard.first
+        val scrollTargetCardSeqArr: Array<Int> = scrollUtilDataForFindingOutCard.second
+        val containerRecyclerview: RecyclerView =
+            binding.layoutMainbody.containerRecyclerViewMainBodyContainers
+        val scrollActionQueue: Queue<Runnable> = LinkedList()
+        for ((index, targetContainerNo) in (startContainerPosition until startContainerPosition + scrollTargetCardSeqArr.size).withIndex()) {
+            scrollActionQueue.offer(Runnable {
+                containerRecyclerview.smoothScrollToPosition(targetContainerNo)
+                val delayedAction = Runnable {
+                    val containerViewHolder =
+                        containerRecyclerview.findViewHolderForAdapterPosition(targetContainerNo) as CardContainerViewHolder
+                    val cardRecyclerview: RecyclerView =
+                        containerViewHolder.binding.cardRecyclerViewCardContainerCards
+                    cardRecyclerview.smoothScrollToPosition(scrollTargetCardSeqArr[index])
+                }
+                handler.postDelayed(delayedAction, 900)
+            })
+        }
+        if (scrollActionQueue.isEmpty()) {
+            handler.postDelayed(Runnable {
+                containerRecyclerview.smoothScrollToPosition(
+                    startContainerPosition
+                )
+            }, 900)
+            finishAction.run()
+            return
+        }
+        scrollActionDelayed(scrollActionQueue, finishAction)
+    }
+
+    fun getCardFinder() = cardFinder
+
+    fun getMainHandler() = handler
 
     fun getBinding(): ActivityMainBinding {
         if (::binding.isInitialized)
@@ -61,8 +109,45 @@ class MainActivity : AppCompatActivity() {
         handler = Handler(mainLooper)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.lifecycleOwner = this@MainActivity
-        cardFounder = CardFinder(this@MainActivity)
+        binding.lifecycleOwner = this@MainCardActivity
+        cardFinder = CardFinder(this@MainCardActivity)
+    }
+
+    private fun loadNewCardImage(updatedCardDto: CardDto) {
+        if (TextUtils.equals(updatedCardDto.imagePath, "")) {
+            cardViewModel.setCardImageResource(null, updatedCardDto.cardNo)
+            return
+        }
+        handler.post(Runnable {
+            val cardNo: Int = updatedCardDto.cardNo
+            val width =
+                resources.getDimension(R.dimen.card_thumbnail_image_width).roundToInt()
+            val height =
+                resources.getDimension(R.dimen.card_thumbnail_image_height).roundToInt()
+            Glide.with(this@MainCardActivity).asBitmap()
+                .load(updatedCardDto.imagePath)
+                .addListener(object : RequestListener<Bitmap?> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any,
+                        target: Target<Bitmap?>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Bitmap?,
+                        model: Any,
+                        target: Target<Bitmap?>,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        cardViewModel.setCardImageResource(resource, cardNo)
+                        return false
+                    }
+                }).submit(width, height)
+        })
     }
 
     private fun loadDefaultImageResource() {
@@ -71,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         Thread() {
             val width = resources.getDimension(R.dimen.card_thumbnail_image_width).roundToInt()
             val height = resources.getDimension(R.dimen.card_thumbnail_image_height).roundToInt()
-            Glide.with(this@MainActivity).asBitmap()
+            Glide.with(this@MainCardActivity).asBitmap()
                 .load(R.drawable.default_card_image_01)
                 .addListener(object : RequestListener<Bitmap> {
                     override fun onLoadFailed(
@@ -81,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                         isFirstResource: Boolean
                     ): Boolean {
                         SingleToaster.makeTextLong(
-                            this@MainActivity,
+                            this@MainCardActivity,
                             "기본카드 이미지를 불어올 수 없습니다. 앱을 재시작해주세요."
                         ).show()
                         return false
@@ -105,11 +190,11 @@ class MainActivity : AppCompatActivity() {
     private fun initContainerRv() {
         val containerRv: ContainerRecyclerView =
             binding.layoutMainbody.containerRecyclerViewMainBodyContainers
-        containerRv.adapter = ContainerAdapter(this@MainActivity)
+        containerRv.adapter = ContainerAdapter(this@MainCardActivity)
         containerRv.setLayoutManager(
             ContainerRecyclerView
                 .ItemScrollingControlLayoutManager(
-                    this@MainActivity, LinearLayoutManager.VERTICAL, false
+                    this@MainCardActivity, LinearLayoutManager.VERTICAL, false
                 )
         )
         containerRv.adapter?.notifyDataSetChanged()
@@ -119,7 +204,7 @@ class MainActivity : AppCompatActivity() {
         binding.layoutSearchdrawer.cardSearchResultRecyclerview
             .addItemDecoration(
                 DividerItemDecoration(
-                    this@MainActivity, DividerItemDecoration.VERTICAL
+                    this@MainCardActivity, DividerItemDecoration.VERTICAL
                 )
             )
     }
@@ -160,41 +245,44 @@ class MainActivity : AppCompatActivity() {
         searchAutoComplete.setTextColor(resources.getColor(R.color.colorPrimary, theme))
     }
 
-    private fun initUiUtils(){
+    private fun initUiUtils() {
         val cardGestureListener = CardGestureListener()
-        val cardGestureDetector = GestureDetectorCompat(this@MainActivity, cardGestureListener)
+        val cardGestureDetector = GestureDetectorCompat(this@MainCardActivity, cardGestureListener)
         cardViewModel.setCardGestureListener(cardGestureListener)
         cardViewModel.setCardGestureDetector(cardGestureDetector)
         cardViewModel.connectGestureUtilsToOnCardTouchListener()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun showContainerView(){
-        runOnUiThread { binding.layoutMainbody.containerRecyclerViewMainBodyContainers
-            .adapter?.notifyDataSetChanged()}
+    private fun showContainerView() {
+        runOnUiThread {
+            binding.layoutMainbody.containerRecyclerViewMainBodyContainers
+                .adapter?.notifyDataSetChanged()
+        }
     }
 
-    private fun waitToLoadDefaultImageResource(){
-        if (cardViewModel.hasDefaultCardImage()){
+    private fun waitToLoadDefaultImageResource() {
+        if (cardViewModel.hasDefaultCardImage()) {
             showContainerView()
             return
         }
-        handler.postDelayed(Runnable { waitToLoadDefaultImageResource()
-        },500)
+        handler.postDelayed(Runnable {
+            waitToLoadDefaultImageResource()
+        }, 500)
     }
 
-    private fun loadAllCardResources(){
+    private fun loadAllCardImageResources() {
         if (cardViewModel.isDataInitialized)
             return
         val allCardArr = cardViewModel.pictureCardArr
         val width = resources.getDimension(R.dimen.card_thumbnail_image_width).roundToInt()
         val height = resources.getDimension(R.dimen.card_thumbnail_image_height).roundToInt()
-        for (card in allCardArr){
+        for (card in allCardArr) {
             if (TextUtils.equals(card.imagePath, "")) continue
             handler.post {
                 val cardNo: Int = card.cardNo
                 try {
-                    Glide.with(this@MainActivity).asBitmap()
+                    Glide.with(this@MainCardActivity).asBitmap()
                         .load(card.imagePath)
                         .addListener(object : RequestListener<Bitmap?> {
                             override fun onLoadFailed(
@@ -203,8 +291,10 @@ class MainActivity : AppCompatActivity() {
                                 target: Target<Bitmap?>,
                                 isFirstResource: Boolean
                             ): Boolean {
-                                SingleToaster.makeTextShort(this@MainActivity
-                                    ,"[${card.title}] 이미지를 불러오는데 실패했습니다. 다시 시도해주세요.").show()
+                                SingleToaster.makeTextShort(
+                                    this@MainCardActivity,
+                                    "[${card.title}] 이미지를 불러오는데 실패했습니다. 다시 시도해주세요."
+                                ).show()
                                 return false
                             }
 
@@ -229,15 +319,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.testactivity_main)
         initVarWithContext()
         binding.viewModel = cardViewModel
         loadDefaultImageResource()
         initContentView()
         initUiUtils()
-        cardViewModel.loadData(){
+        cardViewModel.loadData() {
             waitToLoadDefaultImageResource()
-            loadAllCardResources()
+            loadAllCardImageResources()
         }
     }
 
@@ -252,10 +341,45 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         SingleToastManager.clear()
-        CardViewShadowProvider.onDestroy();
+        CardViewShadowProvider.onDestroy()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        supportActionBar?.hide()
+        cardViewModel.toggleSettingsOn()
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        val mainDL = binding.drawerLayoutMainSearchDrawer
+        if (mainDL.isDrawerOpen(GravityCompat.END)) {
+            mainDL.closeDrawer(GravityCompat.END)
+            val searchView: SearchView = binding.layoutSearchdrawer.cardSearchView
+            searchView.setQuery("", false)
+            searchView.isIconified = true
+            cardFinder.isSendingFindCardReq = false
+            return
+        }
+        if(cardViewModel.isSettingsOn.value == true){
+            supportActionBar?.hide()
+        }else super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SpreadingOutDetailOnClickListener.REQ_MANAGE_DETAIL) {
+            if (data == null) return
+            val updatedCardDto = data.getSerializableExtra("post_card") as CardDto
+            val imageChanged: Boolean = cardViewModel.isCardImageChanged(updatedCardDto)
+            cardViewModel.applyCardFromDetailActivity(updatedCardDto)
+            if (imageChanged) {
+                loadNewCardImage(updatedCardDto)
+            }
+        }
     }
 
     companion object {
         const val TAG = "@@MainActivity"
+        fun test(){}
     }
 }

@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.databinding.ItemEmptycontainerBinding;
 import com.choco_tyranno.team_tree.databinding.ItemCardcontainerBinding;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 public class ContainerAdapter extends RecyclerView.Adapter<ContainerViewHolder> {
     private final CardViewModel viewModel;

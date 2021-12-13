@@ -1,12 +1,8 @@
 package com.choco_tyranno.team_tree.presentation.searching_drawer;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -16,13 +12,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class CardFinder {
@@ -41,7 +35,7 @@ public class CardFinder {
             @Override
             public void onAnimationEnd(Animation animation) {
                 MainCardActivity mainCardActivity = (MainCardActivity) context;
-                ActivityMainBinding binding = mainCardActivity.getMainBinding();
+                ActivityMainBinding binding = mainCardActivity.getBinding();
                 DrawerLayout MainDL = binding.drawerLayoutMainSearchDrawer;
                 MainDL.closeDrawer(GravityCompat.END);
                 SearchView searchView = binding.layoutSearchdrawer.cardSearchView;

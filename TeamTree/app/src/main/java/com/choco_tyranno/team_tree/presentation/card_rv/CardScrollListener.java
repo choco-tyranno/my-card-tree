@@ -1,26 +1,18 @@
 package com.choco_tyranno.team_tree.presentation.card_rv;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.choco_tyranno.team_tree.Logger;
-import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class CardScrollListener extends RecyclerView.OnScrollListener {
     private OnFocusChangedListener focusChangedListener;

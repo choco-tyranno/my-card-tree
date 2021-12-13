@@ -25,23 +25,21 @@
             android:name=".presentation.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
+        </activity>
+        <activity android:name=".presentation.main.MainCardActivity"
+            android:theme="@style/AppTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".presentation.MainCardActivity"
-            android:theme="@style/AppTheme"
-            android:exported="true"/>
         <activity android:name=".presentation.detail_page.DetailCardActivity"
             android:exported="true"/>
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/LicensesTheme"
             android:exported="true"/>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.choco_tyranno.team_tree"

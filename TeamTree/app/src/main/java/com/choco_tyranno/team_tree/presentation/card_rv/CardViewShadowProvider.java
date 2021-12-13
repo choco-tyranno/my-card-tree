@@ -20,6 +20,7 @@ public class CardViewShadowProvider {
 
     }
 
+    //rename : destroy
     public static void onDestroy() {
         if (holder != null)
             holder = null;

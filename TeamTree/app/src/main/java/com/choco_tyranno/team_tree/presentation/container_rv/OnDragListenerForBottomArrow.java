@@ -1,16 +1,14 @@
 package com.choco_tyranno.team_tree.presentation.container_rv;
 
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.choco_tyranno.team_tree.Logger;
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.presentation.CardViewModel;
-import com.choco_tyranno.team_tree.presentation.MainCardActivity;
 import com.choco_tyranno.team_tree.presentation.card_rv.DragMoveDataContainer;
+import com.choco_tyranno.team_tree.presentation.main.MainCardActivity;
 
 public class OnDragListenerForBottomArrow implements View.OnDragListener {
     @Override

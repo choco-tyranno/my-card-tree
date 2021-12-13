@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".card_crud_feature.presentation.MainCardActivity">
+    tools:context=".presentation.main.MainCardActivity">
 
     <data>
         <import type="android.view.View" />
