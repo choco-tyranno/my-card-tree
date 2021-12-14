@@ -8,21 +8,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.choco_tyranno.team_tree.database_util.MockCard;
-import com.choco_tyranno.team_tree.database_util.MockCardFactory;
 import com.choco_tyranno.team_tree.domain.card_data.CardDao;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
-import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Database(entities = {CardEntity.class}, version = 1, exportSchema = false)
 public abstract class TeamTreeDataBase extends RoomDatabase {

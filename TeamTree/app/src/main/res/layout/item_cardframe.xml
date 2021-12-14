@@ -15,7 +15,7 @@
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState" />
+            type="com.choco_tyranno.team_tree.ui.card_rv.CardState" />
 
         <variable
             name="card"
@@ -23,11 +23,11 @@
 
         <variable
             name="cardImage"
-            type="com.choco_tyranno.team_tree.presentation.card_rv.ObservableBitmap" />
+            type="com.choco_tyranno.team_tree.ui.card_rv.ObservableBitmap" />
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

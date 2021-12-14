@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.choco_tyranno.team_tree.presentation.settings.SettingsFragment"
+        android:name="com.choco_tyranno.team_tree.ui.settings.SettingsFragment"
         android:label="설정"
         tools:layout="@layout/fragment_settings" />
 </navigation>

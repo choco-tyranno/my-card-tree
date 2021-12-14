@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
         <variable
             name="card"
             type="com.choco_tyranno.team_tree.domain.card_data.CardDto" />

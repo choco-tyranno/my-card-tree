@@ -9,13 +9,13 @@
         <import type="com.choco_tyranno.team_tree.domain.card_data.CardDto"/>
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
         <variable
             name="container_no"
             type="Integer"/>
         <variable
             name="container"
-            type="com.choco_tyranno.team_tree.presentation.container_rv.Container" />
+            type="com.choco_tyranno.team_tree.ui.container_rv.Container" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,7 +85,7 @@
 
         <!--Child RecyclerView-->
 
-        <com.choco_tyranno.team_tree.presentation.card_rv.CardRecyclerView
+        <com.choco_tyranno.team_tree.ui.card_rv.CardRecyclerView
             android:id="@+id/cardRecyclerView_cardContainer_cards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

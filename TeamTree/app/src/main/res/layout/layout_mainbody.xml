@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
     </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 bind:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <com.choco_tyranno.team_tree.presentation.container_rv.ContainerRecyclerView
+            <com.choco_tyranno.team_tree.ui.container_rv.ContainerRecyclerView
                 android:id="@+id/containerRecyclerView_mainBody_containers"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -55,7 +55,7 @@
                 app:onDragListener="@{viewModel.onDragListenerForContainerRecyclerView}"
                 app:onScrollListener="@{viewModel.onScrollListenerForContainerRecyclerView}" />
 
-            <com.choco_tyranno.team_tree.presentation.main.TopAppBar
+            <com.choco_tyranno.team_tree.ui.main.TopAppBar
                 android:id="@+id/view_mainBody_topAppBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -73,7 +73,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.97" />
 
-            <com.choco_tyranno.team_tree.presentation.main.RemoveSwitch
+            <com.choco_tyranno.team_tree.ui.main.RemoveSwitch
                 android:id="@+id/removeSwitch_mainBody_removeSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
                 app:onDragListener="@{viewModel.onDragListenerForBottomArrow}"
                 tools:alpha="1" />
 
-            <com.choco_tyranno.team_tree.presentation.main.BottomBar
+            <com.choco_tyranno.team_tree.ui.main.BottomBar
                 android:id="@+id/bottomBar_mainBody_bottomBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -155,7 +155,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:alpha="1" />
 
-            <com.choco_tyranno.team_tree.presentation.main.NewCardButton
+            <com.choco_tyranno.team_tree.ui.main.NewCardButton
                 android:id="@+id/button_mainBody_newCard"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"

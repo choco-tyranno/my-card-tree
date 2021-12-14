@@ -4,7 +4,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.choco_tyranno.team_tree.BR;
-import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
+import com.choco_tyranno.team_tree.ui.card_rv.ContactCardViewHolder;
 
 import java.io.Serializable;
 import java.util.ArrayList;

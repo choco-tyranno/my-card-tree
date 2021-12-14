@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.main.MainCardActivity">
+    tools:context=".ui.main.MainCardActivity">
 
     <data>
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

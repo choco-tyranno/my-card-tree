@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.9">
 
-            <com.choco_tyranno.team_tree.presentation.main.SearchView
+            <com.choco_tyranno.team_tree.ui.main.SearchView
                 android:id="@+id/card_search_view"
                 onQueryTextListener="@{viewModel.onQueryTextListenerForSearchingCard}"
                 android:layout_width="0dp"
@@ -133,7 +133,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 app:layout_constraintWidth_percent="0.15" />
 
-            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                 app:longPagerMode="@{viewModel.longPagerOn}"
                 tools:text="1" />
 
-            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 tools:text="2" />
 
-            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 tools:text="3" />
 
-            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 tools:text="4" />
 
-            <com.choco_tyranno.team_tree.presentation.searching_drawer.view.SearchResultPager
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.SearchResultPager
                 android:id="@+id/searchResultPager_searchDrawer_pager5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

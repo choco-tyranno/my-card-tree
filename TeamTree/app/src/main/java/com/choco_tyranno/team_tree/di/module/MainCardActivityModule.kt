@@ -1,6 +1,6 @@
 package com.choco_tyranno.team_tree.di.module
 
-import com.choco_tyranno.team_tree.presentation.card_rv.listener.OnClickListenerForCallBtn
+import com.choco_tyranno.team_tree.ui.card.view.CallDialView
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,5 +11,5 @@ import dagger.hilt.android.components.ActivityComponent
 object MainCardActivityModule {
 
     @Provides
-    fun provideOnClickListenerForCallBtn() : OnClickListenerForCallBtn = OnClickListenerForCallBtn.getInstance()
+    fun provideOnClickListenerForCallBtn() : CallDialView.OnClickListenerForCallBtn = CallDialView.OnClickListenerForCallBtn.getInstance()
 }

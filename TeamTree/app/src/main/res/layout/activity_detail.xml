@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.detail_page.DetailPageViewModel" />
+            type="com.choco_tyranno.team_tree.ui.detail_page.DetailPageViewModel" />
 
         <variable
             name="card"
@@ -18,7 +18,7 @@
 
         <variable
             name="detailPage"
-            type="com.choco_tyranno.team_tree.presentation.detail_page.DetailPage" />
+            type="com.choco_tyranno.team_tree.ui.detail_page.DetailPage" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -17,15 +17,15 @@
 
         <variable
             name="cardState"
-            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState" />
+            type="com.choco_tyranno.team_tree.ui.card_rv.CardState" />
 
         <variable
             name="frontState"
-            type="com.choco_tyranno.team_tree.presentation.card_rv.CardState.Front" />
+            type="com.choco_tyranno.team_tree.ui.card_rv.CardState.Front" />
 
         <variable
             name="viewModel"
-            type="com.choco_tyranno.team_tree.presentation.CardViewModel" />
+            type="com.choco_tyranno.team_tree.ui.CardViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardTitleEditor
+            <com.choco_tyranno.team_tree.ui.card_rv.view.CardTitleEditor
                 android:id="@+id/cardTitleEditor_cardFront_titleEditor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -130,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardModeSwitch
+            <com.choco_tyranno.team_tree.ui.card_rv.view.CardModeSwitch
                 android:id="@+id/cardModeSwitch_cardFront_cardModeSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
                 tools:text="010-3355-5252" />
 
 
-            <com.choco_tyranno.team_tree.presentation.card_rv.view.CardContactNumberEditor
+            <com.choco_tyranno.team_tree.ui.card_rv.view.CardContactNumberEditor
                 android:id="@+id/cardContactNumberEditor_cardFront_contactNumberEditor"
                 app:layout_constraintStart_toStartOf="@id/textContentsStartLine"
                 app:layout_constraintEnd_toEndOf="@id/switchStartLine"
@@ -221,7 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <ImageButton
+            <com.choco_tyranno.team_tree.ui.card.view.CallDialView
                 android:id="@+id/imageButton_cardFront_callBtn"
                 android:scaleType="fitCenter"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -234,8 +234,7 @@
                 android:contentDescription="@string/call_btn_desc"
                 android:src="@drawable/ic_call_01"
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp"
-                app:onClickListener="@{viewModel.onClickListenerForCallBtn}" />
+                app:cornerRadius="20dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/frontCard_editTool_saveBtn"

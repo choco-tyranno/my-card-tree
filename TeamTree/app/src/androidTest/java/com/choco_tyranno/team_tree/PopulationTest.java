@@ -6,20 +6,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.choco_tyranno.team_tree.database_util.MockCard;
 import com.choco_tyranno.team_tree.database_util.MockCardFactory;
-import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
-import com.choco_tyranno.team_tree.presentation.card_rv.ContactCardViewHolder;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
