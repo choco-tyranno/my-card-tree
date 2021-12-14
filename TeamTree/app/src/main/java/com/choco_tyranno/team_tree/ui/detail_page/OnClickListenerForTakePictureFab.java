@@ -1,16 +1,20 @@
-package com.choco_tyranno.team_tree.presentation.detail_page;
+package com.choco_tyranno.team_tree.ui.detail_page;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
 
+import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
+import com.choco_tyranno.team_tree.ui.SingleToaster;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +29,11 @@ public class OnClickListenerForTakePictureFab implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (!v.getContext().getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
+            v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.shaking_accessdenied));
+            SingleToaster.makeTextShort(v.getContext(),v.getResources().getString(R.string.detailActivity_cameraNotFoundMessage)).show();
+            return;
+        }
         DetailCardActivity detailCardActivity = (DetailCardActivity) v.getContext();
         ActivityDetailBinding binding = detailCardActivity.getBinding();
         DetailPage pageState = binding.getDetailPage();
