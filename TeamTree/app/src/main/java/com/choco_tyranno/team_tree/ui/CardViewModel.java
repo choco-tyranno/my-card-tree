@@ -44,7 +44,6 @@ import com.choco_tyranno.team_tree.ui.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.team_tree.ui.card_rv.DragMoveDataContainer;
 import com.choco_tyranno.team_tree.ui.card_rv.SpreadingOutDetailOnClickListener;
 import com.choco_tyranno.team_tree.ui.card_rv.ObservableBitmap;
-import com.choco_tyranno.team_tree.ui.card_rv.OnClickListenerForMessageBtn;
 import com.choco_tyranno.team_tree.ui.card_rv.OnDragListenerForCardRecyclerView;
 import com.choco_tyranno.team_tree.ui.container_rv.CardContainerViewHolder;
 import com.choco_tyranno.team_tree.ui.container_rv.CloneCardShadow;
@@ -100,8 +99,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForBottomArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
     private View.OnClickListener spreadingOutDetailOnClickListener;
-    private View.OnClickListener onClickListenerForCallBtn;
-    private View.OnClickListener onClickListenerForMessageBtn;
     private View.OnClickListener onClickListenerForSettingButton;
     private SearchView.OnQueryTextListener onQueryTextListenerForSearchingCard;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
@@ -162,14 +159,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public View.OnDragListener getOnDragListenerForContainerRecyclerView() {
         return this.onDragListenerForContainerRecyclerView;
-    }
-
-    public View.OnClickListener getOnClickListenerForCallBtn() {
-        return this.onClickListenerForCallBtn;
-    }
-
-    public View.OnClickListener getOnClickListenerForMessageBtn() {
-        return this.onClickListenerForMessageBtn;
     }
 
     private Pair<Integer, Integer[]> filterUselessScrollUtilData(Integer[] allGoalCardSeqArr) {
@@ -513,7 +502,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnClickListenerForMovingPageBundleBtn();
-        initOnClickListenerForMessageBtn();
         initOnDragListenerForContainerRecyclerView();
         initOnDragListenerForTopArrow();
         initOnDragListenerForBottomArrow();
@@ -549,14 +537,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private void initOnDragListenerForContainerRecyclerView() {
         this.onDragListenerForContainerRecyclerView = new OnDragListenerForContainerRecyclerView();
     }
-
-    private void initOnClickListenerForMessageBtn() {
-        this.onClickListenerForMessageBtn = new OnClickListenerForMessageBtn();
-    }
-
-//    private void initOnClickListenerForCallBtn() {
-//        this.onClickListenerForCallBtn = OnClickListenerForCallBtn.getInstance();
-//    }
 
     private void initOnClickListenerForMovingPageBundleBtn() {
         this.onClickListenerForMovingPageBundleBtn = new OnClickListenerForMovingPageBundleBtn();

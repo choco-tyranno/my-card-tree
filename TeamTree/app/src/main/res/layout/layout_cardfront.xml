@@ -267,7 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <ImageButton
+            <com.choco_tyranno.team_tree.ui.card.view.MessageDialView
                 android:id="@+id/frontCard_messageBtn"
                 android:scaleType="fitCenter"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -280,8 +280,7 @@
                 android:contentDescription="@string/message_btn_desc"
                 android:src="@drawable/ic_message_01"
                 android:visibility="@{frontState.mode==frontState.READ_MODE? View.VISIBLE : View.INVISIBLE}"
-                app:cornerRadius="20dp"
-                app:onClickListener="@{viewModel.onClickListenerForMessageBtn}" />
+                app:cornerRadius="20dp"/>
 
 
             <com.google.android.material.button.MaterialButton
