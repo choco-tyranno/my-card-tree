@@ -5,7 +5,7 @@
     tools:context=".ui.main.MainCardActivity">
 
     <data>
-        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.choco_tyranno.team_tree.ui.CardViewModel" />
@@ -18,14 +18,13 @@
 
         <include
             android:id="@+id/layout_mainbody"
-            bind:viewModel="@{viewModel}"
-            layout="@layout/layout_mainbody" />
+            layout="@layout/layout_mainbody"
+            bind:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/layout_searchdrawer"
-            bind:viewModel="@{viewModel}"
-            layout="@layout/layout_searchdrawer"/>
+            layout="@layout/layout_searchdrawer"
+            bind:viewModel="@{viewModel}" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
 </layout>

@@ -67,6 +67,13 @@
         앱 필수 권한이 거부되어 앱을 종료합니다.</string>
     <string name="splashActivity_storagePermissionRequestDialogDeniedPositiveButtonText">
         종료</string>
+    <string name="default_positiveText">확인</string>
+    <string name="default_negativeText">취소</string>
+
+    <string name="main_callDialogAlertDialogTitle"> 📞 전화 다이얼</string>
+    <string name="main_callDialogAlertDialogMessage">에 전화걸기 화면으로 이동하시겠습니까?</string>
+    <string name="main_messageDialogAlertDialogTitle"> ✉️ 메시지 다이얼</string>
+    <string name="main_messageDialogAlertDialogMessage">에 메세지 보내기 화면으로 이동하시겠습니까?</string>
 
     <string name="splashActivity_flexibleUpdateCompleteSnackBarMessage">🌠새로운 버전 다운로드 완료!</string>
     <string name="splashActivity_flexibleUpdateCompleteActionText">설치</string>

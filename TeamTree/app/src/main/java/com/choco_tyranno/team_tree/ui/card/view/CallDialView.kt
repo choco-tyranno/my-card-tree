@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -26,40 +27,55 @@ class CallDialView @JvmOverloads constructor(
     }
 
     @ActivityScoped
-    class OnClickListenerForCallBtn private constructor(): OnClickListener {
-        override fun onClick(v: View) = checkCallPermission(v)
-//        override fun onClick(v: View) = test(v)
+    class OnClickListenerForCallBtn private constructor() : OnClickListener {
+        override fun onClick(v: View) = startCallDialActivity(v)
 
-        private fun test(view : View){
-            view.startAnimation(AccessDeniedAnimationProvider.getInstance(view.context))
-        }
-
-        private fun checkCallPermission(view : View){
-            view.context.checkSelfPermission(Manifest.permission.CALL_PHONE)
-        }
-
-        private fun startCallDialActivity(callBtn : View){
-            val viewPositionManager : ConstraintLayout = callBtn.parent as ConstraintLayout
-            val cardView : MaterialCardView = viewPositionManager.parent as MaterialCardView
-            val cardFrame : ConstraintLayout = cardView.parent as ConstraintLayout
-            val cardRecyclerView : RecyclerView = cardFrame.parent as RecyclerView
-            val card : CardDto? = ((cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder).binding.card)
+        private fun startCallDialActivity(callBtn: View) {
+            val resources = callBtn.resources
+            val context = callBtn.context
+            val viewPositionManager: ConstraintLayout =
+                callBtn.parent as ConstraintLayout
+            val cardView: MaterialCardView =
+                viewPositionManager.parent as MaterialCardView
+            val cardFrame: ConstraintLayout = cardView.parent as ConstraintLayout
+            val cardRecyclerView: RecyclerView = cardFrame.parent as RecyclerView
+            val card: CardDto? =
+                (cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder).binding.card
             val targetContactNumber = card?.contactNumber
-            val intentCall = Intent(Intent.ACTION_DIAL)
-            intentCall.setData(Uri.parse("tel:$targetContactNumber"))
-            callBtn.context.startActivity(intentCall);
+            val cardTitle = "\'"+if (card?.title.equals("")) "이름없음" else card?.title+"\'"
+            val alertDialog =
+                AlertDialog.Builder(context)
+                    .setTitle(R.string.main_callDialogAlertDialogTitle)
+                    .setMessage(cardTitle+resources.getString(R.string.main_callDialogAlertDialogMessage))
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.default_positiveText) { dialog, id ->
+                        val intentDial = Intent(Intent.ACTION_DIAL)
+                        intentDial.setData(Uri.parse("tel:$targetContactNumber"))
+                        context.startActivity(intentDial)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.default_negativeText){ dialog , id ->
+                        dialog.dismiss()
+                    }.create()
+            alertDialog.show()
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(resources.getColor(R.color.colorAccent_c, context.theme))
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(resources.getColor(R.color.defaultTextColor, context.theme))
         }
 
-        companion object{
-            private val instance : OnClickListenerForCallBtn = OnClickListenerForCallBtn()
-            @JvmStatic fun getInstance() = instance
+        companion object {
+            private val instance: OnClickListenerForCallBtn = OnClickListenerForCallBtn()
+            @JvmStatic
+            fun getInstance() = instance
         }
     }
 
-    class AccessDeniedAnimationProvider{
-        companion object{
-            private lateinit var instance : Animation
-            @JvmStatic fun getInstance(context: Context) : Animation{
+    class AccessDeniedAnimationProvider {
+        companion object {
+            private lateinit var instance: Animation
+            @JvmStatic
+            fun getInstance(context: Context): Animation {
                 if (::instance.isInitialized)
                     return instance
                 instance = AnimationUtils.loadAnimation(context, R.anim.shaking_accessdenied)

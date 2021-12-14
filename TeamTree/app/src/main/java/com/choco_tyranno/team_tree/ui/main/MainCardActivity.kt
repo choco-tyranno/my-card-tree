@@ -47,7 +47,7 @@ import kotlin.math.roundToInt
 class MainCardActivity : AppCompatActivity() {
     val cardViewModel: CardViewModel by viewModels()
     private lateinit var handler: Handler
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding : ActivityMainBinding
     private lateinit var cardFinder: CardFinder
 
     private fun scrollActionDelayed(scrollActionQueue : Queue<Runnable>, finishAction: Runnable?){
@@ -97,7 +97,7 @@ class MainCardActivity : AppCompatActivity() {
 
     fun getMainHandler() = handler
 
-    fun getBinding(): ActivityMainBinding {
+    fun getBinding() : ActivityMainBinding {
         if (::binding.isInitialized)
             return binding
         else
