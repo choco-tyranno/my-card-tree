@@ -102,9 +102,8 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.1" />
 
-            <ImageButton
-                android:id="@+id/prev_page_btn"
-                onClickListener="@{viewModel.onClickListenerForMovingPageBundleBtn}"
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.PagerBundleView
+                android:id="@+id/pagerBundleView_searchDrawer_prevButton"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0.3"
@@ -117,9 +116,8 @@
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 app:layout_constraintWidth_percent="0.15" />
 
-            <ImageButton
-                android:id="@+id/next_page_btn"
-                onClickListener="@{viewModel.onClickListenerForMovingPageBundleBtn}"
+            <com.choco_tyranno.team_tree.ui.searching_drawer.view.PagerBundleView
+                android:id="@+id/pagerBundleView_searchDrawer_nextButton"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0.3"
@@ -143,7 +141,7 @@
                 android:visibility="@{viewModel.pagerCount &lt; 1 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/searchResultPager_searchDrawer_pager2"
-                app:layout_constraintStart_toEndOf="@id/prev_page_btn"
+                app:layout_constraintStart_toEndOf="@id/pagerBundleView_searchDrawer_prevButton"
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 app:longPagerMode="@{viewModel.longPagerOn}"
                 tools:text="1" />
@@ -203,7 +201,7 @@
                 android:textColor="@color/defaultTextColor"
                 android:visibility="@{viewModel.pagerCount &lt; 5 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/next_page_btn"
+                app:layout_constraintEnd_toStartOf="@id/pagerBundleView_searchDrawer_nextButton"
                 app:layout_constraintStart_toEndOf="@id/searchResultPager_searchDrawer_pager4"
                 app:layout_constraintTop_toBottomOf="@id/card_search_result_recyclerview"
                 tools:text="5" />

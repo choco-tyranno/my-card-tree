@@ -126,8 +126,8 @@ public class SearchResultPager extends MaterialButton implements DependentView {
         constraintSet.clear(pager4.getId(), ConstraintSet.START);
         constraintSet.clear(pager4.getId(), ConstraintSet.TOP);
         constraintSet.clear(pager5.getId(), ConstraintSet.TOP);
-        constraintSet.connect(pager3.getId(), ConstraintSet.END, binding.layoutSearchdrawer.nextPageBtn.getId(), ConstraintSet.START);
-        constraintSet.connect(pager4.getId(), ConstraintSet.START, binding.layoutSearchdrawer.prevPageBtn.getId(), ConstraintSet.END);
+        constraintSet.connect(pager3.getId(), ConstraintSet.END, binding.layoutSearchdrawer.pagerBundleViewSearchDrawerNextButton.getId(), ConstraintSet.START);
+        constraintSet.connect(pager4.getId(), ConstraintSet.START, binding.layoutSearchdrawer.pagerBundleViewSearchDrawerPrevButton.getId(), ConstraintSet.END);
         constraintSet.connect(pager4.getId(), ConstraintSet.TOP, pager1.getId(), ConstraintSet.BOTTOM);
         constraintSet.connect(pager5.getId(), ConstraintSet.TOP, pager1.getId(), ConstraintSet.BOTTOM);
 

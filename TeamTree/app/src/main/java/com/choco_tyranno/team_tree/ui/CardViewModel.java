@@ -13,21 +13,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.GravityCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableInt;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.choco_tyranno.team_tree.R;
-import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.domain.card_data.CardEntity;
 import com.choco_tyranno.team_tree.domain.source.CardRepository;
@@ -50,7 +46,6 @@ import com.choco_tyranno.team_tree.ui.container_rv.OnDragListenerForContainerRec
 import com.choco_tyranno.team_tree.ui.container_rv.OnDragListenerForTopArrow;
 import com.choco_tyranno.team_tree.ui.main.MainCardActivity;
 import com.choco_tyranno.team_tree.ui.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
-import com.choco_tyranno.team_tree.ui.searching_drawer.OnClickListenerForMovingPageBundleBtn;
 import com.choco_tyranno.team_tree.ui.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.ui.searching_drawer.SearchingResultAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -97,7 +92,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private CardGestureListener cardGestureListener;
     private SearchingResultAdapter searchingResultAdapter;
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
-    private View.OnClickListener onClickListenerForMovingPageBundleBtn;
 
     public static final int SEARCHING_RESULT_MAX_COUNT = 5;
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
@@ -215,11 +209,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         if (hasRemainder)
             pageBundleNo++;
         return pageBundleNo;
-    }
-
-
-    public View.OnClickListener getOnClickListenerForMovingPageBundleBtn() {
-        return this.onClickListenerForMovingPageBundleBtn;
     }
 
     public void setFocusPageNo(int pageNo) {
@@ -472,7 +461,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initCardTouchListener();
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
-        initOnClickListenerForMovingPageBundleBtn();
         initOnDragListenerForContainerRecyclerView();
         initOnDragListenerForTopArrow();
         initOnDragListenerForBottomArrow();
@@ -492,10 +480,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnDragListenerForContainerRecyclerView() {
         this.onDragListenerForContainerRecyclerView = new OnDragListenerForContainerRecyclerView();
-    }
-
-    private void initOnClickListenerForMovingPageBundleBtn() {
-        this.onClickListenerForMovingPageBundleBtn = new OnClickListenerForMovingPageBundleBtn();
     }
 
     private void initOnClickListenerForFindingSearchingResultTargetBtn() {
@@ -1411,7 +1395,16 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         pagerCount.setValue(count);
     }
 
-    public void prepareNextPagers() {
+    public void showPagerBundle(int viewId){
+        if (viewId==R.id.pagerBundleView_searchDrawer_prevButton){
+            preparePrevPagers();
+            return;
+        }
+        if(viewId==R.id.pagerBundleView_searchDrawer_nextButton)
+            prepareNextPagers();
+    }
+
+    private void prepareNextPagers() {
         if (!hasNextPageBundle())
             return;
         int nextPageNo = getPageBundleNoByPageNo(getFocusPageNo()) * VISIBLE_PAGE_ITEM_MAX_COUNT + 1;
@@ -1420,7 +1413,7 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         getSearchingResultRecyclerViewAdapter().notifyDataSetChanged();
     }
 
-    public void preparePrevPagers() {
+    private void preparePrevPagers() {
         if (!hasPrevPageBundle())
             return;
         int prevPageNo = (getPageBundleNoByPageNo(getFocusPageNo()) - 1) * VISIBLE_PAGE_ITEM_MAX_COUNT;
