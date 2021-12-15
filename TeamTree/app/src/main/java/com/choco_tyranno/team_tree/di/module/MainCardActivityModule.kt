@@ -10,6 +10,4 @@ import dagger.hilt.android.components.ActivityComponent
 @Module
 object MainCardActivityModule {
 
-    @Provides
-    fun provideOnClickListenerForCallBtn() : CallDialView.OnClickListenerForCallBtn = CallDialView.OnClickListenerForCallBtn.getInstance()
 }
