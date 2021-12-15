@@ -243,7 +243,7 @@ class MainCardActivity : AppCompatActivity() {
             ).build()
             .resolve()
 
-        val newCardButton = binding.layoutMainbody.buttonMainBodyNewCard
+        val newCardButton = binding.layoutMainbody.newCardViewMainBodyNewCard
         DependentUIResolverBuilder<View>()
             .baseView(newCardButton)
             .with(
@@ -381,6 +381,7 @@ class MainCardActivity : AppCompatActivity() {
             return
         }
         if (cardViewModel.isSettingsOn.value == true) {
+            cardViewModel.toggleSettingsOn()
             supportActionBar?.hide()
         } else super.onBackPressed()
     }
