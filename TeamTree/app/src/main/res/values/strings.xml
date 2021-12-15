@@ -65,6 +65,7 @@
         종료</string>
     <string name="default_positiveText">확인</string>
     <string name="default_negativeText">취소</string>
+    <string name="main_detailActivityResultNotOk">이전 화면 세션이 만료되었습니다. 앱을 재실행해 주세요.</string>
     <string name="main_callDialogAlertDialogTitle"> 📞 전화 다이얼</string>
     <string name="main_callDialogAlertDialogMessage">에 전화걸기 화면으로 이동하시겠습니까?</string>
     <string name="main_messageDialogAlertDialogTitle"> ✉️ 메시지 다이얼</string>

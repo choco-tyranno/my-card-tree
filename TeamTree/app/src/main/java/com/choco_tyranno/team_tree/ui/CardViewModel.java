@@ -1,7 +1,6 @@
 package com.choco_tyranno.team_tree.ui;
 
 import android.app.Application;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -28,7 +26,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.choco_tyranno.team_tree.R;
 import com.choco_tyranno.team_tree.databinding.ActivityMainBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
@@ -40,12 +37,10 @@ import com.choco_tyranno.team_tree.ui.card_rv.CardRecyclerView;
 import com.choco_tyranno.team_tree.ui.card_rv.CardScrollListener;
 import com.choco_tyranno.team_tree.ui.card_rv.CardState;
 import com.choco_tyranno.team_tree.ui.card_rv.CardTouchListener;
-import com.choco_tyranno.team_tree.ui.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.team_tree.ui.card_rv.DragMoveDataContainer;
 import com.choco_tyranno.team_tree.ui.card_rv.ObservableBitmap;
 import com.choco_tyranno.team_tree.ui.card_rv.OnDragListenerForCardRecyclerView;
 import com.choco_tyranno.team_tree.ui.container_rv.CardContainerViewHolder;
-import com.choco_tyranno.team_tree.ui.container_rv.CloneCardShadow;
 import com.choco_tyranno.team_tree.ui.container_rv.Container;
 import com.choco_tyranno.team_tree.ui.container_rv.ContainerAdapter;
 import com.choco_tyranno.team_tree.ui.container_rv.ContainerRecyclerView;
@@ -59,7 +54,6 @@ import com.choco_tyranno.team_tree.ui.searching_drawer.OnClickListenerForMovingP
 import com.choco_tyranno.team_tree.ui.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.ui.searching_drawer.SearchingResultAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,7 +84,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private List<CardDto> searchingResultCardList;
     private ObservableInt focusPageNo;
 
-    private View.OnLongClickListener onLongListenerForCreateCardUtilFab;
     private View.OnDragListener onDragListenerForContainerRecyclerView;
     private View.OnDragListener onDragListenerForTopArrow;
     private View.OnDragListener onDragListenerForBottomArrow;
@@ -477,7 +470,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     // ***** Start Listener
     private void initListeners() {
-        initCreateCardUtilFabOnLongClickListener();
         initEmptyCardSpaceDragListener();
         initOnFocusChangedListener();
         initOnScrollStateChangeListener();
@@ -536,14 +528,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initCardTouchListener() {
         cardTouchListener = new CardTouchListener();
-    }
-
-    private void initCreateCardUtilFabOnLongClickListener() {
-        this.onLongListenerForCreateCardUtilFab = (view) -> view.startDragAndDrop(
-                ClipData.newPlainText("", "")
-                , new CloneCardShadow(CardViewShadowProvider.getInstance(view.getContext(), null))
-                , Pair.create("CREATE", "")
-                , 0);
     }
 
     public void increaseListSeq(List<CardDto> list) {
@@ -1571,10 +1555,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     public View.OnDragListener getOnDragListenerForBottomArrow() {
         return onDragListenerForBottomArrow;
-    }
-
-    public View.OnLongClickListener getOnLongListenerForCreateCardUtilFab() {
-        return onLongListenerForCreateCardUtilFab;
     }
 
     @BindingAdapter("onCardDragListener")

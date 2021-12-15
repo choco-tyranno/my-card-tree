@@ -155,13 +155,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:alpha="1" />
 
-            <com.choco_tyranno.team_tree.ui.main.NewCardButton
-                android:id="@+id/button_mainBody_newCard"
+            <com.choco_tyranno.team_tree.ui.main.view.NewCardView
+                android:id="@+id/newCardView_mainBody_newCard"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:backgroundTint="@color/colorAccent_b"
                 android:contentDescription="@string/order_card_fab_content_description"
-                android:onLongClickListener="@{viewModel.onLongListenerForCreateCardUtilFab}"
                 android:rotation="50"
                 android:text="@string/addNewCardUtil_fab_text"
                 android:textColor="#fff"
