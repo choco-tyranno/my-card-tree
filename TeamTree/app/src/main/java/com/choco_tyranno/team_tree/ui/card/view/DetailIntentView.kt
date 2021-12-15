@@ -23,7 +23,6 @@ class DetailIntentView @JvmOverloads constructor(
     init {
         setOnClickListener(OnClickListenerForDetailIntentView.getInstance())
     }
-
     private class OnClickListenerForDetailIntentView private constructor() : OnClickListener {
         override fun onClick(v: View) = startDetailActivity(v)
         private fun startDetailActivity(v: View) {
@@ -31,8 +30,7 @@ class DetailIntentView @JvmOverloads constructor(
             val cardBackContainer = cardBackPositionManager.parent
             val cardFrame = cardBackContainer.parent as ConstraintLayout
             val cardRecyclerView = cardFrame.parent as CardRecyclerView
-            val cardViewHolder =
-                cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder
+            val cardViewHolder = cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder
             val binding: ItemCardframeBinding = cardViewHolder.binding
             val cardDTO: CardDto = binding.card
             val cardImageView: ImageView = binding.cardBackLayout.imageViewCardBackCardImage
@@ -45,11 +43,9 @@ class DetailIntentView @JvmOverloads constructor(
             mainActivity.getActivityResultLauncherForDetailScene()
                 .launch(intent, activityOptionsCompat)
         }
-
         companion object {
             private val instance: OnClickListenerForDetailIntentView =
                 OnClickListenerForDetailIntentView()
-
             @JvmStatic
             fun getInstance() = instance
         }

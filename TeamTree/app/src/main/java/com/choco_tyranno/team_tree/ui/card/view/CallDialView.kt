@@ -25,10 +25,8 @@ class CallDialView @JvmOverloads constructor(
     init {
         setOnClickListener(OnClickListenerForCallBtn.getInstance())
     }
-
     private class OnClickListenerForCallBtn private constructor() : OnClickListener {
         override fun onClick(v: View) = startCallDialActivity(v)
-
         private fun startCallDialActivity(callBtn: View) {
             val resources = callBtn.resources
             val context = callBtn.context
@@ -62,10 +60,8 @@ class CallDialView @JvmOverloads constructor(
             alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 .setTextColor(resources.getColor(R.color.defaultTextColor, context.theme))
         }
-
         companion object {
             private val instance: OnClickListenerForCallBtn = OnClickListenerForCallBtn()
-
             @JvmStatic
             fun getInstance() = instance
         }
