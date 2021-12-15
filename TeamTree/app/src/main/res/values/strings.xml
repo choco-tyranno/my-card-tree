@@ -43,17 +43,13 @@
     <string name="message_btn_desc">message button. click to move messaging screen.</string>
     <string name="flower_icon_desc">flower image view. this view appeared when target item chosen.</string>
     <string name="search_item_selecting_btn_desc">dot button. click to fire finding card.</string>
-
     <string name="cardFront_cardSwitchRatioToCardFrame">0.15</string>
     <string name="mainBody_removeSwitchRatioToTopAppBar">1.0</string>
     <string name="detail_noteLabel">note :</string>
-
     <string name="searDrawer_settingsBtnDesc">Settings button. Click to move for settings page.</string>
-
     <!--    Settings Fragment-->
     <string name="settings_fragment_top_app_bar_title">설정</string>
     <string name="settings_fragment_oss_license_title">🚀 오픈소스 라이선스</string>
-
     <string name="splashActivity_storagePermissionRequestDialogMessage">
         Team tree는 앱 데이터 저장을 위해 \'저장공간 권한\'을 필요로 합니다.
         \n\n저장공간 사용을 켜주세요.</string>
@@ -69,15 +65,16 @@
         종료</string>
     <string name="default_positiveText">확인</string>
     <string name="default_negativeText">취소</string>
-
     <string name="main_callDialogAlertDialogTitle"> 📞 전화 다이얼</string>
     <string name="main_callDialogAlertDialogMessage">에 전화걸기 화면으로 이동하시겠습니까?</string>
     <string name="main_messageDialogAlertDialogTitle"> ✉️ 메시지 다이얼</string>
     <string name="main_messageDialogAlertDialogMessage">에 메시지 보내기 화면으로 이동하시겠습니까?</string>
-
-    <string name="splashActivity_flexibleUpdateCompleteSnackBarMessage">🌠새로운 버전 다운로드 완료!</string>
-    <string name="splashActivity_flexibleUpdateCompleteActionText">설치</string>
-    <string name="splashActivity_updateFailText">
+    <string name="splash_flexibleUpdateCompleteSnackBarMessage">🌠새로운 버전 다운로드 완료!</string>
+    <string name="splash_flexibleUpdateCompleteActionText">설치</string>
+    <string name="splash_updateFailText">
         Team tree 업데이트 실패. 앱 종료 후 다시 시도해 주세요.</string>
-    <string name="detailActivity_cameraNotFoundMessage">기기가 카메라를 지원하지 않습니다.</string>
+    <string name="detail_cameraAlertDialogTitle">📷</string>
+    <string name="detail_cameraAlertDialogMessage">카메라로 이동하시겠습니까?</string>
+    <string name="detail_cameraNotFoundMessage">기기가 카메라를 지원하지 않습니다.</string>
+    <string name="detail_takePictureIntentErrorText">사진촬영을 할 수 없습니다.</string>
 </resources>
