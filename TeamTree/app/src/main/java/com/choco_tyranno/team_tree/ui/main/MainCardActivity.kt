@@ -11,6 +11,8 @@ import android.util.Pair
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -34,7 +36,6 @@ import com.choco_tyranno.team_tree.ui.SingleToastManager
 import com.choco_tyranno.team_tree.ui.SingleToaster
 import com.choco_tyranno.team_tree.ui.card_rv.CardGestureListener
 import com.choco_tyranno.team_tree.ui.card_rv.CardViewShadowProvider
-import com.choco_tyranno.team_tree.ui.card_rv.SpreadingOutDetailOnClickListener
 import com.choco_tyranno.team_tree.ui.container_rv.CardContainerViewHolder
 import com.choco_tyranno.team_tree.ui.container_rv.ContainerAdapter
 import com.choco_tyranno.team_tree.ui.container_rv.ContainerRecyclerView
@@ -47,13 +48,30 @@ import kotlin.math.roundToInt
 class MainCardActivity : AppCompatActivity() {
     val cardViewModel: CardViewModel by viewModels()
     private lateinit var handler: Handler
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var cardFinder: CardFinder
+    private val activityResultLauncherForDetailScene = createActivityResultLauncherForDetailScene()
+    fun getActivityResultLauncherForDetailScene() = activityResultLauncherForDetailScene
 
-    private fun scrollActionDelayed(scrollActionQueue : Queue<Runnable>, finishAction: Runnable?){
+    private fun createActivityResultLauncherForDetailScene(): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if(result.resultCode != RESULT_OK){
+                SingleToaster.makeTextShort(this@MainCardActivity,"리턴 실패").show()
+                return@registerForActivityResult
+            }
+            SingleToaster.makeTextShort(this@MainCardActivity,"리턴 성공").show()
+            val updatedCardDto = result.data?.getSerializableExtra("post_card") as CardDto
+            val imageChanged: Boolean = cardViewModel.isCardImageChanged(updatedCardDto)
+            cardViewModel.applyCardFromDetailActivity(updatedCardDto)
+            if (imageChanged) {
+                loadNewCardImage(updatedCardDto)
+            }
+        }
+    }
+
+    private fun scrollActionDelayed(scrollActionQueue: Queue<Runnable>, finishAction: Runnable?) {
         handler.postDelayed(Runnable {
             if (scrollActionQueue.isEmpty()) {
-                Log.d("","")
                 finishAction?.run()
                 return@Runnable
             }
@@ -62,7 +80,10 @@ class MainCardActivity : AppCompatActivity() {
         }, 900)
     }
 
-    fun scrollToFindingTargetCard(scrollUtilDataForFindingOutCard : Pair<Int, Array<Int>>, finishAction : Runnable){
+    fun scrollToFindingTargetCard(
+        scrollUtilDataForFindingOutCard: Pair<Int, Array<Int>>,
+        finishAction: Runnable
+    ) {
         val startContainerPosition = scrollUtilDataForFindingOutCard.first
         val scrollTargetCardSeqArr: Array<Int> = scrollUtilDataForFindingOutCard.second
         val containerRecyclerview: RecyclerView =
@@ -97,7 +118,7 @@ class MainCardActivity : AppCompatActivity() {
 
     fun getMainHandler() = handler
 
-    fun getBinding() : ActivityMainBinding {
+    fun getBinding(): ActivityMainBinding {
         if (::binding.isInitialized)
             return binding
         else
@@ -360,26 +381,13 @@ class MainCardActivity : AppCompatActivity() {
             cardFinder.isSendingFindCardReq = false
             return
         }
-        if(cardViewModel.isSettingsOn.value == true){
+        if (cardViewModel.isSettingsOn.value == true) {
             supportActionBar?.hide()
-        }else super.onBackPressed()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SpreadingOutDetailOnClickListener.REQ_MANAGE_DETAIL) {
-            if (data == null) return
-            val updatedCardDto = data.getSerializableExtra("post_card") as CardDto
-            val imageChanged: Boolean = cardViewModel.isCardImageChanged(updatedCardDto)
-            cardViewModel.applyCardFromDetailActivity(updatedCardDto)
-            if (imageChanged) {
-                loadNewCardImage(updatedCardDto)
-            }
-        }
+        } else super.onBackPressed()
     }
 
     companion object {
         const val TAG = "@@MainActivity"
-        fun test(){}
+        fun test() {}
     }
 }
