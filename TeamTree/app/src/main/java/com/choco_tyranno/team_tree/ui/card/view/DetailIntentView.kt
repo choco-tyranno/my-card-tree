@@ -32,7 +32,7 @@ class DetailIntentView @JvmOverloads constructor(
             val cardRecyclerView = cardFrame.parent as CardRecyclerView
             val cardViewHolder = cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder
             val binding: ItemCardframeBinding = cardViewHolder.binding
-            val cardDTO: CardDto = binding.card
+            val cardDTO: CardDto? = binding.card
             val cardImageView: ImageView = binding.cardBackLayout.imageViewCardBackCardImage
             val mainActivity = v.context as MainCardActivity
             val intent = Intent(mainActivity, DetailCardActivity::class.java)
