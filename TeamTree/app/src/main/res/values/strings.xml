@@ -48,7 +48,7 @@
     <string name="detail_noteLabel">note :</string>
     <string name="searDrawer_settingsBtnDesc">Settings button. Click to move for settings page.</string>
     <!--    Settings Fragment-->
-    <string name="settings_fragment_top_app_bar_title">설정</string>
+    <string name="settings_appBarTitle">설정</string>
     <string name="settings_fragment_oss_license_title">🚀 오픈소스 라이선스</string>
     <string name="splashActivity_storagePermissionRequestDialogMessage">
         Team tree는 앱 데이터 저장을 위해 \'저장공간 권한\'을 필요로 합니다.

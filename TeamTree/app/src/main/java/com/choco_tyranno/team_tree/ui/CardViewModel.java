@@ -88,7 +88,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForTopArrow;
     private View.OnDragListener onDragListenerForBottomArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
-    private View.OnClickListener onClickListenerForSettingButton;
     private SearchView.OnQueryTextListener onQueryTextListenerForSearchingCard;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
     private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
@@ -133,10 +132,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
                         increaseListCardsSeq(mPresentData.get(newCardDto.getContainerNo()), newCardDto.getSeqNo()))
                 , orderDropDataInsertListenerForContainer(firstVisibleItemCardState, mPresentData.get(newCardDto.getContainerNo()), cardRecyclerView)
         );
-    }
-
-    public View.OnClickListener getOnClickListenerForSettingButton() {
-        return this.onClickListenerForSettingButton;
     }
 
     public View.OnDragListener getOnDragListenerForContainerRecyclerView() {
@@ -481,21 +476,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnDragListenerForContainerRecyclerView();
         initOnDragListenerForTopArrow();
         initOnDragListenerForBottomArrow();
-        initOnClickListenerForSettingButton();
-    }
-
-    private void initOnClickListenerForSettingButton() {
-        this.onClickListenerForSettingButton = view -> {
-            ActivityMainBinding binding = ((MainCardActivity)view.getContext()).getBinding();
-            DrawerLayout mainDL = binding.drawerLayoutMainSearchDrawer;
-            mainDL.closeDrawer(GravityCompat.END);
-            toggleSettingsOn();
-
-            ActionBar appBar = ((MainCardActivity) view.getContext()).getSupportActionBar();
-            Objects.requireNonNull(appBar).setTitle("설정");
-            appBar.setDisplayHomeAsUpEnabled(true);
-            appBar.show();
-        };
     }
 
     private void initScrollListenerForContainerRecyclerView() {
