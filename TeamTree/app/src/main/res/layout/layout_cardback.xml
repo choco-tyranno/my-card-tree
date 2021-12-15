@@ -93,15 +93,14 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.975" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/shapeableImageView_cardBack_detailTrigger"
+            <com.choco_tyranno.team_tree.ui.card.view.DetailIntentView
+                android:id="@+id/detailIntentView_cardBack_detailIntentView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toTopOf="@id/guideline_cardBack_detailTriggerTopLine"
                 app:layout_constraintBottom_toBottomOf="@id/guideline_cardBack_detailTriggerBottomLine"
                 app:layout_constraintStart_toStartOf="@id/guideline_cardBack_detailTriggerStartLine"
                 app:layout_constraintEnd_toEndOf="@id/guideline_cardBack_detailTriggerEndLine"
-                android:onClickListener="@{viewModel.spreadingOutDetailOnClickListener}"
                 android:src="@drawable/ic_baseline_fullscreen_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
