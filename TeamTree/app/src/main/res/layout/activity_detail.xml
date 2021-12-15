@@ -410,9 +410,8 @@
                         app:layout_constraintTop_toTopOf="@id/guideline_detail_cardImageBottomLine"
                         app:rippleColor="#fff" />
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButton_detail_camera"
-                        onClickListener="@{viewModel.onClickListenerForTakePictureFab}"
+                    <com.choco_tyranno.team_tree.ui.detail_page.view.CameraButton
+                        android:id="@+id/cameraButton_detail_camera"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/colorPrimary_b"
