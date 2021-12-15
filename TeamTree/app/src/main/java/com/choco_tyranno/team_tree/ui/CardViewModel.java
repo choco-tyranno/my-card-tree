@@ -42,7 +42,6 @@ import com.choco_tyranno.team_tree.ui.card_rv.CardState;
 import com.choco_tyranno.team_tree.ui.card_rv.CardTouchListener;
 import com.choco_tyranno.team_tree.ui.card_rv.CardViewShadowProvider;
 import com.choco_tyranno.team_tree.ui.card_rv.DragMoveDataContainer;
-import com.choco_tyranno.team_tree.ui.card_rv.SpreadingOutDetailOnClickListener;
 import com.choco_tyranno.team_tree.ui.card_rv.ObservableBitmap;
 import com.choco_tyranno.team_tree.ui.card_rv.OnDragListenerForCardRecyclerView;
 import com.choco_tyranno.team_tree.ui.container_rv.CardContainerViewHolder;
@@ -83,13 +82,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private HashMap<Integer, ObservableBitmap> cardImageMap;
     private List<Container> mPresentContainerList;
     private List<List<Pair<CardDto, CardState>>> mPresentData;
-
     private MutableLiveData<Boolean> settingsOn;
     private MutableLiveData<Integer> pagerCount;
     private MutableLiveData<Integer> focusPagerNo;
     private MutableLiveData<Boolean> longPagerOn;
     private List<MutableLiveData<String>> searchResultPagerTextList;
-
     private List<CardDto> searchingResultCardList;
     private ObservableInt focusPageNo;
 
@@ -98,13 +95,11 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnDragListener onDragListenerForTopArrow;
     private View.OnDragListener onDragListenerForBottomArrow;
     private View.OnDragListener onDragListenerForEmptyCardSpace;
-    private View.OnClickListener spreadingOutDetailOnClickListener;
     private View.OnClickListener onClickListenerForSettingButton;
     private SearchView.OnQueryTextListener onQueryTextListenerForSearchingCard;
     private CardScrollListener.OnFocusChangedListener mOnFocusChangedListener;
     private CardScrollListener.OnScrollStateChangeListener mOnScrollStateChangeListener;
     private ContainerScrollListener mContainerRecyclerViewScrollListener;
-
     private CardTouchListener cardTouchListener;
     private GestureDetectorCompat cardGestureDetector;
     private CardGestureListener cardGestureListener;
@@ -112,21 +107,15 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
     private View.OnClickListener onClickListenerForMovingPageBundleBtn;
 
-    private final int CARD_LOCATION_LEFT = 0;
-    private final int CARD_LOCATION_RIGHT = 1;
     public static final int SEARCHING_RESULT_MAX_COUNT = 5;
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
     private final int LONG_LENGTH_PAGER_NO = 10;
     private final int NO_FOCUS_PAGE = 0;
-
     private final AtomicBoolean dataInitialized = new AtomicBoolean(false);
-
     private final String TAG = "@@CardViewModel";
-
     public MutableLiveData<Boolean> getLongPagerOn() {
         return longPagerOn;
     }
-
     public MutableLiveData<Integer> getPagerCount() {
         return pagerCount;
     }
@@ -445,10 +434,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         view.setOnClickListener(clickListener);
     }
 
-    public View.OnClickListener getSpreadingOutDetailOnClickListener() {
-        return spreadingOutDetailOnClickListener;
-    }
-
     public CardViewModel(Application application) {
         super(application);
         this.mCardRepository = new CardRepository(application);
@@ -498,7 +483,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initOnScrollStateChangeListener();
         initScrollListenerForContainerRecyclerView();
         initCardTouchListener();
-        initSpreadingOutDetailOnClickListener();
         initOnQueryTextListenerForSearchingCard();
         initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnClickListenerForMovingPageBundleBtn();
@@ -548,10 +532,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnQueryTextListenerForSearchingCard() {
         this.onQueryTextListenerForSearchingCard = new OnQueryTextListenerForSearchingCard(this);
-    }
-
-    private void initSpreadingOutDetailOnClickListener() {
-        spreadingOutDetailOnClickListener = new SpreadingOutDetailOnClickListener();
     }
 
     private void initCardTouchListener() {
