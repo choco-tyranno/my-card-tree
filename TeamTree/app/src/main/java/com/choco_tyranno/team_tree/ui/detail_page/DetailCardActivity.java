@@ -1,9 +1,10 @@
 package com.choco_tyranno.team_tree.ui.detail_page;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +18,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewTreeObserver;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -29,7 +28,6 @@ import com.choco_tyranno.team_tree.databinding.ActivityDetailBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.ui.SingleToastManager;
 import com.choco_tyranno.team_tree.ui.SingleToaster;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,7 +36,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class DetailCardActivity extends AppCompatActivity {
@@ -47,7 +44,20 @@ public class DetailCardActivity extends AppCompatActivity {
     private DetailPage detailPage;
     private CardDto ownerCardDto;
     private DetailFab detailFab;
-
+    private final ActivityResultLauncher<Intent> activityResultLauncherForIntentCamera = createActivityResultLauncherForIntentCamera();
+    public ActivityResultLauncher<Intent> getActivityResultLauncherForIntentCamera(){
+        return activityResultLauncherForIntentCamera;
+    }
+    private ActivityResultLauncher<Intent> createActivityResultLauncherForIntentCamera() {
+        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if(result.getResultCode()==RESULT_OK){
+                ownerCardDto.setImagePath(detailPage.getPhotoPath());
+                viewModel.update(ownerCardDto);
+                loadImage();
+                SingleToastManager.show(SingleToaster.makeTextShort(binding.getRoot().getContext(), "사진이 저장되었습니다."));
+            }
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,37 +77,24 @@ public class DetailCardActivity extends AppCompatActivity {
         binding.executePendingBindings();
         setContentViewsTextSize();
     }
-
     private void setContentViewsTextSize() {
-        binding.textViewDetailTitle.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int textSizePx = (int) binding.textViewDetailTitle.getTextSize();
-                binding.appCompatEditTextDetailTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
-                binding.appCompatEditTextDetailSubtitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
-                binding.appCompatEditTextDetailContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
-
-                float secondaryTextSizePx = (float) textSizePx * 3 / 5;
-                binding.appCompatEditTextDetailNoteEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-                binding.textViewDetailNote.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-                binding.materialButtonDetailModify.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-                binding.materialButtonDetailSave.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-                binding.materialButtonDetailBack.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-                binding.materialDetailCancel.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
-            }
+        binding.textViewDetailTitle.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int textSizePx = (int) binding.textViewDetailTitle.getTextSize();
+            binding.appCompatEditTextDetailTitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+            binding.appCompatEditTextDetailSubtitleEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+            binding.appCompatEditTextDetailContactNumberEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+            float secondaryTextSizePx = (float) textSizePx * 3 / 5;
+            binding.appCompatEditTextDetailNoteEditor.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            binding.textViewDetailNote.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            binding.materialButtonDetailModify.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            binding.materialButtonDetailSave.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            binding.materialButtonDetailBack.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
+            binding.materialDetailCancel.setTextSize(TypedValue.COMPLEX_UNIT_PX, secondaryTextSizePx);
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OnClickListenerForTakePictureFab.REQUEST_TAKE_PICTURE && resultCode == RESULT_OK) {
-            ownerCardDto.setImagePath(detailPage.getPhotoPath());
-            viewModel.update(ownerCardDto);
-            loadImage();
-            SingleToastManager.show(SingleToaster.makeTextShort(this, "사진이 저장되었습니다."));
-        }
-
         if (requestCode == OnClickListenerForOpenGalleryFab.REQUEST_OPEN_GALLERY && resultCode == RESULT_OK) {
             OutputStream outputStream = null;
             if (data == null) {
@@ -127,7 +124,6 @@ public class DetailCardActivity extends AppCompatActivity {
             loadImage();
             SingleToastManager.show(SingleToaster.makeTextShort(this, "사진이 변경되었습니다."));
         }
-
         if (requestCode == OnClickListenerForLoadContactInfoFab.REQUEST_LOAD_CONTACT_INFO && resultCode == RESULT_OK) {
             if (data == null) {
                 SingleToastManager.show(SingleToaster.makeTextShort(this, "연락처 불러오기 실패."));
@@ -140,12 +136,10 @@ public class DetailCardActivity extends AppCompatActivity {
             cursor.moveToFirst();
             String retrievedName = cursor.getString(0);
             String retrievedPhoneNumber = cursor.getString(1);
-
             String normalizedPhoneNumber = PhoneNumberUtils.normalizeNumber(retrievedPhoneNumber);
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             String countryCode = telephonyManager.getSimCountryIso();
             String formattedNumber = PhoneNumberUtils.formatNumber(normalizedPhoneNumber, countryCode);
-
             ownerCardDto.setTitle(retrievedName);
             ownerCardDto.setContactNumber(formattedNumber);
             cursor.close();
@@ -153,7 +147,6 @@ public class DetailCardActivity extends AppCompatActivity {
             SingleToastManager.show(SingleToaster.makeTextShort(this, "연락처를 불러왔습니다."));
         }
     }
-
     private File createImageFile(Context context, DetailPage pageState) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -166,14 +159,13 @@ public class DetailCardActivity extends AppCompatActivity {
         pageState.setPhotoPath(image.getAbsolutePath());
         return image;
     }
-
     private void loadDefaultCardImage() {
         new Thread(() -> {
             try {
                 int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
                 int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
                 Glide.with(DetailCardActivity.this).asBitmap()
-                        .load(R.drawable.default_card_image_01).addListener(new RequestListener<Bitmap>() {
+                        .load(R.drawable.default_card_image_01).addListener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         return false;
@@ -190,7 +182,6 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         }).start();
     }
-
     private void loadImage() {
         if (TextUtils.equals(ownerCardDto.getImagePath(), ""))
             return;
@@ -199,7 +190,7 @@ public class DetailCardActivity extends AppCompatActivity {
                 int width = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_width));
                 int height = Math.round(getResources().getDimension(R.dimen.card_thumbnail_image_height));
                 Glide.with(DetailCardActivity.this).asBitmap()
-                        .load(ownerCardDto.getImagePath()).addListener(new RequestListener<Bitmap>() {
+                        .load(ownerCardDto.getImagePath()).addListener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         return false;
@@ -216,41 +207,33 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         }).start();
     }
-
     private void mainBinding() {
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.setLifecycleOwner(this);
     }
-
     public ActivityDetailBinding getBinding() {
         return binding;
     }
-
     @Override
     public void onEnterAnimationComplete() {
         super.onEnterAnimationComplete();
     }
-
     public CardDto getCardDto() {
         return ownerCardDto;
     }
-
     public DetailFab getDetailFab() {
         return detailFab;
     }
-
     @Override
     public void onBackPressed() {
         binding.floatingActionButtonDetailUtilContainer.setVisibility(View.GONE);
         binding.floatingActionButtonDetailCamera.setVisibility(View.GONE);
         binding.floatingActionButtonDetailGallery.setVisibility(View.GONE);
         binding.floatingActionButtonDetailContactInfo.setVisibility(View.GONE);
-
         Intent intent = new Intent();
         intent.putExtra("post_card", getCardDto());
         setResult(Activity.RESULT_OK, intent);
         supportFinishAfterTransition();
     }
-
 }
