@@ -436,11 +436,11 @@
                         android:contentDescription="@string/open_gallery_fab_desc"
                         android:src="@drawable/baseline_collections_white_24"
                         android:visibility="@{detailPage.utilContainerOpened? View.VISIBLE: View.INVISIBLE}"
-                        app:layout_constraintCircle="@id/floatingActionButton_detail_camera"
+                        app:layout_constraintCircle="@id/cameraButton_detail_camera"
                         app:layout_constraintCircleAngle="135"
                         app:layout_constraintCircleRadius="90dp"
-                        app:layout_constraintStart_toEndOf="@id/floatingActionButton_detail_camera"
-                        app:layout_constraintTop_toBottomOf="@id/floatingActionButton_detail_camera"
+                        app:layout_constraintStart_toEndOf="@id/cameraButton_detail_camera"
+                        app:layout_constraintTop_toBottomOf="@id/cameraButton_detail_camera"
                         app:rippleColor="#fff" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
