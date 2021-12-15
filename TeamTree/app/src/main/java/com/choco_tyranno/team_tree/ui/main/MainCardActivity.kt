@@ -56,10 +56,9 @@ class MainCardActivity : AppCompatActivity() {
     private fun createActivityResultLauncherForDetailScene(): ActivityResultLauncher<Intent> {
         return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if(result.resultCode != RESULT_OK){
-                SingleToaster.makeTextShort(this@MainCardActivity,"리턴 실패").show()
+                SingleToaster.makeTextShort(this@MainCardActivity,resources.getString(R.string.main_detailActivityResultNotOk)).show()
                 return@registerForActivityResult
             }
-            SingleToaster.makeTextShort(this@MainCardActivity,"리턴 성공").show()
             val updatedCardDto = result.data?.getSerializableExtra("post_card") as CardDto
             val imageChanged: Boolean = cardViewModel.isCardImageChanged(updatedCardDto)
             cardViewModel.applyCardFromDetailActivity(updatedCardDto)
