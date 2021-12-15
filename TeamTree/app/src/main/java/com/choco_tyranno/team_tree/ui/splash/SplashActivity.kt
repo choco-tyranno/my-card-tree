@@ -50,11 +50,11 @@ class SplashActivity constructor(
     private fun showSnackBarForCompleteFlexibleUpdate() {
         Snackbar.make(
             this@SplashActivity.findViewById(R.id.constraintLayout_splash_rootView),
-            R.string.splashActivity_flexibleUpdateCompleteSnackBarMessage,
+            R.string.splash_flexibleUpdateCompleteSnackBarMessage,
             Snackbar.LENGTH_INDEFINITE
         )
             .setAction(
-                R.string.splashActivity_flexibleUpdateCompleteActionText
+                R.string.splash_flexibleUpdateCompleteActionText
             ) {
                 splashViewModel.setProgressContentName("Installing new version...")
                 appUpdateManager.completeUpdate()
@@ -118,7 +118,7 @@ class SplashActivity constructor(
             splashViewModel.setProgressContentName("Update failed...")
             SingleToaster.makeTextLong(
                 this,
-                resources.getString(R.string.splashActivity_updateFailText)
+                resources.getString(R.string.splash_updateFailText)
             ).show()
             startMainCardActivity()
         }

@@ -57,14 +57,14 @@ class CameraButton @JvmOverloads constructor(
                 v.startAnimation(AccessDeniedAnimationProvider.getInstance(context))
                 SingleToaster.makeTextShort(
                     context,
-                    resources.getString(R.string.detailActivity_cameraNotFoundMessage)
+                    resources.getString(R.string.detail_cameraNotFoundMessage)
                 ).show()
                 return
             }
             val alertDialog =
                 AlertDialog.Builder(context)
-                    .setTitle(R.string.detailActivity_cameraAlertDialogTitle)
-                    .setMessage(R.string.detailActivity_cameraAlertDialogMessage)
+                    .setTitle(R.string.detail_cameraAlertDialogTitle)
+                    .setMessage(R.string.detail_cameraAlertDialogMessage)
                     .setCancelable(true)
                     .setPositiveButton(R.string.default_positiveText) { dialog, id ->
                         val binding = detailActivity.binding
@@ -82,7 +82,7 @@ class CameraButton @JvmOverloads constructor(
                                 takePictureIntent
                             )
                         } else {
-                            SingleToaster.makeTextShort(context, resources.getString(R.string.detailActivity_takePictureIntentErrorText)).show()
+                            SingleToaster.makeTextShort(context, resources.getString(R.string.detail_takePictureIntentErrorText)).show()
                         }
                         dialog.dismiss()
                     }
