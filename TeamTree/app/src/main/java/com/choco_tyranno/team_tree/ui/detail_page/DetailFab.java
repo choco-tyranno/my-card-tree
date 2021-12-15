@@ -20,7 +20,7 @@ public class DetailFab {
 
     public void animateFab(ActivityDetailBinding binding) {
         FloatingActionButton utilContainerFab = binding.floatingActionButtonDetailUtilContainer;
-        FloatingActionButton takePictureFab = binding.floatingActionButtonDetailCamera;
+        FloatingActionButton takePictureFab = binding.cameraButtonDetailCamera;
         FloatingActionButton openGalleryFab = binding.floatingActionButtonDetailGallery;
         FloatingActionButton loadContactInfoFab = binding.floatingActionButtonDetailContactInfo;
         DetailPage detailPage = binding.getDetailPage();

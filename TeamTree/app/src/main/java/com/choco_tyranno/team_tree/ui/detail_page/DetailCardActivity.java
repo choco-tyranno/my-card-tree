@@ -228,7 +228,7 @@ public class DetailCardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         binding.floatingActionButtonDetailUtilContainer.setVisibility(View.GONE);
-        binding.floatingActionButtonDetailCamera.setVisibility(View.GONE);
+        binding.cameraButtonDetailCamera.setVisibility(View.GONE);
         binding.floatingActionButtonDetailGallery.setVisibility(View.GONE);
         binding.floatingActionButtonDetailContactInfo.setVisibility(View.GONE);
         Intent intent = new Intent();
