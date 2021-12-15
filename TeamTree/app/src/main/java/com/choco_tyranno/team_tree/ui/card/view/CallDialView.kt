@@ -26,8 +26,7 @@ class CallDialView @JvmOverloads constructor(
         setOnClickListener(OnClickListenerForCallBtn.getInstance())
     }
 
-    @ActivityScoped
-    class OnClickListenerForCallBtn private constructor() : OnClickListener {
+    private class OnClickListenerForCallBtn private constructor() : OnClickListener {
         override fun onClick(v: View) = startCallDialActivity(v)
 
         private fun startCallDialActivity(callBtn: View) {
@@ -42,11 +41,11 @@ class CallDialView @JvmOverloads constructor(
             val card: CardDto? =
                 (cardRecyclerView.getChildViewHolder(cardFrame) as ContactCardViewHolder).binding.card
             val targetContactNumber = card?.contactNumber
-            val cardTitle = "\'"+if (card?.title.equals("")) "이름없음" else card?.title+"\'"
+            val cardTitle = "\'" + if (card?.title.equals("")) "이름없음" else card?.title + "\'"
             val alertDialog =
                 AlertDialog.Builder(context)
                     .setTitle(R.string.main_callDialogAlertDialogTitle)
-                    .setMessage(cardTitle+resources.getString(R.string.main_callDialogAlertDialogMessage))
+                    .setMessage(cardTitle + resources.getString(R.string.main_callDialogAlertDialogMessage))
                     .setCancelable(true)
                     .setPositiveButton(R.string.default_positiveText) { dialog, id ->
                         val intentDial = Intent(Intent.ACTION_DIAL)
@@ -54,7 +53,7 @@ class CallDialView @JvmOverloads constructor(
                         context.startActivity(intentDial)
                         dialog.dismiss()
                     }
-                    .setNegativeButton(R.string.default_negativeText){ dialog , id ->
+                    .setNegativeButton(R.string.default_negativeText) { dialog, id ->
                         dialog.dismiss()
                     }.create()
             alertDialog.show()
@@ -66,21 +65,9 @@ class CallDialView @JvmOverloads constructor(
 
         companion object {
             private val instance: OnClickListenerForCallBtn = OnClickListenerForCallBtn()
+
             @JvmStatic
             fun getInstance() = instance
-        }
-    }
-
-    class AccessDeniedAnimationProvider {
-        companion object {
-            private lateinit var instance: Animation
-            @JvmStatic
-            fun getInstance(context: Context): Animation {
-                if (::instance.isInitialized)
-                    return instance
-                instance = AnimationUtils.loadAnimation(context, R.anim.shaking_accessdenied)
-                return instance
-            }
         }
     }
 }
