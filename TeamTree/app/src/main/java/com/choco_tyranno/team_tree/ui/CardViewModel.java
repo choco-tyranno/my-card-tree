@@ -45,7 +45,6 @@ import com.choco_tyranno.team_tree.ui.container_rv.OnDragListenerForBottomArrow;
 import com.choco_tyranno.team_tree.ui.container_rv.OnDragListenerForContainerRecyclerView;
 import com.choco_tyranno.team_tree.ui.container_rv.OnDragListenerForTopArrow;
 import com.choco_tyranno.team_tree.ui.main.MainCardActivity;
-import com.choco_tyranno.team_tree.ui.searching_drawer.OnClickListenerForFindingSearchingResultTargetButton;
 import com.choco_tyranno.team_tree.ui.searching_drawer.OnQueryTextListenerForSearchingCard;
 import com.choco_tyranno.team_tree.ui.searching_drawer.SearchingResultAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -91,7 +90,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
     private GestureDetectorCompat cardGestureDetector;
     private CardGestureListener cardGestureListener;
     private SearchingResultAdapter searchingResultAdapter;
-    private View.OnClickListener onClickListenerForFindingSearchingResultTargetBtn;
 
     public static final int SEARCHING_RESULT_MAX_COUNT = 5;
     public static final int VISIBLE_PAGE_ITEM_MAX_COUNT = 5;
@@ -301,10 +299,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         searchingResultCardList.sort((o1, o2) -> Integer.compare(o1.getContainerNo(), o2.getContainerNo()));
     }
 
-    public View.OnClickListener getOnClickListenerForFindingSearchingResultTargetBtn() {
-        return onClickListenerForFindingSearchingResultTargetBtn;
-    }
-
     public int getSearchingResultItemCount() {
         final int allItemCount = searchingResultCardList.size();
         if (allItemCount == 0)
@@ -460,7 +454,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
         initScrollListenerForContainerRecyclerView();
         initCardTouchListener();
         initOnQueryTextListenerForSearchingCard();
-        initOnClickListenerForFindingSearchingResultTargetBtn();
         initOnDragListenerForContainerRecyclerView();
         initOnDragListenerForTopArrow();
         initOnDragListenerForBottomArrow();
@@ -480,10 +473,6 @@ public class CardViewModel extends AndroidViewModel implements UiThreadAccessibl
 
     private void initOnDragListenerForContainerRecyclerView() {
         this.onDragListenerForContainerRecyclerView = new OnDragListenerForContainerRecyclerView();
-    }
-
-    private void initOnClickListenerForFindingSearchingResultTargetBtn() {
-        this.onClickListenerForFindingSearchingResultTargetBtn = new OnClickListenerForFindingSearchingResultTargetButton();
     }
 
     private void initOnQueryTextListenerForSearchingCard() {

@@ -20,7 +20,7 @@ import java.util.Optional;
 
 
 public class CardFinder {
-    private boolean sendingFindCardReq;
+    private boolean findCardRequested = false;
     Animation flyingToRightAnimation;
     Runnable finishAction;
 
@@ -29,7 +29,7 @@ public class CardFinder {
         flyingToRightAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                sendingFindCardReq = true;
+                findCardRequested = true;
             }
 
             @Override
@@ -43,7 +43,7 @@ public class CardFinder {
                 searchView.setIconified(true);
                 Optional.ofNullable(finishAction).ifPresent(Runnable::run);
                 finishAction = null;
-                sendingFindCardReq = false;
+                findCardRequested = false;
             }
 
             @Override
@@ -68,12 +68,12 @@ public class CardFinder {
         planeImageView.startAnimation(flyingToRightAnimation);
     }
 
-    public boolean isSendingFindCardReq(){
-        return sendingFindCardReq;
+    public boolean isFindCardRequested(){
+        return findCardRequested;
     }
 
-    public void setSendingFindCardReq(boolean flag){
-        this.sendingFindCardReq = flag;
+    public void setFindCardRequested(boolean flag){
+        this.findCardRequested = flag;
     }
 
 }

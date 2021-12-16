@@ -377,7 +377,7 @@ class MainCardActivity : AppCompatActivity() {
             val searchView: SearchView = binding.layoutSearchdrawer.cardSearchView
             searchView.setQuery("", false)
             searchView.isIconified = true
-            cardFinder.isSendingFindCardReq = false
+            cardFinder.isFindCardRequested = false
             return
         }
         if (cardViewModel.isSettingsOn.value == true) {
