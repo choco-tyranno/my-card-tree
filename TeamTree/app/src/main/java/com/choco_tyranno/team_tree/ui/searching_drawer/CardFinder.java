@@ -54,11 +54,11 @@ public class CardFinder {
 
     public void animate(View selectingAssistView){
         ViewGroup parentView = (ViewGroup) selectingAssistView.getParent();
-        View selectingView = parentView.findViewById(R.id.search_item_selecting_btn);
+        View selectingView = parentView.findViewById(R.id.view_searchResultItem_finderShapeHelper);
         //back to origin visibility / color needed.
         selectingView.getBackground().setColorFilter(new BlendModeColorFilter(selectingView.getResources().getColor(R.color.colorSubPrimary_a
                 , selectingView.getContext().getTheme()), BlendMode.SRC_ATOP));
-        View planeImageView = parentView.findViewById(R.id.send_card_image_btn);
+        View planeImageView = parentView.findViewById(R.id.imageButton_searchResultItem_paperAirplane);
         finishAction = ()->{
             selectingView.getBackground().setColorFilter(new BlendModeColorFilter(selectingView.getResources().getColor(R.color.colorAccent_c
                     , selectingView.getContext().getTheme()), BlendMode.SRC_ATOP));
