@@ -2,10 +2,8 @@ package com.choco_tyranno.team_tree.ui.searching_drawer;
 
 import android.util.Pair;
 import android.view.View;
-
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.choco_tyranno.team_tree.databinding.ItemSearchingResultBinding;
+import com.choco_tyranno.team_tree.databinding.ItemSearchresultBinding;
 import com.choco_tyranno.team_tree.domain.card_data.CardDto;
 import com.choco_tyranno.team_tree.ui.CardViewModel;
 import com.choco_tyranno.team_tree.ui.main.MainCardActivity;
@@ -27,7 +25,7 @@ public class OnClickListenerForFindingSearchingResultTargetButton implements Vie
         if (searchingResultViewHolder==null){
             return;
         }
-        ItemSearchingResultBinding binding = searchingResultViewHolder.getBinding();
+        ItemSearchresultBinding binding = searchingResultViewHolder.getBinding();
         CardDto cardDTO = binding.getCard();
         Pair<Integer, Integer[]> scrollUtilDataForFindingOutCard =  viewModel.findScrollUtilDataForFindingOutCard(cardDTO);
         if (scrollUtilDataForFindingOutCard.second.length==0)
